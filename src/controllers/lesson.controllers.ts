@@ -1,3 +1,5 @@
+import { Lesson } from "../models/lesson.model";
+
 export const createLesson = async (req, res) => {
   try {
     const { courseId, lessonTitle, lessonDuration, isPaid } =
@@ -91,15 +93,10 @@ export const updateLesson = async (req, res) => {
 };
 
 export const deleteLesson = async (req, res) => {
-  try {
-    const lesson = await Lesson.findById(req.params.id);
+  const id = req.params.id;
 
-    if (lesson) {
-      await lesson.remove();
-      res.status(200).json({ message: "Lesson removed" });
-    } else {
-      res.status(404).json({ message: "Lesson not found" });
-    }
+  try {
+    const lesson = await Lesson.findByIdAndDelete(id);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

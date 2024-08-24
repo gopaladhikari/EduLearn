@@ -19,10 +19,10 @@ const reviewSchema = new mongoose.Schema(
       required: true,
     },
 
-    userImage: {
-      type: String,
-      required: true,
-    },
+    // userImage: {
+    //   type: String,
+    //   required: true,
+    // },
 
     review: {
       type: String,

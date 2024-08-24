@@ -32,7 +32,7 @@ const userDetailsSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export const UserDetailsModel = mongoose.model(
+export const UserDetails = mongoose.model(
   "UserDetails",
   userDetailsSchema
 );

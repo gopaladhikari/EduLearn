@@ -33,7 +33,7 @@ const currentPursuingSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export const CurrentPursuingModel = mongoose.model(
+export const CurrentPursuing = mongoose.model(
   "CurrentPursuing",
   currentPursuingSchema
 );

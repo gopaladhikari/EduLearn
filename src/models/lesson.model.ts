@@ -36,7 +36,4 @@ const lessonSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export const LessonModal = mongoose.model(
-  "LessonModal",
-  lessonSchema
-);
+export const Lesson = mongoose.model("Lesson", lessonSchema);

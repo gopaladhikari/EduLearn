@@ -14,7 +14,7 @@ const advertisementBannerSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export const AdvertisementBannerModel = mongoose.model(
+export const AdvertisementBanner = mongoose.model(
   "AdvertisementBanner",
   advertisementBannerSchema
 );

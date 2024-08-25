@@ -9,7 +9,7 @@ export const createAdvertisementBanner = dbHandler(async (req, res) => {
   if (!bannerImage) throw new ApiError("Banner image is required!");
 
   const newAdvertisementBanner = await AdvertisementBanner.create({
-    bannerImage: bannerImage,
+    bannerImage,
   });
 
   if (!newAdvertisementBanner)

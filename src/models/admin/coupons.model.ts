@@ -7,14 +7,17 @@ const couponSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
+
     couponDescription: {
       type: String,
       required: true,
     },
+
     discount: {
       type: Number,
       required: true,
     },
+
     userBy: [
       {
         type: mongoose.Schema.Types.ObjectId,

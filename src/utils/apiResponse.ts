@@ -7,13 +7,12 @@ export class ApiError extends Error {
   data: null;
   stack?: string;
 
-  constructor(message: string, stack = "") {
+  constructor(message: string) {
     super(message);
     this.success = false;
     this.data = null;
 
-    if (stack) this.stack = stack;
-    else Error.captureStackTrace(this, this.constructor);
+    Error.captureStackTrace(this, this.constructor);
   }
 }
 

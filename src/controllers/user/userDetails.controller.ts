@@ -5,14 +5,11 @@ import { dbHandler } from "../../utils/dbHandler";
 import { isValidObjectId } from "mongoose";
 
 export const createUserDetails = dbHandler(async (req, res) => {
-  const { success, data, error } = userDetailsSchema.safeParse(
-    req.body
-  );
+  const { success, data, error } = userDetailsSchema.safeParse(req.body);
 
   if (!success) throw new ApiError(error.message);
 
-  if (!isValidObjectId(data.userId))
-    throw new ApiError("Invalid user id");
+  if (!isValidObjectId(data.userId)) throw new ApiError("Invalid user id");
 
   const userDetails = await UserDetails.create({
     userId: data.userId,
@@ -52,9 +49,7 @@ export const updateUserDetails = dbHandler(async (req, res) => {
 
   if (!isValidObjectId(userId)) throw new ApiError("Invalid user id");
 
-  const { success, data, error } = userDetailsSchema.safeParse(
-    req.body
-  );
+  const { success, data, error } = userDetailsSchema.safeParse(req.body);
 
   if (!success) throw new ApiError(error.message);
 
@@ -70,8 +65,7 @@ export const updateUserDetails = dbHandler(async (req, res) => {
     { new: true }
   );
 
-  if (!updatedUserDetails)
-    throw new ApiError("User details not found");
+  if (!updatedUserDetails) throw new ApiError("User details not found");
 
   res
     .status(200)
@@ -88,12 +82,9 @@ export const deleteUserDetails = dbHandler(async (req, res) => {
 
   if (!isValidObjectId(userId)) throw new ApiError("Invalid user id");
 
-  const deletedUserDetails = await UserDetails.findByIdAndDelete(
-    userId
-  );
+  const deletedUserDetails = await UserDetails.findByIdAndDelete(userId);
 
-  if (!deletedUserDetails)
-    throw new ApiError("User details not found");
+  if (!deletedUserDetails) throw new ApiError("User details not found");
 
   res
     .status(200)

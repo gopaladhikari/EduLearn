@@ -22,12 +22,35 @@ The dbHandler is a higher-order function designed to simplify error handling in 
 
 - This approach ensures that all errors, whether synchronous or asynchronous, are consistently caught and passed to the next middleware in the Express pipeline for centralized error handling.
 
+## Code
+
+```typescript
+import { ApiError } from "./apiResponse";
+import type {
+  Request,
+  Response,
+  NextFunction,
+  RequestHandler,
+} from "express";
+
+export const dbHandler = (requestHandler: RequestHandler) => {
+  return (req: Request, res: Response, next: NextFunction) => {
+    try {
+      requestHandler(req, res, next);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json(new ApiError((error as Error).message));
+    }
+  };
+};
+```
+
 ### Example
 
 ```typescript
 import { dbHandler } from "../utils/dbHandler";
 
-const routeHandler = dbHandler(async (req, res, next) => {
+const someController = dbHandler(async (req, res, next) => {
   // Your route handler logic here without try/catch
 });
 ```

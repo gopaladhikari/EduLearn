@@ -1,61 +1,63 @@
 # E-Learning App API's
 
-Completed API's 1. User Authentication
-• Sign Up with a phone number
-• Login with a phone number
-• Get user
+Completed API's
 
-2.  Select University
-    • create university
-    • get universities
-    • update university
-    • delete university
+1. User Authentication
+   • Sign Up with a phone number
+   • Login with a phone number
+   • Get user
 
-3.  Main Courses
+2. Select University
+   • create university
+   • get universities
+   • update university
+   • delete university
 
-    • create course
-    • get courses
-    • get course by ID
-    • update course
-    • delete course
+3. Main Courses
 
-4.  Current Pursuing Course
+   • create course
+   • get courses
+   • get course by ID
+   • update course
+   • delete course
 
-    • Get All Current Pursuing
-    • Get Current Pursuing by Id
-    • Update Current Pursuing
-    • Delete Current Pursuing
-    • Create Current Pursuing
+4. Current Pursuing Course
 
-5.  Coupon
+   • Get All Current Pursuing
+   • Get Current Pursuing by Id
+   • Update Current Pursuing
+   • Delete Current Pursuing
+   • Create Current Pursuing
 
-    • Create Coupon
-    • Update Coupon
-    • Get All Coupons
-    • Delete Coupon
+5. Coupon
 
-6.  Advertisement Banner
+   • Create Coupon
+   • Update Coupon
+   • Get All Coupons
+   • Delete Coupon
 
-    • Get Advertisement Banners
-    • Get Single Advertisement Banner
-    • Update Advertisement Banner
-    • Delete Advertisement Banner
-    • Create Advertisement Banner
+6. Advertisement Banner
 
-7.  User Details  
-    • Create user details
-    • Get user details by user ID
-    • Update user details
-    • Delete user details
+   • Get Advertisement Banners
+   • Get Single Advertisement Banner
+   • Update Advertisement Banner
+   • Delete Advertisement Banner
+   • Create Advertisement Banner
 
-8.  Review  
-    • Create Review
-    • Get all reviews by course ID
-    • Update Review
-    • Delete Review
+7. User Details  
+   • Create user details
+   • Get user details by user ID
+   • Update user details
+   • Delete user details
 
-9.  Contact Us
-    • Create Contact Request
+8. Review  
+   • Create Review
+   • Get all reviews by course ID
+   • Update Review
+   • Delete Review
+
+9. Contact Us
+   • Create Contact Request
 
 Pending API’s
 

@@ -1,103 +1,118 @@
+import mongoose, { isValidObjectId } from "mongoose";
 import { Lesson } from "../models/lesson.model";
+import { lessonSchema } from "../schemas/lessons.schema";
+import { ApiError, ApiSuccess } from "../utils/apiResponse";
+import { dbHandler } from "../utils/dbHandler";
 
-export const createLesson = async (req, res) => {
-  try {
-    const { courseId, lessonTitle, lessonDuration, isPaid } =
-      req.body;
-
-    if (
-      !req.files ||
-      !req.files["thumbnailImage"] ||
-      !req.files["lessonVideo"]
-    ) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Files are missing" });
+type UploadedFiles =
+  | {
+      [key: string]: Express.Multer.File[];
     }
+  | undefined;
 
-    const thumbnailImage = req.files["thumbnailImage"][0].path;
-    const lessonVideo = req.files["lessonVideo"][0].path;
+export const createLesson = dbHandler(async (req, res) => {
+  const { success, data, error } = lessonSchema.safeParse(req.body);
 
-    const lesson = new Lesson({
-      courseId,
-      thumbnailImage,
-      lessonTitle,
-      lessonDuration,
-      lessonVideo,
-      isPaid: isPaid || false,
-    });
+  if (!success) throw new ApiError(error.message);
 
-    const createdLesson = await lesson.save();
-    res.status(201).json(createdLesson);
-  } catch (error) {
-    console.error("Error creating lesson:", error);
-    res.status(500).json({
-      success: false,
-      statusCode: 500,
-      message: "Internal Server Error",
-      error: error.message,
-    });
-  }
-};
+  const files = req.files as UploadedFiles;
 
-export const getLessons = async (req, res) => {
-  try {
-    const lessons = await Lesson.find();
-    res.status(200).json(lessons);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
+  const thumbnailImagePath = files?.thumbnailImage[0].path;
+  const lessonVideoPath = files?.lessonVideo[0].path;
 
-export const getLessonById = async (req, res) => {
-  try {
-    const lesson = await Lesson.findById(req.params.id);
-    if (lesson) {
-      res.status(200).json(lesson);
-    } else {
-      res.status(404).json({ message: "Lesson not found" });
-    }
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
+  if (!thumbnailImagePath || !lessonVideoPath)
+    throw new ApiError("Files are missing");
 
-export const updateLesson = async (req, res) => {
-  try {
-    const { courseId, lessonTitle, lessonDuration, isPaid } =
-      req.body;
-    const lesson = await Lesson.findById(req.params.id);
+  const lesson = await Lesson.create({
+    courseId: data.courseId,
+    thumbnailImage: thumbnailImagePath,
+    lessonTitle: data.lessonTitle,
+    lessonDuration: data.lessonDuration,
+    lessonVideo: lessonVideoPath,
+    isPaid: data.isPaid,
+  });
 
-    if (lesson) {
-      lesson.courseId = courseId || lesson.courseId;
-      lesson.lessonTitle = lessonTitle || lesson.lessonTitle;
-      lesson.lessonDuration = lessonDuration || lesson.lessonDuration;
-      lesson.isPaid = isPaid !== undefined ? isPaid : lesson.isPaid;
+  if (!lesson) throw new ApiError("Lesson not created");
 
-      if (req.files["thumbnailImage"]) {
-        lesson.thumbnailImage = req.files["thumbnailImage"][0].path;
-      }
+  res
+    .status(201)
+    .json(new ApiSuccess("Lesson created successfully", lesson));
+});
 
-      if (req.files["lessonVideo"]) {
-        lesson.lessonVideo = req.files["lessonVideo"][0].path;
-      }
+export const getLessons = dbHandler(async (req, res) => {
+  const lessons = await Lesson.find();
 
-      const updatedLesson = await lesson.save();
-      res.status(200).json(updatedLesson);
-    } else {
-      res.status(404).json({ message: "Lesson not found" });
-    }
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
+  if (!lessons.length) throw new ApiError("Lessons not found");
 
-export const deleteLesson = async (req, res) => {
+  res
+    .status(200)
+    .json(new ApiSuccess("Lessons fetched successfully", lessons));
+});
+
+export const getLessonById = dbHandler(async (req, res) => {
+  const lessonId = req.params.lessonId;
+
+  if (!isValidObjectId(lessonId))
+    throw new ApiError("Invalid lesson id");
+
+  const lesson = await Lesson.findById(lessonId);
+
+  if (!lesson) throw new ApiError("Lesson not found");
+
+  res
+    .status(200)
+    .json(new ApiSuccess("Lesson fetched successfully", lesson));
+});
+
+export const updateLesson = dbHandler(async (req, res) => {
+  const lessonId = req.params.lessonId;
+
+  if (!isValidObjectId(lessonId))
+    throw new ApiError("Invalid lesson id");
+
+  const { data, success, error } = lessonSchema.safeParse(req.body);
+
+  if (!success) throw new ApiError(error.message);
+
+  const files = req.files as UploadedFiles;
+
+  const thumbnailImagePath = files?.thumbnailImage[0].path;
+  const lessonVideoPath = files?.lessonVideo[0].path;
+
+  const lesson = await Lesson.findById(lessonId);
+
+  if (!lesson) throw new ApiError("Lesson not found");
+
+  lesson.courseId = new mongoose.Types.ObjectId(data.courseId);
+  lesson.lessonTitle = data.lessonTitle;
+  lesson.lessonDuration = data.lessonDuration;
+  lesson.isPaid = data.isPaid;
+
+  if (thumbnailImagePath) lesson.thumbnailImage = thumbnailImagePath;
+
+  if (lessonVideoPath) lesson.lessonVideo = lessonVideoPath;
+
+  const updatedLesson = await lesson.save();
+
+  if (!updatedLesson) throw new ApiError("Lesson not updated");
+
+  res
+    .status(200)
+    .json(
+      new ApiSuccess("Lesson updated successfully", updatedLesson)
+    );
+});
+
+export const deleteLesson = dbHandler(async (req, res) => {
   const id = req.params.id;
 
-  try {
-    const lesson = await Lesson.findByIdAndDelete(id);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
+  if (!isValidObjectId(id)) throw new ApiError("Invalid lesson id");
+
+  const lesson = await Lesson.findByIdAndDelete(id);
+
+  if (!lesson) throw new ApiError("Lesson not found");
+
+  res
+    .status(200)
+    .json(new ApiSuccess("Lesson deleted successfully", lesson));
+});

@@ -106,10 +106,15 @@ export const deleteAdvertisementBanner = dbHandler(async (req, res) => {
   if (!isValidObjectId(advertisementBannerId))
     throw new ApiError("Advertisement banner id is invalid!");
 
-  const advertisementBanner = await AdvertisementBanner.findByIdAndUpdate({
-    _id: advertisementBannerId,
-    isDeleted: true,
-  });
+  const advertisementBanner = await AdvertisementBanner.findByIdAndUpdate(
+    {
+      _id: advertisementBannerId,
+      isDeleted: false,
+    },
+    {
+      isDeleted: true,
+    }
+  );
 
   if (!advertisementBanner)
     throw new ApiError("Advertisement banner not found!");

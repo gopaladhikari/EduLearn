@@ -1,23 +1,18 @@
 import { Coupon } from "../../models/admin/coupons.model";
 import { ApiError, ApiSuccess } from "../../utils/apiResponse";
 import { dbHandler } from "../../utils/dbHandler";
+import { couponSchema } from "../../schemas/coupon.schema";
+import { isValidObjectId } from "mongoose";
 
 export const createCoupon = dbHandler(async (req, res) => {
-  const couponCode = req.body.couponCode;
-  const discount = req.body.discount;
-  const expiryDate = req.body.expiryDate;
-  const isActive = req.body.isActive;
+  const { success, data, error } = couponSchema.safeParse(req.body);
 
-  if (!couponCode || !discount || !expiryDate || !isActive)
-    throw new ApiError(
-      "Coupon code, discount, expiry date and isActive are required!"
-    );
+  if (!success) throw new ApiError(error.message);
 
   const newCoupon = await Coupon.create({
-    couponCode,
-    discount,
-    expiryDate,
-    isActive,
+    couponCode: data.couponCode,
+    discount: data.discount,
+    description: data.description,
   });
 
   if (!newCoupon) throw new ApiError("Coupon not created!");
@@ -27,56 +22,34 @@ export const createCoupon = dbHandler(async (req, res) => {
     .json(new ApiSuccess("Coupon created successfully!", newCoupon));
 });
 
-export const getAllCoupons = dbHandler(async (req, res) => {
-  const coupons = await Coupon.find({
-    isDeleted: false,
-  });
+export const getAllCoupons = dbHandler(async (_, res) => {
+  const coupons = await Coupon.find();
 
   if (!coupons.length) throw new ApiError("Coupons not found!");
 
-  return res
+  res
     .status(200)
     .json(new ApiSuccess("Coupons fetched successfully!", coupons));
-});
-
-export const getCouponById = dbHandler(async (req, res) => {
-  const couponId = req.params.couponId;
-
-  if (!couponId) throw new ApiError("Coupon id is required!");
-
-  const coupon = await Coupon.findById(couponId);
-
-  if (!coupon || coupon.isDeleted) throw new ApiError("Coupon not found!");
-
-  return res
-    .status(200)
-    .json(new ApiSuccess("Coupon fetched successfully!", coupon));
 });
 
 export const updateCoupon = dbHandler(async (req, res) => {
   const couponId = req.params.couponId;
 
-  if (!couponId) throw new ApiError("Coupon id is required!");
+  if (!isValidObjectId(couponId)) throw new ApiError("Invalid coupon id!");
 
-  const coupon = await Coupon.findById(couponId);
+  const { data, success, error } = couponSchema.safeParse(req.body);
 
-  if (!coupon || coupon.isDeleted) throw new ApiError("Coupon not found!");
+  if (!success) throw new ApiError(error.message);
 
-  const { name, description, discount, isActive } = req.body;
+  const coupon = await Coupon.findByIdAndUpdate(couponId, {
+    couponCode: data.couponCode,
+    discount: data.discount,
+    description: data.description,
+  });
 
-  if (!name || !description || !discount || !isActive)
-    throw new ApiError(
-      "Name, description, discount and isActive are required!"
-    );
+  if (!coupon) throw new ApiError("Coupon not found!");
 
-  coupon.name = name;
-  coupon.description = description;
-  coupon.discount = discount;
-  coupon.isActive = isActive;
-
-  await coupon.save();
-
-  return res
+  res
     .status(200)
     .json(new ApiSuccess("Coupon updated successfully!", coupon));
 });
@@ -84,13 +57,11 @@ export const updateCoupon = dbHandler(async (req, res) => {
 export const deleteCoupon = dbHandler(async (req, res) => {
   const couponId = req.params.couponId;
 
-  if (!couponId) throw new ApiError("Coupon id is required!");
+  if (!isValidObjectId(couponId)) throw new ApiError("Invalid coupon id!");
 
-  const coupon = await Coupon.findByIdAndUpdate(couponId, {
-    isDeleted: true,
-  });
+  const coupon = await Coupon.findByIdAndDelete(couponId);
 
-  if (!coupon || coupon.isDeleted) throw new ApiError("Coupon not found!");
+  if (!coupon) throw new ApiError("Coupon not found!");
 
   return res
     .status(200)

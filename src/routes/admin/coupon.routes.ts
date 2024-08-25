@@ -9,9 +9,9 @@ import {
   getAllCoupons,
 } from "../../controllers/admin/coupon.controller";
 
-couponRouter.get("/get-coupon", getAllCoupons);
-couponRouter.post("/add-coupon", createCoupon);
-couponRouter.put("/update-coupon", updateCoupon);
-couponRouter.delete("/delete-coupon", deleteCoupon);
+couponRouter.get("/", getAllCoupons);
+couponRouter.post("/", createCoupon);
+couponRouter.put("/update/:couponId", updateCoupon);
+couponRouter.delete("/delete/:couponId", deleteCoupon);
 
 export { couponRouter };

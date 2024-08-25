@@ -17,7 +17,7 @@ mainCourseRouter
 
 mainCourseRouter.route("/").get(getAllCourses);
 mainCourseRouter.route("/:courseId").get(getCourseById);
-mainCourseRouter.route("/:courseId").put(updateCourse);
+mainCourseRouter.route("/update/:courseId").put(updateCourse);
 mainCourseRouter.route("/delete/:courseId").delete(deleteCourse);
 
 export { mainCourseRouter };

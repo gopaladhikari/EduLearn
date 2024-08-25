@@ -10,9 +10,9 @@ import { upload } from "../middlewares/multer.middleware";
 
 const lessonRouter = Router();
 
-lessonRouter.route("/get-all-lessons").get(getLessons);
+lessonRouter.route("/").get(getLessons);
 
-lessonRouter.route("/create-lesson").post(
+lessonRouter.route("/").post(
   upload.fields([
     { name: "thumbnailImage", maxCount: 1 },
     { name: "lessonVideo", maxCount: 1 },
@@ -20,10 +20,10 @@ lessonRouter.route("/create-lesson").post(
   createLesson
 );
 
-lessonRouter.route("/get-lesson-by-id/:lessonId").get(getLessonById);
+lessonRouter.route("/:lessonId").get(getLessonById);
 
-lessonRouter.route("/update-lesson-by-id:lessonId").put(updateLesson);
+lessonRouter.route("/update/:lessonId").put(updateLesson);
 
-lessonRouter.route("/delete-lesson-by-id/:lessonId").delete(deleteLesson);
+lessonRouter.route("/delete/:lessonId").delete(deleteLesson);
 
 export { lessonRouter };

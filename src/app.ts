@@ -17,6 +17,7 @@ import { advertisementBannerRouter } from "./routes/admin/advertisementBanner.ro
 import { couponRouter } from "./routes/admin/coupon.routes";
 import { currentPursuingRouter } from "./routes/admin/currentPursuing.routes";
 import { mainCourseRouter } from "./routes/admin/mainCourse.routes";
+import { universityRouter } from "./routes/admin/university.routes";
 
 // Routes declaration
 app.use("/api/v1/contactus", contactUsRouter);
@@ -27,5 +28,6 @@ app.use("/api/v1/advertisement-banner", advertisementBannerRouter);
 app.use("/api/v1/coupon", couponRouter);
 app.use("/api/v1/current-pursuing", currentPursuingRouter);
 app.use("/api/v1/main-courses", mainCourseRouter);
+app.use("/api/v1/university", universityRouter);
 
 export { app };

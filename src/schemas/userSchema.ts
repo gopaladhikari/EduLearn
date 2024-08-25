@@ -17,17 +17,26 @@ export const userSchema = z.object({
 });
 
 export const userDetailsSchema = z.object({
-  name: z.string({
-    required_error: "Name is required",
+  userId: z.string({
+    required_error: "User id is required",
   }),
-  email: z
+
+  universityName: z.string({
+    required_error: "University name is required",
+  }),
+
+  currentlyPursuing: z.string({
+    required_error: "Currently pursuing is required",
+  }),
+
+  semester: z.number({
+    required_error: "Semester is required",
+  }),
+
+  subject: z
     .string({
-      required_error: "Email is required",
+      required_error: "Subject is required",
+      invalid_type_error: "Invalid subject",
     })
-    .email("Invalid email"),
-  mobileno: z
-    .string({
-      required_error: "Mobileno is required",
-    })
-    .min(10, "Invalid mobileno"),
+    .array(),
 });

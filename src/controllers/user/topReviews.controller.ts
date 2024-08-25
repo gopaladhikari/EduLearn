@@ -1,3 +1,4 @@
+import { isValidObjectId } from "mongoose";
 import { TopReviews } from "../../models/user/topReviews.model";
 import {
   createReviewSchema,
@@ -32,7 +33,8 @@ export const createReview = dbHandler(async (req, res) => {
 export const getAllReviewsByCourseId = dbHandler(async (req, res) => {
   const courseId = req.params.courseId;
 
-  if (!courseId) throw new ApiError("Course id is required");
+  if (!isValidObjectId(courseId))
+    throw new ApiError("Course id is required");
 
   const reviews = await TopReviews.find({ courseId });
 
@@ -47,7 +49,8 @@ export const getAllReviewsByCourseId = dbHandler(async (req, res) => {
 export const updatedReview = dbHandler(async (req, res) => {
   const reviewId = req.params.reviewId;
 
-  if (!reviewId) throw new ApiError("Review id is required");
+  if (!isValidObjectId(reviewId))
+    throw new ApiError("Review id is required");
 
   const { success, data, error } = updateReviewSchema.safeParse(
     req.body
@@ -76,7 +79,8 @@ export const updatedReview = dbHandler(async (req, res) => {
 export const deleteReview = dbHandler(async (req, res) => {
   const reviewId = req.params.reviewId;
 
-  if (!reviewId) throw new ApiError("Review id is required");
+  if (!isValidObjectId(reviewId))
+    throw new ApiError("Review id is required");
 
   const deletedReview = await TopReviews.findByIdAndDelete(reviewId);
 

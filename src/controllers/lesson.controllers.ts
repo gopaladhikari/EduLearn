@@ -52,8 +52,7 @@ export const getLessons = dbHandler(async (req, res) => {
 export const getLessonById = dbHandler(async (req, res) => {
   const lessonId = req.params.lessonId;
 
-  if (!isValidObjectId(lessonId))
-    throw new ApiError("Invalid lesson id");
+  if (!isValidObjectId(lessonId)) throw new ApiError("Invalid lesson id");
 
   const lesson = await Lesson.findById(lessonId);
 
@@ -67,8 +66,7 @@ export const getLessonById = dbHandler(async (req, res) => {
 export const updateLesson = dbHandler(async (req, res) => {
   const lessonId = req.params.lessonId;
 
-  if (!isValidObjectId(lessonId))
-    throw new ApiError("Invalid lesson id");
+  if (!isValidObjectId(lessonId)) throw new ApiError("Invalid lesson id");
 
   const { data, success, error } = lessonSchema.safeParse(req.body);
 
@@ -98,17 +96,15 @@ export const updateLesson = dbHandler(async (req, res) => {
 
   res
     .status(200)
-    .json(
-      new ApiSuccess("Lesson updated successfully", updatedLesson)
-    );
+    .json(new ApiSuccess("Lesson updated successfully", updatedLesson));
 });
 
 export const deleteLesson = dbHandler(async (req, res) => {
-  const id = req.params.id;
+  const lessonId = req.params.lessonId;
 
-  if (!isValidObjectId(id)) throw new ApiError("Invalid lesson id");
+  if (!isValidObjectId(lessonId)) throw new ApiError("Invalid lesson id");
 
-  const lesson = await Lesson.findByIdAndDelete(id);
+  const lesson = await Lesson.findByIdAndDelete(lessonId);
 
   if (!lesson) throw new ApiError("Lesson not found");
 

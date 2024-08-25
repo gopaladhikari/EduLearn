@@ -10,8 +10,10 @@ app.use(express.static("public"));
 
 // Import statements for routes
 import { contactUsRouter } from "./routes/user/contactus.routes";
+import { lessonRouter } from "./routes/lesson.routes";
 
 // Routes declaration
 app.use("/api/v1/contactus", contactUsRouter);
+app.use("/api/v1/lessons", lessonRouter);
 
 export { app };

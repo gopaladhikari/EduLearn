@@ -14,7 +14,6 @@ Completed API's
    • delete university
 
 3. Main Courses
-
    • create course
    • get courses
    • get course by ID
@@ -22,7 +21,6 @@ Completed API's
    • delete course
 
 4. Current Pursuing Course
-
    • Get All Current Pursuing
    • Get Current Pursuing by Id
    • Update Current Pursuing
@@ -30,14 +28,12 @@ Completed API's
    • Create Current Pursuing
 
 5. Coupon
-
    • Create Coupon
    • Update Coupon
    • Get All Coupons
    • Delete Coupon
 
 6. Advertisement Banner
-
    • Get Advertisement Banners
    • Get Single Advertisement Banner
    • Update Advertisement Banner

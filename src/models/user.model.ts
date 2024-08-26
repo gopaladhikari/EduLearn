@@ -8,16 +8,40 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+
     mobileno: {
-      type: Number,
+      type: String,
       required: true,
       unique: true,
     },
+
+    isMobileNoVerified: {
+      type: Boolean,
+      default: false,
+    },
+
+    jwtToken: {
+      type: String,
+    },
+
+    otp: {
+      type: Number,
+    },
+
+    otpExpiryDate: {
+      type: Date,
+    },
+
     email: {
       type: String,
       required: true,
       unique: true,
       lowercase: true,
+    },
+
+    isEmailVerified: {
+      type: Boolean,
+      default: false,
     },
   },
   { timestamps: true }

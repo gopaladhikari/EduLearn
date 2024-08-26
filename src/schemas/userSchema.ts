@@ -11,13 +11,10 @@ export const userSchema = z.object({
       invalid_type_error: "Email must be a string",
     })
     .email("Invalid email"),
-  mobileno: z
-    .number({
-      required_error: "Mobileno is required",
-      invalid_type_error: "Mobileno must be a string",
-    })
-    .min(10, "Mobileno must be 10 digits")
-    .max(10, "Mobileno must be 10 digits"),
+  mobileno: z.string({
+    required_error: "Mobileno is required",
+    invalid_type_error: "Mobileno must be a string",
+  }),
 });
 
 export const userDetailsSchema = z.object({

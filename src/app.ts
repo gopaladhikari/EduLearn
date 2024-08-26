@@ -22,6 +22,7 @@ import { authRouter } from "./routes/auth.routes";
 import { notificationRouter } from "./routes/user/notification.routes";
 import { libraryRouter } from "./routes/user/library.routes";
 import { tipsRouter } from "./routes/user/tips.routes";
+import { wishlistRouter } from "./routes/user/wishlist.routes";
 
 // Routes declaration
 app.use("/api/v1/contactus", contactUsRouter);
@@ -37,5 +38,6 @@ app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/notification", notificationRouter);
 app.use("/api/v1/library", libraryRouter);
 app.use("/api/v1/tips", tipsRouter);
+app.use("/api/v1/wishlist", wishlistRouter);
 
 export { app };

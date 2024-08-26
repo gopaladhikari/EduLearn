@@ -57,7 +57,7 @@ userSchema.methods.generateJwtToken = function () {
   return jwt.sign(payload, env.jwtSecret);
 };
 
-interface IUser extends InferSchemaType<typeof userSchema> {
+export interface IUser extends InferSchemaType<typeof userSchema> {
   generateJwtToken(): string;
 }
 

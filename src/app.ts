@@ -19,6 +19,7 @@ import { currentPursuingRouter } from "./routes/admin/currentPursuing.routes";
 import { mainCourseRouter } from "./routes/admin/mainCourse.routes";
 import { universityRouter } from "./routes/admin/university.routes";
 import { authRouter } from "./routes/auth.routes";
+import { notificationRouter } from "./routes/user/notification.routes";
 
 // Routes declaration
 app.use("/api/v1/contactus", contactUsRouter);
@@ -31,5 +32,6 @@ app.use("/api/v1/current-pursuing", currentPursuingRouter);
 app.use("/api/v1/main-courses", mainCourseRouter);
 app.use("/api/v1/university", universityRouter);
 app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/notification", notificationRouter);
 
 export { app };

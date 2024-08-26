@@ -8,9 +8,7 @@ import { ApiError, ApiSuccess } from "../../utils/apiResponse";
 import { dbHandler } from "../../utils/dbHandler";
 
 export const createReview = dbHandler(async (req, res) => {
-  const { success, data, error } = createReviewSchema.safeParse(
-    req.body
-  );
+  const { success, data, error } = createReviewSchema.safeParse(req.body);
 
   if (!success) throw new ApiError(error.message);
 
@@ -52,9 +50,7 @@ export const updatedReview = dbHandler(async (req, res) => {
   if (!isValidObjectId(reviewId))
     throw new ApiError("Review id is required");
 
-  const { success, data, error } = updateReviewSchema.safeParse(
-    req.body
-  );
+  const { success, data, error } = updateReviewSchema.safeParse(req.body);
 
   if (!success) throw new ApiError(error.message);
 
@@ -71,9 +67,7 @@ export const updatedReview = dbHandler(async (req, res) => {
 
   return res
     .status(200)
-    .json(
-      new ApiSuccess("Review updated successfully!", updatedReview)
-    );
+    .json(new ApiSuccess("Review updated successfully!", updatedReview));
 });
 
 export const deleteReview = dbHandler(async (req, res) => {
@@ -88,7 +82,5 @@ export const deleteReview = dbHandler(async (req, res) => {
 
   return res
     .status(200)
-    .json(
-      new ApiSuccess("Review deleted successfully!", deletedReview)
-    );
+    .json(new ApiSuccess("Review deleted successfully!", deletedReview));
 });

@@ -40,3 +40,12 @@ export const userDetailsSchema = z.object({
     })
     .array(),
 });
+
+export const userSchemaWithPassword = z
+  .object({
+    password: z.string({
+      required_error: "Password is required",
+      invalid_type_error: "Password must be a string",
+    }),
+  })
+  .merge(userSchema);

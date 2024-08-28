@@ -4,16 +4,21 @@ import {
   resendOtp,
   verifyLoginOTP,
   verifySignUpOTP,
+  updateUser,
+  getCurrentUser,
 } from "../controllers/auth.controllers";
 
 import { Router } from "express";
+import { verifyJWT } from "../middlewares/auth.middleware";
 
 const authRouter = Router();
 
-authRouter.post("/signup", signUpWithPhoneNumber);
-authRouter.post("/login", loginWithPhoneNumber);
-authRouter.post("/resend-otp", resendOtp);
-authRouter.post("/verify-signup-otp", verifySignUpOTP);
-authRouter.post("/verify-login-otp", verifyLoginOTP);
+authRouter.route("/login").post(verifyJWT, loginWithPhoneNumber);
+authRouter.route("/get-current-user").post(verifyJWT, getCurrentUser);
+authRouter.route("/signup").post(verifyJWT, signUpWithPhoneNumber);
+authRouter.route("/otp").post(verifyJWT, resendOtp);
+authRouter.route("/verify-otp").post(verifyJWT, verifyLoginOTP);
+authRouter.route("/verify-signup-otp").post(verifyJWT, verifySignUpOTP);
+authRouter.route("/update-user").post(verifyJWT, updateUser);
 
 export { authRouter };

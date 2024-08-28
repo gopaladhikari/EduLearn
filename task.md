@@ -76,6 +76,8 @@ Completed API's
 13. Add Notes
     • Get Add Notes
     • Add Add Notes
+    • Create Add Notes
+    • Delete Add Notes
 
 Pending API’s
 

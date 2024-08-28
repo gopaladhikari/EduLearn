@@ -1,7 +1,7 @@
 import { dbHandler } from "../utils/dbHandler";
 import { User } from "../models/user.model";
 import { ApiError, ApiSuccess } from "../utils/apiResponse";
-import { userSchema } from "../schemas/userSchema";
+import { userSchema, userSchemaWithPassword } from "../schemas/userSchema";
 import { sendOtp } from "../utils/twilio";
 
 export const signUpWithPhoneNumber = dbHandler(async (req, res) => {
@@ -127,6 +127,12 @@ export const verifyLoginOTP = dbHandler(async (req, res) => {
   );
 });
 
+export const getCurrentUser = dbHandler(async (req, res) => {
+  res
+    .status(200)
+    .json(new ApiSuccess("User fetched successfully", req.user));
+});
+
 export const resendOtp = dbHandler(async (req, res) => {
   const { mobileno } = req.body;
 
@@ -152,4 +158,27 @@ export const resendOtp = dbHandler(async (req, res) => {
   res
     .status(201)
     .json(new ApiSuccess("Login OTP sent successfully", user));
+});
+
+export const updateUser = dbHandler(async (req, res) => {
+  const userId = req.user?._id;
+
+  const { success, data, error } = userSchemaWithPassword.safeParse(
+    req.body
+  );
+
+  if (!success) throw new ApiError(error.message);
+
+  const user = await User.findById(userId);
+
+  if (!user) throw new ApiError("User not found");
+
+  user.name = data.name;
+  user.email = data.email;
+  user.mobileno = data.mobileno;
+  user.password = data.password;
+
+  await user.save();
+
+  res.status(200).json(new ApiSuccess("User updated successfully", user));
 });

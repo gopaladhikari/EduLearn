@@ -1,5 +1,6 @@
 import mongoose, { InferSchemaType, type ObjectId } from "mongoose";
 import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
 import { env } from "../config/env";
 
 const userSchema = new mongoose.Schema(
@@ -39,6 +40,10 @@ const userSchema = new mongoose.Schema(
       lowercase: true,
     },
 
+    password: {
+      type: String,
+    },
+
     isEmailVerified: {
       type: Boolean,
       default: false,
@@ -46,6 +51,13 @@ const userSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+userSchema.pre("save", async function (next) {
+  if (this.password && this.isModified("password"))
+    this.password = await bcrypt.hash(this.password, 10);
+
+  next();
+});
 
 userSchema.methods.generateJwtToken = function () {
   const payload = {

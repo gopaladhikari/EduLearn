@@ -3,12 +3,17 @@ import {
   addWishlist,
   deleteWishlist,
   getWishlist,
+  clearWishlist,
 } from "../../controllers/user/wishtlist.controller";
+import { verifyJWT } from "../../middlewares/auth.middleware";
 
-const router = Router();
+const wishlistRouter = Router();
 
-router.get("/:userId", getWishlist);
-router.post("/", addWishlist);
-router.delete("/", deleteWishlist);
+wishlistRouter.route("/get").get(verifyJWT, getWishlist);
+wishlistRouter.route("/create/:courseId").post(verifyJWT, addWishlist);
+wishlistRouter
+  .route("/delete/:wishlistId")
+  .post(verifyJWT, deleteWishlist);
+wishlistRouter.route("/clear-wishlist").delete(verifyJWT, clearWishlist);
 
-export { router as wishlistRouter };
+export { wishlistRouter };

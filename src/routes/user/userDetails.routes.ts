@@ -5,15 +5,20 @@ import {
   updateUserDetails,
   getUserDetailsById,
 } from "../../controllers/user/userDetails.controller";
+import { verifyJWT } from "../../middlewares/auth.middleware";
 
 const userDetailsRouter = Router();
 
-userDetailsRouter.route("/").post(createUserDetails);
+userDetailsRouter.route("/create").post(verifyJWT, createUserDetails);
 
-userDetailsRouter.route("/:userId").get(getUserDetailsById);
+userDetailsRouter.route("/get").get(verifyJWT, getUserDetailsById);
 
-userDetailsRouter.route("/update/:userId").put(updateUserDetails);
+userDetailsRouter
+  .route("/update/:userDetailId")
+  .put(verifyJWT, updateUserDetails);
 
-userDetailsRouter.route("/delete/:userId").delete(deleteUserDetails);
+userDetailsRouter
+  .route("/delete/:userDetailId")
+  .delete(verifyJWT, deleteUserDetails);
 
 export { userDetailsRouter };

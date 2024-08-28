@@ -8,7 +8,13 @@ export const getWishlist = dbHandler(async (req, res) => {
 
   if (!isValidObjectId(userId)) throw new ApiError("Invalid userId");
 
-  const wishlist = await Wishlist.findOne({ userId });
+  const wishlist = await Wishlist.findOne({ userId })
+    .populate({
+      path: "courseId",
+      populate: { path: "subjectName", model: "CurrentPursuing" },
+    })
+    .populate("userId");
+
   if (!wishlist) throw new ApiError("Wishlist not found");
 
   res
@@ -17,16 +23,15 @@ export const getWishlist = dbHandler(async (req, res) => {
 });
 
 export const addWishlist = dbHandler(async (req, res) => {
-  const { userId, courseId } = req.body;
+  const userId = req.user?._id;
+  const courseId = req.params.courseId;
 
-  if (!isValidObjectId(userId)) throw new ApiError("Invalid userId");
   if (!isValidObjectId(courseId)) throw new ApiError("Invalid courseId");
 
-  const wishlist = await Wishlist.findOneAndUpdate(
-    { userId },
-    { userId, courseId },
-    { upsert: true }
-  );
+  const wishlist = await Wishlist.create({
+    userId,
+    courseId,
+  });
 
   if (!wishlist) throw new ApiError("Wishlist not found");
 
@@ -36,17 +41,28 @@ export const addWishlist = dbHandler(async (req, res) => {
 });
 
 export const deleteWishlist = dbHandler(async (req, res) => {
-  const { userId, courseId } = req.body;
+  const wishlistId = req.params.courseId;
 
-  if (!isValidObjectId(userId)) throw new ApiError("Invalid userId");
-  if (!isValidObjectId(courseId)) throw new ApiError("Invalid courseId");
+  if (!isValidObjectId(wishlistId)) throw new ApiError("Invalid courseId");
 
-  const wishlist = await Wishlist.findOneAndDelete(
-    { userId, courseId },
-    { upsert: true }
-  );
+  const wishlist = await Wishlist.findByIdAndDelete(wishlistId);
 
   if (!wishlist) throw new ApiError("Wishlist not found");
+
+  res
+    .status(200)
+    .json(new ApiSuccess("Wishlist deleted successfully", wishlist));
+});
+
+export const clearWishlist = dbHandler(async (req, res) => {
+  const userId = req.user?._id;
+
+  if (!isValidObjectId(userId)) throw new ApiError("Invalid userId");
+
+  const wishlist = await Wishlist.deleteMany({ userId });
+
+  if (wishlist.deletedCount === 0)
+    throw new ApiError("Wishlist not found");
 
   res
     .status(200)

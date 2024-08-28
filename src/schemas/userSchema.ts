@@ -18,11 +18,6 @@ export const userSchema = z.object({
 });
 
 export const userDetailsSchema = z.object({
-  userId: z.string({
-    required_error: "User id is required",
-    invalid_type_error: "User id must be a string",
-  }),
-
   universityName: z.string({
     required_error: "University name is required",
     invalid_type_error: "University name must be a string",

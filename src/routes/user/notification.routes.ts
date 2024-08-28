@@ -6,15 +6,20 @@ import {
   getUserNotifications,
   markNotificationAsRead,
 } from "../../controllers/user/notification.controller";
+import { verifyJWT } from "../../middlewares/auth.middleware";
 
 const notificationRouter = Router();
 
-notificationRouter.route("/").post(createNotification);
+notificationRouter.route("/create").post(verifyJWT, createNotification);
 
-notificationRouter.get("/:userId", getUserNotifications);
+notificationRouter.route("/get").get(verifyJWT, getUserNotifications);
 
-notificationRouter.put("/update/:notificationId", markNotificationAsRead);
+notificationRouter
+  .route("/update/:notificationId")
+  .put(verifyJWT, markNotificationAsRead);
 
-notificationRouter.delete("/delete/:notificationId", deleteNotification);
+notificationRouter
+  .route("/delete/:notificationId")
+  .delete(verifyJWT, deleteNotification);
 
 export { notificationRouter };

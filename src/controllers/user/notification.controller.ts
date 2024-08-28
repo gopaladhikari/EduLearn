@@ -5,12 +5,14 @@ import { notificationSchema } from "../../schemas/notification.schema";
 import { isValidObjectId } from "mongoose";
 
 export const createNotification = dbHandler(async (req, res) => {
+  const userId = req.user?._id;
+
   const { success, data, error } = notificationSchema.safeParse(req.body);
 
   if (!success) throw new ApiError(error.message);
 
   const notification = await Notification.create({
-    userId: data.userId,
+    userId,
     title: data.title,
     message: data.message,
     isRead: data.isRead,
@@ -26,9 +28,7 @@ export const createNotification = dbHandler(async (req, res) => {
 });
 
 export const getUserNotifications = dbHandler(async (req, res) => {
-  const userId = req.params.userId;
-
-  if (!isValidObjectId(userId)) throw new ApiError("User id not valid");
+  const userId = req.user?._id;
 
   if (!userId) throw new ApiError("User id not found");
 
@@ -58,12 +58,6 @@ export const markNotificationAsRead = dbHandler(async (req, res) => {
   );
 
   if (!notification) throw new ApiError("Notification not found");
-
-  if (notification.isRead) throw new ApiError("Notification already read");
-
-  notification.isRead = true;
-
-  await notification.save();
 
   res
     .status(200)

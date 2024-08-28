@@ -21,7 +21,7 @@ const notificationSchema = new mongoose.Schema(
     },
   },
   {
-    timestamps: true, // This
+    timestamps: true,
   }
 );
 

@@ -2,7 +2,7 @@ import type { IUser } from "../models/user.model";
 
 declare global {
   namespace Express {
-    export interface Request {
+    interface Request {
       user?: IUser;
     }
   }

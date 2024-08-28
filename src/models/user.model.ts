@@ -1,4 +1,4 @@
-import mongoose, { InferSchemaType } from "mongoose";
+import mongoose, { InferSchemaType, type ObjectId } from "mongoose";
 import jwt from "jsonwebtoken";
 import { env } from "../config/env";
 
@@ -49,7 +49,7 @@ const userSchema = new mongoose.Schema(
 
 userSchema.methods.generateJwtToken = function () {
   const payload = {
-    id: this._id,
+    _id: this._id,
     name: this.name,
     email: this.email,
   };
@@ -58,6 +58,7 @@ userSchema.methods.generateJwtToken = function () {
 };
 
 export interface IUser extends InferSchemaType<typeof userSchema> {
+  _id: ObjectId;
   generateJwtToken(): string;
 }
 

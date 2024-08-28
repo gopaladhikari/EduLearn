@@ -4,7 +4,7 @@ import { dbHandler } from "../../utils/dbHandler";
 import { isValidObjectId } from "mongoose";
 
 export const getWishlist = dbHandler(async (req, res) => {
-  const { userId } = req.params;
+  const userId = req.params.userId;
 
   if (!isValidObjectId(userId)) throw new ApiError("Invalid userId");
 

@@ -55,11 +55,26 @@ Completed API's
 9. Contact Us
    • Create Contact Request
 
+10. Library
+    • Get Library
+    • Create Library
+    • Update Library
+    • Delete Library
+
+11. Notifications
+    • Get Notifications
+    • Create Notification
+    • Update Notification
+    • Delete Notification
+
+12. Tips
+    • Get Tips
+    • Create Tip
+    • Update Tip
+    • Delete Tip
+
 Pending API’s
 
-1.  Library
-2.  Notifications
-3.  Tips
 4.  Story – Question papers
 5.  Cart
 6.  Wishlist

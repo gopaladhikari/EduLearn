@@ -31,10 +31,13 @@ export const verifyJWT = dbHandler(async (req, res, next) => {
   } catch (error) {
     if (error instanceof TokenExpiredError)
       throw new ApiError("Token has expired");
-    else if (error instanceof NotBeforeError)
+
+    if (error instanceof NotBeforeError)
       throw new ApiError("Token not yet valid");
-    else if (error instanceof JsonWebTokenError)
+
+    if (error instanceof JsonWebTokenError)
       throw new ApiError("Malformed token");
-    else throw new ApiError("Internal Server Error");
+
+    throw new ApiError("Internal Server Error");
   }
 });

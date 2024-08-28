@@ -2,11 +2,10 @@ import { dbHandler } from "../../utils/dbHandler";
 import { Tip } from "../../models/user/tips.model";
 import { ApiError, ApiSuccess } from "../../utils/apiResponse";
 import { isValidObjectId } from "mongoose";
+import { tipsSchema } from "../../schemas/tips.schema";
 
 export const getTips = dbHandler(async (req, res) => {
-  const userId = req.params.userId;
-
-  if (!isValidObjectId(userId)) throw new ApiError("User id not valid");
+  const userId = req.user?._id;
 
   const tips = await Tip.find({ userId });
 
@@ -16,16 +15,16 @@ export const getTips = dbHandler(async (req, res) => {
 });
 
 export const createTip = dbHandler(async (req, res) => {
-  const { userId, title, content } = req.body;
+  const userId = req.user?._id;
 
-  if (!isValidObjectId(userId)) throw new ApiError("User id not valid");
-  if (!title) throw new ApiError("Title not valid");
-  if (!content) throw new ApiError("Content not valid");
+  const { success, data, error } = tipsSchema.safeParse(req.body);
+
+  if (!success) throw new ApiError(error.message);
 
   const tip = await Tip.create({
     userId,
-    title,
-    content,
+    title: data.title,
+    content: data.content,
   });
 
   if (!tip) throw new ApiError("Tip not created");
@@ -34,16 +33,20 @@ export const createTip = dbHandler(async (req, res) => {
 });
 
 export const updateTip = dbHandler(async (req, res) => {
-  const { userId, tipId, title, content } = req.body;
+  const tipId = req.params.tipId;
 
-  if (!isValidObjectId(userId)) throw new ApiError("User id not valid");
   if (!isValidObjectId(tipId)) throw new ApiError("Tip id not valid");
-  if (!title) throw new ApiError("Title not valid");
-  if (!content) throw new ApiError("Content not valid");
 
-  const tip = await Tip.findOneAndUpdate(
-    { userId, tipId },
-    { title, content },
+  const { data, success, error } = tipsSchema.safeParse(req.body);
+
+  if (!success) throw new ApiError(error.message);
+
+  const tip = await Tip.findByIdAndUpdate(
+    tipId,
+    {
+      title: data.title,
+      content: data.content,
+    },
     { new: true }
   );
 
@@ -53,12 +56,11 @@ export const updateTip = dbHandler(async (req, res) => {
 });
 
 export const deleteTip = dbHandler(async (req, res) => {
-  const { userId, tipId } = req.body;
+  const tipdId = req.params.tipId;
 
-  if (!isValidObjectId(userId)) throw new ApiError("User id not valid");
-  if (!isValidObjectId(tipId)) throw new ApiError("Tip id not valid");
+  if (!isValidObjectId(tipdId)) throw new ApiError("Tip id not valid");
 
-  const tip = await Tip.findOneAndDelete({ userId, tipId });
+  const tip = await Tip.findByIdAndDelete(tipdId);
 
   if (!tip) throw new ApiError("Tip not found");
 

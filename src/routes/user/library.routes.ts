@@ -12,12 +12,18 @@ const libraryRouter = Router();
 
 // Protected route
 
-libraryRouter.route("/create").post(verifyJWT, addCourseToLibrary);
+libraryRouter
+  .route("/create/:courseId")
+  .post(verifyJWT, addCourseToLibrary);
 
 libraryRouter.route("/get").get(verifyJWT, getUserLibrary);
 
-libraryRouter.route("/update").put(verifyJWT, updateCourseProgress);
+libraryRouter
+  .route("/update/:libraryId")
+  .put(verifyJWT, updateCourseProgress);
 
-libraryRouter.route("/delete").delete(verifyJWT, deleteCourseFromLibrary);
+libraryRouter
+  .route("/delete/:libraryId")
+  .delete(verifyJWT, deleteCourseFromLibrary);
 
 export { libraryRouter };

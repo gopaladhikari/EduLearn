@@ -5,22 +5,22 @@ import { dbHandler } from "../../utils/dbHandler";
 
 // Add course to user's library
 export const addCourseToLibrary = dbHandler(async (req, res) => {
-  const { courseId } = req.body;
   const userId = req.user?._id;
+  const courseId = req.params.courseId;
 
   if (!isValidObjectId(courseId))
     throw new ApiError("Course id not valid");
 
   const existingEntry = await Library.findOne({
-    user: userId,
-    course: courseId,
+    userId,
+    courseId,
   });
 
   if (existingEntry) throw new ApiError("Course already in library");
 
   const libraryEntry = await Library.create({
-    user: userId,
-    course: courseId,
+    userId,
+    courseId,
   });
 
   if (!libraryEntry) throw new ApiError("Library entry not created");
@@ -49,17 +49,23 @@ export const getUserLibrary = dbHandler(async (req, res) => {
 
 // Update course progress
 export const updateCourseProgress = dbHandler(async (req, res) => {
-  const userId = req.user?._id;
+  const libraryId = req.params.libraryId;
 
-  const { courseId, progress } = req.body;
+  if (!isValidObjectId(libraryId))
+    throw new ApiError("Library id not valid");
 
-  if (!isValidObjectId(courseId))
+  const { progress } = req.body;
+
+  if (!isValidObjectId(libraryId))
     throw new ApiError("Course id not valid");
 
-  const libraryEntry = await Library.findOne({
-    userId,
-    courseId,
-  });
+  const libraryEntry = await Library.findByIdAndUpdate(
+    libraryId,
+    {
+      progress: progress,
+    },
+    { new: true }
+  );
 
   if (!libraryEntry) {
     return res
@@ -77,16 +83,12 @@ export const updateCourseProgress = dbHandler(async (req, res) => {
 });
 
 export const deleteCourseFromLibrary = dbHandler(async (req, res) => {
-  const { courseId } = req.body;
-  const userId = req.user?._id;
+  const libraryId = req.params.libraryId;
 
-  if (!isValidObjectId(courseId))
+  if (!isValidObjectId(libraryId))
     throw new ApiError("Course id not valid");
 
-  const libraryEntry = await Library.findOneAndDelete({
-    userId,
-    courseId,
-  });
+  const libraryEntry = await Library.findByIdAndDelete(libraryId);
 
   if (!libraryEntry) throw new ApiError("Course not found in library");
 

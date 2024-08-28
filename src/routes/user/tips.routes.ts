@@ -6,15 +6,16 @@ import {
   getTips,
   updateTip,
 } from "../../controllers/user/tips.controller";
+import { verifyJWT } from "../../middlewares/auth.middleware";
 
 const tipsRouter = Router();
 
-tipsRouter.route("/").get(getTips);
+tipsRouter.route("/get").get(verifyJWT, getTips);
 
-tipsRouter.route("/create").post(createTip);
+tipsRouter.route("/create").post(verifyJWT, createTip);
 
-tipsRouter.route("/update").put(updateTip);
+tipsRouter.route("/update/:tipId").put(verifyJWT, updateTip);
 
-tipsRouter.route("/delete").delete(deleteTip);
+tipsRouter.route("/delete/:tipId").delete(verifyJWT, deleteTip);
 
 export { tipsRouter };

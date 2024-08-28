@@ -1,13 +1,17 @@
 import { Router } from "express";
 import {
-  getAddNotes,
-  addAddNotes,
+  createNote,
+  deleteAddNotes,
+  getNotes,
+  updateNote,
 } from "../../controllers/user/addNotes.controller";
 import { verifyJWT } from "../../middlewares/auth.middleware";
 
 const addNoteRouter = Router();
 
-addNoteRouter.route("/:courseId").get(verifyJWT, getAddNotes);
-addNoteRouter.route("/:courseId").post(verifyJWT, addAddNotes);
+addNoteRouter.route("/get/:courseId").get(verifyJWT, getNotes);
+addNoteRouter.route("/create/:courseId").post(verifyJWT, createNote);
+addNoteRouter.route("/update/:noteId").put(verifyJWT, updateNote);
+addNoteRouter.route("/delete/:noteId").delete(verifyJWT, deleteAddNotes);
 
 export { addNoteRouter };

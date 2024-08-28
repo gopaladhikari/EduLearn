@@ -8,16 +8,20 @@ import { ApiError, ApiSuccess } from "../../utils/apiResponse";
 import { dbHandler } from "../../utils/dbHandler";
 
 export const createReview = dbHandler(async (req, res) => {
+  const courseId = req.params.courseId;
+  const userId = req.user?._id;
+
+  if (!isValidObjectId(courseId)) throw new ApiError("Invalid course id");
+
   const { success, data, error } = createReviewSchema.safeParse(req.body);
 
   if (!success) throw new ApiError(error.message);
 
   const review = await TopReviews.create({
-    name: data.userName,
+    courseId,
+    userId,
     review: data.review,
     rating: data.rating,
-    courseId: data.courseId,
-    userId: data.userId,
     userName: data.userName,
   });
 

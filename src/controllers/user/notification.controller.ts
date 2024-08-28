@@ -49,7 +49,7 @@ export const markNotificationAsRead = dbHandler(async (req, res) => {
   const notificationId = req.params.notificationId;
 
   if (!isValidObjectId(notificationId))
-    throw new ApiError("User id not found");
+    throw new ApiError("Invalid notification id");
 
   const notification = await Notification.findByIdAndUpdate(
     notificationId,

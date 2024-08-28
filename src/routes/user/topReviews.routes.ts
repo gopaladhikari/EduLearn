@@ -5,12 +5,15 @@ import {
   getAllReviewsByCourseId,
   updatedReview,
 } from "../../controllers/user/topReviews.controller";
+import { verifyJWT } from "../../middlewares/auth.middleware";
 
 const topReviewsRouter = Router();
 
-topReviewsRouter.route("/").get(createReview);
+topReviewsRouter.route("/create/:courseId").post(verifyJWT, createReview);
 
-topReviewsRouter.route("/:courseId").get(getAllReviewsByCourseId);
+topReviewsRouter
+  .route("/get/:courseId")
+  .get(verifyJWT, getAllReviewsByCourseId);
 
 topReviewsRouter.route("/update/:reviewId").put(updatedReview);
 

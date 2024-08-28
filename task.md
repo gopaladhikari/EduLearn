@@ -79,11 +79,14 @@ Completed API's
     • Create Add Notes
     • Delete Add Notes
 
+14. Edit Profile
+    • Get Edit Profile
+    • Update Edit Profile
+
 Pending API’s
 
 4.  Story – Question papers
 5.  Cart
-6.  Edit Profile
-7.  Payment Gateway Integration
-8.  Add Wallet - Transaction History
-9.  Bookmark videos
+6.  Payment Gateway Integration
+7.  Add Wallet - Transaction History
+8.  Bookmark videos

@@ -6,6 +6,7 @@ import {
   verifySignUpOTP,
   updateUser,
   getCurrentUser,
+  logout,
 } from "../controllers/auth.controllers";
 
 import { Router } from "express";
@@ -20,5 +21,6 @@ authRouter.route("/otp").post(verifyJWT, resendOtp);
 authRouter.route("/verify-otp").post(verifyJWT, verifyLoginOTP);
 authRouter.route("/verify-signup-otp").post(verifyJWT, verifySignUpOTP);
 authRouter.route("/update-user").post(verifyJWT, updateUser);
+authRouter.route("/logout").post(verifyJWT, logout);
 
 export { authRouter };

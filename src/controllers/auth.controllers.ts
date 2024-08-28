@@ -182,3 +182,19 @@ export const updateUser = dbHandler(async (req, res) => {
 
   res.status(200).json(new ApiSuccess("User updated successfully", user));
 });
+
+export const logout = dbHandler(async (req, res) => {
+  const userId = req.user?._id;
+
+  const user = await User.findByIdAndUpdate(userId, {
+    $unset: { jwtToken: 1 },
+  });
+
+  if (!user) throw new ApiError("User not found");
+
+  delete req.user;
+
+  res
+    .status(200)
+    .json(new ApiSuccess("User logged out successfully", null));
+});

@@ -6,15 +6,18 @@ import {
   getUserLibrary,
   updateCourseProgress,
 } from "../../controllers/user/library.controller";
+import { verifyJWT } from "../../middlewares/auth.middleware";
 
 const libraryRouter = Router();
 
-libraryRouter.route("/").post(addCourseToLibrary);
+// Protected route
 
-libraryRouter.get("/:userId", getUserLibrary);
+libraryRouter.route("/create").post(verifyJWT, addCourseToLibrary);
 
-libraryRouter.put("/update", updateCourseProgress);
+libraryRouter.route("/get").get(verifyJWT, getUserLibrary);
 
-libraryRouter.delete("/delete", deleteCourseFromLibrary);
+libraryRouter.route("/update").put(verifyJWT, updateCourseProgress);
+
+libraryRouter.route("/delete").delete(verifyJWT, deleteCourseFromLibrary);
 
 export { libraryRouter };

@@ -5,9 +5,9 @@ import { dbHandler } from "../../utils/dbHandler";
 
 // Add course to user's library
 export const addCourseToLibrary = dbHandler(async (req, res) => {
-  const { userId, courseId } = req.body;
+  const { courseId } = req.body;
+  const userId = req.user?._id;
 
-  if (!isValidObjectId(userId)) throw new ApiError("User id not valid");
   if (!isValidObjectId(courseId))
     throw new ApiError("Course id not valid");
 
@@ -34,11 +34,9 @@ export const addCourseToLibrary = dbHandler(async (req, res) => {
 
 // Get all courses in user's library
 export const getUserLibrary = dbHandler(async (req, res) => {
-  const userId = req.params.userId;
+  const userId = req.user?._id;
 
-  if (!isValidObjectId(userId)) throw new ApiError("User id not valid");
-
-  const libraryCourses = await Library.find({ user: userId }).populate(
+  const libraryCourses = await Library.find({ userId }).populate(
     "subjectName"
   );
 
@@ -51,9 +49,10 @@ export const getUserLibrary = dbHandler(async (req, res) => {
 
 // Update course progress
 export const updateCourseProgress = dbHandler(async (req, res) => {
-  const { userId, courseId, progress } = req.body;
+  const userId = req.user?._id;
 
-  if (!isValidObjectId(userId)) throw new ApiError("User id not valid");
+  const { courseId, progress } = req.body;
+
   if (!isValidObjectId(courseId))
     throw new ApiError("Course id not valid");
 
@@ -78,9 +77,9 @@ export const updateCourseProgress = dbHandler(async (req, res) => {
 });
 
 export const deleteCourseFromLibrary = dbHandler(async (req, res) => {
-  const { userId, courseId } = req.body;
+  const { courseId } = req.body;
+  const userId = req.user?._id;
 
-  if (!isValidObjectId(userId)) throw new ApiError("User id not valid");
   if (!isValidObjectId(courseId))
     throw new ApiError("Course id not valid");
 

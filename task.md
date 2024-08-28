@@ -73,13 +73,15 @@ Completed API's
     • Update Tip
     • Delete Tip
 
+13. Add Notes
+    • Get Add Notes
+    • Add Add Notes
+
 Pending API’s
 
 4.  Story – Question papers
 5.  Cart
-6.  Wishlist
-7.  Add Notes
-8.  Edit Profile
-9.  Payment Gateway Integration
-10. Add Wallet - Transaction History
-11. Bookmark videos
+6.  Edit Profile
+7.  Payment Gateway Integration
+8.  Add Wallet - Transaction History
+9.  Bookmark videos

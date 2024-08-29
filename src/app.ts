@@ -25,6 +25,7 @@ import { tipsRouter } from "./routes/user/tips.routes";
 import { wishlistRouter } from "./routes/user/wishlist.routes";
 import { addNoteRouter } from "./routes/user/addNote.routes";
 import { storyRouter } from "./routes/admin/story.routes";
+import { bookmarkRouter } from "./routes/user/bookmark.routes";
 
 // Routes declaration
 app.use("/api/v1/contactus", contactUsRouter);
@@ -43,5 +44,6 @@ app.use("/api/v1/tips", tipsRouter);
 app.use("/api/v1/wishlist", wishlistRouter);
 app.use("/api/v1/add-notes", addNoteRouter);
 app.use("/api/v1/story", storyRouter);
+app.use("/api/v1/bookmark", bookmarkRouter);
 
 export { app };

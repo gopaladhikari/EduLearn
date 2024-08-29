@@ -83,10 +83,20 @@ Completed API's
     • Get Edit Profile
     • Update Edit Profile
 
+15. Story – Question papers
+    • Get Story
+    • Create Story
+    • Update Story
+    • Delete Story
+
+16. Bookmark
+    • Get Bookmark
+    • Create Bookmark
+    • Update Bookmark
+    • Delete Bookmark
+
 Pending API’s
 
-4.  Story – Question papers
 5.  Cart
 6.  Payment Gateway Integration
 7.  Add Wallet - Transaction History
-8.  Bookmark videos

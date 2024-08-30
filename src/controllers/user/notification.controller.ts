@@ -3,6 +3,7 @@ import { ApiError, ApiSuccess } from "../../utils/apiResponse";
 import { dbHandler } from "../../utils/dbHandler";
 import { notificationSchema } from "../../schemas/notification.schema";
 import { isValidObjectId } from "mongoose";
+import { cache } from "../../config/node-cache";
 
 export const createNotification = dbHandler(async (req, res) => {
   const userId = req.user?._id;
@@ -20,6 +21,10 @@ export const createNotification = dbHandler(async (req, res) => {
 
   if (!notification) throw new ApiError("Notification not created");
 
+  const cacheKey = `notifications-${userId}`;
+
+  if (cache.has(cacheKey)) cache.del(cacheKey);
+
   res
     .status(201)
     .json(
@@ -32,11 +37,28 @@ export const getUserNotifications = dbHandler(async (req, res) => {
 
   if (!userId) throw new ApiError("User id not found");
 
+  const cacheKey = `notifications-${userId}`;
+
+  if (cache.has(cacheKey)) {
+    const cachedNotifications = cache.get(cacheKey);
+
+    return res
+      .status(200)
+      .json(
+        new ApiSuccess(
+          "Notifications fetched successfully",
+          cachedNotifications
+        )
+      );
+  }
+
   const notifications = await Notification.find({
     userId,
   });
 
   if (!notifications) throw new ApiError("Notifications not found");
+
+  cache.set(cacheKey, notifications);
 
   res
     .status(200)
@@ -47,6 +69,7 @@ export const getUserNotifications = dbHandler(async (req, res) => {
 
 export const markNotificationAsRead = dbHandler(async (req, res) => {
   const notificationId = req.params.notificationId;
+  const userId = req.user?._id;
 
   if (!isValidObjectId(notificationId))
     throw new ApiError("Invalid notification id");
@@ -58,6 +81,10 @@ export const markNotificationAsRead = dbHandler(async (req, res) => {
   );
 
   if (!notification) throw new ApiError("Notification not found");
+
+  const cacheKey = `notifications-${userId}`;
+
+  if (cache.has(cacheKey)) cache.del(cacheKey);
 
   res
     .status(200)
@@ -71,6 +98,7 @@ export const markNotificationAsRead = dbHandler(async (req, res) => {
 
 export const deleteNotification = dbHandler(async (req, res) => {
   const notificationId = req.params.notificationId;
+  const userId = req.user?._id;
 
   if (!isValidObjectId(notificationId))
     throw new ApiError("User id not found");
@@ -80,6 +108,10 @@ export const deleteNotification = dbHandler(async (req, res) => {
   );
 
   if (!notification) throw new ApiError("Notification not found");
+
+  const cacheKey = `notifications-${userId}`;
+
+  if (cache.has(cacheKey)) cache.del(cacheKey);
 
   res
     .status(200)

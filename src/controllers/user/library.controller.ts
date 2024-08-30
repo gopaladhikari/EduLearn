@@ -2,6 +2,7 @@ import { isValidObjectId } from "mongoose";
 import { Library } from "../../models/user/library.model";
 import { ApiError, ApiSuccess } from "../../utils/apiResponse";
 import { dbHandler } from "../../utils/dbHandler";
+import { cache } from "../../config/node-cache";
 
 // Add course to user's library
 export const addCourseToLibrary = dbHandler(async (req, res) => {
@@ -25,6 +26,10 @@ export const addCourseToLibrary = dbHandler(async (req, res) => {
 
   if (!libraryEntry) throw new ApiError("Library entry not created");
 
+  const cacheKey = `library-${userId}`;
+
+  if (cache.has(cacheKey)) cache.del(cacheKey);
+
   res
     .status(201)
     .json(
@@ -42,6 +47,10 @@ export const getUserLibrary = dbHandler(async (req, res) => {
 
   if (!libraryCourses) throw new ApiError("Library not found");
 
+  const cacheKey = `library-${userId}`;
+
+  cache.set(cacheKey, libraryCourses);
+
   res
     .status(200)
     .json(new ApiSuccess("Library fetched successfully", libraryCourses));
@@ -50,6 +59,7 @@ export const getUserLibrary = dbHandler(async (req, res) => {
 // Update course progress
 export const updateCourseProgress = dbHandler(async (req, res) => {
   const libraryId = req.params.libraryId;
+  const userId = req.user?._id;
 
   if (!isValidObjectId(libraryId))
     throw new ApiError("Library id not valid");
@@ -67,11 +77,7 @@ export const updateCourseProgress = dbHandler(async (req, res) => {
     { new: true }
   );
 
-  if (!libraryEntry) {
-    return res
-      .status(404)
-      .json({ message: "Course not found in library" });
-  }
+  if (!libraryEntry) throw new ApiError("Course not found in library");
 
   libraryEntry.progress = progress;
 
@@ -79,11 +85,16 @@ export const updateCourseProgress = dbHandler(async (req, res) => {
 
   await libraryEntry.save();
 
+  const cacheKey = `library-${userId}`;
+
+  if (cache.has(cacheKey)) cache.del(cacheKey);
+
   res.status(200).json(libraryEntry);
 });
 
 export const deleteCourseFromLibrary = dbHandler(async (req, res) => {
   const libraryId = req.params.libraryId;
+  const userId = req.user?._id;
 
   if (!isValidObjectId(libraryId))
     throw new ApiError("Course id not valid");
@@ -91,6 +102,10 @@ export const deleteCourseFromLibrary = dbHandler(async (req, res) => {
   const libraryEntry = await Library.findByIdAndDelete(libraryId);
 
   if (!libraryEntry) throw new ApiError("Course not found in library");
+
+  const cacheKey = `library-${userId}`;
+
+  if (cache.has(cacheKey)) cache.del(cacheKey);
 
   res
     .status(200)

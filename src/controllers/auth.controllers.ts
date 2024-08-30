@@ -3,6 +3,7 @@ import { User } from "../models/user.model";
 import { ApiError, ApiSuccess } from "../utils/apiResponse";
 import { userSchema, userSchemaWithPassword } from "../schemas/userSchema";
 import { sendOtp } from "../utils/twilio";
+import { cache } from "../config/node-cache";
 
 export const signUpWithPhoneNumber = dbHandler(async (req, res) => {
   const { success, data, error } = userSchema.safeParse(req.body);
@@ -128,6 +129,20 @@ export const verifyLoginOTP = dbHandler(async (req, res) => {
 });
 
 export const getCurrentUser = dbHandler(async (req, res) => {
+  const userId = req.user?._id;
+
+  const cacheKey = `user-${userId}`;
+
+  if (cache.has(cacheKey)) {
+    const cachedUser = cache.get(cacheKey);
+
+    return res
+      .status(200)
+      .json(new ApiSuccess("User fetched successfully", cachedUser));
+  }
+
+  cache.set(cacheKey, req.user);
+
   res
     .status(200)
     .json(new ApiSuccess("User fetched successfully", req.user));
@@ -180,6 +195,10 @@ export const updateUser = dbHandler(async (req, res) => {
 
   await user.save();
 
+  const cacheKey = `user-${userId}`;
+
+  if (cache.has(cacheKey)) cache.del(cacheKey);
+
   res.status(200).json(new ApiSuccess("User updated successfully", user));
 });
 
@@ -193,6 +212,10 @@ export const logout = dbHandler(async (req, res) => {
   if (!user) throw new ApiError("User not found");
 
   delete req.user;
+
+  const cacheKey = `user-${userId}`;
+
+  if (cache.has(cacheKey)) cache.del(cacheKey);
 
   res
     .status(200)

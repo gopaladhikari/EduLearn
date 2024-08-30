@@ -2,6 +2,7 @@ import { isValidObjectId } from "mongoose";
 import { Cart } from "../../models/user/cart.model";
 import { ApiError, ApiSuccess } from "../../utils/apiResponse";
 import { dbHandler } from "../../utils/dbHandler";
+import { cache } from "../../config/node-cache";
 
 export const createCart = dbHandler(async (req, res) => {
   const userId = req.user?._id;
@@ -24,6 +25,11 @@ export const createCart = dbHandler(async (req, res) => {
     else existingCart.courses[courseIndex].quantity = quantity;
 
     await existingCart.save();
+
+    const cacheKey = `cart-${userId}`;
+
+    if (cache.has(cacheKey)) cache.del(cacheKey);
+
     return res
       .status(200)
       .json(new ApiSuccess("Cart updated successfully", existingCart));
@@ -42,9 +48,21 @@ export const createCart = dbHandler(async (req, res) => {
 export const getCart = dbHandler(async (req, res) => {
   const userId = req.user?._id;
 
+  const cacheKey = `cart-${userId}`;
+
+  if (cache.has(cacheKey)) {
+    const cachedCart = cache.get(cacheKey);
+
+    return res
+      .status(200)
+      .json(new ApiSuccess("Cart fetched successfully", cachedCart));
+  }
+
   const cart = await Cart.findOne({ userId }).populate("courses");
 
   if (!cart) throw new ApiError("Cart not found");
+
+  cache.set(cacheKey, cart);
 
   res.status(200).json(new ApiSuccess("Cart fetched successfully", cart));
 });
@@ -73,6 +91,10 @@ export const updateCart = dbHandler(async (req, res) => {
 
   await existingCart.save();
 
+  const cacheKey = `cart-${userId}`;
+
+  if (cache.has(cacheKey)) cache.del(cacheKey);
+
   res
     .status(200)
     .json(new ApiSuccess("Cart updated successfully", existingCart));
@@ -93,17 +115,26 @@ export const deleteCourseFromCart = dbHandler(async (req, res) => {
 
   await cart.save({ validateBeforeSave: false });
 
+  const cacheKey = `cart-${userId}`;
+
+  if (cache.has(cacheKey)) cache.del(cacheKey);
+
   res.status(200).json(new ApiSuccess("Cart updated successfully", cart));
 });
 
 export const clearCart = dbHandler(async (req, res) => {
   const cartId = req.params.cartId;
+  const userId = req.user?._id;
 
   if (!isValidObjectId(cartId)) throw new ApiError("Invalid id");
 
   const cart = await Cart.findByIdAndDelete(cartId);
 
   if (!cart) throw new ApiError("Cart not found");
+
+  const cacheKey = `cart-${userId}`;
+
+  if (cache.has(cacheKey)) cache.del(cacheKey);
 
   res.status(200).json(new ApiSuccess("Cart deleted successfully", cart));
 });

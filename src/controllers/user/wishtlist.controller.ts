@@ -1,3 +1,4 @@
+import { cache } from "../../config/node-cache";
 import { Wishlist } from "../../models/user/wishlist.model";
 import { ApiError, ApiSuccess } from "../../utils/apiResponse";
 import { dbHandler } from "../../utils/dbHandler";
@@ -8,6 +9,18 @@ export const getWishlist = dbHandler(async (req, res) => {
 
   if (!isValidObjectId(userId)) throw new ApiError("Invalid userId");
 
+  const cacheKey = `wishlist-${userId}`;
+
+  if (cache.has(cacheKey)) {
+    const cachedWishlist = cache.get(cacheKey);
+
+    return res
+      .status(200)
+      .json(
+        new ApiSuccess("Wishlist fetched successfully", cachedWishlist)
+      );
+  }
+
   const wishlist = await Wishlist.findOne({ userId })
     .populate({
       path: "courseId",
@@ -16,6 +29,8 @@ export const getWishlist = dbHandler(async (req, res) => {
     .populate("userId");
 
   if (!wishlist) throw new ApiError("Wishlist not found");
+
+  cache.set(cacheKey, wishlist);
 
   res
     .status(200)
@@ -35,6 +50,10 @@ export const addWishlist = dbHandler(async (req, res) => {
 
   if (!wishlist) throw new ApiError("Wishlist not found");
 
+  const cacheKey = `wishlist-${userId}`;
+
+  if (cache.has(cacheKey)) cache.del(cacheKey);
+
   res
     .status(200)
     .json(new ApiSuccess("Wishlist added successfully", wishlist));
@@ -42,12 +61,17 @@ export const addWishlist = dbHandler(async (req, res) => {
 
 export const deleteWishlist = dbHandler(async (req, res) => {
   const wishlistId = req.params.courseId;
+  const userId = req.user?._id;
 
   if (!isValidObjectId(wishlistId)) throw new ApiError("Invalid courseId");
 
   const wishlist = await Wishlist.findByIdAndDelete(wishlistId);
 
   if (!wishlist) throw new ApiError("Wishlist not found");
+
+  const cacheKey = `wishlist-${userId}`;
+
+  if (cache.has(cacheKey)) cache.del(cacheKey);
 
   res
     .status(200)
@@ -63,6 +87,10 @@ export const clearWishlist = dbHandler(async (req, res) => {
 
   if (wishlist.deletedCount === 0)
     throw new ApiError("Wishlist not found");
+
+  const cacheKey = `wishlist-${userId}`;
+
+  if (cache.has(cacheKey)) cache.del(cacheKey);
 
   res
     .status(200)

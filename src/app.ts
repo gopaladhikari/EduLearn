@@ -28,6 +28,7 @@ import { storyRouter } from "./routes/admin/story.routes";
 import { bookmarkRouter } from "./routes/user/bookmark.routes";
 import { walletRouter } from "./routes/user/wallet.routes";
 import { transactionRouter } from "./routes/user/transaction.routes";
+import { cartRouter } from "./routes/user/cart.routes";
 
 // Routes declaration
 app.use("/api/v1/contactus", contactUsRouter);
@@ -49,5 +50,6 @@ app.use("/api/v1/story", storyRouter);
 app.use("/api/v1/bookmark", bookmarkRouter);
 app.use("/api/v1/wallet", walletRouter);
 app.use("/api/v1/transaction", transactionRouter);
+app.use("/api/v1/cart", cartRouter);
 
 export { app };

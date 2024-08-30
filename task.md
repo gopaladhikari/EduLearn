@@ -95,8 +95,18 @@ Completed API's
     • Update Bookmark
     • Delete Bookmark
 
+17. Wallet
+    • Create Wallet
+    • Get Wallet
+    • Update Wallet
+    • Delete Wallet
+
+18. Transaction
+    • Create Transaction
+    • Get Transaction
+    • Update Transaction
+    • Delete Transaction
+
 Pending API’s
 
-5.  Cart
 6.  Payment Gateway Integration
-7.  Add Wallet - Transaction History

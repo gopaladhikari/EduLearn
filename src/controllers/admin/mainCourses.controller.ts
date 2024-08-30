@@ -3,9 +3,11 @@ import { ApiError, ApiSuccess } from "../../utils/apiResponse";
 import { dbHandler } from "../../utils/dbHandler";
 import { mainCourseSchema } from "../../schemas/mainCourses.schema";
 import { isValidObjectId } from "mongoose";
+import { cache } from "../../config/node-cache";
 
 export const createCourse = dbHandler(async (req, res) => {
   const { success, data, error } = mainCourseSchema.safeParse(req.body);
+  const userId = req.user?._id;
 
   if (!success) throw new ApiError(error.message);
 
@@ -32,19 +34,38 @@ export const createCourse = dbHandler(async (req, res) => {
 
   if (!course) throw new ApiError("Could not create course");
 
+  const cacheKey = `mainCourse-${userId}`;
+
+  if (cache.has(cacheKey)) cache.del(cacheKey);
+
   res.status(201).json(new ApiSuccess("Course created", course));
 });
 
-export const getAllCourses = dbHandler(async (_, res) => {
+export const getAllCourses = dbHandler(async (req, res) => {
+  const userId = req.user?._id;
+
+  const cacheKey = `mainCourse-${userId}`;
+
+  if (cache.has(cacheKey)) {
+    const cachedCourses = cache.get(cacheKey);
+
+    return res
+      .status(200)
+      .json(new ApiSuccess("All courses", cachedCourses));
+  }
+
   const courses = await MainCourse.find();
 
   if (!courses) throw new ApiError("Could not get all courses");
+
+  cache.set(cacheKey, courses);
 
   res.status(200).json(new ApiSuccess("All courses", courses));
 });
 
 export const getCourseById = dbHandler(async (req, res) => {
   const courseId = req.params.courseId;
+  const userId = req.user?._id;
 
   if (!isValidObjectId(courseId)) throw new ApiError("Invalid id");
 
@@ -52,11 +73,18 @@ export const getCourseById = dbHandler(async (req, res) => {
 
   if (!course) throw new ApiError("Could not get course by id");
 
+  const cacheKey = `mainCourse-${userId}-${courseId}`;
+  const cacheKey2 = `mainCourse-${userId}`;
+
+  if (cache.has(cacheKey)) cache.del(cacheKey);
+  if (cache.has(cacheKey2)) cache.del(cacheKey2);
+
   res.status(200).json(new ApiSuccess("Course by id", course));
 });
 
 export const updateCourse = dbHandler(async (req, res) => {
   const courseId = req.params.courseId;
+  const userId = req.user?._id;
 
   if (!isValidObjectId(courseId)) throw new ApiError("Invalid id");
 
@@ -91,17 +119,30 @@ export const updateCourse = dbHandler(async (req, res) => {
 
   if (!updatedCourse) throw new ApiError("Could not update course");
 
+  const cacheKey = `mainCourse-${userId}-${courseId}`;
+  const cacheKey2 = `mainCourse-${userId}`;
+
+  if (cache.has(cacheKey)) cache.del(cacheKey);
+  if (cache.has(cacheKey2)) cache.del(cacheKey2);
+
   res.status(200).json(new ApiSuccess("Course updated", updatedCourse));
 });
 
 export const deleteCourse = dbHandler(async (req, res) => {
   const courseId = req.params.courseId;
+  const userId = req.user?._id;
 
   if (!isValidObjectId(courseId)) throw new ApiError("Invalid id");
 
   const deletedCourse = await MainCourse.findByIdAndDelete(courseId);
 
   if (!deletedCourse) throw new ApiError("Could not delete course");
+
+  const cacheKey = `mainCourse-${userId}-${courseId}`;
+  const cacheKey2 = `mainCourse-${userId}`;
+
+  if (cache.has(cacheKey)) cache.del(cacheKey);
+  if (cache.has(cacheKey2)) cache.del(cacheKey2);
 
   res.status(200).json(new ApiSuccess("Course deleted", deletedCourse));
 });

@@ -2,9 +2,11 @@ import { isValidObjectId } from "mongoose";
 import { AdvertisementBanner } from "../../models/admin/advertisementBanner.model";
 import { ApiError, ApiSuccess } from "../../utils/apiResponse";
 import { dbHandler } from "../../utils/dbHandler";
+import { cache } from "../../config/node-cache";
 
 export const createAdvertisementBanner = dbHandler(async (req, res) => {
   const bannerImage = req.file?.path;
+  const userId = req.user?._id;
 
   if (!bannerImage) throw new ApiError("Banner image is required!");
 
@@ -14,6 +16,10 @@ export const createAdvertisementBanner = dbHandler(async (req, res) => {
 
   if (!newAdvertisementBanner)
     throw new ApiError("Advertisement banner not created!");
+
+  const cacheKey = `advertisementBanner-${userId}`;
+
+  if (cache.has(cacheKey)) cache.del(cacheKey);
 
   res
     .status(201)
@@ -26,12 +32,31 @@ export const createAdvertisementBanner = dbHandler(async (req, res) => {
 });
 
 export const getAllAdvertisementBanners = dbHandler(async (req, res) => {
+  const userId = req.user?._id;
+
+  const cacheKey = `advertisementBanner-${userId}`;
+
+  if (cache.has(cacheKey)) {
+    const cachedAdvertisementBanners = cache.get(cacheKey);
+
+    return res
+      .status(200)
+      .json(
+        new ApiSuccess(
+          "Advertisement banners fetched successfully!",
+          cachedAdvertisementBanners
+        )
+      );
+  }
+
   const advertisementBanners = await AdvertisementBanner.find({
     isDeleted: false,
   });
 
   if (!advertisementBanners.length)
     throw new ApiError("Advertisement banners not found!");
+
+  cache.set(cacheKey, advertisementBanners);
 
   return res
     .status(200)
@@ -45,6 +70,7 @@ export const getAllAdvertisementBanners = dbHandler(async (req, res) => {
 
 export const getAdvertisementBannerById = dbHandler(async (req, res) => {
   const advertisementBannerId = req.params.advertisementBannerId;
+  const userId = req.user?._id;
 
   if (!isValidObjectId(advertisementBannerId))
     throw new ApiError("Advertisement banner id is invalid!");
@@ -55,6 +81,10 @@ export const getAdvertisementBannerById = dbHandler(async (req, res) => {
 
   if (!advertisementBanner || advertisementBanner.isDeleted)
     throw new ApiError("Advertisement banner not found!");
+
+  const cacheKey = `advertisementBanner-${userId}-${advertisementBannerId}`;
+
+  if (cache.has(cacheKey)) cache.del(cacheKey);
 
   return res
     .status(200)
@@ -68,6 +98,7 @@ export const getAdvertisementBannerById = dbHandler(async (req, res) => {
 
 export const updateAdvertisementBanner = dbHandler(async (req, res) => {
   const advertisementBannerId = req.params.advertisementBannerId;
+  const userId = req.user?._id;
 
   if (!isValidObjectId(advertisementBannerId))
     throw new ApiError("Advertisement banner id is invalid!");
@@ -90,6 +121,12 @@ export const updateAdvertisementBanner = dbHandler(async (req, res) => {
   if (!advertisementBanner)
     throw new ApiError("Advertisement banner not found!");
 
+  const cacheKey = `advertisementBanner-${userId}-${advertisementBannerId}`;
+  const cacheKey2 = `advertisementBanner-${userId}`;
+
+  if (cache.has(cacheKey)) cache.del(cacheKey);
+  if (cache.has(cacheKey2)) cache.del(cacheKey);
+
   return res
     .status(200)
     .json(
@@ -102,6 +139,7 @@ export const updateAdvertisementBanner = dbHandler(async (req, res) => {
 
 export const deleteAdvertisementBanner = dbHandler(async (req, res) => {
   const advertisementBannerId = req.params.advertisementBannerId;
+  const userId = req.user?._id;
 
   if (!isValidObjectId(advertisementBannerId))
     throw new ApiError("Advertisement banner id is invalid!");
@@ -118,6 +156,12 @@ export const deleteAdvertisementBanner = dbHandler(async (req, res) => {
 
   if (!advertisementBanner)
     throw new ApiError("Advertisement banner not found!");
+
+  const cacheKey = `advertisementBanner-${userId}-${advertisementBannerId}`;
+  const cacheKey2 = `advertisementBanner-${userId}`;
+
+  if (cache.has(cacheKey)) cache.del(cacheKey);
+  if (cache.has(cacheKey2)) cache.del(cacheKey);
 
   return res
     .status(200)

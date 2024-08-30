@@ -8,10 +8,14 @@ import {
   createCoupon,
   getAllCoupons,
 } from "../../controllers/admin/coupon.controller";
+import { verifyJWT } from "../../middlewares/auth.middleware";
 
-couponRouter.get("/", getAllCoupons);
-couponRouter.post("/", createCoupon);
-couponRouter.put("/update/:couponId", updateCoupon);
-couponRouter.delete("/delete/:couponId", deleteCoupon);
+couponRouter.route("/get").get(verifyJWT, getAllCoupons);
+
+couponRouter.route("/create").post(verifyJWT, createCoupon);
+
+couponRouter.route("/update/:couponId").put(verifyJWT, updateCoupon);
+
+couponRouter.route("/delete/:couponId").delete(verifyJWT, deleteCoupon);
 
 export { couponRouter };

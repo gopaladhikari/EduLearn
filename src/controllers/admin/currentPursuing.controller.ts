@@ -3,8 +3,11 @@ import { CurrentPursuing } from "../../models/admin/currentPursuing.model";
 import { currentPursuingSchema } from "../../schemas/currentPursing.schema";
 import { ApiError, ApiSuccess } from "../../utils/apiResponse";
 import { dbHandler } from "../../utils/dbHandler";
+import { cache } from "../../config/node-cache";
 
 export const createCurrentPursuing = dbHandler(async (req, res) => {
+  const userId = req.user?._id;
+
   const { success, data, error } = currentPursuingSchema.safeParse(
     req.body
   );
@@ -20,18 +23,41 @@ export const createCurrentPursuing = dbHandler(async (req, res) => {
   if (!currentPursing)
     throw new ApiError("Could not create current pursuing");
 
+  const cacheKey = `currentPursuing-${userId}`;
+
+  if (cache.has(cacheKey)) cache.del(cacheKey);
+
   res
     .status(201)
     .json(new ApiSuccess("Current pursuing created", currentPursing));
 });
 
-export const getAllCurrentPursuings = dbHandler(async (_, res) => {
+export const getAllCurrentPursuings = dbHandler(async (req, res) => {
+  const userId = req.user?._id;
+
+  const cacheKey = `currentPursuing-${userId}`;
+
+  if (cache.has(cacheKey)) {
+    const cachedCurrentPursuings = cache.get(cacheKey);
+
+    return res
+      .status(200)
+      .json(
+        new ApiSuccess(
+          "Current pursuings fetched successfully",
+          cachedCurrentPursuings
+        )
+      );
+  }
+
   const currentPursuings = await CurrentPursuing.find().populate(
     "universityId"
   );
 
   if (!currentPursuings)
     throw new ApiError("Could not get all current pursuings");
+
+  cache.set(cacheKey, currentPursuings);
 
   res
     .status(200)
@@ -41,8 +67,22 @@ export const getAllCurrentPursuings = dbHandler(async (_, res) => {
 export const getCurrentPursuingById = dbHandler(async (req, res) => {
   const currentPursuingId = req.params.currentPursuingId;
 
+  const userId = req.user?._id;
+
   if (!isValidObjectId(currentPursuingId))
     throw new ApiError("Invalid id");
+
+  const cacheKey = `currentPursuing-${userId}-${currentPursuingId}`;
+
+  if (cache.has(cacheKey)) {
+    const cachedCurrentPursuing = cache.get(cacheKey);
+
+    return res
+      .status(200)
+      .json(
+        new ApiSuccess("Current pursuing by id", cachedCurrentPursuing)
+      );
+  }
 
   const currentPursuing = await CurrentPursuing.findById(
     currentPursuingId
@@ -51,6 +91,8 @@ export const getCurrentPursuingById = dbHandler(async (req, res) => {
   if (!currentPursuing)
     throw new ApiError("Could not get current pursuing by id");
 
+  cache.set(cacheKey, currentPursuing);
+
   res
     .status(200)
     .json(new ApiSuccess("Current pursuing by id", currentPursuing));
@@ -58,6 +100,7 @@ export const getCurrentPursuingById = dbHandler(async (req, res) => {
 
 export const updateCurrentPursuing = dbHandler(async (req, res) => {
   const currentPursuingId = req.params.currentPursuingId;
+  const userId = req.user?._id;
 
   if (!isValidObjectId(currentPursuingId))
     throw new ApiError("Invalid id");
@@ -81,6 +124,12 @@ export const updateCurrentPursuing = dbHandler(async (req, res) => {
   if (!updatedCurrentPursuing)
     throw new ApiError("Could not update current pursuing");
 
+  const cacheKey = `currentPursuing-${userId}-${currentPursuingId}`;
+  const cacheKey2 = `currentPursuing-${userId}`;
+
+  if (cache.has(cacheKey)) cache.del(cacheKey);
+  if (cache.has(cacheKey2)) cache.del(cacheKey2);
+
   res
     .status(200)
     .json(
@@ -90,6 +139,7 @@ export const updateCurrentPursuing = dbHandler(async (req, res) => {
 
 export const deleteCurrentPursuing = dbHandler(async (req, res) => {
   const currentPursuingId = req.params.currentPursuingId;
+  const userId = req.user?._id;
 
   if (!isValidObjectId(currentPursuingId))
     throw new ApiError("Invalid id");
@@ -100,6 +150,12 @@ export const deleteCurrentPursuing = dbHandler(async (req, res) => {
 
   if (!deletedCurrentPursuing)
     throw new ApiError("Could not delete current pursuing");
+
+  const cacheKey = `currentPursuing-${userId}-${currentPursuingId}`;
+  const cacheKey2 = `currentPursuing-${userId}`;
+
+  if (cache.has(cacheKey)) cache.del(cacheKey);
+  if (cache.has(cacheKey2)) cache.del(cacheKey2);
 
   res
     .status(200)

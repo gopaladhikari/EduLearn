@@ -4,13 +4,26 @@ import { dbHandler } from "../../utils/dbHandler";
 import { Story } from "../../models/user/story.model";
 import fs from "fs";
 import path from "path";
+import { cache } from "../../config/node-cache";
 
 export const getStories = dbHandler(async (req, res) => {
   const userId = req.user?._id;
 
+  const cacheKey = `stories-${userId}`;
+
+  if (cache.has(cacheKey)) {
+    const cachedStories = cache.get(cacheKey);
+
+    return res
+      .status(200)
+      .json(new ApiSuccess("Stories fetched successfully", cachedStories));
+  }
+
   const stories = await Story.find({ userId });
 
   if (!stories) throw new ApiError("Stories not found");
+
+  cache.set(cacheKey, stories);
 
   res
     .status(200)
@@ -31,6 +44,10 @@ export const addStory = dbHandler(async (req, res) => {
 
   if (!story) throw new ApiError("Story not created");
 
+  const cacheKey = `stories-${userId}`;
+
+  if (cache.has(cacheKey)) cache.del(cacheKey);
+
   res
     .status(200)
     .json(new ApiSuccess("Story created successfully", story));
@@ -38,12 +55,17 @@ export const addStory = dbHandler(async (req, res) => {
 
 export const deleteStory = dbHandler(async (req, res) => {
   const storyId = req.params.storyId;
+  const userId = req.user?._id;
 
   if (!isValidObjectId(storyId)) throw new ApiError("Invalid story id");
 
   const story = await Story.findByIdAndDelete(storyId);
 
   if (!story) throw new ApiError("Story not found");
+
+  const cacheKey = `stories-${userId}`;
+
+  if (cache.has(cacheKey)) cache.del(cacheKey);
 
   res
     .status(200)
@@ -52,7 +74,7 @@ export const deleteStory = dbHandler(async (req, res) => {
 
 export const updateStory = dbHandler(async (req, res) => {
   const storyId = req.params.storyId;
-
+  const userId = req.user?._id;
   const pdfFilePath = req.file?.path;
 
   if (!pdfFilePath) throw new ApiError("File not found");
@@ -69,6 +91,10 @@ export const updateStory = dbHandler(async (req, res) => {
   story.story = pdfFilePath;
 
   await story.save();
+
+  const cacheKey = `stories-${userId}`;
+
+  if (cache.has(cacheKey)) cache.del(cacheKey);
 
   res
     .status(200)

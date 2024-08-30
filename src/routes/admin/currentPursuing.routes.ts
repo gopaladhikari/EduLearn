@@ -6,23 +6,24 @@ import {
   getCurrentPursuingById,
   updateCurrentPursuing,
 } from "../../controllers/admin/currentPursuing.controller";
+import { verifyJWT } from "../../middlewares/auth.middleware";
 
 const currentPursuingRouter = Router();
 
-currentPursuingRouter.route("/").get(getAllCurrentPursuings);
+currentPursuingRouter.route("/").get(verifyJWT, getAllCurrentPursuings);
 
-currentPursuingRouter.route("/").post(createCurrentPursuing);
+currentPursuingRouter.route("/").post(verifyJWT, createCurrentPursuing);
 
 currentPursuingRouter
   .route("/:currentPursuingId")
-  .get(getCurrentPursuingById);
+  .get(verifyJWT, getCurrentPursuingById);
 
 currentPursuingRouter
   .route("/update/:currentPursuingId")
-  .put(updateCurrentPursuing);
+  .put(verifyJWT, updateCurrentPursuing);
 
 currentPursuingRouter
   .route("/delete/:currentPursuingId")
-  .delete(deleteCurrentPursuing);
+  .delete(verifyJWT, deleteCurrentPursuing);
 
 export { currentPursuingRouter };

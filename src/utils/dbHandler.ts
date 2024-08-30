@@ -7,9 +7,9 @@ import type {
 } from "express";
 
 export const dbHandler = (requestHandler: RequestHandler) => {
-  return (req: Request, res: Response, next: NextFunction) => {
+  return async (req: Request, res: Response, next: NextFunction) => {
     try {
-      requestHandler(req, res, next);
+      await requestHandler(req, res, next);
     } catch (error) {
       console.error("Server error", error);
       res.status(500).json(new ApiError((error as Error).message));

@@ -7,6 +7,8 @@ const {
   TWILIO_AUTH_TOKEN,
   TWILIO_PHONE_NUMBER,
   DB_NAME,
+  RAZORPAY_ID_KEY,
+  RAZORPAY_SECRET_KEY,
 } = process.env;
 
 const envSchema = zod.object({
@@ -28,6 +30,12 @@ const envSchema = zod.object({
   dbName: zod.string({
     required_error: "DB_NAME is required",
   }),
+  razorpayIdKey: zod.string({
+    required_error: "RAZORPAY_ID_KEY is required",
+  }),
+  razorpaySecretKey: zod.string({
+    required_error: "RAZORPAY_SECRET_KEY is required",
+  }),
 });
 
 const parsedEnv = envSchema.parse({
@@ -37,6 +45,8 @@ const parsedEnv = envSchema.parse({
   twilioAuthToken: TWILIO_AUTH_TOKEN,
   twilioPhoneNumber: TWILIO_PHONE_NUMBER,
   dbName: DB_NAME,
+  razorpayIdKey: RAZORPAY_ID_KEY,
+  razorpaySecretKey: RAZORPAY_SECRET_KEY,
 });
 
 export const env: Readonly<typeof parsedEnv> = parsedEnv;

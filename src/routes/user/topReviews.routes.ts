@@ -15,8 +15,10 @@ topReviewsRouter
   .route("/get/:courseId")
   .get(verifyJWT, getAllReviewsByCourseId);
 
-topReviewsRouter.route("/update/:reviewId").put(updatedReview);
+topReviewsRouter.route("/update/:reviewId").put(verifyJWT, updatedReview);
 
-topReviewsRouter.route("/delete/:reviewId").delete(deleteReview);
+topReviewsRouter
+  .route("/delete/:reviewId")
+  .delete(verifyJWT, deleteReview);
 
 export { topReviewsRouter };

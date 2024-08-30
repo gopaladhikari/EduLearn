@@ -9,5 +9,9 @@
     "outDir": "dist",
     "strict": true
   },
-  "include": ["src/**/*.ts", "*.d.ts"]
+  "include": ["src/**/*"],
+
+  "ts-node": {
+    "files": true
+  }
 }

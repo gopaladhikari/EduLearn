@@ -5,7 +5,7 @@ import {
   deleteTip,
   getTips,
   updateTip,
-} from "../../controllers/user/tips.controller";
+} from "../../controllers/customer/tips.controller";
 import { verifyJWT } from "../../middlewares/auth.middleware";
 
 const tipsRouter = Router();

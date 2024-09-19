@@ -1,5 +1,5 @@
 import { dbHandler } from "../../utils/dbHandler";
-import { Tip } from "../../models/user/tips.model";
+import { Tip } from "../../models/customer/tips.model";
 import { ApiError, ApiSuccess } from "../../utils/apiResponse";
 import { isValidObjectId } from "mongoose";
 import { tipsSchema } from "../../schemas/tips.schema";

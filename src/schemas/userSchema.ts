@@ -1,7 +1,7 @@
 import z from "zod";
 
 export const userSchema = z.object({
-  name: z.string({
+  fullName: z.string({
     required_error: "Name is required",
     invalid_type_error: "Name must be a string",
   }),

@@ -4,7 +4,7 @@ import {
   deleteAddNotes,
   getNotes,
   updateNote,
-} from "../../controllers/user/addNotes.controller";
+} from "../../controllers/customer/addNotes.controller";
 import { verifyJWT } from "../../middlewares/auth.middleware";
 
 const addNoteRouter = Router();

@@ -1,4 +1,4 @@
-import { Notification } from "../../models/user/notification.model";
+import { Notification } from "../../models/customer/notification.model";
 import { ApiError, ApiSuccess } from "../../utils/apiResponse";
 import { dbHandler } from "../../utils/dbHandler";
 import { notificationSchema } from "../../schemas/notification.schema";

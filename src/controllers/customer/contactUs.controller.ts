@@ -1,12 +1,10 @@
-import { ContactUs } from "../../models/user/contactUs.model";
+import { ContactUs } from "../../models/customer/contactUs.model";
 import { dbHandler } from "../../utils/dbHandler";
 import { contactUsSchema } from "../../schemas/contactUs.schema";
 import { ApiSuccess, ApiError } from "../../utils/apiResponse";
 
 export const createContactUs = dbHandler(async (req, res) => {
-  const { success, data, error } = contactUsSchema.safeParse(
-    req.body
-  );
+  const { success, data, error } = contactUsSchema.safeParse(req.body);
 
   if (!success) throw new ApiError(error.message);
 

@@ -4,7 +4,7 @@ import {
   deleteUserDetails,
   updateUserDetails,
   getUserDetailsById,
-} from "../../controllers/user/userDetails.controller";
+} from "../../controllers/customer/customerDetails.controller";
 import { verifyJWT } from "../../middlewares/auth.middleware";
 
 const userDetailsRouter = Router();

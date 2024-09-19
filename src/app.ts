@@ -52,8 +52,8 @@ app.use("/api/v1/wallet", walletRouter);
 app.use("/api/v1/transaction", transactionRouter);
 app.use("/api/v1/cart", cartRouter);
 
-// User
+// Customer
 
-app.use("/api/v1/user", customerRouter);
+app.use("/api/v1/customer", customerRouter);
 
 export { app };

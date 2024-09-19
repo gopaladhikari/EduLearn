@@ -5,7 +5,7 @@ import {
   deleteCourseFromLibrary,
   getUserLibrary,
   updateCourseProgress,
-} from "../../controllers/user/library.controller";
+} from "../../controllers/customer/library.controller";
 import { verifyJWT } from "../../middlewares/auth.middleware";
 
 const libraryRouter = Router();

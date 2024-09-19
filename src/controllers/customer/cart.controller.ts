@@ -1,5 +1,5 @@
 import { isValidObjectId } from "mongoose";
-import { Cart } from "../../models/user/cart.model";
+import { Cart } from "../../models/customer/cart.model";
 import { ApiError, ApiSuccess } from "../../utils/apiResponse";
 import { dbHandler } from "../../utils/dbHandler";
 import { cache } from "../../config/node-cache";

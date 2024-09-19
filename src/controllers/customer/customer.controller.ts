@@ -1,5 +1,5 @@
 // import { cache } from "../../config/node-cache";
-import { User } from "../../models/user/user.model";
+import { User } from "../../models/customer/customer.model";
 import { userSchema } from "../../schemas/userSchema";
 import { ApiError, ApiSuccess } from "../../utils/apiResponse";
 import { dbHandler } from "../../utils/dbHandler";
@@ -9,7 +9,11 @@ export const registerUser = dbHandler(async (req, res) => {
 
   if (!success) throw new ApiError(error.message);
 
-  const user = await User.create(data);
+  const user = await User.create({
+    fullName: data.fullName,
+    phoneNumber: data.phoneNumber,
+    email: data.email,
+  });
 
   if (!user) throw new ApiError("User not created");
 

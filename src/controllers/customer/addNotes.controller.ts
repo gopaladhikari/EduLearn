@@ -1,6 +1,6 @@
 import { ApiError, ApiSuccess } from "../../utils/apiResponse";
 import { dbHandler } from "../../utils/dbHandler";
-import { AddNotes } from "../../models/user/addNotes.model";
+import { AddNotes } from "../../models/customer/addNotes.model";
 import { isValidObjectId } from "mongoose";
 import { addNotesSchema } from "../../schemas/addnotes.schema";
 import { cache } from "../../config/node-cache";

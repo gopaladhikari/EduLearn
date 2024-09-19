@@ -1,7 +1,7 @@
 import { ApiError, ApiSuccess } from "../../utils/apiResponse";
 import { dbHandler } from "../../utils/dbHandler";
 import { isValidObjectId } from "mongoose";
-import { Bookmark } from "../../models/user/bookmark.model";
+import { Bookmark } from "../../models/customer/bookmark.model";
 import { cache } from "../../config/node-cache";
 
 export const getBookmarks = dbHandler(async (req, res) => {

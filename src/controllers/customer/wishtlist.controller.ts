@@ -1,5 +1,5 @@
 import { cache } from "../../config/node-cache";
-import { Wishlist } from "../../models/user/wishlist.model";
+import { Wishlist } from "../../models/customer/wishlist.model";
 import { ApiError, ApiSuccess } from "../../utils/apiResponse";
 import { dbHandler } from "../../utils/dbHandler";
 import { isValidObjectId } from "mongoose";

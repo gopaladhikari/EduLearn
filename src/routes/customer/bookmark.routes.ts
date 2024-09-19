@@ -3,7 +3,7 @@ import {
   getBookmarks,
   addBookmark,
   deleteBookmark,
-} from "../../controllers/user/bookmark.controller";
+} from "../../controllers/customer/bookmark.controller";
 import { verifyJWT } from "../../middlewares/auth.middleware";
 
 const bookmarkRouter = Router();

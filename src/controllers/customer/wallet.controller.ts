@@ -1,5 +1,5 @@
 import { cache } from "../../config/node-cache";
-import { Wallet } from "../../models/user/wallet.models";
+import { Wallet } from "../../models/customer/wallet.models";
 import { ApiError, ApiSuccess } from "../../utils/apiResponse";
 import { dbHandler } from "../../utils/dbHandler";
 import { isValidObjectId } from "mongoose";

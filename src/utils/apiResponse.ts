@@ -11,7 +11,6 @@ export class ApiError extends Error {
     super(message);
     this.success = false;
     this.data = null;
-
     Error.captureStackTrace(this, this.constructor);
   }
 }

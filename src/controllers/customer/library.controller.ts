@@ -1,5 +1,5 @@
 import { isValidObjectId } from "mongoose";
-import { Library } from "../../models/user/library.model";
+import { Library } from "../../models/customer/library.model";
 import { ApiError, ApiSuccess } from "../../utils/apiResponse";
 import { dbHandler } from "../../utils/dbHandler";
 import { cache } from "../../config/node-cache";

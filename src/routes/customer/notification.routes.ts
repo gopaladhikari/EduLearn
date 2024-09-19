@@ -5,7 +5,7 @@ import {
   deleteNotification,
   getUserNotifications,
   markNotificationAsRead,
-} from "../../controllers/user/notification.controller";
+} from "../../controllers/customer/notification.controller";
 import { verifyJWT } from "../../middlewares/auth.middleware";
 
 const notificationRouter = Router();

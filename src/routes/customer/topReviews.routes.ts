@@ -4,7 +4,7 @@ import {
   deleteReview,
   getAllReviewsByCourseId,
   updatedReview,
-} from "../../controllers/user/topReviews.controller";
+} from "../../controllers/customer/topReviews.controller";
 import { verifyJWT } from "../../middlewares/auth.middleware";
 
 const topReviewsRouter = Router();

@@ -7,7 +7,7 @@ import {
   updateCart,
   deleteCourseFromCart,
   clearCart,
-} from "../../controllers/user/cart.controller";
+} from "../../controllers/customer/cart.controller";
 
 const cartRouter = Router();
 

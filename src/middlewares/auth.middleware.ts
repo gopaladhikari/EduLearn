@@ -8,7 +8,7 @@ import {
 } from "jsonwebtoken";
 import { env } from "../config/env";
 import { dbHandler } from "../utils/dbHandler";
-import { User } from "../models/user/user.model";
+import { User } from "../models/customer/customer.model";
 
 export const verifyJWT = dbHandler(async (req, res, next) => {
   const incomingAccessToken = req.headers.authorization?.replace(

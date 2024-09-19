@@ -1,7 +1,7 @@
 import { isValidObjectId } from "mongoose";
 import { ApiError, ApiSuccess } from "../../utils/apiResponse";
 import { dbHandler } from "../../utils/dbHandler";
-import { Story } from "../../models/user/story.model";
+import { Story } from "../../models/customer/story.model";
 import fs from "fs";
 import path from "path";
 import { cache } from "../../config/node-cache";

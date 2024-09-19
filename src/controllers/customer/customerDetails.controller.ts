@@ -1,5 +1,5 @@
 import { cache } from "../../config/node-cache";
-import { UserDetails } from "../../models/user/userDetails.model";
+import { UserDetails } from "../../models/customer/userDetails.model";
 import { userDetailsSchema } from "../../schemas/userSchema";
 import { ApiError, ApiSuccess } from "../../utils/apiResponse";
 import { dbHandler } from "../../utils/dbHandler";

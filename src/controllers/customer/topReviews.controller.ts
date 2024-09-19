@@ -1,5 +1,5 @@
 import { isValidObjectId } from "mongoose";
-import { TopReviews } from "../../models/user/topReviews.model";
+import { TopReviews } from "../../models/customer/topReviews.model";
 import {
   createReviewSchema,
   updateReviewSchema,

@@ -4,7 +4,7 @@ import {
   getUserTransactions,
   updateTransaction,
   deleteTransaction,
-} from "../../controllers/customer/transaction.controller";
+} from "../../controllers/customer/transactions.controller";
 import { verifyJWT } from "../../middlewares/auth.middleware";
 
 const transactionRouter = Router();

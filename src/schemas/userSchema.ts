@@ -11,10 +11,7 @@ export const userSchema = z.object({
       invalid_type_error: "Email must be a string",
     })
     .email("Invalid email"),
-  mobileno: z.string({
-    required_error: "Mobileno is required",
-    invalid_type_error: "Mobileno must be a string",
-  }),
+  phoneNumber: z.string().regex(/^\d{10}$/, "Invalid phone number"),
 });
 
 export const userDetailsSchema = z.object({

@@ -5,7 +5,7 @@ import { dbHandler } from "../../utils/dbHandler";
 import { cache } from "../../config/node-cache";
 
 export const createCart = dbHandler(async (req, res) => {
-  const userId = req.user?._id;
+  const userId = req.customer?._id;
   const mainCourseId = req.params.mainCourseId;
   const { quantity } = req.body;
 
@@ -47,7 +47,7 @@ export const createCart = dbHandler(async (req, res) => {
 });
 
 export const getCart = dbHandler(async (req, res) => {
-  const userId = req.user?._id;
+  const userId = req.customer?._id;
 
   const cacheKey = `cart-${userId}`;
 
@@ -69,7 +69,7 @@ export const getCart = dbHandler(async (req, res) => {
 });
 
 export const updateCart = dbHandler(async (req, res) => {
-  const userId = req.user?._id;
+  const userId = req.customer?._id;
   const mainCourseId = req.params.mainCourseId;
   const { quantity } = req.body;
 
@@ -102,7 +102,7 @@ export const updateCart = dbHandler(async (req, res) => {
 });
 
 export const deleteCourseFromCart = dbHandler(async (req, res) => {
-  const userId = req.user?._id;
+  const userId = req.customer?._id;
   const mainCourseId = req.params.mainCourseId;
 
   if (!isValidObjectId(mainCourseId))
@@ -125,7 +125,7 @@ export const deleteCourseFromCart = dbHandler(async (req, res) => {
 
 export const clearCart = dbHandler(async (req, res) => {
   const cartId = req.params.cartId;
-  const userId = req.user?._id;
+  const userId = req.customer?._id;
 
   if (!isValidObjectId(cartId)) throw new ApiError(400, "Invalid id");
 

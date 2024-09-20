@@ -7,7 +7,7 @@ import path from "path";
 import { cache } from "../../config/node-cache";
 
 export const getStories = dbHandler(async (req, res) => {
-  const userId = req.user?._id;
+  const userId = req.admin?._id;
 
   const cacheKey = `stories-${userId}`;
 
@@ -31,7 +31,7 @@ export const getStories = dbHandler(async (req, res) => {
 });
 
 export const addStory = dbHandler(async (req, res) => {
-  const userId = req.user?._id;
+  const userId = req.admin?._id;
 
   const pdfFilePath = req.file?.path;
 
@@ -55,7 +55,7 @@ export const addStory = dbHandler(async (req, res) => {
 
 export const deleteStory = dbHandler(async (req, res) => {
   const storyId = req.params.storyId;
-  const userId = req.user?._id;
+  const userId = req.admin?._id;
 
   if (!isValidObjectId(storyId))
     throw new ApiError(400, "Invalid story id");
@@ -75,7 +75,7 @@ export const deleteStory = dbHandler(async (req, res) => {
 
 export const updateStory = dbHandler(async (req, res) => {
   const storyId = req.params.storyId;
-  const userId = req.user?._id;
+  const userId = req.admin?._id;
   const pdfFilePath = req.file?.path;
 
   if (!pdfFilePath) throw new ApiError(400, "File not found");

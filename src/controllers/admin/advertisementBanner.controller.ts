@@ -6,7 +6,7 @@ import { cache } from "../../config/node-cache";
 
 export const createAdvertisementBanner = dbHandler(async (req, res) => {
   const bannerImage = req.file?.path;
-  const userId = req.user?._id;
+  const userId = req.customer?._id;
 
   if (!bannerImage) throw new ApiError(400, "Banner image is required!");
 
@@ -32,7 +32,7 @@ export const createAdvertisementBanner = dbHandler(async (req, res) => {
 });
 
 export const getAllAdvertisementBanners = dbHandler(async (req, res) => {
-  const userId = req.user?._id;
+  const userId = req.admin?._id;
 
   const cacheKey = `advertisementBanner-${userId}`;
 
@@ -70,7 +70,7 @@ export const getAllAdvertisementBanners = dbHandler(async (req, res) => {
 
 export const getAdvertisementBannerById = dbHandler(async (req, res) => {
   const advertisementBannerId = req.params.advertisementBannerId;
-  const userId = req.user?._id;
+  const userId = req.admin?._id;
 
   if (!isValidObjectId(advertisementBannerId))
     throw new ApiError(400, "Advertisement banner id is invalid!");
@@ -98,7 +98,7 @@ export const getAdvertisementBannerById = dbHandler(async (req, res) => {
 
 export const updateAdvertisementBanner = dbHandler(async (req, res) => {
   const advertisementBannerId = req.params.advertisementBannerId;
-  const userId = req.user?._id;
+  const userId = req.admin?._id;
 
   if (!isValidObjectId(advertisementBannerId))
     throw new ApiError(400, "Advertisement banner id is invalid!");
@@ -139,7 +139,7 @@ export const updateAdvertisementBanner = dbHandler(async (req, res) => {
 
 export const deleteAdvertisementBanner = dbHandler(async (req, res) => {
   const advertisementBannerId = req.params.advertisementBannerId;
-  const userId = req.user?._id;
+  const userId = req.admin?._id;
 
   if (!isValidObjectId(advertisementBannerId))
     throw new ApiError(400, "Advertisement banner id is invalid!");

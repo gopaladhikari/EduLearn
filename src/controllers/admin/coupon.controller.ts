@@ -6,7 +6,7 @@ import { isValidObjectId } from "mongoose";
 import { cache } from "../../config/node-cache";
 
 export const createCoupon = dbHandler(async (req, res) => {
-  const userId = req.user?._id;
+  const userId = req.admin?._id;
   const { success, data, error } = couponSchema.safeParse(req.body);
 
   if (!success) throw new ApiError(400, error.message);
@@ -30,7 +30,7 @@ export const createCoupon = dbHandler(async (req, res) => {
 
 export const getAllCoupons = dbHandler(async (req, res) => {
   const coupons = await Coupon.find();
-  const userId = req.user?._id;
+  const userId = req.admin?._id;
 
   const cacheKey = `coupons-${userId}`;
 
@@ -56,7 +56,7 @@ export const getAllCoupons = dbHandler(async (req, res) => {
 export const updateCoupon = dbHandler(async (req, res) => {
   const couponId = req.params.couponId;
 
-  const userId = req.user?._id;
+  const userId = req.admin?._id;
 
   if (!isValidObjectId(couponId))
     throw new ApiError(400, "Invalid coupon id!");
@@ -85,7 +85,7 @@ export const updateCoupon = dbHandler(async (req, res) => {
 export const deleteCoupon = dbHandler(async (req, res) => {
   const couponId = req.params.couponId;
 
-  const userId = req.user?._id;
+  const userId = req.admin?._id;
 
   if (!isValidObjectId(couponId))
     throw new ApiError(400, "Invalid coupon id!");

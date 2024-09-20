@@ -6,7 +6,7 @@ import { dbHandler } from "../../utils/dbHandler";
 import { isValidObjectId } from "mongoose";
 
 export const createUserDetails = dbHandler(async (req, res) => {
-  const userId = req.user?._id;
+  const userId = req.customer?._id;
 
   const { success, data, error } = userDetailsSchema.safeParse(req.body);
 
@@ -34,7 +34,7 @@ export const createUserDetails = dbHandler(async (req, res) => {
 });
 
 export const getUserDetailsById = dbHandler(async (req, res) => {
-  const userId = req.user?._id;
+  const userId = req.customer?._id;
 
   const userDetails = await UserDetails.findOne({ userId }).populate({
     path: "universityId",
@@ -55,8 +55,6 @@ export const getUserDetailsById = dbHandler(async (req, res) => {
 
   if (!userDetails) throw new ApiError(404, "User details not found");
 
-  const cacheKey = `userDetails-${userId}`;
-
   res
     .status(200)
     .json(
@@ -66,7 +64,7 @@ export const getUserDetailsById = dbHandler(async (req, res) => {
 
 export const updateUserDetails = dbHandler(async (req, res) => {
   const userDetailId = req.params.userDetailId;
-  const userId = req.user?._id;
+  const userId = req.customer?._id;
 
   if (!isValidObjectId(userDetailId))
     throw new ApiError(400, "Invalid user detail  id");
@@ -75,32 +73,13 @@ export const updateUserDetails = dbHandler(async (req, res) => {
 
   if (!success) throw new ApiError(400, error.message);
 
-  const updatedUserDetails = await UserDetails.findByIdAndUpdate(
-    userDetailId,
-    {
-      universityName: data.universityName,
-      currentlyPursuing: data.currentlyPursuing,
-      semester: data.semester,
-      subject: data.subject,
-    },
-    { new: true }
-  );
-
-  if (!updatedUserDetails)
-    throw new ApiError(400, "User details not found");
-
   const cacheKey = `userDetails-${userId}`;
 
   if (cache.has(cacheKey)) cache.del(cacheKey);
 
   res
     .status(200)
-    .json(
-      new ApiSuccess(
-        "User details updated successfully",
-        updatedUserDetails
-      )
-    );
+    .json(new ApiSuccess("User details updated successfully", data));
 });
 
 export const deleteUserDetails = dbHandler(async (req, res) => {

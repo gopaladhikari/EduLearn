@@ -38,7 +38,7 @@ export const getWishlist = dbHandler(async (req, res) => {
 });
 
 export const addWishlist = dbHandler(async (req, res) => {
-  const userId = req.user?._id;
+  const userId = req.customer?._id;
   const courseId = req.params.courseId;
 
   if (!isValidObjectId(courseId))
@@ -62,7 +62,7 @@ export const addWishlist = dbHandler(async (req, res) => {
 
 export const deleteWishlist = dbHandler(async (req, res) => {
   const wishlistId = req.params.courseId;
-  const userId = req.user?._id;
+  const userId = req.customer?._id;
 
   if (!isValidObjectId(wishlistId))
     throw new ApiError(400, "Invalid courseId");
@@ -81,7 +81,7 @@ export const deleteWishlist = dbHandler(async (req, res) => {
 });
 
 export const clearWishlist = dbHandler(async (req, res) => {
-  const userId = req.user?._id;
+  const userId = req.customer?._id;
 
   if (!isValidObjectId(userId)) throw new ApiError(400, "Invalid userId");
 

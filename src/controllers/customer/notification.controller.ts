@@ -6,7 +6,7 @@ import { isValidObjectId } from "mongoose";
 import { cache } from "../../config/node-cache";
 
 export const createNotification = dbHandler(async (req, res) => {
-  const userId = req.user?._id;
+  const userId = req.customer?._id;
 
   const { success, data, error } = notificationSchema.safeParse(req.body);
 
@@ -33,7 +33,7 @@ export const createNotification = dbHandler(async (req, res) => {
 });
 
 export const getUserNotifications = dbHandler(async (req, res) => {
-  const userId = req.user?._id;
+  const userId = req.customer?._id;
 
   if (!userId) throw new ApiError(400, "User id not found");
 
@@ -69,7 +69,7 @@ export const getUserNotifications = dbHandler(async (req, res) => {
 
 export const markNotificationAsRead = dbHandler(async (req, res) => {
   const notificationId = req.params.notificationId;
-  const userId = req.user?._id;
+  const userId = req.customer?._id;
 
   if (!isValidObjectId(notificationId))
     throw new ApiError(400, "Invalid notification id");
@@ -98,7 +98,7 @@ export const markNotificationAsRead = dbHandler(async (req, res) => {
 
 export const deleteNotification = dbHandler(async (req, res) => {
   const notificationId = req.params.notificationId;
-  const userId = req.user?._id;
+  const userId = req.customer?._id;
 
   if (!isValidObjectId(notificationId))
     throw new ApiError(400, "User id not found");

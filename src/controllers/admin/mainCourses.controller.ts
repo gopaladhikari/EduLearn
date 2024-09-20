@@ -7,7 +7,7 @@ import { cache } from "../../config/node-cache";
 
 export const createCourse = dbHandler(async (req, res) => {
   const { success, data, error } = mainCourseSchema.safeParse(req.body);
-  const userId = req.user?._id;
+  const userId = req.admin?._id;
 
   if (!success) throw new ApiError(400, error.message);
 
@@ -42,7 +42,7 @@ export const createCourse = dbHandler(async (req, res) => {
 });
 
 export const getAllCourses = dbHandler(async (req, res) => {
-  const userId = req.user?._id;
+  const userId = req.admin?._id;
 
   const cacheKey = `mainCourse-${userId}`;
 
@@ -65,7 +65,7 @@ export const getAllCourses = dbHandler(async (req, res) => {
 
 export const getCourseById = dbHandler(async (req, res) => {
   const courseId = req.params.courseId;
-  const userId = req.user?._id;
+  const userId = req.admin?._id;
 
   if (!isValidObjectId(courseId)) throw new ApiError(400, "Invalid id");
 
@@ -84,7 +84,7 @@ export const getCourseById = dbHandler(async (req, res) => {
 
 export const updateCourse = dbHandler(async (req, res) => {
   const courseId = req.params.courseId;
-  const userId = req.user?._id;
+  const userId = req.admin?._id;
 
   if (!isValidObjectId(courseId)) throw new ApiError(400, "Invalid id");
 
@@ -130,7 +130,7 @@ export const updateCourse = dbHandler(async (req, res) => {
 
 export const deleteCourse = dbHandler(async (req, res) => {
   const courseId = req.params.courseId;
-  const userId = req.user?._id;
+  const userId = req.admin?._id;
 
   if (!isValidObjectId(courseId)) throw new ApiError(400, "Invalid id");
 

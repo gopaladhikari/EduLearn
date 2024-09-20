@@ -5,7 +5,7 @@ import { dbHandler } from "../../utils/dbHandler";
 import { cache } from "../../config/node-cache";
 
 export const createTransaction = dbHandler(async (req, res) => {
-  const userId = req.user?._id;
+  const userId = req.customer?._id;
   const walletId = req.params.walletId;
 
   if (!isValidObjectId(walletId))
@@ -33,7 +33,7 @@ export const createTransaction = dbHandler(async (req, res) => {
 });
 
 export const getUserTransactions = dbHandler(async (req, res) => {
-  const userId = req.user?._id;
+  const userId = req.customer?._id;
 
   const cacheKey = `transactions-${userId}`;
 
@@ -69,7 +69,7 @@ export const getUserTransactions = dbHandler(async (req, res) => {
 export const updateTransaction = dbHandler(async (req, res) => {
   const transactionId = req.params.transactionId;
   const { amount, description } = req.body;
-  const userId = req.user?._id;
+  const userId = req.customer?._id;
 
   if (!isValidObjectId(transactionId))
     throw new ApiError(400, "Invalid transaction id");
@@ -93,7 +93,7 @@ export const updateTransaction = dbHandler(async (req, res) => {
 
 export const deleteTransaction = dbHandler(async (req, res) => {
   const transactionId = req.params.transactionId;
-  const userId = req.user?._id;
+  const userId = req.customer?._id;
 
   if (!isValidObjectId(transactionId))
     throw new ApiError(400, "Invalid transaction id");

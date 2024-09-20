@@ -10,7 +10,7 @@ import { cache } from "../../config/node-cache";
 
 export const createReview = dbHandler(async (req, res) => {
   const courseId = req.params.courseId;
-  const userId = req.user?._id;
+  const userId = req.customer?._id;
 
   if (!isValidObjectId(courseId))
     throw new ApiError(400, "Invalid course id");
@@ -40,7 +40,7 @@ export const createReview = dbHandler(async (req, res) => {
 
 export const getAllReviewsByCourseId = dbHandler(async (req, res) => {
   const courseId = req.params.courseId;
-  const userId = req.user?._id;
+  const userId = req.customer?._id;
 
   if (!isValidObjectId(courseId))
     throw new ApiError(400, "Course id is required");
@@ -69,7 +69,7 @@ export const getAllReviewsByCourseId = dbHandler(async (req, res) => {
 
 export const updatedReview = dbHandler(async (req, res) => {
   const reviewId = req.params.reviewId;
-  const userId = req.user?._id;
+  const userId = req.customer?._id;
 
   if (!isValidObjectId(reviewId))
     throw new ApiError(400, "Review id is required");
@@ -100,7 +100,7 @@ export const updatedReview = dbHandler(async (req, res) => {
 
 export const deleteReview = dbHandler(async (req, res) => {
   const reviewId = req.params.reviewId;
-  const userId = req.user?._id;
+  const userId = req.customer?._id;
 
   if (!isValidObjectId(reviewId))
     throw new ApiError(400, "Review id is required");

@@ -6,7 +6,7 @@ import { tipsSchema } from "../../schemas/tips.schema";
 import { cache } from "../../config/node-cache";
 
 export const getTips = dbHandler(async (req, res) => {
-  const userId = req.user?._id;
+  const userId = req.customer?._id;
 
   const cacheKey = `tips-${userId}`;
 
@@ -28,7 +28,7 @@ export const getTips = dbHandler(async (req, res) => {
 });
 
 export const createTip = dbHandler(async (req, res) => {
-  const userId = req.user?._id;
+  const userId = req.customer?._id;
 
   const { success, data, error } = tipsSchema.safeParse(req.body);
 
@@ -51,7 +51,7 @@ export const createTip = dbHandler(async (req, res) => {
 
 export const updateTip = dbHandler(async (req, res) => {
   const tipId = req.params.tipId;
-  const userId = req.user?._id;
+  const userId = req.customer?._id;
 
   if (!isValidObjectId(tipId)) throw new ApiError(400, "Tip id not valid");
 
@@ -79,7 +79,7 @@ export const updateTip = dbHandler(async (req, res) => {
 
 export const deleteTip = dbHandler(async (req, res) => {
   const tipdId = req.params.tipId;
-  const userId = req.user?._id;
+  const userId = req.customer?._id;
 
   if (!isValidObjectId(tipdId))
     throw new ApiError(400, "Tip id not valid");

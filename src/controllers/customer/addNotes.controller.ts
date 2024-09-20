@@ -7,7 +7,7 @@ import { cache } from "../../config/node-cache";
 
 export const getNotes = dbHandler(async (req, res) => {
   const courseId = req.params.courseId;
-  const userId = req.user?._id;
+  const userId = req.customer?._id;
 
   if (!isValidObjectId(courseId))
     throw new ApiError(400, "Invalid courseId");
@@ -33,7 +33,7 @@ export const getNotes = dbHandler(async (req, res) => {
 });
 
 export const createNote = dbHandler(async (req, res) => {
-  const userId = req.user?._id;
+  const userId = req.customer?._id;
   const courseId = req.params.courseId;
 
   if (!isValidObjectId(courseId))
@@ -61,7 +61,7 @@ export const createNote = dbHandler(async (req, res) => {
 
 export const updateNote = dbHandler(async (req, res) => {
   const noteId = req.params.noteId;
-  const userId = req.user?._id;
+  const userId = req.customer?._id;
 
   if (!isValidObjectId(noteId))
     throw new ApiError(400, "Invalid courseId");
@@ -93,7 +93,8 @@ export const updateNote = dbHandler(async (req, res) => {
 
 export const deleteAddNotes = dbHandler(async (req, res) => {
   const noteId = req.params.noteId;
-  const userId = req.user?._id;
+
+  const userId = req.customer?._id;
 
   if (!isValidObjectId(noteId))
     throw new ApiError(400, "Invalid courseId");

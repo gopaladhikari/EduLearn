@@ -5,7 +5,7 @@ import { dbHandler } from "../../utils/dbHandler";
 import { isValidObjectId } from "mongoose";
 
 export const createWallet = dbHandler(async (req, res) => {
-  const userId = req.user?._id;
+  const userId = req.customer?._id;
 
   const existingWallet = await Wallet.findOne({ userId });
 
@@ -24,7 +24,7 @@ export const createWallet = dbHandler(async (req, res) => {
 });
 
 export const getWallet = dbHandler(async (req, res) => {
-  const userId = req.user?._id;
+  const userId = req.customer?._id;
 
   const cacheKey = `wallet-${userId}`;
 
@@ -49,7 +49,7 @@ export const getWallet = dbHandler(async (req, res) => {
 
 export const updateWalletBalance = dbHandler(async (req, res) => {
   const walletId = req.params.walletId;
-  const userId = req.user?._id;
+  const userId = req.customer?._id;
   const { amount } = req.body;
 
   if (!isValidObjectId(walletId))
@@ -78,7 +78,7 @@ export const updateWalletBalance = dbHandler(async (req, res) => {
 
 export const deleteWallet = dbHandler(async (req, res) => {
   const walletId = req.params.walletId;
-  const userId = req.user?._id;
+  const userId = req.customer?._id;
 
   if (!isValidObjectId(walletId))
     throw new ApiError(400, "Invalid wallet id");

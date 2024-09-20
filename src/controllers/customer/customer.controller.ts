@@ -1,4 +1,3 @@
-// import { cache } from "../../config/node-cache";
 import { Customer } from "../../models/customer/customer.model";
 import { ApiError, ApiSuccess } from "../../utils/apiResponse";
 import { dbHandler } from "../../utils/dbHandler";
@@ -42,7 +41,7 @@ export const loginUser = dbHandler(async (req, res) => {
 
   if (!user) throw new ApiError(400, "User not found");
 
-  const jwtToken = user.generateJWT();
+  const jwtToken = user.generateJwtToken();
 
   res.status(200).json(
     new ApiSuccess("User logged in successfully", {
@@ -53,9 +52,9 @@ export const loginUser = dbHandler(async (req, res) => {
 });
 
 export const getCustomer = dbHandler(async (req, res) => {
-  const user = req.user;
+  if (!req.customer) throw new ApiError(400, "User not found");
 
   return res
     .status(200)
-    .json(new ApiSuccess("User fetched successfully", user));
+    .json(new ApiSuccess("User fetched successfully", req.customer));
 });

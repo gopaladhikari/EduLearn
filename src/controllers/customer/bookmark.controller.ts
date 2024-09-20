@@ -5,7 +5,7 @@ import { Bookmark } from "../../models/customer/bookmark.model";
 import { cache } from "../../config/node-cache";
 
 export const getBookmarks = dbHandler(async (req, res) => {
-  const userId = req.user?._id;
+  const userId = req.customer?._id;
 
   const cacheKey = `bookmarks-${userId}`;
 
@@ -32,7 +32,7 @@ export const getBookmarks = dbHandler(async (req, res) => {
 });
 
 export const addBookmark = dbHandler(async (req, res) => {
-  const userId = req.user?._id;
+  const userId = req.customer?._id;
 
   const mainCourseId = req.params.mainCourseId;
 
@@ -57,7 +57,7 @@ export const addBookmark = dbHandler(async (req, res) => {
 
 export const deleteBookmark = dbHandler(async (req, res) => {
   const bookmarkId = req.params.bookmarkId;
-  const userId = req.user?._id;
+  const userId = req.customer?._id;
 
   if (!isValidObjectId(bookmarkId))
     throw new ApiError(400, "Invalid bookmark id");

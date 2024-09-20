@@ -16,7 +16,7 @@ export const createUniversity = dbHandler(async (req, res) => {
 
   if (!success) throw new ApiError(400, "Invalid data", error.errors);
 
-  const adminId = req.user?._id;
+  const adminId = req.admin?._id;
 
   const university = await University.create({
     universityName: data.universityName,
@@ -32,7 +32,7 @@ export const createUniversity = dbHandler(async (req, res) => {
 });
 
 export const getAllUniversities = dbHandler(async (req, res) => {
-  const userId = req.user?._id;
+  const userId = req.admin?._id;
   const universities = await University.find();
 
   const cacheKey = `university-${userId}`;
@@ -55,7 +55,7 @@ export const getAllUniversities = dbHandler(async (req, res) => {
 
 export const getUniversityById = dbHandler(async (req, res) => {
   const universityId = req.params.universityId;
-  const userId = req.user?._id;
+  const userId = req.admin?._id;
 
   if (!isValidObjectId(universityId))
     throw new ApiError(400, "Invalid id");
@@ -83,7 +83,7 @@ export const getUniversityById = dbHandler(async (req, res) => {
 export const updateUniversity = dbHandler(async (req, res) => {
   const universityName = req.body.universityName;
   const universityId = req.params.universityId;
-  const userId = req.user?._id;
+  const userId = req.admin?._id;
 
   if (!isValidObjectId(universityId))
     throw new ApiError(400, "Invalid id");
@@ -114,7 +114,7 @@ export const updateUniversity = dbHandler(async (req, res) => {
 
 export const deleteUniversity = dbHandler(async (req, res) => {
   const universityId = req.params.universityId;
-  const userId = req.user?._id;
+  const userId = req.admin?._id;
 
   if (!isValidObjectId(universityId))
     throw new ApiError(400, "Invalid id");

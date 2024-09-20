@@ -6,7 +6,7 @@ import { dbHandler } from "../../utils/dbHandler";
 import { cache } from "../../config/node-cache";
 
 export const createCurrentPursuing = dbHandler(async (req, res) => {
-  const userId = req.user?._id;
+  const userId = req.admin?._id;
 
   const { success, data, error } = currentPursuingSchema.safeParse(
     req.body
@@ -33,7 +33,7 @@ export const createCurrentPursuing = dbHandler(async (req, res) => {
 });
 
 export const getAllCurrentPursuings = dbHandler(async (req, res) => {
-  const userId = req.user?._id;
+  const userId = req.admin?._id;
 
   const cacheKey = `currentPursuing-${userId}`;
 
@@ -67,7 +67,7 @@ export const getAllCurrentPursuings = dbHandler(async (req, res) => {
 export const getCurrentPursuingById = dbHandler(async (req, res) => {
   const currentPursuingId = req.params.currentPursuingId;
 
-  const userId = req.user?._id;
+  const userId = req.admin?._id;
 
   if (!isValidObjectId(currentPursuingId))
     throw new ApiError(400, "Invalid id");
@@ -100,7 +100,7 @@ export const getCurrentPursuingById = dbHandler(async (req, res) => {
 
 export const updateCurrentPursuing = dbHandler(async (req, res) => {
   const currentPursuingId = req.params.currentPursuingId;
-  const userId = req.user?._id;
+  const userId = req.admin?._id;
 
   if (!isValidObjectId(currentPursuingId))
     throw new ApiError(400, "Invalid id");
@@ -139,7 +139,7 @@ export const updateCurrentPursuing = dbHandler(async (req, res) => {
 
 export const deleteCurrentPursuing = dbHandler(async (req, res) => {
   const currentPursuingId = req.params.currentPursuingId;
-  const userId = req.user?._id;
+  const userId = req.admin?._id;
 
   if (!isValidObjectId(currentPursuingId))
     throw new ApiError(400, "Invalid id");

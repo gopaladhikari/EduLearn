@@ -1,4 +1,4 @@
-import mongoose, { InferSchemaType } from "mongoose";
+import mongoose, { InferSchemaType, ObjectId } from "mongoose";
 import bcrypt from "bcryptjs";
 import { env } from "../../config/env";
 import jwt from "jsonwebtoken";
@@ -82,6 +82,7 @@ customerSchema.methods.generateAuthToken = function () {
 
 export interface Customer extends InferSchemaType<typeof customerSchema> {
   generateJwtToken: () => string;
+  _id: ObjectId;
 }
 
 export const Customer = mongoose.model<Customer>(

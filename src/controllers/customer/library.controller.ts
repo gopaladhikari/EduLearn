@@ -6,7 +6,7 @@ import { cache } from "../../config/node-cache";
 
 // Add course to user's library
 export const addCourseToLibrary = dbHandler(async (req, res) => {
-  const userId = req.user?._id;
+  const userId = req.customer?._id;
   const courseId = req.params.courseId;
 
   if (!isValidObjectId(courseId))
@@ -39,7 +39,7 @@ export const addCourseToLibrary = dbHandler(async (req, res) => {
 
 // Get all courses in user's library
 export const getUserLibrary = dbHandler(async (req, res) => {
-  const userId = req.user?._id;
+  const userId = req.customer?._id;
 
   const libraryCourses = await Library.find({ userId }).populate(
     "subjectName"
@@ -59,7 +59,7 @@ export const getUserLibrary = dbHandler(async (req, res) => {
 // Update course progress
 export const updateCourseProgress = dbHandler(async (req, res) => {
   const libraryId = req.params.libraryId;
-  const userId = req.user?._id;
+  const userId = req.customer?._id;
 
   if (!isValidObjectId(libraryId))
     throw new ApiError(400, "Library id not valid");
@@ -95,7 +95,7 @@ export const updateCourseProgress = dbHandler(async (req, res) => {
 
 export const deleteCourseFromLibrary = dbHandler(async (req, res) => {
   const libraryId = req.params.libraryId;
-  const userId = req.user?._id;
+  const userId = req.customer?._id;
 
   if (!isValidObjectId(libraryId))
     throw new ApiError(400, "Course id not valid");

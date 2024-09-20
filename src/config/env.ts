@@ -42,24 +42,24 @@ const envSchema = zod.object({
   razorpaySecretKey: zod.string({
     required_error: "RAZORPAY_SECRET_KEY is required",
   }),
-  firebaseApiKey: zod.string({
-    required_error: "FIREBASE_API_KEY is required",
-  }),
-  firebaseAuthDomain: zod.string({
-    required_error: "FIREBASE_AUTH_DOMAIN is required",
-  }),
-  firebaseProjectId: zod.string({
-    required_error: "FIREBASE_PROJECT_ID is required",
-  }),
-  firebaseStorageBucket: zod.string({
-    required_error: "FIREBASE_STORAGE_BUCKET is required",
-  }),
-  firebaseMessagingSenderId: zod.string({
-    required_error: "FIREBASE_MESSAGING_SENDER_ID is required",
-  }),
-  firebaseAppId: zod.string({
-    required_error: "FIREBASE_APP_ID is required",
-  }),
+  // firebaseApiKey: zod.string({
+  //   required_error: "FIREBASE_API_KEY is required",
+  // }),
+  // firebaseAuthDomain: zod.string({
+  //   required_error: "FIREBASE_AUTH_DOMAIN is required",
+  // }),
+  // firebaseProjectId: zod.string({
+  //   required_error: "FIREBASE_PROJECT_ID is required",
+  // }),
+  // firebaseStorageBucket: zod.string({
+  //   required_error: "FIREBASE_STORAGE_BUCKET is required",
+  // }),
+  // firebaseMessagingSenderId: zod.string({
+  //   required_error: "FIREBASE_MESSAGING_SENDER_ID is required",
+  // }),
+  // firebaseAppId: zod.string({
+  //   required_error: "FIREBASE_APP_ID is required",
+  // }),
 });
 
 const parsedEnv = envSchema.parse({

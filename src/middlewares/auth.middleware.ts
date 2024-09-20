@@ -17,7 +17,7 @@ export const verifyJWT = dbHandler(async (req, res, next) => {
   );
 
   if (!incomingAccessToken)
-    throw new ApiError(409, "Unauthorized request");
+    throw new ApiError(401, "Unauthorized request");
 
   const decoded = verify(incomingAccessToken, env.jwtSecret) as JwtPayload;
 

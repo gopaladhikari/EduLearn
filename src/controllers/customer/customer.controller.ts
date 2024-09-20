@@ -1,4 +1,4 @@
-import { cache } from "../../config/node-cache";
+// import { cache } from "../../config/node-cache";
 import { Customer } from "../../models/customer/customer.model";
 import { ApiError, ApiSuccess } from "../../utils/apiResponse";
 import { dbHandler } from "../../utils/dbHandler";

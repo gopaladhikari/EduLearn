@@ -4,21 +4,21 @@ import {
   deleteUserDetails,
   updateUserDetails,
   getUserDetailsById,
-} from "../../controllers/customer/userDetails.controller";
+} from "../../controllers/customer/customerDetails.controller";
 import { verifyJWT } from "../../middlewares/auth.middleware";
 
-const userDetailsRouter = Router();
+const customerDetailsRouter = Router();
 
-userDetailsRouter.route("/create").post(verifyJWT, createUserDetails);
+customerDetailsRouter.route("/create").post(verifyJWT, createUserDetails);
 
-userDetailsRouter.route("/get").get(verifyJWT, getUserDetailsById);
+customerDetailsRouter.route("/").get(verifyJWT, getUserDetailsById);
 
-userDetailsRouter
+customerDetailsRouter
   .route("/update/:userDetailId")
   .put(verifyJWT, updateUserDetails);
 
-userDetailsRouter
+customerDetailsRouter
   .route("/delete/:userDetailId")
   .delete(verifyJWT, deleteUserDetails);
 
-export { userDetailsRouter };
+export { customerDetailsRouter };

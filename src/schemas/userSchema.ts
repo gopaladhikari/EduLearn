@@ -3,7 +3,7 @@ import z from "zod";
 export const loginSchema = z.object({
   phoneNumber: z
     .string()
-    .regex(/^\+91[6-9]\d{9}$/, "Invalid phone number format")
+    // .regex(/^\+91[6-9]\d{9}$/, "Invalid phone number format")
     .min(13, "Invalid phone number")
     .max(13, "Invalid phone number"),
 });

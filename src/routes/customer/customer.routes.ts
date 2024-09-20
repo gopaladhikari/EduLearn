@@ -4,6 +4,7 @@ import {
   getCustomer,
   loginUser,
   registerUser,
+  updateCustomer,
 } from "../../controllers/customer/customer.controller";
 import { verifyJwt } from "../../middlewares/verifyJwt";
 
@@ -16,5 +17,6 @@ userRouter.route("/login").post(loginUser);
 // secured routes
 
 userRouter.route("/").get(verifyJwt, getCustomer);
+userRouter.route("/update").put(verifyJwt, updateCustomer);
 
 export { userRouter };

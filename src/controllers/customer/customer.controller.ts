@@ -69,7 +69,7 @@ export const updateCustomer = dbHandler(async (req, res) => {
     req.body
   );
 
-  if (!success) throw new ApiError(400, error.message, error.errors);
+  if (!success) throw new ApiError(400, "Invalid data", error.errors);
 
   const customer = await Customer.findById(customerId);
 

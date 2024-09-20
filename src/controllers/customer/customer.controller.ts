@@ -22,7 +22,6 @@ export const registerUser = dbHandler(async (req, res) => {
     fullName: data.fullName,
     phoneNumber: data.phoneNumber,
     email: data.email,
-    isPhoneNumberVerified: true,
   });
 
   if (!user) throw new ApiError(400, "User not created");
@@ -35,17 +34,17 @@ export const loginUser = dbHandler(async (req, res) => {
 
   if (!success) throw new ApiError(400, "Invalid data", error.errors);
 
-  const user = await Customer.findOne({
+  const customer = await Customer.findOne({
     phoneNumber: data.phoneNumber,
   });
 
-  if (!user) throw new ApiError(400, "User not found");
+  if (!customer) throw new ApiError(400, "User not found");
 
-  const jwtToken = user.generateJwtToken();
+  const jwtToken = customer.generateJwtToken();
 
   res.status(200).json(
     new ApiSuccess("User logged in successfully", {
-      user,
+      customer,
       jwtToken,
     })
   );

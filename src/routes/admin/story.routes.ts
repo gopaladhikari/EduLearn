@@ -7,7 +7,6 @@ import {
 } from "../../controllers/admin/story.controller";
 import { verifyJwt } from "../../middlewares/verifyJwt";
 import { upload } from "../../middlewares/multer.middleware";
-import { verifyJwt } from "../../middlewares/admin.middleware";
 
 const storyRouter = Router();
 

@@ -17,11 +17,6 @@ const customerSchema = new mongoose.Schema(
       index: true,
     },
 
-    isPhoneNumberVerified: {
-      type: Boolean,
-      default: false,
-    },
-
     email: {
       type: String,
       required: true,
@@ -65,7 +60,7 @@ customerSchema.methods.comparePassword = async function (
   return bcrypt.compare(password, this.password);
 };
 
-customerSchema.methods.generateAuthToken = function () {
+customerSchema.methods.generateJwtToken = function () {
   return jwt.sign(
     {
       _id: this._id,

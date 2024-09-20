@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const userDetailsSchema = new mongoose.Schema(
+const customerDetailsSchema = new mongoose.Schema(
   {
     userId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -32,7 +32,7 @@ const userDetailsSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export const UserDetails = mongoose.model(
-  "UserDetails",
-  userDetailsSchema
+export const CustomerDetails = mongoose.model(
+  "CustomerDetails",
+  customerDetailsSchema
 );

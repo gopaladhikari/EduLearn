@@ -1,4 +1,7 @@
-import mongoose from "mongoose";
+import mongoose, { InferSchemaType } from "mongoose";
+import bcrypt from "bcryptjs";
+import { env } from "../../config/env";
+import jwt from "jsonwebtoken";
 
 const customerSchema = new mongoose.Schema(
   {
@@ -46,4 +49,37 @@ const customerSchema = new mongoose.Schema(
   }
 );
 
-export const Customer = mongoose.model("Customer", customerSchema);
+customerSchema.pre("save", async function (next) {
+  if (this.password && this.isModified("password")) {
+    this.password = await bcrypt.hash(this.password, 10);
+  }
+  next();
+});
+
+customerSchema.methods.comparePassword = async function (
+  password: string
+) {
+  return bcrypt.compare(password, this.password);
+};
+
+customerSchema.methods.generateJWT = function () {
+  return jwt.sign(
+    {
+      _id: this._id,
+      email: this.email,
+    },
+    env.jwtSecret,
+    {
+      expiresIn: "7d",
+    }
+  );
+};
+
+interface Customer extends InferSchemaType<typeof customerSchema> {
+  generateJWT: () => string;
+}
+
+export const Customer = mongoose.model<Customer>(
+  "Customer",
+  customerSchema
+);

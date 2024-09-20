@@ -14,7 +14,7 @@ export const dbHandler = (requestHandler: RequestHandler) => {
       if (error instanceof ApiError)
         return res.status(error.statuscode).json(error);
 
-      res.status(500).json(new ApiError(500, "Internal server error"));
+      res.status(500).json(new ApiError(500, (error as Error).message));
     }
   };
 };

@@ -9,12 +9,12 @@ const {
   DB_NAME,
   RAZORPAY_ID_KEY,
   RAZORPAY_SECRET_KEY,
-  FIREBASE_API_KEY,
-  FIREBASE_AUTH_DOMAIN,
-  FIREBASE_PROJECT_ID,
-  FIREBASE_STORAGE_BUCKET,
-  FIREBASE_MESSAGING_SENDER_ID,
-  FIREBASE_APP_ID,
+  // FIREBASE_API_KEY,
+  // FIREBASE_AUTH_DOMAIN,
+  // FIREBASE_PROJECT_ID,
+  // FIREBASE_STORAGE_BUCKET,
+  // FIREBASE_MESSAGING_SENDER_ID,
+  // FIREBASE_APP_ID,
 } = process.env;
 
 const envSchema = zod.object({
@@ -71,12 +71,12 @@ const parsedEnv = envSchema.parse({
   dbName: DB_NAME,
   razorpayIdKey: RAZORPAY_ID_KEY,
   razorpaySecretKey: RAZORPAY_SECRET_KEY,
-  firebaseApiKey: FIREBASE_API_KEY,
-  firebaseAuthDomain: FIREBASE_AUTH_DOMAIN,
-  firebaseProjectId: FIREBASE_PROJECT_ID,
-  firebaseStorageBucket: FIREBASE_STORAGE_BUCKET,
-  firebaseMessagingSenderId: FIREBASE_MESSAGING_SENDER_ID,
-  firebaseAppId: FIREBASE_APP_ID,
+  // firebaseApiKey: FIREBASE_API_KEY,
+  // firebaseAuthDomain: FIREBASE_AUTH_DOMAIN,
+  // firebaseProjectId: FIREBASE_PROJECT_ID,
+  // firebaseStorageBucket: FIREBASE_STORAGE_BUCKET,
+  // firebaseMessagingSenderId: FIREBASE_MESSAGING_SENDER_ID,
+  // firebaseAppId: FIREBASE_APP_ID,
 });
 
 export const env: Readonly<typeof parsedEnv> = parsedEnv;

@@ -5,20 +5,24 @@ import {
   getAllReviewsByCourseId,
   updatedReview,
 } from "../../controllers/customer/topReviews.controller";
-import { verifyJWT } from "../../middlewares/auth.middleware";
+import { verifyCustomer } from "../../middlewares/customer.middleware";
 
 const topReviewsRouter = Router();
 
-topReviewsRouter.route("/create/:courseId").post(verifyJWT, createReview);
+topReviewsRouter
+  .route("/create/:courseId")
+  .post(verifyCustomer, createReview);
 
 topReviewsRouter
   .route("/get/:courseId")
-  .get(verifyJWT, getAllReviewsByCourseId);
+  .get(verifyCustomer, getAllReviewsByCourseId);
 
-topReviewsRouter.route("/update/:reviewId").put(verifyJWT, updatedReview);
+topReviewsRouter
+  .route("/update/:reviewId")
+  .put(verifyCustomer, updatedReview);
 
 topReviewsRouter
   .route("/delete/:reviewId")
-  .delete(verifyJWT, deleteReview);
+  .delete(verifyCustomer, deleteReview);
 
 export { topReviewsRouter };

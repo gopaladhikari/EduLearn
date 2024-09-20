@@ -1,11 +1,17 @@
 import { cache } from "../../config/node-cache";
 import { University } from "../../models/admin/university.model";
+import { createUniversitySchema } from "../../schemas/universitySchema";
 import { ApiError, ApiSuccess } from "../../utils/apiResponse";
 import { dbHandler } from "../../utils/dbHandler";
 import { isValidObjectId } from "mongoose";
 
 export const createUniversity = dbHandler(async (req, res) => {
-  const universityName = req.body.universityName;
+  const { success, data, error } = createUniversitySchema.safeParse(
+    req.body
+  );
+
+  if (!success) throw new ApiError(400, "Invalid data", error.errors);
+
   const userId = req.user?._id;
   if (!universityName)
     throw new ApiError(400, "University name is required");

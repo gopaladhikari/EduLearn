@@ -14,11 +14,8 @@ export const registerSchema = loginSchema.extend({
 });
 
 export const userDetailsSchema = z.object({
-  universityName: z.string().min(2, "Invalid university name"),
-
-  currentlyPursuing: z.string().min(2, "Invalid subject"),
-
-  semester: z.number().min(1, "Invalid semester"),
-
-  subject: z.string().min(2, "Invalid subject").array(),
+  universityId: z.string().min(2, "Invalid university ID"),
+  currentPursuingId: z.string().min(1, "Invalid current pursuing ID"),
+  semesterId: z.string().min(1, "Invalid semester ID"),
+  subjectIds: z.string().min(1, "Invalid semester ID").array(),
 });

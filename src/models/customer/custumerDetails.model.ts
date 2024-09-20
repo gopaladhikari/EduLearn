@@ -7,24 +7,28 @@ const customerDetailsSchema = new mongoose.Schema(
       ref: "User",
     },
 
-    universityName: {
-      type: String,
+    universityId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "University",
       required: true,
     },
 
-    currentlyPursuing: {
-      type: String,
+    currentPursuingId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "CurrentPursuing",
       required: true,
     },
 
-    semester: {
-      type: Number,
+    semesterId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Semester",
       required: true,
     },
 
-    subject: [
+    subjectIds: [
       {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Subject",
         required: true,
       },
     ],

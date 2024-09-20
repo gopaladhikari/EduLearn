@@ -15,7 +15,7 @@ Let's create a simple middleware that checks if a user is authenticated and assi
 import { ApiError } from "../utils/apiResponse";
 import { dbHandler } from "../utils/dbHandler";
 
-export const verifyJWT = dbHandler(async (req, res, next) => {
+export const verifyCustomer = dbHandler(async (req, res, next) => {
   const incmoingJwtToken = req.headers.authorization;
 
   // Check the incmoingJwtToken in valid or not

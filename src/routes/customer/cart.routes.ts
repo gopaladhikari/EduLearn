@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { verifyJWT } from "../../middlewares/auth.middleware";
+import { verifyCustomer } from "../../middlewares/customer.middleware";
 
 import {
   createCart,
@@ -11,12 +11,12 @@ import {
 
 const cartRouter = Router();
 
-cartRouter.route("/create").post(verifyJWT, createCart);
-cartRouter.route("/get").get(verifyJWT, getCart);
-cartRouter.route("/update/:mainCourseId").put(verifyJWT, updateCart);
+cartRouter.route("/create").post(verifyCustomer, createCart);
+cartRouter.route("/get").get(verifyCustomer, getCart);
+cartRouter.route("/update/:mainCourseId").put(verifyCustomer, updateCart);
 cartRouter
   .route("/delete/:mainCourseId")
-  .delete(verifyJWT, deleteCourseFromCart);
-cartRouter.route("/clear/:cartId").delete(verifyJWT, clearCart);
+  .delete(verifyCustomer, deleteCourseFromCart);
+cartRouter.route("/clear/:cartId").delete(verifyCustomer, clearCart);
 
 export { cartRouter };

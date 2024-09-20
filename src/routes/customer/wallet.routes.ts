@@ -5,18 +5,20 @@ import {
   updateWalletBalance,
   deleteWallet,
 } from "../../controllers/customer/wallet.controller";
-import { verifyJWT } from "../../middlewares/auth.middleware";
+import { verifyCustomer } from "../../middlewares/customer.middleware";
 
 const walletRouter = Router();
 
-walletRouter.route("/create").post(verifyJWT, createWallet);
+walletRouter.route("/create").post(verifyCustomer, createWallet);
 
-walletRouter.route("/get").get(verifyJWT, getWallet);
+walletRouter.route("/get").get(verifyCustomer, getWallet);
 
 walletRouter
   .route("/update/:walletId")
-  .put(verifyJWT, updateWalletBalance);
+  .put(verifyCustomer, updateWalletBalance);
 
-walletRouter.route("/delete/:walletId").delete(verifyJWT, deleteWallet);
+walletRouter
+  .route("/delete/:walletId")
+  .delete(verifyCustomer, deleteWallet);
 
 export { walletRouter };

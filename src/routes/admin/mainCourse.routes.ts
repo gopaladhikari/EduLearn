@@ -8,22 +8,24 @@ import {
   updateCourse,
 } from "../../controllers/admin/mainCourses.controller";
 import { upload } from "../../middlewares/multer.middleware";
-import { verifyJWT } from "../../middlewares/auth.middleware";
+import { verifyCustomer } from "../../middlewares/customer.middleware";
 
 const mainCourseRouter = Router();
 
 mainCourseRouter
   .route("/create")
-  .post(upload.single("instructorImage"), verifyJWT, createCourse);
+  .post(upload.single("instructorImage"), verifyCustomer, createCourse);
 
-mainCourseRouter.route("/get").get(verifyJWT, getAllCourses);
+mainCourseRouter.route("/get").get(verifyCustomer, getAllCourses);
 
-mainCourseRouter.route("/:courseId").get(verifyJWT, getCourseById);
+mainCourseRouter.route("/:courseId").get(verifyCustomer, getCourseById);
 
-mainCourseRouter.route("/update/:courseId").put(verifyJWT, updateCourse);
+mainCourseRouter
+  .route("/update/:courseId")
+  .put(verifyCustomer, updateCourse);
 
 mainCourseRouter
   .route("/delete/:courseId")
-  .delete(verifyJWT, deleteCourse);
+  .delete(verifyCustomer, deleteCourse);
 
 export { mainCourseRouter };

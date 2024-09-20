@@ -5,22 +5,22 @@ import {
   updateTransaction,
   deleteTransaction,
 } from "../../controllers/customer/transactions.controller";
-import { verifyJWT } from "../../middlewares/auth.middleware";
+import { verifyCustomer } from "../../middlewares/customer.middleware";
 
 const transactionRouter = Router();
 
 transactionRouter
   .route("/create/:walletId")
-  .post(verifyJWT, createTransaction);
+  .post(verifyCustomer, createTransaction);
 
-transactionRouter.route("/get").get(verifyJWT, getUserTransactions);
+transactionRouter.route("/get").get(verifyCustomer, getUserTransactions);
 
 transactionRouter
   .route("/update/:transactionId")
-  .put(verifyJWT, updateTransaction);
+  .put(verifyCustomer, updateTransaction);
 
 transactionRouter
   .route("/delete/:transactionId")
-  .delete(verifyJWT, deleteTransaction);
+  .delete(verifyCustomer, deleteTransaction);
 
 export { transactionRouter };

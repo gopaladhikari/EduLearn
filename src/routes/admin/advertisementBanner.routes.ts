@@ -8,19 +8,19 @@ import {
   updateAdvertisementBanner,
 } from "../../controllers/admin/advertisementBanner.controller";
 import { upload } from "../../middlewares/multer.middleware";
-import { verifyJWT } from "../../middlewares/auth.middleware";
+import { verifyCustomer } from "../../middlewares/customer.middleware";
 
 const advertisementBannerRouter = Router();
 
 advertisementBannerRouter
   .route("/")
-  .get(verifyJWT, getAllAdvertisementBanners);
+  .get(verifyCustomer, getAllAdvertisementBanners);
 
 advertisementBannerRouter
   .route("/")
   .post(
     upload.single("bannerImage"),
-    verifyJWT,
+    verifyCustomer,
     createAdvertisementBanner
   );
 
@@ -30,10 +30,10 @@ advertisementBannerRouter
 
 advertisementBannerRouter
   .route("/update/:advertisementBannerId")
-  .put(verifyJWT, updateAdvertisementBanner);
+  .put(verifyCustomer, updateAdvertisementBanner);
 
 advertisementBannerRouter
   .route("/delete/:advertisementBannerId")
-  .delete(verifyJWT, deleteAdvertisementBanner);
+  .delete(verifyCustomer, deleteAdvertisementBanner);
 
 export { advertisementBannerRouter };

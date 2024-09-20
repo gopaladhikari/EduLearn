@@ -5,21 +5,21 @@ import {
   deleteStory,
   updateStory,
 } from "../../controllers/admin/story.controller";
-import { verifyJWT } from "../../middlewares/auth.middleware";
+import { verifyCustomer } from "../../middlewares/customer.middleware";
 import { upload } from "../../middlewares/multer.middleware";
 
 const storyRouter = Router();
 
-storyRouter.route("/get").get(verifyJWT, getStories);
+storyRouter.route("/get").get(verifyCustomer, getStories);
 
 storyRouter
   .route("/create")
-  .post(upload.single("story"), verifyJWT, addStory);
+  .post(upload.single("story"), verifyCustomer, addStory);
 
 storyRouter
   .route("/update/:storyId")
-  .put(upload.single("story"), verifyJWT, updateStory);
+  .put(upload.single("story"), verifyCustomer, updateStory);
 
-storyRouter.route("/delete/:storyId").delete(verifyJWT, deleteStory);
+storyRouter.route("/delete/:storyId").delete(verifyCustomer, deleteStory);
 
 export { storyRouter };

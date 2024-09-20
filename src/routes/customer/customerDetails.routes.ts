@@ -5,20 +5,21 @@ import {
   updateUserDetails,
   getUserDetailsById,
 } from "../../controllers/customer/customerDetails.controller";
-import { verifyJWT } from "../../middlewares/auth.middleware";
+import { verifyCustomer } from "../../middlewares/customer.middleware";
 
 const customerDetailsRouter = Router();
 
-customerDetailsRouter.route("/create").post(verifyJWT, createUserDetails);
-
-customerDetailsRouter.route("/").get(verifyJWT, getUserDetailsById);
+customerDetailsRouter.route("/").get(verifyCustomer, getUserDetailsById);
+customerDetailsRouter
+  .route("/create")
+  .post(verifyCustomer, createUserDetails);
 
 customerDetailsRouter
   .route("/update/:userDetailId")
-  .put(verifyJWT, updateUserDetails);
+  .put(verifyCustomer, updateUserDetails);
 
 customerDetailsRouter
   .route("/delete/:userDetailId")
-  .delete(verifyJWT, deleteUserDetails);
+  .delete(verifyCustomer, deleteUserDetails);
 
 export { customerDetailsRouter };

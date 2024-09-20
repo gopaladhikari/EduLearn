@@ -1,17 +1,39 @@
 import mongoose from "mongoose";
 
-const semesterSchema = new mongoose.Schema(
+const currentPursuingName = new mongoose.Schema(
   {
-    semester: {
+    name: {
       type: String,
       required: true,
     },
-    subjects: [
-      {
-        type: String,
-        required: true,
-      },
-    ],
+    logo: {
+      type: String,
+      required: true,
+    },
+  },
+  { timestamps: true }
+);
+
+const subjectName = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+    },
+    logo: {
+      type: String,
+      required: true,
+    },
+  },
+  { timestamps: true }
+);
+
+const semesterName = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+    },
   },
   { timestamps: true }
 );
@@ -23,12 +45,12 @@ const currentPursuingSchema = new mongoose.Schema(
       ref: "University",
       required: true,
     },
-    currentPursuingCourse: {
-      type: String,
-      required: true,
-    },
 
-    semesters: [semesterSchema],
+    currentPursuingName: [currentPursuingName],
+
+    semesters: [semesterName],
+
+    subjects: [subjectName],
   },
   { timestamps: true }
 );

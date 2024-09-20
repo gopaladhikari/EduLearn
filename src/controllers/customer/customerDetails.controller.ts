@@ -12,16 +12,14 @@ export const createUserDetails = dbHandler(async (req, res) => {
 
   if (!success) throw new ApiError(400, error.message);
 
-  if (!isValidObjectId(userId)) throw new ApiError(400, "Invalid user id");
-
   const cacheKey = `userDetails-${userId}`;
 
   const userDetails = await UserDetails.create({
     userId,
-    universityName: data.universityName,
-    currentlyPursuing: data.currentlyPursuing,
-    semester: data.semester,
-    subject: data.subject,
+    universityId: data.universityId,
+    currentPursuingId: data.currentPursuingId,
+    semesterId: data.semesterId,
+    subjectIds: data.subjectIds,
   });
 
   if (!userDetails) throw new ApiError(400, "User details not created");
@@ -38,24 +36,26 @@ export const createUserDetails = dbHandler(async (req, res) => {
 export const getUserDetailsById = dbHandler(async (req, res) => {
   const userId = req.user?._id;
 
-  const userDetails = await UserDetails.findById(userId);
+  const userDetails = await UserDetails.findOne({ userId }).populate({
+    path: "universityId",
+    select: "name",
+    populate: {
+      path: "currentPursuingId",
+      select: "name",
+      populate: {
+        path: "semesterId",
+        select: "name",
+        populate: {
+          path: "subjectIds",
+          select: "name",
+        },
+      },
+    },
+  });
 
-  if (!userDetails) throw new ApiError(400, "User details not found");
+  if (!userDetails) throw new ApiError(404, "User details not found");
 
   const cacheKey = `userDetails-${userId}`;
-
-  if (cache.has(cacheKey)) {
-    const cachedUserDetails = cache.get(cacheKey);
-
-    return res
-      .status(200)
-      .json(
-        new ApiSuccess(
-          "User details fetched successfully",
-          cachedUserDetails
-        )
-      );
-  }
 
   res
     .status(200)

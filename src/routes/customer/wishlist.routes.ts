@@ -5,15 +5,19 @@ import {
   getWishlist,
   clearWishlist,
 } from "../../controllers/customer/wishtlist.controller";
-import { verifyJWT } from "../../middlewares/auth.middleware";
+import { verifyCustomer } from "../../middlewares/customer.middleware";
 
 const wishlistRouter = Router();
 
-wishlistRouter.route("/get").get(verifyJWT, getWishlist);
-wishlistRouter.route("/create/:courseId").post(verifyJWT, addWishlist);
+wishlistRouter.route("/get").get(verifyCustomer, getWishlist);
+wishlistRouter
+  .route("/create/:courseId")
+  .post(verifyCustomer, addWishlist);
 wishlistRouter
   .route("/delete/:wishlistId")
-  .post(verifyJWT, deleteWishlist);
-wishlistRouter.route("/clear-wishlist").delete(verifyJWT, clearWishlist);
+  .post(verifyCustomer, deleteWishlist);
+wishlistRouter
+  .route("/clear-wishlist")
+  .delete(verifyCustomer, clearWishlist);
 
 export { wishlistRouter };

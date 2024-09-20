@@ -24,6 +24,9 @@ const customerSchema = new mongoose.Schema(
 
     email: {
       type: String,
+      required: true,
+      unique: true,
+      index: true,
     },
 
     isEmailVerified: {
@@ -67,6 +70,7 @@ customerSchema.methods.generateJWT = function () {
     {
       _id: this._id,
       email: this.email,
+      fullName: this.fullName,
     },
     env.jwtSecret,
     {

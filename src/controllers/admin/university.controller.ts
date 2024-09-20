@@ -10,26 +10,25 @@ export const createUniversity = dbHandler(async (req, res) => {
     req.body
   );
 
+  const logoPath = req.file?.path;
+
+  if (!logoPath) throw new ApiError(400, "University logo is required");
+
   if (!success) throw new ApiError(400, "Invalid data", error.errors);
 
-  const userId = req.user?._id;
-  if (!universityName)
-    throw new ApiError(400, "University name is required");
+  const adminId = req.user?._id;
 
-  const newUniversity = await University.create({
-    universityName: universityName,
+  const university = await University.create({
+    universityName: data.universityName,
+    universityLogo: logoPath,
+    adminId,
   });
 
-  if (!newUniversity)
-    throw new ApiError(400, "Could not create university");
-
-  const cacheKey = `university-${userId}`;
+  const cacheKey = `university-${adminId}`;
 
   if (cache.has(cacheKey)) cache.del(cacheKey);
 
-  res
-    .status(201)
-    .json(new ApiSuccess("University created", newUniversity));
+  res.status(201).json(new ApiSuccess("University created", university));
 });
 
 export const getAllUniversities = dbHandler(async (req, res) => {

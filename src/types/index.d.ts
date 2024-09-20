@@ -1,9 +1,11 @@
-import { IUser } from "../models/user.model";
+import type { Admin } from "../models/admin/admin.model";
+import type { Customer } from "../models/customer/customer.model";
 
 declare global {
   namespace Express {
     interface Request {
-      user?: IUser;
+      admin?: Admin;
+      customer?: Customer;
     }
   }
 }

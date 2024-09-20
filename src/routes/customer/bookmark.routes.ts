@@ -4,16 +4,16 @@ import {
   addBookmark,
   deleteBookmark,
 } from "../../controllers/customer/bookmark.controller";
-import { verifyCustomer } from "../../middlewares/customer.middleware";
+import { verifyJwt } from "../../middlewares/verifyJwt";
 
 const bookmarkRouter = Router();
 
-bookmarkRouter.route("/get").get(verifyCustomer, getBookmarks);
+bookmarkRouter.route("/get").get(verifyJwt, getBookmarks);
 
-bookmarkRouter.route("/create").post(verifyCustomer, addBookmark);
+bookmarkRouter.route("/create").post(verifyJwt, addBookmark);
 
 bookmarkRouter
   .route("/delete/:bookmarkId")
-  .delete(verifyCustomer, deleteBookmark);
+  .delete(verifyJwt, deleteBookmark);
 
 export { bookmarkRouter };

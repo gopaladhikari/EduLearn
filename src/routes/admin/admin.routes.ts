@@ -6,7 +6,7 @@ import {
   registerAdmin,
   updateAdmin,
 } from "../../controllers/admin/admin.controller";
-import { verifyAdmin } from "../../middlewares/admin.middleware";
+import { verifyJwt } from "../../middlewares/verifyJwt";
 
 const adminRouter = Router();
 
@@ -15,8 +15,8 @@ adminRouter.route("/register").post(registerAdmin);
 adminRouter.route("/login").post(loginAdmin);
 
 // public routes
-adminRouter.route("/").get(verifyAdmin, getAdminById);
-adminRouter.route("/update").put(verifyAdmin, updateAdmin);
-adminRouter.route("/delete").delete(verifyAdmin, deleteAdmin);
+adminRouter.route("/").get(verifyJwt, getAdminById);
+adminRouter.route("/update").put(verifyJwt, updateAdmin);
+adminRouter.route("/delete").delete(verifyJwt, deleteAdmin);
 
 export { adminRouter };

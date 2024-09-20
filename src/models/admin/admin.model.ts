@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { InferSchemaType } from "mongoose";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { env } from "../../config/env";
@@ -38,12 +38,13 @@ adminSchema.methods.comparePassword = async function (password: string) {
   return bcrypt.compare(password, this.password);
 };
 
-adminSchema.methods.generateAuthToken = function () {
+adminSchema.methods.generateJwtToken = function () {
   const token = jwt.sign(
     {
       _id: this._id,
       email: this.email,
       fullName: this.fullName,
+      role: "admin",
     },
     env.jwtSecret,
     {
@@ -53,4 +54,8 @@ adminSchema.methods.generateAuthToken = function () {
   return token;
 };
 
-export const Admin = mongoose.model("Admin", adminSchema);
+export interface Admin extends InferSchemaType<typeof adminSchema> {
+  generateJwtToken: () => string;
+}
+
+export const Admin = mongoose.model<Admin>("Admin", adminSchema);

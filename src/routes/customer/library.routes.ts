@@ -6,7 +6,7 @@ import {
   getUserLibrary,
   updateCourseProgress,
 } from "../../controllers/customer/library.controller";
-import { verifyCustomer } from "../../middlewares/customer.middleware";
+import { verifyJwt } from "../../middlewares/verifyJwt";
 
 const libraryRouter = Router();
 
@@ -14,16 +14,16 @@ const libraryRouter = Router();
 
 libraryRouter
   .route("/create/:courseId")
-  .post(verifyCustomer, addCourseToLibrary);
+  .post(verifyJwt, addCourseToLibrary);
 
-libraryRouter.route("/get").get(verifyCustomer, getUserLibrary);
+libraryRouter.route("/get").get(verifyJwt, getUserLibrary);
 
 libraryRouter
   .route("/update/:libraryId")
-  .put(verifyCustomer, updateCourseProgress);
+  .put(verifyJwt, updateCourseProgress);
 
 libraryRouter
   .route("/delete/:libraryId")
-  .delete(verifyCustomer, deleteCourseFromLibrary);
+  .delete(verifyJwt, deleteCourseFromLibrary);
 
 export { libraryRouter };

@@ -5,7 +5,7 @@ import {
   loginUser,
   registerUser,
 } from "../../controllers/customer/customer.controller";
-import { verifyCustomer } from "../../middlewares/customer.middleware";
+import { verifyJwt } from "../../middlewares/verifyJwt";
 
 const userRouter = Router();
 
@@ -15,6 +15,6 @@ userRouter.route("/login").post(loginUser);
 
 // secured routes
 
-userRouter.route("/").get(verifyCustomer, getCustomer);
+userRouter.route("/").get(verifyJwt, getCustomer);
 
 export { userRouter };

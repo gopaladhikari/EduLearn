@@ -41,6 +41,12 @@ const universitySchema = new mongoose.Schema(
       required: true,
     },
 
+    adminId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Admin",
+      required: true,
+    },
+
     universityLogo: {
       type: String,
     },

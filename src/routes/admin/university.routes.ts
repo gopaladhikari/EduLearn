@@ -8,24 +8,24 @@ import {
   updateUniversity,
 } from "../../controllers/admin/university.controller";
 import { upload } from "../../middlewares/multer.middleware";
-import { verifyCustomer } from "../../middlewares/customer.middleware";
+import { verifyJwt } from "../../middlewares/verifyJwt";
 
 const universityRouter = Router();
 
+universityRouter.route("/").get(verifyJwt, getAllUniversities);
+
 universityRouter
   .route("/create")
-  .post(upload.single("universityLogo"), verifyCustomer, createUniversity);
+  .post(verifyJwt, upload.single("universityLogo"), createUniversity);
 
-universityRouter.route("/get").get(verifyCustomer, getAllUniversities);
+universityRouter.route("/:universityId").get(verifyJwt, getUniversityById);
 
-universityRouter
-  .route("/get/:universityId")
-  .get(verifyCustomer, getUniversityById);
 universityRouter
   .route("/update/:universityId")
-  .put(verifyCustomer, updateUniversity);
+  .put(verifyJwt, updateUniversity);
+
 universityRouter
   .route("/delete/:universityId")
-  .delete(verifyCustomer, deleteUniversity);
+  .delete(verifyJwt, deleteUniversity);
 
 export { universityRouter };

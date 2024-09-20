@@ -65,12 +65,13 @@ customerSchema.methods.comparePassword = async function (
   return bcrypt.compare(password, this.password);
 };
 
-customerSchema.methods.generateJWT = function () {
+customerSchema.methods.generateAuthToken = function () {
   return jwt.sign(
     {
       _id: this._id,
       email: this.email,
       fullName: this.fullName,
+      role: "customer",
     },
     env.jwtSecret,
     {
@@ -79,8 +80,8 @@ customerSchema.methods.generateJWT = function () {
   );
 };
 
-interface Customer extends InferSchemaType<typeof customerSchema> {
-  generateJWT: () => string;
+export interface Customer extends InferSchemaType<typeof customerSchema> {
+  generateJwtToken: () => string;
 }
 
 export const Customer = mongoose.model<Customer>(

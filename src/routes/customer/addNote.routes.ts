@@ -5,15 +5,13 @@ import {
   getNotes,
   updateNote,
 } from "../../controllers/customer/addNotes.controller";
-import { verifyCustomer } from "../../middlewares/customer.middleware";
+import { verifyJwt } from "../../middlewares/verifyJwt";
 
 const addNoteRouter = Router();
 
-addNoteRouter.route("/get/:courseId").get(verifyCustomer, getNotes);
-addNoteRouter.route("/create/:courseId").post(verifyCustomer, createNote);
-addNoteRouter.route("/update/:noteId").put(verifyCustomer, updateNote);
-addNoteRouter
-  .route("/delete/:noteId")
-  .delete(verifyCustomer, deleteAddNotes);
+addNoteRouter.route("/get/:courseId").get(verifyJwt, getNotes);
+addNoteRouter.route("/create/:courseId").post(verifyJwt, createNote);
+addNoteRouter.route("/update/:noteId").put(verifyJwt, updateNote);
+addNoteRouter.route("/delete/:noteId").delete(verifyJwt, deleteAddNotes);
 
 export { addNoteRouter };

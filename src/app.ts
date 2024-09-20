@@ -15,8 +15,6 @@ import { mainAdminRouter } from "./routes/admin/index.routes";
 
 // Routes declaration
 
-// Customer
-
 app.use("/api/v1/customer", customerRouter);
 app.use("/api/v1/admin", mainAdminRouter);
 

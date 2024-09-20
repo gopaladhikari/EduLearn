@@ -7,7 +7,7 @@ import { isValidObjectId } from "mongoose";
 export const getWishlist = dbHandler(async (req, res) => {
   const userId = req.params.userId;
 
-  if (!isValidObjectId(userId)) throw new ApiError("Invalid userId");
+  if (!isValidObjectId(userId)) throw new ApiError(400, "Invalid userId");
 
   const cacheKey = `wishlist-${userId}`;
 
@@ -28,7 +28,7 @@ export const getWishlist = dbHandler(async (req, res) => {
     })
     .populate("userId");
 
-  if (!wishlist) throw new ApiError("Wishlist not found");
+  if (!wishlist) throw new ApiError(400, "Wishlist not found");
 
   cache.set(cacheKey, wishlist);
 
@@ -41,14 +41,15 @@ export const addWishlist = dbHandler(async (req, res) => {
   const userId = req.user?._id;
   const courseId = req.params.courseId;
 
-  if (!isValidObjectId(courseId)) throw new ApiError("Invalid courseId");
+  if (!isValidObjectId(courseId))
+    throw new ApiError(400, "Invalid courseId");
 
   const wishlist = await Wishlist.create({
     userId,
     courseId,
   });
 
-  if (!wishlist) throw new ApiError("Wishlist not found");
+  if (!wishlist) throw new ApiError(400, "Wishlist not found");
 
   const cacheKey = `wishlist-${userId}`;
 
@@ -63,11 +64,12 @@ export const deleteWishlist = dbHandler(async (req, res) => {
   const wishlistId = req.params.courseId;
   const userId = req.user?._id;
 
-  if (!isValidObjectId(wishlistId)) throw new ApiError("Invalid courseId");
+  if (!isValidObjectId(wishlistId))
+    throw new ApiError(400, "Invalid courseId");
 
   const wishlist = await Wishlist.findByIdAndDelete(wishlistId);
 
-  if (!wishlist) throw new ApiError("Wishlist not found");
+  if (!wishlist) throw new ApiError(400, "Wishlist not found");
 
   const cacheKey = `wishlist-${userId}`;
 
@@ -81,12 +83,12 @@ export const deleteWishlist = dbHandler(async (req, res) => {
 export const clearWishlist = dbHandler(async (req, res) => {
   const userId = req.user?._id;
 
-  if (!isValidObjectId(userId)) throw new ApiError("Invalid userId");
+  if (!isValidObjectId(userId)) throw new ApiError(400, "Invalid userId");
 
   const wishlist = await Wishlist.deleteMany({ userId });
 
   if (wishlist.deletedCount === 0)
-    throw new ApiError("Wishlist not found");
+    throw new ApiError(400, "Wishlist not found");
 
   const cacheKey = `wishlist-${userId}`;
 

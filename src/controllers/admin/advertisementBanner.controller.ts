@@ -8,14 +8,14 @@ export const createAdvertisementBanner = dbHandler(async (req, res) => {
   const bannerImage = req.file?.path;
   const userId = req.user?._id;
 
-  if (!bannerImage) throw new ApiError("Banner image is required!");
+  if (!bannerImage) throw new ApiError(400, "Banner image is required!");
 
   const newAdvertisementBanner = await AdvertisementBanner.create({
     bannerImage,
   });
 
   if (!newAdvertisementBanner)
-    throw new ApiError("Advertisement banner not created!");
+    throw new ApiError(400, "Advertisement banner not created!");
 
   const cacheKey = `advertisementBanner-${userId}`;
 
@@ -54,7 +54,7 @@ export const getAllAdvertisementBanners = dbHandler(async (req, res) => {
   });
 
   if (!advertisementBanners.length)
-    throw new ApiError("Advertisement banners not found!");
+    throw new ApiError(400, "Advertisement banners not found!");
 
   cache.set(cacheKey, advertisementBanners);
 
@@ -73,14 +73,14 @@ export const getAdvertisementBannerById = dbHandler(async (req, res) => {
   const userId = req.user?._id;
 
   if (!isValidObjectId(advertisementBannerId))
-    throw new ApiError("Advertisement banner id is invalid!");
+    throw new ApiError(400, "Advertisement banner id is invalid!");
 
   const advertisementBanner = await AdvertisementBanner.findById(
     advertisementBannerId
   );
 
   if (!advertisementBanner || advertisementBanner.isDeleted)
-    throw new ApiError("Advertisement banner not found!");
+    throw new ApiError(400, "Advertisement banner not found!");
 
   const cacheKey = `advertisementBanner-${userId}-${advertisementBannerId}`;
 
@@ -101,11 +101,11 @@ export const updateAdvertisementBanner = dbHandler(async (req, res) => {
   const userId = req.user?._id;
 
   if (!isValidObjectId(advertisementBannerId))
-    throw new ApiError("Advertisement banner id is invalid!");
+    throw new ApiError(400, "Advertisement banner id is invalid!");
 
   const bannerImage = req.file?.path;
 
-  if (!bannerImage) throw new ApiError("Banner image is required!");
+  if (!bannerImage) throw new ApiError(400, "Banner image is required!");
 
   const advertisementBanner = await AdvertisementBanner.findOneAndUpdate(
     {
@@ -119,7 +119,7 @@ export const updateAdvertisementBanner = dbHandler(async (req, res) => {
   );
 
   if (!advertisementBanner)
-    throw new ApiError("Advertisement banner not found!");
+    throw new ApiError(400, "Advertisement banner not found!");
 
   const cacheKey = `advertisementBanner-${userId}-${advertisementBannerId}`;
   const cacheKey2 = `advertisementBanner-${userId}`;
@@ -142,7 +142,7 @@ export const deleteAdvertisementBanner = dbHandler(async (req, res) => {
   const userId = req.user?._id;
 
   if (!isValidObjectId(advertisementBannerId))
-    throw new ApiError("Advertisement banner id is invalid!");
+    throw new ApiError(400, "Advertisement banner id is invalid!");
 
   const advertisementBanner = await AdvertisementBanner.findByIdAndUpdate(
     {
@@ -155,7 +155,7 @@ export const deleteAdvertisementBanner = dbHandler(async (req, res) => {
   );
 
   if (!advertisementBanner)
-    throw new ApiError("Advertisement banner not found!");
+    throw new ApiError(400, "Advertisement banner not found!");
 
   const cacheKey = `advertisementBanner-${userId}-${advertisementBannerId}`;
   const cacheKey2 = `advertisementBanner-${userId}`;

@@ -20,11 +20,11 @@ export const verifyJWT = dbHandler(async (req, res, next) => {
 
   // Check the incmoingJwtToken in valid or not
 
-  if(!isValid) throw new ApiError("Unauthorized request");
+  if(!isValid) throw new ApiError(400,"Unauthorized request");
 
   next();
   } catch (error) {
-    throw new ApiError("Internal Server Error");
+    throw new ApiError(400,"Internal Server Error");
   }
 });
 ```

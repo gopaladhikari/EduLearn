@@ -10,21 +10,21 @@ export const addCourseToLibrary = dbHandler(async (req, res) => {
   const courseId = req.params.courseId;
 
   if (!isValidObjectId(courseId))
-    throw new ApiError("Course id not valid");
+    throw new ApiError(400, "Course id not valid");
 
   const existingEntry = await Library.findOne({
     userId,
     courseId,
   });
 
-  if (existingEntry) throw new ApiError("Course already in library");
+  if (existingEntry) throw new ApiError(400, "Course already in library");
 
   const libraryEntry = await Library.create({
     userId,
     courseId,
   });
 
-  if (!libraryEntry) throw new ApiError("Library entry not created");
+  if (!libraryEntry) throw new ApiError(400, "Library entry not created");
 
   const cacheKey = `library-${userId}`;
 
@@ -45,7 +45,7 @@ export const getUserLibrary = dbHandler(async (req, res) => {
     "subjectName"
   );
 
-  if (!libraryCourses) throw new ApiError("Library not found");
+  if (!libraryCourses) throw new ApiError(400, "Library not found");
 
   const cacheKey = `library-${userId}`;
 
@@ -62,12 +62,12 @@ export const updateCourseProgress = dbHandler(async (req, res) => {
   const userId = req.user?._id;
 
   if (!isValidObjectId(libraryId))
-    throw new ApiError("Library id not valid");
+    throw new ApiError(400, "Library id not valid");
 
   const { progress } = req.body;
 
   if (!isValidObjectId(libraryId))
-    throw new ApiError("Course id not valid");
+    throw new ApiError(400, "Course id not valid");
 
   const libraryEntry = await Library.findByIdAndUpdate(
     libraryId,
@@ -77,7 +77,8 @@ export const updateCourseProgress = dbHandler(async (req, res) => {
     { new: true }
   );
 
-  if (!libraryEntry) throw new ApiError("Course not found in library");
+  if (!libraryEntry)
+    throw new ApiError(400, "Course not found in library");
 
   libraryEntry.progress = progress;
 
@@ -97,11 +98,12 @@ export const deleteCourseFromLibrary = dbHandler(async (req, res) => {
   const userId = req.user?._id;
 
   if (!isValidObjectId(libraryId))
-    throw new ApiError("Course id not valid");
+    throw new ApiError(400, "Course id not valid");
 
   const libraryEntry = await Library.findByIdAndDelete(libraryId);
 
-  if (!libraryEntry) throw new ApiError("Course not found in library");
+  if (!libraryEntry)
+    throw new ApiError(400, "Course not found in library");
 
   const cacheKey = `library-${userId}`;
 

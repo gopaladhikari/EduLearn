@@ -9,12 +9,12 @@ export const createCourse = dbHandler(async (req, res) => {
   const { success, data, error } = mainCourseSchema.safeParse(req.body);
   const userId = req.user?._id;
 
-  if (!success) throw new ApiError(error.message);
+  if (!success) throw new ApiError(400, error.message);
 
   const instructorImagePath = req.file?.path;
 
   if (!instructorImagePath)
-    throw new ApiError("Instructor image is required");
+    throw new ApiError(400, "Instructor image is required");
 
   const course = await MainCourse.create({
     courseType: data.courseType,
@@ -32,7 +32,7 @@ export const createCourse = dbHandler(async (req, res) => {
     lessonsVideos: data.lessonsVideos,
   });
 
-  if (!course) throw new ApiError("Could not create course");
+  if (!course) throw new ApiError(400, "Could not create course");
 
   const cacheKey = `mainCourse-${userId}`;
 
@@ -56,7 +56,7 @@ export const getAllCourses = dbHandler(async (req, res) => {
 
   const courses = await MainCourse.find();
 
-  if (!courses) throw new ApiError("Could not get all courses");
+  if (!courses) throw new ApiError(400, "Could not get all courses");
 
   cache.set(cacheKey, courses);
 
@@ -67,11 +67,11 @@ export const getCourseById = dbHandler(async (req, res) => {
   const courseId = req.params.courseId;
   const userId = req.user?._id;
 
-  if (!isValidObjectId(courseId)) throw new ApiError("Invalid id");
+  if (!isValidObjectId(courseId)) throw new ApiError(400, "Invalid id");
 
   const course = await MainCourse.findById(courseId);
 
-  if (!course) throw new ApiError("Could not get course by id");
+  if (!course) throw new ApiError(400, "Could not get course by id");
 
   const cacheKey = `mainCourse-${userId}-${courseId}`;
   const cacheKey2 = `mainCourse-${userId}`;
@@ -86,16 +86,16 @@ export const updateCourse = dbHandler(async (req, res) => {
   const courseId = req.params.courseId;
   const userId = req.user?._id;
 
-  if (!isValidObjectId(courseId)) throw new ApiError("Invalid id");
+  if (!isValidObjectId(courseId)) throw new ApiError(400, "Invalid id");
 
   const { success, data, error } = mainCourseSchema.safeParse(req.body);
 
   const instructorImagePath = req.file?.path;
 
   if (!instructorImagePath)
-    throw new ApiError("Instructor image is required");
+    throw new ApiError(400, "Instructor image is required");
 
-  if (!success) throw new ApiError(error.message);
+  if (!success) throw new ApiError(400, error.message);
 
   const updatedCourse = await MainCourse.findByIdAndUpdate(
     courseId,
@@ -117,7 +117,7 @@ export const updateCourse = dbHandler(async (req, res) => {
     { new: true }
   );
 
-  if (!updatedCourse) throw new ApiError("Could not update course");
+  if (!updatedCourse) throw new ApiError(400, "Could not update course");
 
   const cacheKey = `mainCourse-${userId}-${courseId}`;
   const cacheKey2 = `mainCourse-${userId}`;
@@ -132,11 +132,11 @@ export const deleteCourse = dbHandler(async (req, res) => {
   const courseId = req.params.courseId;
   const userId = req.user?._id;
 
-  if (!isValidObjectId(courseId)) throw new ApiError("Invalid id");
+  if (!isValidObjectId(courseId)) throw new ApiError(400, "Invalid id");
 
   const deletedCourse = await MainCourse.findByIdAndDelete(courseId);
 
-  if (!deletedCourse) throw new ApiError("Could not delete course");
+  if (!deletedCourse) throw new ApiError(400, "Could not delete course");
 
   const cacheKey = `mainCourse-${userId}-${courseId}`;
   const cacheKey2 = `mainCourse-${userId}`;

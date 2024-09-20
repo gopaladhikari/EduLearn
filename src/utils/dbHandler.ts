@@ -11,8 +11,10 @@ export const dbHandler = (requestHandler: RequestHandler) => {
     try {
       await requestHandler(req, res, next);
     } catch (error) {
-      console.error("Server error", error);
-      res.status(500).json(new ApiError((error as Error).message));
+      if (error instanceof ApiError)
+        return res.status(error.statuscode).json(error);
+
+      res.status(500).json(new ApiError(500, "Internal server error"));
     }
   };
 };

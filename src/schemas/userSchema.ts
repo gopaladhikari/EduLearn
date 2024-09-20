@@ -1,48 +1,24 @@
 import z from "zod";
 
 export const userSchema = z.object({
-  fullName: z.string({
-    required_error: "Name is required",
-    invalid_type_error: "Name must be a string",
-  }),
-  email: z
-    .string({
-      required_error: "Email is required",
-      invalid_type_error: "Email must be a string",
-    })
-    .email("Invalid email"),
-  phoneNumber: z.string().regex(/^\d{10}$/, "Invalid phone number"),
+  fullName: z.string().min(2, "Invalid full name"),
+  email: z.string().email("Invalid email"),
+  phoneNumber: z
+    .string()
+    .min(10, "Invalid phone number")
+    .max(10, "Invalid phone number"),
 });
 
 export const userDetailsSchema = z.object({
-  universityName: z.string({
-    required_error: "University name is required",
-    invalid_type_error: "University name must be a string",
-  }),
+  universityName: z.string().min(2, "Invalid university name"),
 
-  currentlyPursuing: z.string({
-    required_error: "Currently pursuing is required",
-    invalid_type_error: "Currently pursuing must be a string",
-  }),
+  currentlyPursuing: z.string().min(2, "Invalid subject"),
 
-  semester: z.number({
-    required_error: "Semester is required",
-    invalid_type_error: "Semester must be a number",
-  }),
+  semester: z.number().min(1, "Invalid semester"),
 
-  subject: z
-    .string({
-      required_error: "Subject is required",
-      invalid_type_error: "Subject must be a string",
-    })
-    .array(),
+  subject: z.string().min(2, "Invalid subject").array(),
 });
 
-export const userSchemaWithPassword = z
-  .object({
-    password: z.string({
-      required_error: "Password is required",
-      invalid_type_error: "Password must be a string",
-    }),
-  })
-  .merge(userSchema);
+export const userSchemaWithPassword = userSchema.extend({
+  password: z.string().min(6, "Invalid password"),
+});

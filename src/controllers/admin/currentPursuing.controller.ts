@@ -12,7 +12,7 @@ export const createCurrentPursuing = dbHandler(async (req, res) => {
     req.body
   );
 
-  if (!success) throw new ApiError(error.message);
+  if (!success) throw new ApiError(400, error.message);
 
   const currentPursing = await CurrentPursuing.create({
     universityId: data.universityId,
@@ -21,7 +21,7 @@ export const createCurrentPursuing = dbHandler(async (req, res) => {
   });
 
   if (!currentPursing)
-    throw new ApiError("Could not create current pursuing");
+    throw new ApiError(400, "Could not create current pursuing");
 
   const cacheKey = `currentPursuing-${userId}`;
 
@@ -55,7 +55,7 @@ export const getAllCurrentPursuings = dbHandler(async (req, res) => {
   );
 
   if (!currentPursuings)
-    throw new ApiError("Could not get all current pursuings");
+    throw new ApiError(400, "Could not get all current pursuings");
 
   cache.set(cacheKey, currentPursuings);
 
@@ -70,7 +70,7 @@ export const getCurrentPursuingById = dbHandler(async (req, res) => {
   const userId = req.user?._id;
 
   if (!isValidObjectId(currentPursuingId))
-    throw new ApiError("Invalid id");
+    throw new ApiError(400, "Invalid id");
 
   const cacheKey = `currentPursuing-${userId}-${currentPursuingId}`;
 
@@ -89,7 +89,7 @@ export const getCurrentPursuingById = dbHandler(async (req, res) => {
   ).populate("universityId");
 
   if (!currentPursuing)
-    throw new ApiError("Could not get current pursuing by id");
+    throw new ApiError(400, "Could not get current pursuing by id");
 
   cache.set(cacheKey, currentPursuing);
 
@@ -103,13 +103,13 @@ export const updateCurrentPursuing = dbHandler(async (req, res) => {
   const userId = req.user?._id;
 
   if (!isValidObjectId(currentPursuingId))
-    throw new ApiError("Invalid id");
+    throw new ApiError(400, "Invalid id");
 
   const { success, data, error } = currentPursuingSchema.safeParse(
     req.body
   );
 
-  if (!success) throw new ApiError(error.message);
+  if (!success) throw new ApiError(400, error.message);
 
   const updatedCurrentPursuing = await CurrentPursuing.findByIdAndUpdate(
     currentPursuingId,
@@ -122,7 +122,7 @@ export const updateCurrentPursuing = dbHandler(async (req, res) => {
   );
 
   if (!updatedCurrentPursuing)
-    throw new ApiError("Could not update current pursuing");
+    throw new ApiError(400, "Could not update current pursuing");
 
   const cacheKey = `currentPursuing-${userId}-${currentPursuingId}`;
   const cacheKey2 = `currentPursuing-${userId}`;
@@ -142,14 +142,14 @@ export const deleteCurrentPursuing = dbHandler(async (req, res) => {
   const userId = req.user?._id;
 
   if (!isValidObjectId(currentPursuingId))
-    throw new ApiError("Invalid id");
+    throw new ApiError(400, "Invalid id");
 
   const deletedCurrentPursuing = await CurrentPursuing.findByIdAndDelete(
     currentPursuingId
   );
 
   if (!deletedCurrentPursuing)
-    throw new ApiError("Could not delete current pursuing");
+    throw new ApiError(400, "Could not delete current pursuing");
 
   const cacheKey = `currentPursuing-${userId}-${currentPursuingId}`;
   const cacheKey2 = `currentPursuing-${userId}`;

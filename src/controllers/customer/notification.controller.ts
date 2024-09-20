@@ -10,7 +10,7 @@ export const createNotification = dbHandler(async (req, res) => {
 
   const { success, data, error } = notificationSchema.safeParse(req.body);
 
-  if (!success) throw new ApiError(error.message);
+  if (!success) throw new ApiError(400, error.message);
 
   const notification = await Notification.create({
     userId,
@@ -19,7 +19,7 @@ export const createNotification = dbHandler(async (req, res) => {
     isRead: data.isRead,
   });
 
-  if (!notification) throw new ApiError("Notification not created");
+  if (!notification) throw new ApiError(400, "Notification not created");
 
   const cacheKey = `notifications-${userId}`;
 
@@ -35,7 +35,7 @@ export const createNotification = dbHandler(async (req, res) => {
 export const getUserNotifications = dbHandler(async (req, res) => {
   const userId = req.user?._id;
 
-  if (!userId) throw new ApiError("User id not found");
+  if (!userId) throw new ApiError(400, "User id not found");
 
   const cacheKey = `notifications-${userId}`;
 
@@ -56,7 +56,7 @@ export const getUserNotifications = dbHandler(async (req, res) => {
     userId,
   });
 
-  if (!notifications) throw new ApiError("Notifications not found");
+  if (!notifications) throw new ApiError(400, "Notifications not found");
 
   cache.set(cacheKey, notifications);
 
@@ -72,7 +72,7 @@ export const markNotificationAsRead = dbHandler(async (req, res) => {
   const userId = req.user?._id;
 
   if (!isValidObjectId(notificationId))
-    throw new ApiError("Invalid notification id");
+    throw new ApiError(400, "Invalid notification id");
 
   const notification = await Notification.findByIdAndUpdate(
     notificationId,
@@ -80,7 +80,7 @@ export const markNotificationAsRead = dbHandler(async (req, res) => {
     { new: true }
   );
 
-  if (!notification) throw new ApiError("Notification not found");
+  if (!notification) throw new ApiError(400, "Notification not found");
 
   const cacheKey = `notifications-${userId}`;
 
@@ -101,13 +101,13 @@ export const deleteNotification = dbHandler(async (req, res) => {
   const userId = req.user?._id;
 
   if (!isValidObjectId(notificationId))
-    throw new ApiError("User id not found");
+    throw new ApiError(400, "User id not found");
 
   const notification = await Notification.findByIdAndDelete(
     notificationId
   );
 
-  if (!notification) throw new ApiError("Notification not found");
+  if (!notification) throw new ApiError(400, "Notification not found");
 
   const cacheKey = `notifications-${userId}`;
 

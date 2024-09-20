@@ -21,7 +21,7 @@ export const getStories = dbHandler(async (req, res) => {
 
   const stories = await Story.find({ userId });
 
-  if (!stories) throw new ApiError("Stories not found");
+  if (!stories) throw new ApiError(400, "Stories not found");
 
   cache.set(cacheKey, stories);
 
@@ -35,14 +35,14 @@ export const addStory = dbHandler(async (req, res) => {
 
   const pdfFilePath = req.file?.path;
 
-  if (!pdfFilePath) throw new ApiError("File not found");
+  if (!pdfFilePath) throw new ApiError(400, "File not found");
 
   const story = await Story.create({
     userId,
     story: pdfFilePath,
   });
 
-  if (!story) throw new ApiError("Story not created");
+  if (!story) throw new ApiError(400, "Story not created");
 
   const cacheKey = `stories-${userId}`;
 
@@ -57,11 +57,12 @@ export const deleteStory = dbHandler(async (req, res) => {
   const storyId = req.params.storyId;
   const userId = req.user?._id;
 
-  if (!isValidObjectId(storyId)) throw new ApiError("Invalid story id");
+  if (!isValidObjectId(storyId))
+    throw new ApiError(400, "Invalid story id");
 
   const story = await Story.findByIdAndDelete(storyId);
 
-  if (!story) throw new ApiError("Story not found");
+  if (!story) throw new ApiError(400, "Story not found");
 
   const cacheKey = `stories-${userId}`;
 
@@ -77,12 +78,13 @@ export const updateStory = dbHandler(async (req, res) => {
   const userId = req.user?._id;
   const pdfFilePath = req.file?.path;
 
-  if (!pdfFilePath) throw new ApiError("File not found");
-  if (!isValidObjectId(storyId)) throw new ApiError("Invalid story id");
+  if (!pdfFilePath) throw new ApiError(400, "File not found");
+  if (!isValidObjectId(storyId))
+    throw new ApiError(400, "Invalid story id");
 
   const story = await Story.findById(storyId);
 
-  if (!story) throw new ApiError("Story not found");
+  if (!story) throw new ApiError(400, "Story not found");
 
   const oldStoryPath = path.join(__dirname, story.story);
 

@@ -10,9 +10,9 @@ export const createUserDetails = dbHandler(async (req, res) => {
 
   const { success, data, error } = userDetailsSchema.safeParse(req.body);
 
-  if (!success) throw new ApiError(error.message);
+  if (!success) throw new ApiError(400, error.message);
 
-  if (!isValidObjectId(userId)) throw new ApiError("Invalid user id");
+  if (!isValidObjectId(userId)) throw new ApiError(400, "Invalid user id");
 
   const cacheKey = `userDetails-${userId}`;
 
@@ -24,7 +24,7 @@ export const createUserDetails = dbHandler(async (req, res) => {
     subject: data.subject,
   });
 
-  if (!userDetails) throw new ApiError("User details not created");
+  if (!userDetails) throw new ApiError(400, "User details not created");
 
   if (cache.has(cacheKey)) cache.del(cacheKey);
 
@@ -40,7 +40,7 @@ export const getUserDetailsById = dbHandler(async (req, res) => {
 
   const userDetails = await UserDetails.findById(userId);
 
-  if (!userDetails) throw new ApiError("User details not found");
+  if (!userDetails) throw new ApiError(400, "User details not found");
 
   const cacheKey = `userDetails-${userId}`;
 
@@ -69,11 +69,11 @@ export const updateUserDetails = dbHandler(async (req, res) => {
   const userId = req.user?._id;
 
   if (!isValidObjectId(userDetailId))
-    throw new ApiError("Invalid user detail  id");
+    throw new ApiError(400, "Invalid user detail  id");
 
   const { success, data, error } = userDetailsSchema.safeParse(req.body);
 
-  if (!success) throw new ApiError(error.message);
+  if (!success) throw new ApiError(400, error.message);
 
   const updatedUserDetails = await UserDetails.findByIdAndUpdate(
     userDetailId,
@@ -86,7 +86,8 @@ export const updateUserDetails = dbHandler(async (req, res) => {
     { new: true }
   );
 
-  if (!updatedUserDetails) throw new ApiError("User details not found");
+  if (!updatedUserDetails)
+    throw new ApiError(400, "User details not found");
 
   const cacheKey = `userDetails-${userId}`;
 
@@ -106,13 +107,14 @@ export const deleteUserDetails = dbHandler(async (req, res) => {
   const userDetailId = req.params.userDetailId;
 
   if (!isValidObjectId(userDetailId))
-    throw new ApiError("Invalid user id");
+    throw new ApiError(400, "Invalid user id");
 
   const deletedUserDetails = await UserDetails.findByIdAndDelete(
     userDetailId
   );
 
-  if (!deletedUserDetails) throw new ApiError("User details not found");
+  if (!deletedUserDetails)
+    throw new ApiError(400, "User details not found");
 
   res
     .status(200)

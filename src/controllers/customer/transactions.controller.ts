@@ -8,7 +8,8 @@ export const createTransaction = dbHandler(async (req, res) => {
   const userId = req.user?._id;
   const walletId = req.params.walletId;
 
-  if (!isValidObjectId(walletId)) throw new ApiError("Invalid wallet id");
+  if (!isValidObjectId(walletId))
+    throw new ApiError(400, "Invalid wallet id");
 
   const { amount, transactionType, description } = req.body;
 
@@ -20,7 +21,7 @@ export const createTransaction = dbHandler(async (req, res) => {
     description,
   });
 
-  if (!transaction) throw new ApiError("Transaction not created");
+  if (!transaction) throw new ApiError(400, "Transaction not created");
 
   const cacheKey = `transactions-${userId}`;
 
@@ -53,7 +54,8 @@ export const getUserTransactions = dbHandler(async (req, res) => {
     transactionDate: -1,
   });
 
-  if (!transactions.length) throw new ApiError("No transactions found");
+  if (!transactions.length)
+    throw new ApiError(400, "No transactions found");
 
   cache.set(cacheKey, transactions);
 
@@ -70,7 +72,7 @@ export const updateTransaction = dbHandler(async (req, res) => {
   const userId = req.user?._id;
 
   if (!isValidObjectId(transactionId))
-    throw new ApiError("Invalid transaction id");
+    throw new ApiError(400, "Invalid transaction id");
 
   const transaction = await Transaction.findByIdAndUpdate(
     transactionId,
@@ -78,7 +80,7 @@ export const updateTransaction = dbHandler(async (req, res) => {
     { new: true }
   );
 
-  if (!transaction) throw new ApiError("Transaction not found");
+  if (!transaction) throw new ApiError(400, "Transaction not found");
 
   const cacheKey = `transactions-${userId}`;
 
@@ -94,10 +96,10 @@ export const deleteTransaction = dbHandler(async (req, res) => {
   const userId = req.user?._id;
 
   if (!isValidObjectId(transactionId))
-    throw new ApiError("Invalid transaction id");
+    throw new ApiError(400, "Invalid transaction id");
 
   const transaction = await Transaction.findByIdAndDelete(transactionId);
-  if (!transaction) throw new ApiError("Transaction not found");
+  if (!transaction) throw new ApiError(400, "Transaction not found");
 
   const cacheKey = `transactions-${userId}`;
 

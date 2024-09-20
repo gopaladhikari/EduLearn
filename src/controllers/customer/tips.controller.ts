@@ -20,7 +20,7 @@ export const getTips = dbHandler(async (req, res) => {
 
   const tips = await Tip.find({ userId });
 
-  if (!tips) throw new ApiError("Tips not found");
+  if (!tips) throw new ApiError(400, "Tips not found");
 
   cache.set(cacheKey, tips);
 
@@ -32,7 +32,7 @@ export const createTip = dbHandler(async (req, res) => {
 
   const { success, data, error } = tipsSchema.safeParse(req.body);
 
-  if (!success) throw new ApiError(error.message);
+  if (!success) throw new ApiError(400, error.message);
 
   const tip = await Tip.create({
     userId,
@@ -40,7 +40,7 @@ export const createTip = dbHandler(async (req, res) => {
     content: data.content,
   });
 
-  if (!tip) throw new ApiError("Tip not created");
+  if (!tip) throw new ApiError(400, "Tip not created");
 
   const cacheKey = `tips-${userId}`;
 
@@ -53,11 +53,11 @@ export const updateTip = dbHandler(async (req, res) => {
   const tipId = req.params.tipId;
   const userId = req.user?._id;
 
-  if (!isValidObjectId(tipId)) throw new ApiError("Tip id not valid");
+  if (!isValidObjectId(tipId)) throw new ApiError(400, "Tip id not valid");
 
   const { data, success, error } = tipsSchema.safeParse(req.body);
 
-  if (!success) throw new ApiError(error.message);
+  if (!success) throw new ApiError(400, error.message);
 
   const tip = await Tip.findByIdAndUpdate(
     tipId,
@@ -68,7 +68,7 @@ export const updateTip = dbHandler(async (req, res) => {
     { new: true }
   );
 
-  if (!tip) throw new ApiError("Tip not found");
+  if (!tip) throw new ApiError(400, "Tip not found");
 
   const cacheKey = `tips-${userId}`;
 
@@ -81,11 +81,12 @@ export const deleteTip = dbHandler(async (req, res) => {
   const tipdId = req.params.tipId;
   const userId = req.user?._id;
 
-  if (!isValidObjectId(tipdId)) throw new ApiError("Tip id not valid");
+  if (!isValidObjectId(tipdId))
+    throw new ApiError(400, "Tip id not valid");
 
   const tip = await Tip.findByIdAndDelete(tipdId);
 
-  if (!tip) throw new ApiError("Tip not found");
+  if (!tip) throw new ApiError(400, "Tip not found");
 
   const cacheKey = `tips-${userId}`;
 

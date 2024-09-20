@@ -9,7 +9,7 @@ export const createCoupon = dbHandler(async (req, res) => {
   const userId = req.user?._id;
   const { success, data, error } = couponSchema.safeParse(req.body);
 
-  if (!success) throw new ApiError(error.message);
+  if (!success) throw new ApiError(400, error.message);
 
   const newCoupon = await Coupon.create({
     couponCode: data.couponCode,
@@ -17,7 +17,7 @@ export const createCoupon = dbHandler(async (req, res) => {
     description: data.description,
   });
 
-  if (!newCoupon) throw new ApiError("Coupon not created!");
+  if (!newCoupon) throw new ApiError(400, "Coupon not created!");
 
   const cacheKey = `coupons-${userId}`;
 
@@ -44,7 +44,7 @@ export const getAllCoupons = dbHandler(async (req, res) => {
       );
   }
 
-  if (!coupons.length) throw new ApiError("Coupons not found!");
+  if (!coupons.length) throw new ApiError(400, "Coupons not found!");
 
   cache.set(cacheKey, coupons);
 
@@ -58,11 +58,12 @@ export const updateCoupon = dbHandler(async (req, res) => {
 
   const userId = req.user?._id;
 
-  if (!isValidObjectId(couponId)) throw new ApiError("Invalid coupon id!");
+  if (!isValidObjectId(couponId))
+    throw new ApiError(400, "Invalid coupon id!");
 
   const { data, success, error } = couponSchema.safeParse(req.body);
 
-  if (!success) throw new ApiError(error.message);
+  if (!success) throw new ApiError(400, error.message);
 
   const coupon = await Coupon.findByIdAndUpdate(couponId, {
     couponCode: data.couponCode,
@@ -70,7 +71,7 @@ export const updateCoupon = dbHandler(async (req, res) => {
     description: data.description,
   });
 
-  if (!coupon) throw new ApiError("Coupon not found!");
+  if (!coupon) throw new ApiError(400, "Coupon not found!");
 
   const cacheKey = `coupons-${userId}`;
 
@@ -86,11 +87,12 @@ export const deleteCoupon = dbHandler(async (req, res) => {
 
   const userId = req.user?._id;
 
-  if (!isValidObjectId(couponId)) throw new ApiError("Invalid coupon id!");
+  if (!isValidObjectId(couponId))
+    throw new ApiError(400, "Invalid coupon id!");
 
   const coupon = await Coupon.findByIdAndDelete(couponId);
 
-  if (!coupon) throw new ApiError("Coupon not found!");
+  if (!coupon) throw new ApiError(400, "Coupon not found!");
 
   const cacheKey = `coupons-${userId}`;
 

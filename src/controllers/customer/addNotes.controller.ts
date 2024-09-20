@@ -9,7 +9,8 @@ export const getNotes = dbHandler(async (req, res) => {
   const courseId = req.params.courseId;
   const userId = req.user?._id;
 
-  if (!isValidObjectId(courseId)) throw new ApiError("Invalid courseId");
+  if (!isValidObjectId(courseId))
+    throw new ApiError(400, "Invalid courseId");
 
   const cacheKey = `notes-${userId}`;
 
@@ -22,7 +23,7 @@ export const getNotes = dbHandler(async (req, res) => {
 
   const addNotes = await AddNotes.find({ userId, courseId });
 
-  if (!addNotes) throw new ApiError("AddNotes not found");
+  if (!addNotes) throw new ApiError(400, "AddNotes not found");
 
   cache.set(cacheKey, addNotes);
 
@@ -35,11 +36,12 @@ export const createNote = dbHandler(async (req, res) => {
   const userId = req.user?._id;
   const courseId = req.params.courseId;
 
-  if (!isValidObjectId(courseId)) throw new ApiError("Invalid courseId");
+  if (!isValidObjectId(courseId))
+    throw new ApiError(400, "Invalid courseId");
 
   const { data, success, error } = addNotesSchema.safeParse(req.body);
 
-  if (!success) throw new ApiError(error.message);
+  if (!success) throw new ApiError(400, error.message);
 
   const addNotes = await AddNotes.create({
     userId,
@@ -47,7 +49,7 @@ export const createNote = dbHandler(async (req, res) => {
     note: data.note,
   });
 
-  if (!addNotes) throw new ApiError("AddNotes not found");
+  if (!addNotes) throw new ApiError(400, "AddNotes not found");
   const cacheKey = `notes-${userId}`;
 
   if (cache.has(cacheKey)) cache.del(cacheKey);
@@ -61,11 +63,12 @@ export const updateNote = dbHandler(async (req, res) => {
   const noteId = req.params.noteId;
   const userId = req.user?._id;
 
-  if (!isValidObjectId(noteId)) throw new ApiError("Invalid courseId");
+  if (!isValidObjectId(noteId))
+    throw new ApiError(400, "Invalid courseId");
 
   const { data, success, error } = addNotesSchema.safeParse(req.body);
 
-  if (!success) throw new ApiError(error.message);
+  if (!success) throw new ApiError(400, error.message);
 
   const updatedNotes = await AddNotes.findByIdAndUpdate(
     noteId,
@@ -77,7 +80,7 @@ export const updateNote = dbHandler(async (req, res) => {
     }
   );
 
-  if (!updatedNotes) throw new ApiError("AddNotes not found");
+  if (!updatedNotes) throw new ApiError(400, "AddNotes not found");
 
   const cacheKey = `notes-${userId}`;
 
@@ -92,11 +95,12 @@ export const deleteAddNotes = dbHandler(async (req, res) => {
   const noteId = req.params.noteId;
   const userId = req.user?._id;
 
-  if (!isValidObjectId(noteId)) throw new ApiError("Invalid courseId");
+  if (!isValidObjectId(noteId))
+    throw new ApiError(400, "Invalid courseId");
 
   const addNotes = await AddNotes.findByIdAndDelete(noteId);
 
-  if (!addNotes) throw new ApiError("AddNotes not found");
+  if (!addNotes) throw new ApiError(400, "AddNotes not found");
 
   const cacheKey = `notes-${userId}`;
 

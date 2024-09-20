@@ -7,13 +7,15 @@ import { isValidObjectId } from "mongoose";
 export const createUniversity = dbHandler(async (req, res) => {
   const universityName = req.body.universityName;
   const userId = req.user?._id;
-  if (!universityName) throw new ApiError("University name is required");
+  if (!universityName)
+    throw new ApiError(400, "University name is required");
 
   const newUniversity = await University.create({
     universityName: universityName,
   });
 
-  if (!newUniversity) throw new ApiError("Could not create university");
+  if (!newUniversity)
+    throw new ApiError(400, "Could not create university");
 
   const cacheKey = `university-${userId}`;
 
@@ -38,7 +40,8 @@ export const getAllUniversities = dbHandler(async (req, res) => {
       .json(new ApiSuccess("All universities", cachedUniversities));
   }
 
-  if (!universities) throw new ApiError("Could not get all universities");
+  if (!universities)
+    throw new ApiError(400, "Could not get all universities");
 
   cache.set(cacheKey, universities);
 
@@ -49,7 +52,8 @@ export const getUniversityById = dbHandler(async (req, res) => {
   const universityId = req.params.universityId;
   const userId = req.user?._id;
 
-  if (!isValidObjectId(universityId)) throw new ApiError("Invalid id");
+  if (!isValidObjectId(universityId))
+    throw new ApiError(400, "Invalid id");
 
   const cacheKey = `university-${userId}-${universityId}`;
 
@@ -63,7 +67,8 @@ export const getUniversityById = dbHandler(async (req, res) => {
 
   const university = await University.findById(universityId);
 
-  if (!university) throw new ApiError("Could not get university by id");
+  if (!university)
+    throw new ApiError(400, "Could not get university by id");
 
   cache.set(cacheKey, university);
 
@@ -75,9 +80,11 @@ export const updateUniversity = dbHandler(async (req, res) => {
   const universityId = req.params.universityId;
   const userId = req.user?._id;
 
-  if (!isValidObjectId(universityId)) throw new ApiError("Invalid id");
+  if (!isValidObjectId(universityId))
+    throw new ApiError(400, "Invalid id");
 
-  if (!universityName) throw new ApiError("University name is required");
+  if (!universityName)
+    throw new ApiError(400, "University name is required");
 
   const updatedUniversity = await University.findByIdAndUpdate(
     universityId,
@@ -87,7 +94,7 @@ export const updateUniversity = dbHandler(async (req, res) => {
   );
 
   if (!updatedUniversity)
-    throw new ApiError("Could not update university");
+    throw new ApiError(400, "Could not update university");
 
   const cacheKey = `university-${userId}-${universityId}`;
   const cacheKey2 = `university-${userId}`;
@@ -104,14 +111,15 @@ export const deleteUniversity = dbHandler(async (req, res) => {
   const universityId = req.params.universityId;
   const userId = req.user?._id;
 
-  if (!isValidObjectId(universityId)) throw new ApiError("Invalid id");
+  if (!isValidObjectId(universityId))
+    throw new ApiError(400, "Invalid id");
 
   const deletedUniversity = await University.findByIdAndDelete(
     universityId
   );
 
   if (!deletedUniversity)
-    throw new ApiError("Could not delete university");
+    throw new ApiError(400, "Could not delete university");
 
   const cacheKey = `university-${userId}-${universityId}`;
   const cacheKey2 = `university-${userId}`;

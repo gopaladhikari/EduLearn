@@ -10,7 +10,7 @@ export const createWallet = dbHandler(async (req, res) => {
   const existingWallet = await Wallet.findOne({ userId });
 
   if (existingWallet)
-    throw new ApiError("Wallet already exists for this user");
+    throw new ApiError(400, "Wallet already exists for this user");
 
   const newWallet = await Wallet.create({ userId });
 
@@ -38,7 +38,7 @@ export const getWallet = dbHandler(async (req, res) => {
 
   const wallet = await Wallet.findOne({ userId }).populate("transactions");
 
-  if (!wallet) throw new ApiError("Wallet not found");
+  if (!wallet) throw new ApiError(400, "Wallet not found");
 
   cache.set(cacheKey, wallet);
 
@@ -52,7 +52,8 @@ export const updateWalletBalance = dbHandler(async (req, res) => {
   const userId = req.user?._id;
   const { amount } = req.body;
 
-  if (!isValidObjectId(walletId)) throw new ApiError("Invalid wallet id");
+  if (!isValidObjectId(walletId))
+    throw new ApiError(400, "Invalid wallet id");
 
   const wallet = await Wallet.findByIdAndUpdate(
     walletId,
@@ -64,7 +65,7 @@ export const updateWalletBalance = dbHandler(async (req, res) => {
     }
   );
 
-  if (!wallet) throw new ApiError("Wallet not found");
+  if (!wallet) throw new ApiError(400, "Wallet not found");
 
   const cacheKey = `wallet-${userId}`;
 
@@ -79,11 +80,12 @@ export const deleteWallet = dbHandler(async (req, res) => {
   const walletId = req.params.walletId;
   const userId = req.user?._id;
 
-  if (!isValidObjectId(walletId)) throw new ApiError("Invalid wallet id");
+  if (!isValidObjectId(walletId))
+    throw new ApiError(400, "Invalid wallet id");
 
   const wallet = await Wallet.findByIdAndDelete(walletId);
 
-  if (!wallet) throw new ApiError("Wallet not found");
+  if (!wallet) throw new ApiError(400, "Wallet not found");
 
   const cacheKey = `wallet-${userId}`;
 

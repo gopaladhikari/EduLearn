@@ -16,7 +16,7 @@ export const createLesson = dbHandler(async (req, res) => {
 
   const { success, data, error } = lessonSchema.safeParse(req.body);
 
-  if (!success) throw new ApiError(error.message);
+  if (!success) throw new ApiError(400, error.message);
 
   const files = req.files as UploadedFiles;
 
@@ -25,7 +25,7 @@ export const createLesson = dbHandler(async (req, res) => {
   const lessonVideoPath = files?.lessonVideo[0].path;
 
   if (!thumbnailImagePath || !lessonVideoPath)
-    throw new ApiError("Files are missing");
+    throw new ApiError(400, "Files are missing");
 
   const cacheKey = `lessons-${userId}`;
 
@@ -38,7 +38,7 @@ export const createLesson = dbHandler(async (req, res) => {
     isPaid: data.isPaid,
   });
 
-  if (!lesson) throw new ApiError("Lesson not created");
+  if (!lesson) throw new ApiError(400, "Lesson not created");
 
   if (cache.has(cacheKey)) cache.del(cacheKey);
 
@@ -62,7 +62,7 @@ export const getLessons = dbHandler(async (req, res) => {
 
   const lessons = await Lesson.find();
 
-  if (!lessons.length) throw new ApiError("Lessons not found");
+  if (!lessons.length) throw new ApiError(400, "Lessons not found");
 
   cache.set(cacheKey, lessons);
 
@@ -75,7 +75,8 @@ export const getLessonById = dbHandler(async (req, res) => {
   const lessonId = req.params.lessonId;
   const userId = req.user?._id;
 
-  if (!isValidObjectId(lessonId)) throw new ApiError("Invalid lesson id");
+  if (!isValidObjectId(lessonId))
+    throw new ApiError(400, "Invalid lesson id");
 
   const cacheKey = `lessons-${userId}-${lessonId}`;
 
@@ -89,7 +90,7 @@ export const getLessonById = dbHandler(async (req, res) => {
 
   const lesson = await Lesson.findById(lessonId);
 
-  if (!lesson) throw new ApiError("Lesson not found");
+  if (!lesson) throw new ApiError(400, "Lesson not found");
 
   res
     .status(200)
@@ -100,11 +101,12 @@ export const updateLesson = dbHandler(async (req, res) => {
   const lessonId = req.params.lessonId;
   const userId = req.user?._id;
 
-  if (!isValidObjectId(lessonId)) throw new ApiError("Invalid lesson id");
+  if (!isValidObjectId(lessonId))
+    throw new ApiError(400, "Invalid lesson id");
 
   const { data, success, error } = lessonSchema.safeParse(req.body);
 
-  if (!success) throw new ApiError(error.message);
+  if (!success) throw new ApiError(400, error.message);
 
   const files = req.files as UploadedFiles;
 
@@ -113,7 +115,7 @@ export const updateLesson = dbHandler(async (req, res) => {
 
   const lesson = await Lesson.findById(lessonId);
 
-  if (!lesson) throw new ApiError("Lesson not found");
+  if (!lesson) throw new ApiError(400, "Lesson not found");
 
   lesson.courseId = new mongoose.Types.ObjectId(data.courseId);
   lesson.lessonTitle = data.lessonTitle;
@@ -126,7 +128,7 @@ export const updateLesson = dbHandler(async (req, res) => {
 
   const updatedLesson = await lesson.save();
 
-  if (!updatedLesson) throw new ApiError("Lesson not updated");
+  if (!updatedLesson) throw new ApiError(400, "Lesson not updated");
 
   const cacheKey = `lessons-${userId}`;
   const cacheKey2 = `lessons-${userId}-${lessonId}`;
@@ -143,11 +145,12 @@ export const deleteLesson = dbHandler(async (req, res) => {
   const lessonId = req.params.lessonId;
   const userId = req.user?._id;
 
-  if (!isValidObjectId(lessonId)) throw new ApiError("Invalid lesson id");
+  if (!isValidObjectId(lessonId))
+    throw new ApiError(400, "Invalid lesson id");
 
   const lesson = await Lesson.findByIdAndDelete(lessonId);
 
-  if (!lesson) throw new ApiError("Lesson not found");
+  if (!lesson) throw new ApiError(400, "Lesson not found");
 
   const cacheKey = `lessons-${userId}`;
 

@@ -9,9 +9,10 @@ export const createCart = dbHandler(async (req, res) => {
   const mainCourseId = req.params.mainCourseId;
   const { quantity } = req.body;
 
-  if (!isValidObjectId(mainCourseId)) throw new ApiError("Invalid id");
+  if (!isValidObjectId(mainCourseId))
+    throw new ApiError(400, "Invalid id");
 
-  if (!quantity) throw new ApiError("Quantity is required");
+  if (!quantity) throw new ApiError(400, "Quantity is required");
 
   const existingCart = await Cart.findOne({ userId });
 
@@ -40,7 +41,7 @@ export const createCart = dbHandler(async (req, res) => {
     courses: [{ mainCourseId, quantity }],
   });
 
-  if (!cart) throw new ApiError("Cart not created");
+  if (!cart) throw new ApiError(400, "Cart not created");
 
   res.status(201).json(new ApiSuccess("Cart created successfully", cart));
 });
@@ -60,7 +61,7 @@ export const getCart = dbHandler(async (req, res) => {
 
   const cart = await Cart.findOne({ userId }).populate("courses");
 
-  if (!cart) throw new ApiError("Cart not found");
+  if (!cart) throw new ApiError(400, "Cart not found");
 
   cache.set(cacheKey, cart);
 
@@ -73,19 +74,19 @@ export const updateCart = dbHandler(async (req, res) => {
   const { quantity } = req.body;
 
   if (!isValidObjectId(mainCourseId))
-    throw new ApiError("Invalid main course id");
+    throw new ApiError(400, "Invalid main course id");
 
-  if (!quantity) throw new ApiError("Quantity is required");
+  if (!quantity) throw new ApiError(400, "Quantity is required");
 
   const existingCart = await Cart.findOne({ userId });
 
-  if (!existingCart) throw new ApiError("Cart not found");
+  if (!existingCart) throw new ApiError(400, "Cart not found");
 
   const courseIndex = existingCart.courses.findIndex(
     (course) => course.mainCourseId.toString() === mainCourseId
   );
 
-  if (courseIndex === -1) throw new ApiError("Course not found");
+  if (courseIndex === -1) throw new ApiError(400, "Course not found");
 
   existingCart.courses[courseIndex].quantity = quantity;
 
@@ -105,11 +106,11 @@ export const deleteCourseFromCart = dbHandler(async (req, res) => {
   const mainCourseId = req.params.mainCourseId;
 
   if (!isValidObjectId(mainCourseId))
-    throw new ApiError("Invalid main course id");
+    throw new ApiError(400, "Invalid main course id");
 
   const cart = await Cart.findOne({ userId });
 
-  if (!cart) throw new ApiError("Cart not found");
+  if (!cart) throw new ApiError(400, "Cart not found");
 
   cart.courses.pull({ mainCourseId });
 
@@ -126,11 +127,11 @@ export const clearCart = dbHandler(async (req, res) => {
   const cartId = req.params.cartId;
   const userId = req.user?._id;
 
-  if (!isValidObjectId(cartId)) throw new ApiError("Invalid id");
+  if (!isValidObjectId(cartId)) throw new ApiError(400, "Invalid id");
 
   const cart = await Cart.findByIdAndDelete(cartId);
 
-  if (!cart) throw new ApiError("Cart not found");
+  if (!cart) throw new ApiError(400, "Cart not found");
 
   const cacheKey = `cart-${userId}`;
 

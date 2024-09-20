@@ -22,7 +22,7 @@ export const getBookmarks = dbHandler(async (req, res) => {
     "mainCourseId"
   );
 
-  if (!bookmarks) throw new ApiError("Bookmarks not found");
+  if (!bookmarks) throw new ApiError(400, "Bookmarks not found");
 
   cache.set(cacheKey, bookmarks);
 
@@ -39,14 +39,14 @@ export const addBookmark = dbHandler(async (req, res) => {
   const cacheKey = `bookmarks-${userId}`;
 
   if (!isValidObjectId(mainCourseId))
-    throw new ApiError("Invalid main course id");
+    throw new ApiError(400, "Invalid main course id");
 
   const bookmark = await Bookmark.create({
     userId,
     mainCourseId,
   });
 
-  if (!bookmark) throw new ApiError("Bookmark not created");
+  if (!bookmark) throw new ApiError(400, "Bookmark not created");
 
   if (cache.has(cacheKey)) cache.del(cacheKey);
 
@@ -60,13 +60,13 @@ export const deleteBookmark = dbHandler(async (req, res) => {
   const userId = req.user?._id;
 
   if (!isValidObjectId(bookmarkId))
-    throw new ApiError("Invalid bookmark id");
+    throw new ApiError(400, "Invalid bookmark id");
 
   const cacheKey = `bookmarks-${userId}`;
 
   const bookmark = await Bookmark.findByIdAndDelete(bookmarkId);
 
-  if (!bookmark) throw new ApiError("Bookmark not found");
+  if (!bookmark) throw new ApiError(400, "Bookmark not found");
 
   if (cache.has(cacheKey)) cache.del(cacheKey);
 

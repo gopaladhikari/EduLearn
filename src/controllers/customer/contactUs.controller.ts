@@ -6,7 +6,7 @@ import { ApiSuccess, ApiError } from "../../utils/apiResponse";
 export const createContactUs = dbHandler(async (req, res) => {
   const { success, data, error } = contactUsSchema.safeParse(req.body);
 
-  if (!success) throw new ApiError(error.message);
+  if (!success) throw new ApiError(400, error.message);
 
   const newContactRequest = await ContactUs.create({
     name: data.name,

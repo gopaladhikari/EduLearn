@@ -12,11 +12,12 @@ export const createReview = dbHandler(async (req, res) => {
   const courseId = req.params.courseId;
   const userId = req.user?._id;
 
-  if (!isValidObjectId(courseId)) throw new ApiError("Invalid course id");
+  if (!isValidObjectId(courseId))
+    throw new ApiError(400, "Invalid course id");
 
   const { success, data, error } = createReviewSchema.safeParse(req.body);
 
-  if (!success) throw new ApiError(error.message);
+  if (!success) throw new ApiError(400, error.message);
 
   const review = await TopReviews.create({
     courseId,
@@ -26,7 +27,7 @@ export const createReview = dbHandler(async (req, res) => {
     userName: data.userName,
   });
 
-  if (!review) throw new ApiError("Review not created");
+  if (!review) throw new ApiError(400, "Review not created");
 
   const cacheKey = `topReviews-${userId}`;
 
@@ -42,7 +43,7 @@ export const getAllReviewsByCourseId = dbHandler(async (req, res) => {
   const userId = req.user?._id;
 
   if (!isValidObjectId(courseId))
-    throw new ApiError("Course id is required");
+    throw new ApiError(400, "Course id is required");
 
   const cacheKey = `topReviews-${userId}`;
 
@@ -57,7 +58,7 @@ export const getAllReviewsByCourseId = dbHandler(async (req, res) => {
   const reviews = await TopReviews.find({ courseId });
 
   if (!reviews.length)
-    throw new ApiError("No reviews found for this course");
+    throw new ApiError(400, "No reviews found for this course");
 
   cache.set(cacheKey, reviews);
 
@@ -71,11 +72,11 @@ export const updatedReview = dbHandler(async (req, res) => {
   const userId = req.user?._id;
 
   if (!isValidObjectId(reviewId))
-    throw new ApiError("Review id is required");
+    throw new ApiError(400, "Review id is required");
 
   const { success, data, error } = updateReviewSchema.safeParse(req.body);
 
-  if (!success) throw new ApiError(error.message);
+  if (!success) throw new ApiError(400, error.message);
 
   const updatedReview = await TopReviews.findByIdAndUpdate(
     reviewId,
@@ -86,7 +87,7 @@ export const updatedReview = dbHandler(async (req, res) => {
     { new: true }
   );
 
-  if (!updatedReview) throw new ApiError("Review not found");
+  if (!updatedReview) throw new ApiError(400, "Review not found");
 
   const cacheKey = `topReviews-${userId}`;
 
@@ -102,11 +103,11 @@ export const deleteReview = dbHandler(async (req, res) => {
   const userId = req.user?._id;
 
   if (!isValidObjectId(reviewId))
-    throw new ApiError("Review id is required");
+    throw new ApiError(400, "Review id is required");
 
   const deletedReview = await TopReviews.findByIdAndDelete(reviewId);
 
-  if (!deletedReview) throw new ApiError("Review not found");
+  if (!deletedReview) throw new ApiError(400, "Review not found");
 
   const cacheKey = `topReviews-${userId}`;
 

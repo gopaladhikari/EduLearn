@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
     "rootDir": "src",
+    "types": ["node", "express"],
+    "resolveJsonModule": true,
     "removeComments": true,
     "esModuleInterop": true,
     "module": "NodeNext",

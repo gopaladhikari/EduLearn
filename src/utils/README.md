@@ -79,7 +79,7 @@ import { ApiError } from "../utils/apiResponse";
 try {
   // Some code that may throw an error
 } catch (error) {
-  throw new ApiError("Error message");
+  throw new ApiError(400, "Error message");
 }
 ```
 

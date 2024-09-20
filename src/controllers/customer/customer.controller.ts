@@ -1,7 +1,11 @@
 import { Customer } from "../../models/customer/customer.model";
+import {
+  registerSchema,
+  loginSchema,
+  customerDetailsSchema,
+} from "../../schemas/customerSchema";
 import { ApiError, ApiSuccess } from "../../utils/apiResponse";
 import { dbHandler } from "../../utils/dbHandler";
-import { loginSchema, registerSchema } from "../../schemas/userSchema";
 
 export const registerUser = dbHandler(async (req, res) => {
   const { success, data, error } = registerSchema.safeParse(req.body);
@@ -56,4 +60,31 @@ export const getCustomer = dbHandler(async (req, res) => {
   return res
     .status(200)
     .json(new ApiSuccess("User fetched successfully", req.customer));
+});
+
+export const updateCustomer = dbHandler(async (req, res) => {
+  const customerId = req.customer?._id;
+
+  const { success, data, error } = customerDetailsSchema.safeParse(
+    req.body
+  );
+
+  if (!success) throw new ApiError(400, error.message, error.errors);
+
+  const customer = await Customer.findById(customerId);
+
+  if (!customer) throw new ApiError(404, "User not found");
+
+  customer.fullName = data.fullName;
+  customer.email = data.email;
+  customer.phoneNumber = data.phoneNumber;
+  customer.password = data.password;
+
+  const updatedCustomer = await customer.save();
+
+  if (!updatedCustomer) throw new ApiError(400, "User not updated");
+
+  res
+    .status(200)
+    .json(new ApiSuccess("User updated successfully", updatedCustomer));
 });

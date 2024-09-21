@@ -1,7 +1,7 @@
 import { Router } from "express";
 import {
   deleteAdmin,
-  getAdminById,
+  getAdmin,
   loginAdmin,
   registerAdmin,
   updateAdmin,
@@ -14,8 +14,8 @@ const adminRouter = Router();
 adminRouter.route("/register").post(registerAdmin);
 adminRouter.route("/login").post(loginAdmin);
 
-// public routes
-adminRouter.route("/").get(verifyJwt, getAdminById);
+// private routes
+adminRouter.route("/").get(verifyJwt, getAdmin);
 adminRouter.route("/update").put(verifyJwt, updateAdmin);
 adminRouter.route("/delete").delete(verifyJwt, deleteAdmin);
 

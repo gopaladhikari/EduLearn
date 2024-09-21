@@ -1,9 +1,6 @@
 import { Customer } from "../../models/customer/customer.model";
-import {
-  registerSchema,
-  loginSchema,
-  customerDetailsSchema,
-} from "../../schemas/customerSchema";
+import { customerDetailsSchema } from "../../schemas/customerSchema";
+import { registerSchema, loginSchema } from "../../schemas/userSchema";
 import { ApiError, ApiSuccess } from "../../utils/apiResponse";
 import { dbHandler } from "../../utils/dbHandler";
 
@@ -12,25 +9,27 @@ export const registerUser = dbHandler(async (req, res) => {
 
   if (!success) throw new ApiError(400, "Invalid data", error.errors);
 
-  const existingUser = await Customer.findOne({
+  const existingCustomer = await Customer.findOne({
     $or: [{ phoneNumber: data.phoneNumber }, { email: data.email }],
   });
 
-  if (existingUser)
+  if (existingCustomer)
     throw new ApiError(
       400,
       "User of this email or phone number already exists"
     );
 
-  const user = await Customer.create({
+  const newCustomer = await Customer.create({
     fullName: data.fullName,
     phoneNumber: data.phoneNumber,
     email: data.email,
   });
 
-  if (!user) throw new ApiError(400, "User not created");
+  if (!newCustomer) throw new ApiError(400, "User not created");
 
-  res.status(201).json(new ApiSuccess("User created successfully", user));
+  res
+    .status(201)
+    .json(new ApiSuccess("User created successfully", newCustomer));
 });
 
 export const loginUser = dbHandler(async (req, res) => {
@@ -71,7 +70,7 @@ export const updateCustomer = dbHandler(async (req, res) => {
 
   if (!success) throw new ApiError(400, "Invalid data", error.errors);
 
-  const customer = await Customer.findById(customerId);
+  const customer = await Customer.findById(customerId).select("-password");
 
   if (!customer) throw new ApiError(404, "User not found");
 

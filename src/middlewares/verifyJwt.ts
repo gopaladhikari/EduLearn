@@ -36,7 +36,7 @@ export const verifyJwt = dbHandler(async (req, res, next) => {
     if (decoded.role === "customer") {
       const customer = await Customer.findById(decoded._id);
 
-      if (!customer) throw new ApiError(404, "User not found");
+      if (!customer) throw new ApiError(404, "Customer not found");
 
       req.customer = customer;
 
@@ -46,7 +46,7 @@ export const verifyJwt = dbHandler(async (req, res, next) => {
     if (decoded.role === "admin") {
       const admin = await Admin.findById(decoded._id);
 
-      if (!admin) throw new ApiError(404, "User not found");
+      if (!admin) throw new ApiError(404, "Admin not found");
 
       req.admin = admin;
 

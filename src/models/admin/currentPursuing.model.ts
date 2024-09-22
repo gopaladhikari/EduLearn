@@ -1,56 +1,24 @@
 import mongoose from "mongoose";
 
-const currentPursuingName = new mongoose.Schema(
-  {
-    name: {
-      type: String,
-      required: true,
-    },
-    logo: {
-      type: String,
-      required: true,
-    },
-  },
-  { timestamps: true }
-);
-
-const subjectName = new mongoose.Schema(
-  {
-    name: {
-      type: String,
-      required: true,
-    },
-    logo: {
-      type: String,
-      required: true,
-    },
-  },
-  { timestamps: true }
-);
-
-const semesterName = new mongoose.Schema(
-  {
-    name: {
-      type: String,
-      required: true,
-    },
-  },
-  { timestamps: true }
-);
-
 const currentPursuingSchema = new mongoose.Schema(
   {
+    name: { type: String, required: true },
+
     universityId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "University",
       required: true,
+      index: true,
     },
 
-    currentPursuingName: [currentPursuingName],
+    semesters: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Semester",
+      },
+    ],
 
-    semesters: [semesterName],
-
-    subjects: [subjectName],
+    isDeleted: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

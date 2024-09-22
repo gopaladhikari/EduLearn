@@ -1,22 +1,20 @@
 import { Router } from "express";
+
 import {
   createCurrentPursuing,
   deleteCurrentPursuing,
-  getAllCurrentPursuings,
-  getCurrentPursuingById,
+  getAllCurrentPursuing,
   updateCurrentPursuing,
 } from "../../controllers/admin/currentPursuing.controller";
 import { verifyJwt } from "../../middlewares/verifyJwt";
 
 const currentPursuingRouter = Router();
 
-currentPursuingRouter.route("/").get(verifyJwt, getAllCurrentPursuings);
-
-currentPursuingRouter.route("/").post(verifyJwt, createCurrentPursuing);
+currentPursuingRouter.route("/").get(verifyJwt, getAllCurrentPursuing);
 
 currentPursuingRouter
-  .route("/:currentPursuingId")
-  .get(verifyJwt, getCurrentPursuingById);
+  .route("/create")
+  .post(verifyJwt, createCurrentPursuing);
 
 currentPursuingRouter
   .route("/update/:currentPursuingId")

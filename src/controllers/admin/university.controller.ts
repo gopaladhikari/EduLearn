@@ -1,16 +1,14 @@
 import { cache } from "../../config/node-cache";
-import {
-  CurrentPursuing,
-  Semester,
-  Subject,
-  University,
-} from "../../models/admin/university.model";
+import { University } from "../../models/admin/university.model";
 import { createUniversitySchema } from "../../schemas/universitySchema";
 import { ApiError, ApiSuccess } from "../../utils/apiResponse";
 import { dbHandler } from "../../utils/dbHandler";
 import { isValidObjectId } from "mongoose";
-import fs from "fs";
 import { CustomerDetails } from "../../models/customer/custumerDetails.model";
+import { CurrentPursuing } from "../../models/admin/currentPursuing.model";
+import { Semester } from "../../models/admin/semester.model";
+import { Subject } from "../../models/admin/subject.model";
+import fs from "fs";
 
 export const createUniversity = dbHandler(async (req, res) => {
   const { success, data, error } = createUniversitySchema.safeParse(
@@ -32,10 +30,6 @@ export const createUniversity = dbHandler(async (req, res) => {
   });
 
   if (!university) throw new ApiError(400, "Could not create university");
-
-  const cacheKey = `university-${university._id}`;
-
-  if (cache.has(cacheKey)) cache.del(cacheKey);
 
   res.status(201).json(new ApiSuccess("University created", university));
 });

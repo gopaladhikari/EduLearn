@@ -1,4 +1,4 @@
-import { ZodIssue } from "zod";
+import type { ZodIssue } from "zod";
 
 /**
  * The ApiError class standardizes the error object providing the consistent structure for error responses used across the application.

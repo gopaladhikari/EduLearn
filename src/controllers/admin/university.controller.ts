@@ -31,6 +31,10 @@ export const createUniversity = dbHandler(async (req, res) => {
 
   if (!university) throw new ApiError(400, "Could not create university");
 
+  const cacheKey = `universities-list`;
+
+  if (cache.has(cacheKey)) cache.del(cacheKey);
+
   res.status(201).json(new ApiSuccess("University created", university));
 });
 
@@ -41,7 +45,7 @@ export const getAllUniversities = dbHandler(async (req, res) => {
   if (!adminId && !customerId)
     throw new ApiError(400, "Admin or Customer id is required");
 
-  const cacheKey = `universities-list`;
+  const cacheKey = "universities-list";
 
   if (cache.has(cacheKey)) {
     const cachedUniversities = cache.get(cacheKey);
@@ -53,10 +57,15 @@ export const getAllUniversities = dbHandler(async (req, res) => {
 
   const universities = await University.find({
     isDeleted: false,
-  }).select("-currentPursuing");
+  }).select("-adminId -isDeleted");
 
-  if (!universities)
-    throw new ApiError(400, "Could not get all universities");
+  cache.set(cacheKey, universities);
+
+  res
+    .status(200)
+    .json(
+      new ApiSuccess("All universities fetched successfully", universities)
+    );
 });
 
 export const getUniversityById = dbHandler(async (req, res) => {
@@ -82,7 +91,9 @@ export const getUniversityById = dbHandler(async (req, res) => {
       );
   }
 
-  const university = await University.findById(universityId);
+  const university = await University.findById(universityId).populate(
+    "adminId"
+  );
 
   if (!university) throw new ApiError(404, "University not found");
 
@@ -106,7 +117,7 @@ export const updateUniversity = dbHandler(async (req, res) => {
   if (!adminId) throw new ApiError(401, "Unauthorized request");
 
   if (!isValidObjectId(universityId))
-    throw new ApiError(400, "Invalid id");
+    throw new ApiError(400, "Invalid University Id");
 
   const logoPath = req.file?.path;
 
@@ -222,7 +233,5 @@ export const deleteUniversity = dbHandler(async (req, res) => {
   if (cache.has(allUniversitiesCacheKey))
     cache.del(allUniversitiesCacheKey);
 
-  res
-    .status(200)
-    .json(new ApiSuccess("University deleted", allUniversitiesCacheKey));
+  res.status(200).json(new ApiSuccess("University deleted", null));
 });

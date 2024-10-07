@@ -1,6 +1,6 @@
 import { cache } from "../../config/node-cache";
 import { CustomerDetails as UserDetails } from "../../models/customer/custumerDetails.model";
-import { userDetailsSchema } from "../../schemas/userSchema";
+import { customerDetailsSchema } from "../../schemas/customerSchema";
 import { ApiError, ApiSuccess } from "../../utils/apiResponse";
 import { dbHandler } from "../../utils/dbHandler";
 import { isValidObjectId } from "mongoose";
@@ -8,7 +8,11 @@ import { isValidObjectId } from "mongoose";
 export const createUserDetails = dbHandler(async (req, res) => {
   const userId = req.customer?._id;
 
-  const { success, data, error } = userDetailsSchema.safeParse(req.body);
+  const { success, data, error } = customerDetailsSchema.safeParse(
+    req.body
+  );
+
+  console.log(data);
 
   if (!success) throw new ApiError(400, error.message);
 
@@ -16,10 +20,10 @@ export const createUserDetails = dbHandler(async (req, res) => {
 
   const userDetails = await UserDetails.create({
     userId,
-    universityId: data.universityId,
-    currentPursuingId: data.currentPursuingId,
-    semesterId: data.semesterId,
-    subjectIds: data.subjectIds,
+    // universityId: data.,
+    // currentPursuingId: data.currentPursuingId,
+    // semesterId: data.semesterId,
+    // subjectIds: data.subjectIds,
   });
 
   if (!userDetails) throw new ApiError(400, "User details not created");
@@ -69,7 +73,9 @@ export const updateUserDetails = dbHandler(async (req, res) => {
   if (!isValidObjectId(userDetailId))
     throw new ApiError(400, "Invalid user detail  id");
 
-  const { success, data, error } = userDetailsSchema.safeParse(req.body);
+  const { success, data, error } = customerDetailsSchema.safeParse(
+    req.body
+  );
 
   if (!success) throw new ApiError(400, error.message);
 

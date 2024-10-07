@@ -34,7 +34,9 @@ export const verifyJwt = dbHandler(async (req, res, next) => {
     ) as DecodedUser;
 
     if (decoded.role === "customer") {
-      const customer = await Customer.findById(decoded._id);
+      const customer = await Customer.findById(decoded._id).select(
+        "-password"
+      );
 
       if (!customer) throw new ApiError(404, "Customer not found");
 
@@ -44,7 +46,7 @@ export const verifyJwt = dbHandler(async (req, res, next) => {
     }
 
     if (decoded.role === "admin") {
-      const admin = await Admin.findById(decoded._id);
+      const admin = await Admin.findById(decoded._id).select("-password");
 
       if (!admin) throw new ApiError(404, "Admin not found");
 
@@ -62,6 +64,8 @@ export const verifyJwt = dbHandler(async (req, res, next) => {
     if (error instanceof JsonWebTokenError)
       throw new ApiError(400, "Malformed token");
 
-    throw new ApiError(400, "Internal Server Error");
+    if (error instanceof ApiError) throw error;
+
+    throw new ApiError(500, "Internal Server Error");
   }
 });

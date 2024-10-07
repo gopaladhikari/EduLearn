@@ -11,9 +11,9 @@ export const dbHandler = (requestHandler: RequestHandler) => {
     try {
       await requestHandler(req, res, next);
     } catch (error) {
+      console.log(error);
       if (error instanceof ApiError)
         return res.status(error.statuscode).json(error);
-
       res.status(500).json(new ApiError(500, (error as Error).message));
     }
   };

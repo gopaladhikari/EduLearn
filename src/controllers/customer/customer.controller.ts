@@ -39,7 +39,7 @@ export const loginUser = dbHandler(async (req, res) => {
 
   const customer = await Customer.findOne({
     phoneNumber: data.phoneNumber,
-  });
+  }).select("-password");
 
   if (!customer) throw new ApiError(400, "User not found");
 
@@ -55,6 +55,8 @@ export const loginUser = dbHandler(async (req, res) => {
 
 export const getCustomer = dbHandler(async (req, res) => {
   if (!req.customer) throw new ApiError(400, "User not found");
+
+  delete req.customer.password;
 
   return res
     .status(200)

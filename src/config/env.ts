@@ -12,29 +12,29 @@ const {
 } = process.env;
 
 const envSchema = zod.object({
-  mongoUri: zod.string({
-    required_error: "MONGO_URI is required",
+  mongoUri: zod.string().min(1, {
+    message: "MONGO_URI is required",
   }),
-  jwtSecret: zod.string({
-    required_error: "JWT_SECRET is required",
+  jwtSecret: zod.string().min(1, {
+    message: "JWT_SECRET is required",
   }),
-  twilioSid: zod.string({
-    required_error: "TWILIO_ACCOUNT_SID is required",
+  twilioSid: zod.string().min(1, {
+    message: "TWILIO_ACCOUNT_SID is required",
   }),
-  twilioAuthToken: zod.string({
-    required_error: "TWILIO_AUTH_TOKEN is required",
+  twilioAuthToken: zod.string().min(1, {
+    message: "TWILIO_AUTH_TOKEN is required",
   }),
-  twilioPhoneNumber: zod.string({
-    required_error: "TWILIO_PHONE_NUMBER is required",
+  twilioPhoneNumber: zod.string().min(1, {
+    message: "TWILIO_PHONE_NUMBER is required",
   }),
-  dbName: zod.string({
-    required_error: "DB_NAME is required",
+  dbName: zod.string().min(1, {
+    message: "DB_NAME is required",
   }),
-  razorpayIdKey: zod.string({
-    required_error: "RAZORPAY_ID_KEY is required",
+  razorpayIdKey: zod.string().min(1, {
+    message: "RAZORPAY_ID_KEY is required",
   }),
-  razorpaySecretKey: zod.string({
-    required_error: "RAZORPAY_SECRET_KEY is required",
+  razorpaySecretKey: zod.string().min(1, {
+    message: "RAZORPAY_SECRET_KEY is required",
   }),
 });
 

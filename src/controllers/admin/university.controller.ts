@@ -105,6 +105,7 @@ export const getUniversityById = dbHandler(async (req, res) => {
 });
 
 export const updateUniversity = dbHandler(async (req, res) => {
+  console.log(req.body);
   const { success, data, error } = createUniversitySchema.safeParse(
     req.body
   );

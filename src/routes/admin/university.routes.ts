@@ -22,7 +22,7 @@ universityRouter.route("/:universityId").get(verifyJwt, getUniversityById);
 
 universityRouter
   .route("/update/:universityId")
-  .put(verifyJwt, updateUniversity);
+  .put(verifyJwt, upload.single("universityLogo"), updateUniversity);
 
 universityRouter
   .route("/delete/:universityId")

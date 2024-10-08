@@ -3,7 +3,7 @@ import { University } from "../../models/admin/university.model";
 import { createUniversitySchema } from "../../schemas/universitySchema";
 import { ApiError, ApiSuccess } from "../../utils/apiResponse";
 import { dbHandler } from "../../utils/dbHandler";
-import { isValidObjectId } from "mongoose";
+import mongoose, { isValidObjectId } from "mongoose";
 import { CustomerDetails } from "../../models/customer/custumerDetails.model";
 import { CurrentPursuing } from "../../models/admin/currentPursuing.model";
 import { Semester } from "../../models/admin/semester.model";
@@ -91,21 +91,45 @@ export const getUniversityById = dbHandler(async (req, res) => {
       );
   }
 
-  const university = await University.findById(universityId).populate(
-    "adminId"
-  );
+  const university = await University.aggregate([
+    {
+      $match: {
+        _id: new mongoose.Types.ObjectId(universityId),
+        isDeleted: false,
+      },
+    },
+    {
+      $lookup: {
+        from: "admins",
+        localField: "adminId",
+        foreignField: "_id",
+        as: "admin",
+      },
+    },
+    {
+      $addFields: {
+        admin: {
+          $arrayElemAt: ["$admin", 0],
+        },
+      },
+    },
+    {
+      $unset: "adminId",
+    },
+  ]);
 
-  if (!university) throw new ApiError(404, "University not found");
+  if (!university.length) throw new ApiError(404, "University not found");
 
-  cache.set(cacheKey, university);
+  cache.set(cacheKey, university[0]);
 
   res
     .status(200)
-    .json(new ApiSuccess("University fetched successfully", university));
+    .json(
+      new ApiSuccess("University fetched successfully", university[0])
+    );
 });
 
 export const updateUniversity = dbHandler(async (req, res) => {
-  console.log(req.body);
   const { success, data, error } = createUniversitySchema.safeParse(
     req.body
   );
@@ -173,21 +197,19 @@ export const deleteUniversity = dbHandler(async (req, res) => {
 
   if (!adminId) throw new ApiError(401, "Unauthorized request");
 
-  const university = await University.findOneAndUpdate(
-    {
-      _id: universityId,
-      adminId: adminId,
-      isDeleted: false,
-    },
-    {
-      isDeleted: true,
-    },
-    {
-      new: true,
-    }
-  );
+  const university = await University.findById(universityId);
 
-  if (!university) throw new ApiError(400, "Could not delete university");
+  if (!university) throw new ApiError(400, "Could not find university");
+
+  if (university.adminId.toString() !== adminId.toString())
+    throw new ApiError(401, "Unauthorized request");
+
+  if (university.isDeleted)
+    throw new ApiError(400, "University is deleted");
+
+  university.isDeleted = true;
+
+  await university.save({ validateBeforeSave: false });
 
   const currentPursuingList = await CurrentPursuing.find({
     universityId: universityId,

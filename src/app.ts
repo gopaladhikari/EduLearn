@@ -16,7 +16,7 @@ import { ApiSuccess } from "./utils/apiResponse";
 
 // Routes declaration
 
-app.get("/", (req, res) => {
+app.get("/api/v1/health-check", (req, res) => {
   res.status(200).json(new ApiSuccess("Welcome to E-learning", null));
 });
 

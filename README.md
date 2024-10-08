@@ -80,4 +80,4 @@ Contributions are welcome! Please submit a pull request or open an issue if you 
 
 License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License - see the [LICENSE](https://github.com/gopaladhikari/e-learning?tab=MIT-1-ov-file) file for details.

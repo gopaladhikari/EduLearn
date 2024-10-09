@@ -31,7 +31,7 @@ This repository contains the backend code for an E-Learning Platform built using
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/gopuadks/e-learning.git
+git clone git@github.com:gopaladhikari/e-learning.git
 ```
 
 2. Install dependencies:
@@ -68,8 +68,9 @@ npm start
 ├── routes             # API route definitions
 ├── utils              # Helper functions (e.g., dbHandler)
 ├── schemas            # zod validations
-├── app.js             # Entry point to the application
-└── server.js          # Server configuration and setup
+└── db                  # Database connection
+├── app.ts             # All routes, middlewares configured here
+└── index.ts           # Entry point of the application and database inilialization
 ```
 
 ## Contributing

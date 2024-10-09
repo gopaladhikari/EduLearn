@@ -4,8 +4,6 @@ import { ApiError, ApiSuccess } from "../../utils/apiResponse";
 import { dbHandler } from "../../utils/dbHandler";
 import { cache } from "../../config/node-cache";
 import { createCurrentPursuingSchema } from "../../schemas/currentPursing.schema";
-import { Semester } from "../../models/admin/semester.model";
-import { Subject } from "../../models/admin/subject.model";
 
 export const createCurrentPursuingByUniversityId = dbHandler(
   async (req, res) => {
@@ -149,26 +147,6 @@ export const deleteCurrentPursuing = dbHandler(async (req, res) => {
 
   if (!currentPursuing)
     throw new ApiError(404, "Current pursuing not found");
-
-  const semesterList = await Semester.find({
-    _id: { $in: currentPursuing.semesters },
-  });
-
-  if (semesterList.length > 0) {
-    for (const semester of semesterList) {
-      semester.isDeleted = true;
-      await semester.save();
-
-      await Subject.updateMany(
-        {
-          _id: { $in: semester.subjects },
-        },
-        {
-          $set: { isDeleted: true },
-        }
-      );
-    }
-  }
 
   const currentPursuingCacheKey = `current-pursuing-${currentPursuing.universityId}`;
 

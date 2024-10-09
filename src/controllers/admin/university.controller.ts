@@ -5,9 +5,6 @@ import { ApiError, ApiSuccess } from "../../utils/apiResponse";
 import { dbHandler } from "../../utils/dbHandler";
 import mongoose, { isValidObjectId } from "mongoose";
 import { CustomerDetails } from "../../models/customer/custumerDetails.model";
-import { CurrentPursuing } from "../../models/admin/currentPursuing.model";
-import { Semester } from "../../models/admin/semester.model";
-import { Subject } from "../../models/admin/subject.model";
 import fs from "fs";
 
 export const createUniversity = dbHandler(async (req, res) => {
@@ -220,37 +217,6 @@ export const deleteUniversity = dbHandler(async (req, res) => {
   university.isDeleted = true;
 
   await university.save({ validateBeforeSave: false });
-
-  const currentPursuingList = await CurrentPursuing.find({
-    universityId: universityId,
-  });
-
-  if (currentPursuingList.length > 0) {
-    for (const currentPursuing of currentPursuingList) {
-      currentPursuing.isDeleted = true;
-      await currentPursuing.save();
-
-      const semesterList = await Semester.find({
-        _id: { $in: currentPursuing.semesters },
-      });
-
-      if (semesterList.length > 0) {
-        for (const semester of semesterList) {
-          semester.isDeleted = true;
-          await semester.save();
-
-          await Subject.updateMany(
-            {
-              _id: { $in: semester.subjects },
-            },
-            {
-              $set: { isDeleted: true },
-            }
-          );
-        }
-      }
-    }
-  }
 
   CustomerDetails.updateMany(
     {

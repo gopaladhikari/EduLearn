@@ -33,9 +33,6 @@ export const createSubject = dbHandler(async (req, res) => {
 
   if (!subject) throw new ApiError(400, "Could not create subject");
 
-  semester.subjects.push(subject._id);
-  await semester.save();
-
   res.status(201).json(new ApiSuccess("Subject created", subject));
 });
 
@@ -61,15 +58,7 @@ export const getAllSubject = dbHandler(async (req, res) => {
       .json(new ApiSuccess("All subject", cachedSubject));
   }
 
-  const subject = await Subject.find({
-    _id: { $in: semester.subjects },
-  });
-
-  if (!subject) throw new ApiError(400, "Could not get all subject");
-
-  cache.set(cacheKey, subject);
-
-  res.status(200).json(new ApiSuccess("All subject", subject));
+  res.status(200).json(new ApiSuccess("All subject", {}));
 });
 
 export const updateSubject = dbHandler(async (req, res) => {

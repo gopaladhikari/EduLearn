@@ -11,13 +11,6 @@ const currentPursuingSchema = new mongoose.Schema(
       index: true,
     },
 
-    semesters: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Semester",
-      },
-    ],
-
     isDeleted: { type: Boolean, default: false },
   },
   { timestamps: true }

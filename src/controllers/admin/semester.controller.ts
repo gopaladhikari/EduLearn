@@ -1,84 +1,84 @@
-import { isValidObjectId } from "mongoose";
+import mongoose, { isValidObjectId } from "mongoose";
 import { cache } from "../../config/node-cache";
-import { CurrentPursuing } from "../../models/admin/currentPursuing.model";
 import { Semester } from "../../models/admin/semester.model";
-import { Subject } from "../../models/admin/subject.model";
 import { ApiError, ApiSuccess } from "../../utils/apiResponse";
 import { dbHandler } from "../../utils/dbHandler";
-import { semesterSchema } from "../../schemas/semester.schema";
+import {
+  semesterSchema,
+  updateSemesterSchema,
+} from "../../schemas/semester.schema";
 
-export const createSemester = dbHandler(async (req, res) => {
-  const { success, data, error } = semesterSchema.safeParse(req.body);
+export const createSemesterByCurrentPursuingId = dbHandler(
+  async (req, res) => {
+    const { success, data, error } = semesterSchema.safeParse(req.body);
 
-  if (!success) throw new ApiError(400, "Invalid data", error.errors);
+    if (!success) throw new ApiError(400, "Invalid data", error.errors);
 
-  const currentPursuingId = req.params.currentPursuingId;
+    const currentPursuingId = req.params.currentPursuingId;
 
-  const adminId = req.admin?._id;
+    const adminId = req.admin?._id;
 
-  if (!adminId) throw new ApiError(401, "Unauthorized request");
+    if (!adminId) throw new ApiError(401, "Unauthorized request");
 
-  if (!isValidObjectId(currentPursuingId))
-    throw new ApiError(400, "Invalid id");
+    if (!isValidObjectId(currentPursuingId))
+      throw new ApiError(400, "Invalid Current Pursuing Id");
 
-  const currentPursuing = await CurrentPursuing.findById(
-    currentPursuingId
-  );
+    const dbData = data.names.map((name) => ({ name, currentPursuingId }));
 
-  if (!currentPursuing)
-    throw new ApiError(400, "Current pursuing not found");
+    const semester = await Semester.insertMany(dbData);
 
-  const semester = await Semester.create({
-    name: data.name,
-  });
+    if (!semester) throw new ApiError(400, "Could not create semester");
 
-  if (!semester) throw new ApiError(400, "Could not create semester");
-
-  currentPursuing.semesters.push(semester._id);
-  await currentPursuing.save();
-
-  res.status(201).json(new ApiSuccess("Semester created", semester));
-});
-
-export const getAllSemester = dbHandler(async (req, res) => {
-  const currentPursuingId = req.params.currentPursuingId;
-  const adminId = req.admin?._id;
-
-  if (!adminId) throw new ApiError(401, "Unauthorized request");
-
-  if (!isValidObjectId(currentPursuingId))
-    throw new ApiError(400, "Invalid id");
-
-  const cacheKey = `semester-list-${currentPursuingId}`;
-
-  if (cache.has(cacheKey)) {
-    const cachedSemester = cache.get(cacheKey);
-
-    return res
-      .status(200)
-      .json(new ApiSuccess("All semesters", cachedSemester));
+    res.status(201).json(new ApiSuccess("Semester created", semester));
   }
+);
 
-  const currentPursuing = await CurrentPursuing.findById(
-    currentPursuingId
-  );
+export const getAllSemesterByCurrentPursuingId = dbHandler(
+  async (req, res) => {
+    const currentPursuingId = req.params.currentPursuingId;
+    const adminId = req.admin?._id;
 
-  if (!currentPursuing)
-    throw new ApiError(400, "Current pursuing not found");
+    if (!adminId) throw new ApiError(401, "Unauthorized request");
 
-  const semesters = await Semester.find({
-    _id: { $in: currentPursuing.semesters },
-  });
+    if (!isValidObjectId(currentPursuingId))
+      throw new ApiError(400, "Invalid id");
 
-  if (!semesters) throw new ApiError(404, "Semesters not found");
+    const cacheKey = `semester-list-${currentPursuingId}`;
 
-  cache.set(cacheKey, semesters);
+    if (cache.has(cacheKey)) {
+      const cachedSemester = cache.get(cacheKey);
 
-  res.status(200).json(new ApiSuccess("All semesters", semesters));
-});
+      return res
+        .status(200)
+        .json(new ApiSuccess("All semesters", cachedSemester));
+    }
+
+    const semesters = await Semester.aggregate([
+      {
+        $match: {
+          currentPursuingId: new mongoose.Types.ObjectId(
+            currentPursuingId
+          ),
+          isDeleted: false,
+        },
+      },
+      {
+        $unset: ["currentPursuingId", "isDeleted"],
+      },
+    ]);
+
+    if (!semesters.length) throw new ApiError(404, "Semester not found");
+
+    cache.set(cacheKey, semesters);
+
+    res.status(200).json(new ApiSuccess("All semesters", semesters));
+  }
+);
 
 export const updateSemester = dbHandler(async (req, res) => {
-  const { success, data, error } = semesterSchema.safeParse(req.body);
+  const { success, data, error } = updateSemesterSchema.safeParse(
+    req.body
+  );
 
   if (!success) throw new ApiError(400, "Invalid data", error.errors);
 
@@ -89,8 +89,11 @@ export const updateSemester = dbHandler(async (req, res) => {
 
   if (!isValidObjectId(semesterId)) throw new ApiError(400, "Invalid id");
 
-  const semester = await Semester.findByIdAndUpdate(
-    semesterId,
+  const semester = await Semester.findOneAndUpdate(
+    {
+      _id: semesterId,
+      isDeleted: false,
+    },
     {
       name: data.name,
     },
@@ -99,19 +102,9 @@ export const updateSemester = dbHandler(async (req, res) => {
     }
   );
 
-  if (!semester) throw new ApiError(400, "Could not update semester");
+  if (!semester) throw new ApiError(404, "Semester not found");
 
-  const currentPursuing = await CurrentPursuing.findOne({
-    semesters: {
-      $in: [semester._id],
-    },
-    isDeleted: false,
-  });
-
-  if (!currentPursuing)
-    throw new ApiError(400, "Current pursuing not found");
-
-  const cacheKey = `semester-${currentPursuing._id}`;
+  const cacheKey = `semester-list-${semester.currentPursuingId}`;
 
   if (cache.has(cacheKey)) cache.del(cacheKey);
 
@@ -137,30 +130,12 @@ export const deleteSemester = dbHandler(async (req, res) => {
     {
       new: true,
     }
-  );
+  ).select("-isDeleted -currentPursuingId");
 
-  if (!semester) throw new ApiError(400, "Semester not found");
+  if (!semester) throw new ApiError(404, "Semester not found");
 
-  Subject.updateMany(
-    {
-      _id: { $in: semester.subjects },
-    },
-    {
-      isDeleted: true,
-    }
-  );
+  const cacheKey = `semester-list-${semester.currentPursuingId}`;
 
-  const currentPursuing = await CurrentPursuing.findOne({
-    semesters: {
-      $in: [semester._id],
-    },
-    isDeleted: false,
-  });
-
-  if (!currentPursuing)
-    throw new ApiError(400, "Current pursuing not found");
-
-  const cacheKey = `semester-${currentPursuing._id}`;
   if (cache.has(cacheKey)) cache.del(cacheKey);
 
   res.status(200).json(new ApiSuccess("Semester deleted", semester));

@@ -1,18 +1,22 @@
 import { Router } from "express";
 
 import {
-  createSemester,
+  createSemesterByCurrentPursuingId,
   deleteSemester,
-  getAllSemester,
+  getAllSemesterByCurrentPursuingId,
   updateSemester,
 } from "../../controllers/admin/semester.controller";
 import { verifyJwt } from "../../middlewares/verifyJwt";
 
 const semesterRouter = Router();
 
-semesterRouter.route("/").get(verifyJwt, getAllSemester);
+semesterRouter
+  .route("/:currentPursuingId")
+  .get(verifyJwt, getAllSemesterByCurrentPursuingId);
 
-semesterRouter.route("/create").post(verifyJwt, createSemester);
+semesterRouter
+  .route("/create/:currentPursuingId")
+  .post(verifyJwt, createSemesterByCurrentPursuingId);
 
 semesterRouter.route("/update/:semesterId").put(verifyJwt, updateSemester);
 

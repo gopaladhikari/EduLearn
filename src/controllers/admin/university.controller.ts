@@ -55,9 +55,19 @@ export const getAllUniversities = dbHandler(async (req, res) => {
       .json(new ApiSuccess("All universities", cachedUniversities));
   }
 
-  const universities = await University.find({
-    isDeleted: false,
-  }).select("-adminId -isDeleted");
+  const universities = await University.aggregate([
+    {
+      $match: {
+        isDeleted: false,
+      },
+    },
+    {
+      $unset: ["adminId", "isDeleted"],
+    },
+  ]);
+
+  if (!universities.length)
+    throw new ApiError(404, "University not found");
 
   cache.set(cacheKey, universities);
 

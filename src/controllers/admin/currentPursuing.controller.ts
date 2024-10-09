@@ -74,11 +74,7 @@ export const getAllCurrentPursuingByUniversityId = dbHandler(
       },
 
       {
-        $unset: "semesters",
-      },
-
-      {
-        $unset: "universityId",
+        $unset: ["semesters", "universityId", "isDeleted"],
       },
     ]);
 

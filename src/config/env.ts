@@ -49,4 +49,6 @@ const parsedEnv = envSchema.parse({
   razorpaySecretKey: RAZORPAY_SECRET_KEY,
 });
 
-export const env: Readonly<typeof parsedEnv> = parsedEnv;
+type Env = Readonly<typeof parsedEnv>;
+
+export const env: Env = parsedEnv;

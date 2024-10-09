@@ -12,11 +12,11 @@ This folder contains utility functions that are used across the application.
 
 The dbHandler is a higher-order function designed to simplify error handling in Express.js route handlers. It wraps a given RequestHandler (an Express middleware function) in a Promise, allowing for easier management of errors in asynchronous code.
 
-### Parameters:
+## Parameters:
 
 - requestHandler: A function that handles the incoming request, following the standard Express middleware signature (req, res, next). This function can be synchronous or asynchronous.
 
-### Purpose
+## Purpose
 
 - It eliminates the need for repetitive try/catch blocks in every route handler.
 

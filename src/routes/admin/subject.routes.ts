@@ -11,13 +11,15 @@ import { upload } from "../../middlewares/multer.middleware";
 
 const subjectRouter = Router();
 
-subjectRouter.route("/").get(verifyJwt, getAllSubject);
+subjectRouter.route("/:semesterId").get(verifyJwt, getAllSubject);
 
 subjectRouter
-  .route("/create")
+  .route("/create/:semesterId")
   .post(verifyJwt, upload.single("logo"), createSubject);
 
-subjectRouter.route("/update/:subjectId").put(verifyJwt, updateSubject);
+subjectRouter
+  .route("/update/:subjectId")
+  .put(verifyJwt, upload.single("logo"), updateSubject);
 
 subjectRouter.route("/delete/:subjectId").delete(verifyJwt, deleteSubject);
 

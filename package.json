@@ -2,7 +2,7 @@
   "name": "e-learning",
   "version": "1.0.0",
   "description": "E learning is the application which allows people to buy and sell course",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "dev": "nodemon src/index.ts",
     "build": "npm i && npx tsc",

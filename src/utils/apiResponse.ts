@@ -7,8 +7,8 @@ import type { ZodIssue } from "zod";
 export class ApiError extends Error {
   success: false;
   data: null;
-  stack?: string;
-  message: string;
+  override stack?: string;
+  override message: string;
   errors?: ZodIssue[];
   statuscode: number;
 

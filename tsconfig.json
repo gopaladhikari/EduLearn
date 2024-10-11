@@ -5,13 +5,19 @@
     "resolveJsonModule": true,
     "removeComments": true,
     "esModuleInterop": true,
+    "skipLibCheck": true,
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
+    "moduleDetection": "force",
     "target": "ES2022",
     "outDir": "dist",
-    "strict": true
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true
   },
+
   "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"],
 
   "ts-node": {
     "files": true

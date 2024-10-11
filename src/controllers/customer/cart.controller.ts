@@ -23,6 +23,7 @@ export const createCart = dbHandler(async (req, res) => {
 
     if (courseIndex === -1)
       existingCart.courses.push({ mainCourseId, quantity });
+    // @ts-expect-error no error
     else existingCart.courses[courseIndex].quantity = quantity;
 
     await existingCart.save();
@@ -88,6 +89,7 @@ export const updateCart = dbHandler(async (req, res) => {
 
   if (courseIndex === -1) throw new ApiError(400, "Course not found");
 
+  // @ts-expect-error no error
   existingCart.courses[courseIndex].quantity = quantity;
 
   await existingCart.save();

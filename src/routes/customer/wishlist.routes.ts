@@ -5,7 +5,7 @@ import {
   getWishlist,
   clearWishlist,
 } from "../../controllers/customer/wishtlist.controller";
-import { verifyJwt } from "../../middlewares/verifyJwt";
+import { verifyJwt } from "../../middlewares/verifyJwt.middleware";
 
 const wishlistRouter = Router();
 

@@ -6,7 +6,7 @@ import {
   getTips,
   updateTip,
 } from "../../controllers/customer/tips.controller";
-import { verifyJwt } from "../../middlewares/verifyJwt";
+import { verifyJwt } from "../../middlewares/verifyJwt.middleware";
 
 const tipsRouter = Router();
 

@@ -8,7 +8,7 @@ import {
   updateAdvertisementBanner,
 } from "../../controllers/admin/advertisementBanner.controller";
 import { upload } from "../../middlewares/multer.middleware";
-import { verifyJwt } from "../../middlewares/verifyJwt";
+import { verifyJwt } from "../../middlewares/verifyJwt.middleware";
 
 const advertisementBannerRouter = Router();
 

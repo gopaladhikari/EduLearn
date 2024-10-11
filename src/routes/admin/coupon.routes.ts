@@ -8,7 +8,7 @@ import {
   createCoupon,
   getAllCoupons,
 } from "../../controllers/admin/coupon.controller";
-import { verifyJwt } from "../../middlewares/verifyJwt";
+import { verifyJwt } from "../../middlewares/verifyJwt.middleware";
 
 couponRouter.route("/get").get(verifyJwt, getAllCoupons);
 

@@ -6,7 +6,7 @@ import {
   registerUser,
   updateCustomer,
 } from "../../controllers/customer/customer.controller";
-import { verifyJwt } from "../../middlewares/verifyJwt";
+import { verifyJwt } from "../../middlewares/verifyJwt.middleware";
 
 const userRouter = Router();
 

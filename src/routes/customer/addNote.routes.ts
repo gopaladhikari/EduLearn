@@ -5,7 +5,7 @@ import {
   getNotes,
   updateNote,
 } from "../../controllers/customer/addNotes.controller";
-import { verifyJwt } from "../../middlewares/verifyJwt";
+import { verifyJwt } from "../../middlewares/verifyJwt.middleware";
 
 const addNoteRouter = Router();
 

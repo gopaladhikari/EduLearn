@@ -6,7 +6,7 @@ import {
   getAllSemesterByCurrentPursuingId,
   updateSemester,
 } from "../../controllers/admin/semester.controller";
-import { verifyJwt } from "../../middlewares/verifyJwt";
+import { verifyJwt } from "../../middlewares/verifyJwt.middleware";
 
 const semesterRouter = Router();
 

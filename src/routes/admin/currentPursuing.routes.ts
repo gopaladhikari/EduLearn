@@ -6,7 +6,7 @@ import {
   getAllCurrentPursuingByUniversityId,
   updateCurrentPursuing,
 } from "../../controllers/admin/currentPursuing.controller";
-import { verifyJwt } from "../../middlewares/verifyJwt";
+import { verifyJwt } from "../../middlewares/verifyJwt.middleware";
 
 const currentPursuingRouter = Router();
 

@@ -6,7 +6,7 @@ import {
   registerAdmin,
   updateAdmin,
 } from "../../controllers/admin/admin.controller";
-import { verifyJwt } from "../../middlewares/verifyJwt";
+import { verifyJwt } from "../../middlewares/verifyJwt.middleware";
 
 const adminRouter = Router();
 

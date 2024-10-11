@@ -6,7 +6,7 @@ import {
   getUserLibrary,
   updateCourseProgress,
 } from "../../controllers/customer/library.controller";
-import { verifyJwt } from "../../middlewares/verifyJwt";
+import { verifyJwt } from "../../middlewares/verifyJwt.middleware";
 
 const libraryRouter = Router();
 

@@ -5,7 +5,7 @@ import {
   getAllReviewsByCourseId,
   updatedReview,
 } from "../../controllers/customer/topReviews.controller";
-import { verifyJwt } from "../../middlewares/verifyJwt";
+import { verifyJwt } from "../../middlewares/verifyJwt.middleware";
 
 const topReviewsRouter = Router();
 

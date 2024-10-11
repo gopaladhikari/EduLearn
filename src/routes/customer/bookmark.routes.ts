@@ -4,7 +4,7 @@ import {
   addBookmark,
   deleteBookmark,
 } from "../../controllers/customer/bookmark.controller";
-import { verifyJwt } from "../../middlewares/verifyJwt";
+import { verifyJwt } from "../../middlewares/verifyJwt.middleware";
 
 const bookmarkRouter = Router();
 

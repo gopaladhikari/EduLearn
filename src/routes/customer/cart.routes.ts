@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { verifyJwt } from "../../middlewares/verifyJwt";
+import { verifyJwt } from "../../middlewares/verifyJwt.middleware";
 
 import {
   createCart,

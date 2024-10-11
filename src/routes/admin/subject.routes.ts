@@ -6,7 +6,7 @@ import {
   getAllSubject,
   updateSubject,
 } from "../../controllers/admin/subject.controller";
-import { verifyJwt } from "../../middlewares/verifyJwt";
+import { verifyJwt } from "../../middlewares/verifyJwt.middleware";
 import { upload } from "../../middlewares/multer.middleware";
 
 const subjectRouter = Router();

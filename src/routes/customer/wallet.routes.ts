@@ -5,7 +5,7 @@ import {
   updateWalletBalance,
   deleteWallet,
 } from "../../controllers/customer/wallet.controller";
-import { verifyJwt } from "../../middlewares/verifyJwt";
+import { verifyJwt } from "../../middlewares/verifyJwt.middleware";
 
 const walletRouter = Router();
 

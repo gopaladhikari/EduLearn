@@ -5,7 +5,7 @@ import {
   updateUserDetails,
   getUserDetailsById,
 } from "../../controllers/customer/customerDetails.controller";
-import { verifyJwt } from "../../middlewares/verifyJwt";
+import { verifyJwt } from "../../middlewares/verifyJwt.middleware";
 
 const customerDetailsRouter = Router();
 

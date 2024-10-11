@@ -8,7 +8,7 @@ import {
   updateCourse,
 } from "../../controllers/admin/mainCourses.controller";
 import { upload } from "../../middlewares/multer.middleware";
-import { verifyJwt } from "../../middlewares/verifyJwt";
+import { verifyJwt } from "../../middlewares/verifyJwt.middleware";
 
 const mainCourseRouter = Router();
 

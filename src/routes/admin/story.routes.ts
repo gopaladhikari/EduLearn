@@ -5,7 +5,7 @@ import {
   deleteStory,
   updateStory,
 } from "../../controllers/admin/story.controller";
-import { verifyJwt } from "../../middlewares/verifyJwt";
+import { verifyJwt } from "../../middlewares/verifyJwt.middleware";
 import { upload } from "../../middlewares/multer.middleware";
 
 const storyRouter = Router();

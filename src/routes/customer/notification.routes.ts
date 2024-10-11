@@ -6,7 +6,7 @@ import {
   getUserNotifications,
   markNotificationAsRead,
 } from "../../controllers/customer/notification.controller";
-import { verifyJwt } from "../../middlewares/verifyJwt";
+import { verifyJwt } from "../../middlewares/verifyJwt.middleware";
 
 const notificationRouter = Router();
 

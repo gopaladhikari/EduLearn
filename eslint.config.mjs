@@ -7,8 +7,4 @@ export default [
   { languageOptions: { globals: globals.browser } },
   pluginJs.configs.recommended,
   ...tseslint.configs.recommended,
-  {
-    plugins: ["@typescript-eslint"],
-    extends: ["plugin:@typescript-eslint/recommended"],
-  },
 ];

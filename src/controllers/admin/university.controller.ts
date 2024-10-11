@@ -4,8 +4,9 @@ import { createUniversitySchema } from "../../schemas/universitySchema";
 import { ApiError, ApiSuccess } from "../../utils/apiResponse";
 import { dbHandler } from "../../utils/dbHandler";
 import mongoose, { isValidObjectId } from "mongoose";
-import { CustomerDetails } from "../../models/customer/custumerDetails.model";
 import fs from "fs";
+
+let a = 6;
 
 export const createUniversity = dbHandler(async (req, res) => {
   const { success, data, error } = createUniversitySchema.safeParse(
@@ -212,18 +213,11 @@ export const deleteUniversity = dbHandler(async (req, res) => {
     throw new ApiError(401, "Unauthorized request");
 
   if (university.isDeleted)
-    throw new ApiError(400, "University is deleted");
+    throw new ApiError(404, "University not found");
 
   university.isDeleted = true;
 
   await university.save({ validateBeforeSave: false });
-
-  CustomerDetails.updateMany(
-    {
-      universityId: universityId,
-    },
-    { isDeleted: true }
-  );
 
   const universityCacheKey = `university-${universityId}`;
   const allUniversitiesCacheKey = `universities-list`;

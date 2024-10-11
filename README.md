@@ -68,7 +68,7 @@ npm start
 ├── routes             # API route definitions
 ├── utils              # Helper functions (e.g., dbHandler)
 ├── schemas            # zod validations
-└── db                  # Database connection
+└── db                 # Database connection
 ├── app.ts             # All routes, middlewares configured here
 └── index.ts           # Entry point of the application and database inilialization
 ```

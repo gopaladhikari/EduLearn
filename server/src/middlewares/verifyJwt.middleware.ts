@@ -52,8 +52,10 @@ export const verifyJwt = dbHandler(async (req, res, next) => {
 
       req.admin = admin;
 
-      next();
+      return next();
     }
+
+    throw new ApiError(401, "Unauthorized request");
   } catch (error) {
     if (error instanceof TokenExpiredError)
       throw new ApiError(400, "Token has expired");

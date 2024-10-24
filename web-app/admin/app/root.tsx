@@ -6,8 +6,8 @@ import {
 	ScrollRestoration,
 } from "@remix-run/react";
 import type { LinksFunction } from "@remix-run/node";
-import { Header } from "./components/partials/Header";
-import { Footer } from "./components/partials/Footer";
+import { Header } from "../components/partials/Header";
+import { Footer } from "../components/partials/Footer";
 import styles from "./tailwind.css?url";
 
 export const links: LinksFunction = () => [

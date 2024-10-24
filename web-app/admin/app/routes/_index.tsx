@@ -1,6 +1,6 @@
 import type { MetaFunction } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
-import { MaxWithWrapper } from "~/components/partials/MaxWithWrapper";
+import { MaxWithWrapper } from "components/partials/MaxWithWrapper";
 
 export const meta: MetaFunction = () => {
 	return [

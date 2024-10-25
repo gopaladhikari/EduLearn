@@ -1,6 +1,6 @@
 import type { MetaFunction } from "@remix-run/node";
-import { Link, useLoaderData } from "@remix-run/react";
-import { MaxWithWrapper } from "components/partials/MaxWithWrapper";
+import { json, Link, useLoaderData } from "@remix-run/react";
+import { MaxWithWrapper } from "~/components/partials/MaxWithWrapper";
 
 export const meta: MetaFunction = () => {
 	return [
@@ -22,11 +22,18 @@ export const loader = async () => {
 	);
 	const data: LoaderData[] = await res.json();
 
-	return data;
+	return json(
+		{ data },
+		{
+			headers: {
+				"Cache-Control": "max-age=3600, public",
+			},
+		}
+	);
 };
 
 export default function Index() {
-	const data = useLoaderData<typeof loader>();
+	const { data } = useLoaderData<typeof loader>();
 
 	return (
 		<MaxWithWrapper className="space-y-5">
@@ -38,10 +45,10 @@ export default function Index() {
 					gridTemplateColumns: "repeat(auto-fit, minmax(450px, 1fr))",
 				}}
 			>
-				{data.map((item) => {
+				{data?.map((item) => {
 					return (
 						<article key={item.id}>
-							<h2>
+							<h2 className="text-3xl">
 								<Link to={`/blogs/${item.id}`}>{item.title}</Link>
 							</h2>
 							<p>{item.body}</p>

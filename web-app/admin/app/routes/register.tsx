@@ -1,10 +1,14 @@
-import React from "react";
-import { MaxWithWrapper } from "components/partials/MaxWithWrapper";
+import { MaxWithWrapper } from "~/components/partials/MaxWithWrapper";
+import { json, Link, redirect } from "@remix-run/react";
 import type { ActionFunction, MetaFunction } from "@remix-run/node";
-import { Link } from "@remix-run/react";
-import { cn } from "lib/utils";
-import { buttonVariants } from "components/ui/button";
-import { LoginForm } from "components/auth/LoginForm";
+import { LoginForm } from "~/components/auth/RegisterForm";
+import { getValidatedFormData } from "remix-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { registerSchema } from "~/schemas/admin.schema";
+import { axiosInstance } from "~/config/axios";
+import { AxiosError } from "axios";
+
+const resolver = zodResolver(registerSchema);
 
 export const meta: MetaFunction = () => {
 	return [
@@ -15,25 +19,40 @@ export const meta: MetaFunction = () => {
 };
 
 export const action: ActionFunction = async ({ request }) => {
-	const formData = await request.formData();
-	console.dir(formData.get("email"));
-	return null;
+	const { errors, data } = await getValidatedFormData<FormData>(
+		request,
+		resolver
+	);
+
+	if (errors) return json(errors, 400);
+
+	try {
+		const res = await axiosInstance.post("/register", data);
+		if (res.data.success) return redirect("/login");
+		return json(
+			{
+				success: false,
+				message: "Something went wrong",
+			},
+			{
+				status: 400,
+			}
+		);
+	} catch (error) {
+		if (error instanceof AxiosError)
+			return json(
+				error.response?.data,
+				error.response?.status || 400
+			);
+		return json(error, 400);
+	}
 };
 
 export default function register() {
 	return (
-		<MaxWithWrapper>
-			<div className="container relative hidden h-[800px] flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
-				<Link
-					to="/login"
-					className={cn(
-						buttonVariants({ variant: "ghost" }),
-						"absolute right-4 top-4 md:right-8 md:top-8"
-					)}
-				>
-					Login
-				</Link>
-				<div className="relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex">
+		<MaxWithWrapper as="section">
+			<div className="flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
+				<div className="relative hidden h-full flex-col bg-muted p-10 text-white lg:flex dark:border-r">
 					<div className="absolute inset-0 bg-zinc-900" />
 					<div className="relative z-20 flex items-center text-lg font-medium">
 						<svg
@@ -48,17 +67,7 @@ export default function register() {
 						>
 							<path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3" />
 						</svg>
-						Acme Inc
-					</div>
-					<div className="relative z-20 mt-auto">
-						<blockquote className="space-y-2">
-							<p className="text-lg">
-								&ldquo;This library has saved me countless hours of
-								work and helped me deliver stunning designs to my
-								clients faster than ever before.&rdquo;
-							</p>
-							<footer className="text-sm">Sofia Davis</footer>
-						</blockquote>
+						E-Learning
 					</div>
 				</div>
 				<div className="lg:p-8">
@@ -79,7 +88,7 @@ export default function register() {
 								className="underline underline-offset-4 hover:text-primary"
 							>
 								Terms of Service
-							</Link>{" "}
+							</Link>
 							and{" "}
 							<Link
 								to="/privacy"

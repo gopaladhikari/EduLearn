@@ -1,18 +1,21 @@
-import { cn } from "lib/utils";
+import { cn } from "~/lib/utils";
 
-interface Props extends React.HTMLAttributes<HTMLDivElement> {}
+interface Props extends React.HTMLAttributes<HTMLDivElement> {
+	as?: React.ElementType;
+}
 
 export function MaxWithWrapper({
 	children,
 	className,
+	as: Component = "div",
 	...prop
 }: Props) {
 	return (
-		<div
+		<Component
 			className={cn("mx-auto max-w-screen-xl p-4", className)}
 			{...prop}
 		>
 			{children}
-		</div>
+		</Component>
 	);
 }

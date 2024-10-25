@@ -1,7 +1,7 @@
-import { menu } from "config/site";
+import { menu } from "~/config/site";
 import { MaxWithWrapper } from "./MaxWithWrapper";
 import { NavLink } from "@remix-run/react";
-import { cn } from "lib/utils";
+import { cn } from "~/lib/utils";
 
 export function Header() {
 	return (

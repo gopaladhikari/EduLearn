@@ -6,7 +6,7 @@ import { getValidatedFormData } from "remix-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { registerSchema } from "~/schemas/admin.schema";
 import { axiosInstance } from "~/config/axios";
-import { AxiosError } from "axios";
+import type { CustomizedApiError } from "~/types";
 
 const resolver = zodResolver(registerSchema);
 
@@ -38,6 +38,7 @@ export const action: ActionFunction = async ({ request }) => {
 
 	try {
 		const res = await axiosInstance.post<Res>("/register", data);
+
 		if (res.data.success) return redirect("/login");
 		return json(
 			{
@@ -49,12 +50,17 @@ export const action: ActionFunction = async ({ request }) => {
 			}
 		);
 	} catch (error) {
-		if (error instanceof AxiosError)
-			return json(
-				error.response?.data,
-				error.response?.status || 400
-			);
-		return json(error, 400);
+		const err = error as CustomizedApiError;
+
+		return json(
+			{
+				success: false,
+				message: err.response?.data?.message || err.message,
+			},
+			{
+				status: 400,
+			}
+		);
 	}
 };
 
@@ -63,7 +69,6 @@ export default function register() {
 		<MaxWithWrapper as="section">
 			<div className="flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
 				<div className="relative hidden h-full flex-col bg-muted p-10 text-white lg:flex dark:border-r">
-					<div className="absolute inset-0 bg-zinc-900" />
 					<div className="relative z-20 flex items-center text-lg font-medium">
 						<svg
 							xmlns="http://www.w3.org/2000/svg"

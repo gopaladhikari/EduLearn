@@ -1,7 +1,11 @@
 import { createCookieSessionStorage } from "@remix-run/node";
 
 type SessionData = {
-	userId: string;
+	user: {
+		_id: string;
+		email: string;
+		fullName: string;
+	};
 };
 
 type SessionFlashData = {
@@ -12,12 +16,8 @@ export const { getSession, commitSession, destroySession } =
 	createCookieSessionStorage<SessionData, SessionFlashData>({
 		cookie: {
 			name: "__session",
-			domain: "remix.run",
 			httpOnly: true,
-			maxAge: 60,
-			path: "/",
-			sameSite: "lax",
-			secrets: ["s3cret1"],
+			maxAge: 60 * 60 * 24 * 7, // 7 days
 			secure: true,
 		},
 	});

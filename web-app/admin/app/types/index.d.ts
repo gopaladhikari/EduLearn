@@ -1,4 +1,5 @@
 import "axios";
+import type { AxiosError } from "axios";
 
 declare module "axios" {
 	export interface CustomizedApiResponse<T = any> {
@@ -9,17 +10,7 @@ declare module "axios" {
 		};
 	}
 
-	export interface CustomizedErrorResponse {
-		response: {
-			data: {
-				data: null;
-				success: boolean;
-				message: string;
-			};
-		};
-	}
-
-	export interface Axios {
+	export interface AxiosInstance {
 		get<T = any, R = CustomizedApiResponse<T>, D = any>(
 			url: string,
 			config?: AxiosRequestConfig<D>
@@ -31,4 +22,14 @@ declare module "axios" {
 			config?: AxiosRequestConfig<D>
 		): Promise<R>;
 	}
+}
+
+export interface CustomizedApiError extends AxiosError {
+	response?: {
+		data: {
+			data: null;
+			success: boolean;
+			message: string;
+		};
+	};
 }

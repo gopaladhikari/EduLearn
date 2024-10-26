@@ -10,28 +10,18 @@ import { useRemixForm } from "remix-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, useActionData } from "@remix-run/react";
 import { action } from "~/routes/register";
-import { useEffect } from "react";
 
 export function LoginForm() {
 	const {
 		handleSubmit,
 		formState: { errors, isSubmitting },
 		register,
-		setError,
 	} = useRemixForm<RegisterAdmin>({
 		mode: "onSubmit",
 		resolver: zodResolver(registerSchema),
 	});
 
 	const data = useActionData<typeof action>();
-
-	useEffect(() => {
-		if (data && data.success === false) {
-			setError("root", {
-				message: data.message,
-			});
-		}
-	}, [data]);
 
 	return (
 		<div className="grid gap-6">
@@ -98,10 +88,9 @@ export function LoginForm() {
 							</p>
 						)}
 					</div>
-					{errors?.root && (
-						<p className="text-sm text-destructive">
-							{errors.root.message}
-						</p>
+
+					{data?.message && (
+						<p className="text-sm text-destructive">{data.message}</p>
 					)}
 
 					<Button disabled={isSubmitting}>

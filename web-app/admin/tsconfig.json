@@ -9,7 +9,11 @@
 	],
 	"compilerOptions": {
 		"lib": ["DOM", "DOM.Iterable", "ES2022"],
-		"types": ["@remix-run/node", "vite/client"],
+		"types": [
+			"@remix-run/node",
+			"vite/client",
+			"./app/types/index.d.ts"
+		],
 		"isolatedModules": true,
 		"esModuleInterop": true,
 		"jsx": "react-jsx",
@@ -19,9 +23,10 @@
 		"target": "ES2022",
 		"strict": true,
 		"allowJs": true,
-		"skipLibCheck": true,
+		"skipLibCheck": false,
 		"forceConsistentCasingInFileNames": true,
 		"baseUrl": ".",
+
 		"paths": {
 			"~/*": ["./app/*"]
 		},

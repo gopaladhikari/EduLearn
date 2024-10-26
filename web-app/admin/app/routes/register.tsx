@@ -18,6 +18,16 @@ export const meta: MetaFunction = () => {
 	];
 };
 
+type Res = {
+	fullName: "Gopal Adhikarii";
+	email: "gopal@gmail.com";
+	phoneNumber: "9810545494";
+	_id: "671c7d1a4ea6a107a9daddc3";
+	createdAt: "2024-10-26T05:24:43.005Z";
+	updatedAt: "2024-10-26T05:24:43.005Z";
+	__v: 0;
+};
+
 export const action: ActionFunction = async ({ request }) => {
 	const { errors, data } = await getValidatedFormData<FormData>(
 		request,
@@ -27,7 +37,7 @@ export const action: ActionFunction = async ({ request }) => {
 	if (errors) return json(errors, 400);
 
 	try {
-		const res = await axiosInstance.post("/register", data);
+		const res = await axiosInstance.post<Res>("/register", data);
 		if (res.data.success) return redirect("/login");
 		return json(
 			{

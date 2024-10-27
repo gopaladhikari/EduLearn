@@ -9,7 +9,7 @@ import {
 import { useRemixForm } from "remix-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, useActionData } from "@remix-run/react";
-import { action } from "~/routes/register";
+import { action } from "~/lib/routes/register";
 
 export function LoginForm() {
 	const {

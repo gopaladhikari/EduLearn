@@ -16,8 +16,6 @@ export const links: LinksFunction = () => [
 	{ rel: "stylesheet", href: styles },
 ];
 
-// export const loader: LoaderFunction = async ({ request }) => {};
-
 export function Layout({ children }: { children: React.ReactNode }) {
 	return (
 		<html lang="en" suppressHydrationWarning>

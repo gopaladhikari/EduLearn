@@ -66,6 +66,10 @@
 		@apply border-border;
 	}
 
+	h1 {
+		@apply text-2xl font-bold md:text-3xl lg:text-5xl;
+	}
+
 	main {
 		@apply min-h-screen;
 	}

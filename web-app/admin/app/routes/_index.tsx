@@ -33,29 +33,7 @@ export const loader = async () => {
 };
 
 export default function Index() {
-	const { data } = useLoaderData<typeof loader>();
+	const data = useLoaderData<typeof loader>();
 
-	return (
-		<MaxWithWrapper className="space-y-5">
-			<h1>Blogs posts</h1>
-
-			<section
-				className="grid gap-8"
-				style={{
-					gridTemplateColumns: "repeat(auto-fit, minmax(450px, 1fr))",
-				}}
-			>
-				{data?.map((item) => {
-					return (
-						<article key={item.id}>
-							<h2 className="text-3xl">
-								<Link to={`/blogs/${item.id}`}>{item.title}</Link>
-							</h2>
-							<p>{item.body}</p>
-						</article>
-					);
-				})}
-			</section>
-		</MaxWithWrapper>
-	);
+	return <MaxWithWrapper className="space-y-5"></MaxWithWrapper>;
 }

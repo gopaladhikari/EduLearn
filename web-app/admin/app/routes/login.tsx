@@ -16,7 +16,12 @@ import { getValidatedFormData, useRemixForm } from "remix-hook-form";
 import { loginSchema, LoginAdmin } from "~/schemas/admin.schema";
 import { axiosInstance } from "~/config/axios";
 import type { CustomizedApiError } from "~/types";
-import { commitSession } from "~/lib/session";
+import {
+	commitSession,
+	destroySession,
+	getSession,
+} from "~/lib/session";
+import type { User } from "~/types/custom";
 
 export const meta: MetaFunction = () => {
 	return [
@@ -26,7 +31,14 @@ export const meta: MetaFunction = () => {
 	];
 };
 
+type LoginResponse = {
+	admin: User;
+	jwtToken: string;
+};
+
 export const action: ActionFunction = async ({ request }) => {
+	const cookie = request.headers.get("cookie");
+
 	const { errors, data } = await getValidatedFormData<LoginAdmin>(
 		request,
 		zodResolver(loginSchema)
@@ -41,24 +53,50 @@ export const action: ActionFunction = async ({ request }) => {
 			{ status: 400 }
 		);
 
+	const session = await getSession(cookie);
+
 	try {
-		const res = await axiosInstance.post("/login", data);
+		const res = await axiosInstance.post<LoginResponse>(
+			"/login",
+			data
+		);
 
 		if (res.data.success) {
+			const { admin, jwtToken } = res.data.data;
+
+			session.set("user", admin);
+			session.set("jwtToken", jwtToken as string);
+
 			return redirect("/dashboard", {
 				headers: {
-					"Set-Cookie": await commitSession(res.data.data),
+					"Set-Cookie": await commitSession(session),
 				},
 			});
 		}
+		return json(
+			{
+				message: "Something went wrong",
+			},
+			{
+				status: 400,
+				headers: {
+					"Set-Cookie": await destroySession(session),
+				},
+			}
+		);
 	} catch (error) {
-		console.log(error);
 		const err = error as CustomizedApiError;
+
 		return json(
 			{
 				message: err.response?.data?.message || err.message,
 			},
-			{ status: 400 }
+			{
+				status: 400,
+				headers: {
+					"Set-Cookie": await destroySession(session),
+				},
+			}
 		);
 	}
 };

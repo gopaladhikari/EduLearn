@@ -1,12 +1,15 @@
 import { menu } from "~/config/site";
 import { MaxWithWrapper } from "./MaxWithWrapper";
-import { NavLink } from "@remix-run/react";
+import { json, NavLink, useLoaderData } from "@remix-run/react";
 import { cn } from "~/lib/utils";
+import type { User } from "~/types/custom";
 
 export function Header() {
+	const user = useLoaderData();
+
 	return (
 		<header className="shadow-md dark:border-b dark:shadow-none">
-			<MaxWithWrapper>
+			<MaxWithWrapper as="section">
 				<nav role="navigation">
 					<menu className="flex items-center gap-6" role="menu">
 						<li

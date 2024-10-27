@@ -105,6 +105,7 @@ export default function login() {
 	const {
 		handleSubmit,
 		formState: { errors, isSubmitting },
+		setValue,
 		register,
 	} = useRemixForm<LoginAdmin>({
 		mode: "onSubmit",
@@ -112,6 +113,7 @@ export default function login() {
 	});
 
 	const data = useActionData<typeof action>();
+
 	return (
 		<MaxWithWrapper as="section">
 			<div className="flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
@@ -177,6 +179,15 @@ export default function login() {
 											<Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
 										)}
 										Sign in
+									</Button>
+									<Button
+										type="button"
+										variant="outline"
+										onClick={() =>
+											setValue("phoneNumber", "0123456789")
+										}
+									>
+										Guest user
 									</Button>
 								</div>
 							</Form>

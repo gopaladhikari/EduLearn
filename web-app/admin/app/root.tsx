@@ -1,20 +1,12 @@
 import {
-	json,
 	Links,
 	Meta,
 	Outlet,
 	Scripts,
 	ScrollRestoration,
 } from "@remix-run/react";
-import type { LinksFunction, LoaderFunction } from "@remix-run/node";
-import { Header } from "./components/partials/Header";
 import { Footer } from "./components/partials/Footer";
-import styles from "./tailwind.css?url";
-import { getCurrentUser } from "./lib/session";
-
-export const links: LinksFunction = () => [
-	{ rel: "stylesheet", href: styles },
-];
+import "./tailwind.css";
 
 export function Layout({ children }: { children: React.ReactNode }) {
 	return (
@@ -29,7 +21,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
 				<Links />
 			</head>
 			<body suppressHydrationWarning>
-				<Header />
 				<main>{children}</main>
 				<Footer />
 				<ScrollRestoration />

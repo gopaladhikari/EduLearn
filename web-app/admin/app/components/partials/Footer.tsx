@@ -1,5 +1,3 @@
-import { Link } from "@remix-run/react";
-
 export function Footer() {
 	return (
 		<footer>
@@ -12,7 +10,7 @@ export function Footer() {
 								E-learning
 							</div>
 							<p className="mt-3 text-sm text-gray-700 dark:text-gray-400">
-								476 Shantivan Soc. Rajkot, India
+								Rangeli-08, Koshi, Nepal
 							</p>
 						</div>
 						<div className="mt-6 grid flex-grow grid-cols-3 gap-6 sm:mt-0 sm:grid-cols-3 lg:grid-cols-4">

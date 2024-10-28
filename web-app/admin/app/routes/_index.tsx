@@ -1,5 +1,5 @@
-import type { MetaFunction } from "@remix-run/node";
-import { NavLink } from "@remix-run/react";
+import type { LoaderFunction, MetaFunction } from "@remix-run/node";
+import { json, NavLink, redirect } from "@remix-run/react";
 import { MaxWithWrapper } from "~/components/partials/MaxWithWrapper";
 import { Button } from "~/components/ui/button";
 import {
@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import FeatureWithImage from "~/components/Home/FeatureWithImage";
 import { Header } from "~/components/partials/Header";
+import { getCurrentUser } from "~/lib/session";
 
 export const meta: MetaFunction = () => {
 	return [
@@ -26,6 +27,18 @@ const loginFeatures = [
 	"Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui lorem cupidatat commodo.",
 	"Ac tincidunt sapien vehicula erat auctor pellentesque rhoncus.",
 ];
+
+export const loader: LoaderFunction = async ({ request }) => {
+	const user = await getCurrentUser(request);
+
+	if (user) return redirect("/dashboard");
+	return json(
+		{
+			message: "You are not logged in",
+		},
+		{ status: 401 }
+	);
+};
 
 export default function Index() {
 	return (

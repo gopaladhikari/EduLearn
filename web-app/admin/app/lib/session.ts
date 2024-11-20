@@ -19,7 +19,6 @@ export const { getSession, commitSession, destroySession } =
 			name: "__session",
 			secrets: ["super-secret-secret"],
 			sameSite: "lax",
-			path: "/",
 			httpOnly: true,
 			secure: process.env.NODE_ENV === "production",
 			maxAge: 60 * 60 * 24 * 7, // 7 days

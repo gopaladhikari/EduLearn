@@ -1,9 +1,4 @@
 import {
-	Avatar,
-	AvatarImage,
-	AvatarFallback,
-} from "@radix-ui/react-avatar";
-import {
 	DropdownMenuShortcut,
 	DropdownMenu,
 	DropdownMenuTrigger,
@@ -14,6 +9,7 @@ import {
 	DropdownMenuItem,
 } from "../ui/dropdown-menu";
 import { Button } from "../ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 export function UserNav() {
 	return (

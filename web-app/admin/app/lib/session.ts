@@ -1,13 +1,8 @@
-import {
-	createCookieSessionStorage,
-	redirect,
-} from "@remix-run/node";
-import type { User } from "~/types/custom";
+import { type SessionData } from "@remix-run/node";
+import { createCookieSessionStorage } from "@remix-run/node";
+import { createThemeSessionResolver } from "remix-themes";
 
-type SessionData = {
-	user?: User;
-	jwtToken?: string;
-};
+import type { User } from "~/types/custom";
 
 type SessionFlashData = {
 	error: string;
@@ -25,12 +20,27 @@ export const { getSession, commitSession, destroySession } =
 		},
 	});
 
-export const getCurrentUser = async (request: Request) => {
+export const getCurrentUser = async (
+	request: Request
+): Promise<User> => {
 	const cookie = request.headers.get("cookie");
 
 	const session = await getSession(cookie);
 
-	const user = session.get("user");
+	const user = session.get("user") as User;
 
 	return user;
 };
+
+const sessionStorage = createCookieSessionStorage({
+	cookie: {
+		name: "theme",
+		path: "/",
+		httpOnly: true,
+		sameSite: "lax",
+		secrets: ["secret"],
+	},
+});
+
+export const themeSessionResolver =
+	createThemeSessionResolver(sessionStorage);

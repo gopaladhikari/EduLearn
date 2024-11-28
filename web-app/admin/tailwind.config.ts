@@ -5,6 +5,7 @@ export default {
 		"./app/**/{**,.client,.server}/**/*.{js,jsx,ts,tsx}",
 		"./components/**/{**,.client,.server}/**/*.{js,jsx,ts,tsx}",
 	],
+	darkMode: ["class"],
 	theme: {
 		extend: {
 			fontFamily: {

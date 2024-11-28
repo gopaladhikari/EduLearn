@@ -2,8 +2,8 @@ import type { MetaFunction } from "@remix-run/node";
 
 export const meta: MetaFunction = () => {
 	return [
-		{ title: "Customer | E learning" },
-		{ name: "description", content: "Customer list of E-learning" },
+		{ title: "Products | E learning" },
+		{ name: "description", content: "Products list of E-learning" },
 	];
 };
 

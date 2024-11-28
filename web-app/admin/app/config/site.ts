@@ -8,4 +8,11 @@ export const menu = {
 		{ name: "Login", to: "/login" },
 		{ name: "Register", to: "/register" },
 	],
+
+	dashboard: [
+		{ name: "Dashboard", to: "/dashboard" },
+		{ name: "Customers", to: "/dashboard/customers" },
+		{ name: "Courses", to: "/dashboard/courses" },
+		{ name: "Settings", to: "/dashboard/settings" },
+	],
 } as const;

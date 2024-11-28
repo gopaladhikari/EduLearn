@@ -1,4 +1,5 @@
-import { Link } from "@remix-run/react";
+import { NavLink } from "@remix-run/react";
+import { menu } from "~/config/site";
 import { cn } from "~/lib/utils";
 
 export function MainNav({
@@ -6,37 +7,26 @@ export function MainNav({
 	...props
 }: React.HTMLAttributes<HTMLElement>) {
 	return (
-		<nav
-			className={cn(
-				"flex items-center space-x-4 lg:space-x-6",
-				className
-			)}
-			{...props}
-		>
-			<Link
-				to="/dashboard"
-				className="text-sm font-medium transition-colors hover:text-primary"
-			>
-				Overview
-			</Link>
-			<Link
-				to="/dashboard/customers"
-				className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
-			>
-				Customers
-			</Link>
-			<Link
-				to="/dashboard/products"
-				className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
-			>
-				Products
-			</Link>
-			<Link
-				to="/dashboard/settings"
-				className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
-			>
-				Settings
-			</Link>
+		<nav className={className} {...props}>
+			<menu className="flex items-center space-x-4 lg:space-x-6">
+				{menu.dashboard.map((item) => (
+					<li key={item.name}>
+						<NavLink
+							relative="path"
+							to={item.to}
+							end
+							className={({ isActive }) =>
+								cn(
+									"text-sm font-medium text-muted-foreground transition-colors hover:text-primary",
+									isActive && "text-primary"
+								)
+							}
+						>
+							{item.name}
+						</NavLink>
+					</li>
+				))}
+			</menu>
 		</nav>
 	);
 }

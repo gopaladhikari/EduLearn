@@ -49,7 +49,7 @@ export default function Index() {
 					<div className="relative isolate overflow-hidden bg-background">
 						<div className="mx-auto flex w-full max-w-7xl justify-start px-6 pb-24 pt-10 sm:pb-32 lg:flex lg:px-8 lg:py-36">
 							<div className="mx-auto max-w-7xl justify-start lg:max-w-3xl lg:pt-8">
-								<h1 className="wrap-balance mt-6 bg-black bg-gradient-to-br bg-clip-text text-center text-4xl font-medium leading-tight tracking-tight text-transparent sm:text-6xl sm:leading-[1.15] dark:from-white dark:to-[hsla(0,0%,100%,.5)]">
+								<h1 className="wrap-balance mt-6 bg-black bg-gradient-to-br bg-clip-text text-center text-4xl font-medium leading-tight tracking-tight text-transparent dark:from-white dark:to-[hsla(0,0%,100%,.5)] sm:text-6xl sm:leading-[1.15]">
 									<h1>Welcome to E-learning</h1>
 								</h1>
 								<p className="wrap-balance mt-6 text-center text-lg font-light leading-7 text-gray-700 dark:text-gray-400">
@@ -70,10 +70,10 @@ export default function Index() {
 				</div>
 				<div className="mx-auto max-w-7xl px-6 py-24 md:py-32 lg:px-8">
 					<div className="max-w-3xl">
-						<h1 className="wrap-balance mt-16 bg-black bg-gradient-to-br bg-clip-text text-left text-4xl font-medium tracking-tight text-transparent sm:text-5xl sm:leading-snug dark:from-white dark:to-[hsla(0,0%,100%,.5)]">
+						<h1 className="wrap-balance mt-16 bg-black bg-gradient-to-br bg-clip-text text-left text-4xl font-medium tracking-tight text-transparent dark:from-white dark:to-[hsla(0,0%,100%,.5)] sm:text-5xl sm:leading-snug">
 							All your features in one place
 						</h1>
-						<p className="wrap-balance mt-6 text-left text-base font-light leading-7 text-gray-700 lg:text-lg dark:text-gray-400">
+						<p className="wrap-balance mt-6 text-left text-base font-light leading-7 text-gray-700 dark:text-gray-400 lg:text-lg">
 							Lorem ipsum dolor sit amet, consectetur adipisicing
 							elit. Hic aliquid voluptas saepe maxime asperiores totam
 							fuga assumenda iure repudiandae. Ab, ipsum vitae!

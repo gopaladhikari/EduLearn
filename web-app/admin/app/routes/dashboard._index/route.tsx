@@ -4,7 +4,6 @@ import { CalendarDateRangePicker } from "~/components/dashboard/date-range-picke
 import { MainNav } from "~/components/dashboard/main-nav";
 import { Overview } from "~/components/dashboard/overview";
 import { RecentSales } from "~/components/dashboard/recent-sales";
-import TeamSwitcher from "~/components/dashboard/team-switcher";
 import { UserNav } from "~/components/dashboard/user-nav";
 import { Button } from "~/components/ui/button";
 import {

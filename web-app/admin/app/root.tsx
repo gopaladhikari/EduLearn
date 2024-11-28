@@ -1,37 +1,63 @@
 import {
-	json,
+	ThemeProvider,
+	useTheme,
+	PreventFlashOnWrongTheme,
+} from "remix-themes";
+import {
 	Links,
+	LiveReload,
 	Meta,
 	Outlet,
-	redirect,
 	Scripts,
-	ScrollRestoration,
+	useLoaderData,
 } from "@remix-run/react";
-import { Footer } from "./components/partials/Footer";
+import {
+	ScrollRestoration,
+	type LoaderFunction,
+} from "react-router-dom";
+import { themeSessionResolver } from "./lib/session";
 import "./tailwind.css";
 
-export function Layout({ children }: { children: React.ReactNode }) {
+// Return the theme from the session storage using the loader
+export const loader: LoaderFunction = async ({ request }) => {
+	const { getTheme } = await themeSessionResolver(request);
+	return {
+		theme: getTheme(),
+	};
+};
+
+export default function AppWithProviders() {
+	const data = useLoaderData<typeof loader>();
 	return (
-		<html lang="en" suppressHydrationWarning>
+		<ThemeProvider
+			specifiedTheme={data.theme}
+			themeAction="/action/set-theme"
+		>
+			<App />
+		</ThemeProvider>
+	);
+}
+
+function App() {
+	const [theme] = useTheme();
+
+	return (
+		<html lang="en" className={theme ?? "dark"}>
 			<head>
 				<meta charSet="utf-8" />
 				<meta
 					name="viewport"
-					content="width=device-width, initial-scale=1"
+					content="width=device-width,initial-scale=1"
 				/>
 				<Meta />
+				<PreventFlashOnWrongTheme ssrTheme={Boolean(theme)} />
 				<Links />
 			</head>
-			<body suppressHydrationWarning>
-				<main>{children}</main>
-				<Footer />
+			<body>
+				<Outlet />
 				<ScrollRestoration />
 				<Scripts />
 			</body>
 		</html>
 	);
-}
-
-export default function App() {
-	return <Outlet />;
 }

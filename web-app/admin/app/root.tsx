@@ -5,11 +5,11 @@ import {
 } from "remix-themes";
 import {
 	Links,
-	LiveReload,
 	Meta,
 	Outlet,
 	Scripts,
 	useLoaderData,
+	LiveReload,
 } from "@remix-run/react";
 import {
 	ScrollRestoration,
@@ -54,6 +54,7 @@ function App() {
 				<Links />
 			</head>
 			<body>
+				{process.env.NODE_ENV === "development" && <LiveReload />}
 				<Outlet />
 				<ScrollRestoration />
 				<Scripts />

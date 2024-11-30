@@ -48,7 +48,7 @@ export default function FeatureWithImage({
 								</div>
 							</div>
 						</div>
-						<img
+						{/* <img
 							src={darkFeatureImage}
 							alt="Product screenshot"
 							className={cn(
@@ -69,7 +69,7 @@ export default function FeatureWithImage({
 									"lg:order-2 lg:ml-16": imagePosition === "right",
 								}
 							)}
-						/>
+						/> */}
 					</div>
 				</div>
 			</div>

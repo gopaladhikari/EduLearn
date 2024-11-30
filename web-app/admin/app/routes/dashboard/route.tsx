@@ -1,6 +1,7 @@
 import type { LoaderFunction } from "@remix-run/node";
 import {
 	json,
+	Link,
 	Outlet,
 	redirect,
 	useLoaderData,
@@ -31,19 +32,22 @@ export default function dashboard() {
 
 	return (
 		<>
-			<MaxWithWrapper className="p-0">
-				<div className="border-b">
-					<div className="flex h-16 items-center px-4">
-						<strong className="text-lg">E-learning</strong>
-						<MainNav className="mx-6" />
-						<div className="ml-auto flex items-center space-x-4">
-							<Search />
-							<ModeToggle />
-							<UserNav user={data} />
-						</div>
+			<div className="border-b shadow-md">
+				<MaxWithWrapper className="flex items-center gap-4">
+					<strong className="text-2xl">
+						<Link to="/dashboard" className="text-foreground">
+							E-learning
+						</Link>
+					</strong>
+					<MainNav className="mx-6" />
+					<div className="ml-auto flex items-center space-x-4">
+						<Search />
+						<ModeToggle />
+						<UserNav user={data} />
 					</div>
-				</div>
-
+				</MaxWithWrapper>
+			</div>
+			<MaxWithWrapper>
 				<Outlet />
 			</MaxWithWrapper>
 		</>

@@ -26,7 +26,9 @@ export function UserNav({ user }: Props) {
 				>
 					<Avatar className="h-8 w-8">
 						{/* <AvatarImage src="/avatars/01.png" alt="@shadcn" /> */}
-						<AvatarFallback>{user.fullName.charAt(0)}</AvatarFallback>
+						<AvatarFallback>
+							{user.fullName?.charAt(0)}
+						</AvatarFallback>
 					</Avatar>
 				</Button>
 			</DropdownMenuTrigger>

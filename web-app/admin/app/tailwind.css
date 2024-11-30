@@ -65,7 +65,7 @@
 	}
 
 	h1 {
-		@apply text-2xl font-bold md:text-3xl lg:text-5xl;
+		@apply text-2xl font-bold md:text-3xl;
 	}
 
 	main {

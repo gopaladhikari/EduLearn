@@ -8,5 +8,9 @@ export const meta: MetaFunction = () => {
 };
 
 export default function route() {
-	return <div>route</div>;
+	return (
+		<main>
+			<h1 className="text-xl">Customers</h1>
+		</main>
+	);
 }

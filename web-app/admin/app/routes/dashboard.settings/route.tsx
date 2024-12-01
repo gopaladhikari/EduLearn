@@ -1,22 +1,16 @@
-import type { MetaFunction } from "@remix-run/node";
-import { Link, Outlet } from "@remix-run/react";
-
-export const meta: MetaFunction = () => {
-	return [
-		{ title: "Settings | E learning" },
-		{ name: "description", content: "Settings of E-learning" },
-	];
-};
+import { AppSidebar } from "~/components/settings/app-sidebar";
+import {
+	SidebarProvider,
+	SidebarTrigger,
+} from "~/components/ui/sidebar";
 
 export default function setting() {
 	return (
-		<main>
-			<h1 className="">Hi world</h1>
-			<h1 className="">Hi world</h1>
-			<h1 className="">Hi world</h1>
-			<h1 className="">Hi world</h1>
-
-			<Outlet />
-		</main>
+		<SidebarProvider>
+			<main>
+				<h1>Settings</h1>
+				<AppSidebar />
+			</main>
+		</SidebarProvider>
 	);
 }

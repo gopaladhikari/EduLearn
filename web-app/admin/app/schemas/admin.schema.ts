@@ -1,11 +1,11 @@
 import z from "zod";
 
-// regex for 10 digit mobile number
 
 export const loginSchema = z.object({
 	phoneNumber: z.string().regex(/^\d{10}$/, {
 		message: "Invalid phone number",
 	}),
+
 });
 
 export const registerSchema = loginSchema.extend({

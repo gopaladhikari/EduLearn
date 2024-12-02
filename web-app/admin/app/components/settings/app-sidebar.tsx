@@ -1,84 +1,34 @@
+import { menu } from "~/config/site";
 import {
 	Sidebar,
 	SidebarContent,
-	SidebarFooter,
 	SidebarGroup,
 	SidebarGroupContent,
-	SidebarGroupLabel,
-	SidebarHeader,
 	SidebarMenu,
 	SidebarMenuButton,
 	SidebarMenuItem,
 } from "../ui/sidebar";
-
-import {
-	Calendar,
-	Home,
-	Inbox,
-	Search,
-	Settings,
-} from "lucide-react";
-
-const items = [
-	{
-		title: "Home",
-		url: "#",
-		icon: Home,
-	},
-	{
-		title: "Inbox",
-		url: "#",
-		icon: Inbox,
-	},
-	{
-		title: "Calendar",
-		url: "#",
-		icon: Calendar,
-	},
-	{
-		title: "Search",
-		url: "#",
-		icon: Search,
-	},
-	{
-		title: "Settings",
-		url: "#",
-		icon: Settings,
-	},
-];
+import { Link, useLocation, useNavigate } from "@remix-run/react";
+import { cn } from "~/lib/utils";
 
 export function AppSidebar() {
+	const { pathname } = useLocation();
+
 	return (
-		<Sidebar collapsible="none" className="bg-transparent">
+		<Sidebar collapsible="none" className="w-full bg-transparent">
 			<SidebarContent>
-				<SidebarGroup>
-					<SidebarGroupLabel>General</SidebarGroupLabel>
+				<SidebarGroup className="p-0">
 					<SidebarGroupContent>
 						<SidebarMenu>
-							{items.map((item) => (
-								<SidebarMenuItem key={item.title}>
-									<SidebarMenuButton asChild>
-										<a href={item.url}>
-											<item.icon />
-											<span>{item.title}</span>
-										</a>
-									</SidebarMenuButton>
-								</SidebarMenuItem>
-							))}
-						</SidebarMenu>
-					</SidebarGroupContent>
-				</SidebarGroup>
-				<SidebarGroup>
-					<SidebarGroupLabel>Account</SidebarGroupLabel>
-					<SidebarGroupContent>
-						<SidebarMenu>
-							{items.map((item) => (
-								<SidebarMenuItem key={item.title}>
-									<SidebarMenuButton asChild>
-										<a href={item.url}>
-											<item.icon />
-											<span>{item.title}</span>
-										</a>
+							{menu.settings.map((item) => (
+								<SidebarMenuItem key={item.name}>
+									<SidebarMenuButton
+										asChild
+										className={cn(
+											pathname === item.to && "bg-sidebar-accent"
+										)}
+									>
+										<Link to={item.to}>{item.name}</Link>
 									</SidebarMenuButton>
 								</SidebarMenuItem>
 							))}

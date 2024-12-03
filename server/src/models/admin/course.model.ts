@@ -32,13 +32,13 @@ const courseSchema = new mongoose.Schema(
 
     price: { type: Number, default: 0 },
 
-    ratings: [
-      {
-        userId: mongoose.Schema.Types.ObjectId,
-        ref: "Customer",
-        rating: Number,
-      },
-    ],
+    // ratings: [
+    //   {
+    //     userId: mongoose.Schema.Types.ObjectId,
+    //     ref: "Customer",
+    //     rating: Number,
+    //   },
+    // ],
 
     isPopular: {
       type: Boolean,
@@ -60,4 +60,4 @@ const courseSchema = new mongoose.Schema(
   }
 );
 
-export const Course = mongoose.model("Course", courseSchema);
+export const Courses = mongoose.model("Course", courseSchema);

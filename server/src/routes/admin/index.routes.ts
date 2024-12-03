@@ -5,6 +5,7 @@ import { storyRouter } from "./story.routes";
 import { semesterRouter } from "./semester.routes";
 import { subjectRouter } from "./subject.routes";
 import { currentPursuingRouter } from "./currentPursuing.routes";
+import { adminCoursesRoutes } from "./courses.routes";
 
 const mainAdminRouter = Router();
 
@@ -14,5 +15,6 @@ mainAdminRouter.use("/current-pursuing", currentPursuingRouter);
 mainAdminRouter.use("/semester", semesterRouter);
 mainAdminRouter.use("/subject", subjectRouter);
 mainAdminRouter.use("/story", storyRouter);
+mainAdminRouter.use("/courses", adminCoursesRoutes);
 
 export { mainAdminRouter };

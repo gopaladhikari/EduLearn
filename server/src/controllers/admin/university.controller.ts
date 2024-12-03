@@ -6,8 +6,6 @@ import { dbHandler } from "../../utils/dbHandler";
 import mongoose, { isValidObjectId } from "mongoose";
 import fs from "fs";
 
-let a = 6;
-
 export const createUniversity = dbHandler(async (req, res) => {
   const { success, data, error } = createUniversitySchema.safeParse(
     req.body

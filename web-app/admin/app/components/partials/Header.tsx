@@ -1,6 +1,6 @@
 import { menu } from "~/config/site";
 import { MaxWithWrapper } from "./MaxWithWrapper";
-import { NavLink } from "@remix-run/react";
+import { NavLink, useLocation } from "@remix-run/react";
 import { cn } from "~/lib/utils";
 
 export function Header() {
@@ -21,6 +21,7 @@ export function Header() {
 							<li key={item.name} role="menubar">
 								<NavLink
 									to={item.to}
+									end={false}
 									role="menuitem"
 									className={({ isActive }) =>
 										cn("text-sm", isActive && "text-primary")

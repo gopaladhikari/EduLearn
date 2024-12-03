@@ -39,7 +39,9 @@ export default function dashboard() {
 							E-learning
 						</Link>
 					</strong>
-					<MainNav className="mx-6" />
+					<header>
+						<MainNav className="mx-6" />
+					</header>
 					<div className="ml-auto flex items-center space-x-4">
 						<Search />
 						<ModeToggle />

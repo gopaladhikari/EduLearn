@@ -13,10 +13,13 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import type { User } from "~/types/custom";
 
 type Props = {
-	user: User;
+	data: {
+		admin: User;
+		jwtToken: string;
+	};
 };
 
-export function UserNav({ user }: Props) {
+export function UserNav({ data }: Props) {
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
@@ -27,7 +30,7 @@ export function UserNav({ user }: Props) {
 					<Avatar className="h-8 w-8">
 						{/* <AvatarImage src="/avatars/01.png" alt="@shadcn" /> */}
 						<AvatarFallback>
-							{user.fullName?.charAt(0)}
+							{data?.admin.fullName?.charAt(0)}
 						</AvatarFallback>
 					</Avatar>
 				</Button>
@@ -36,10 +39,10 @@ export function UserNav({ user }: Props) {
 				<DropdownMenuLabel className="font-normal">
 					<div className="flex flex-col space-y-1">
 						<p className="text-sm font-medium leading-none">
-							{user.fullName}
+							{data?.admin.fullName}
 						</p>
 						<p className="text-xs leading-none text-muted-foreground">
-							{user.email}
+							{data?.admin.email}
 						</p>
 					</div>
 				</DropdownMenuLabel>

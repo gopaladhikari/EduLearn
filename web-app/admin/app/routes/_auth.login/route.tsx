@@ -63,7 +63,7 @@ export const action: ActionFunction = async ({ request }) => {
 			const { admin, jwtToken } = res.data.data;
 
 			session.set("user", admin);
-			session.set("jwtToken", jwtToken as string);
+			session.set("jwtToken", jwtToken);
 
 			return redirect("/dashboard", {
 				headers: {

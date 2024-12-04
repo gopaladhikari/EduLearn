@@ -78,3 +78,18 @@ export const deleteAdmin = dbHandler(async (req, res) => {
 
   res.status(200).json(new ApiSuccess("Admin deleted successfully", null));
 });
+
+export const updateSession = dbHandler(async (req, res) => {
+  const admin = req.admin;
+
+  if (!admin) throw new ApiError(400, "Admin not found");
+
+  const jwtToken = admin.generateJwtToken();
+
+  return res.status(200).json(
+    new ApiSuccess("Admin session updated successfully", {
+      admin,
+      jwtToken,
+    })
+  );
+});

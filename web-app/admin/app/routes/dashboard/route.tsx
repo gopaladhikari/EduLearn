@@ -1,4 +1,4 @@
-import type { LoaderFunction } from "@remix-run/node";
+import type { LoaderFunction, SessionData } from "@remix-run/node";
 import {
 	json,
 	Link,
@@ -6,25 +6,60 @@ import {
 	redirect,
 	useLoaderData,
 } from "@remix-run/react";
+import type { AxiosError } from "axios";
 import { Search } from "lucide-react";
 import { MainNav } from "~/components/dashboard/main-nav";
 import { UserNav } from "~/components/dashboard/user-nav";
 import { MaxWithWrapper } from "~/components/partials/MaxWithWrapper";
 import { ModeToggle } from "~/components/partials/mode-toggle";
-import { destroySession, getSession } from "~/lib/session";
+import { axiosInstance } from "~/config/axios";
+import {
+	commitSession,
+	destroySession,
+	getSession,
+} from "~/lib/session";
+import type { CustomizedApiError } from "~/types";
 
 export const loader: LoaderFunction = async ({ request }) => {
 	const cookie = request.headers.get("cookie");
 
 	const session = await getSession(cookie);
 
-	if (session.has("user")) return json(session.get("user"));
-	return redirect("/", {
-		status: 401,
-		headers: {
-			"Set-Cookie": await destroySession(session),
-		},
-	});
+	if (!session.has("jwtToken"))
+		return redirect("/", {
+			headers: {
+				"Set-Cookie": await destroySession(session),
+			},
+		});
+
+	const jwtToken = session.get("jwtToken");
+
+	axiosInstance.defaults.headers.common["Authorization"] =
+		`Bearer ${jwtToken}`;
+
+	try {
+		const { data } = await axiosInstance.get("/update-session");
+
+		if (!data.success)
+			return redirect("/", {
+				headers: {
+					"Set-Cookie": await destroySession(session),
+				},
+			});
+
+		return json(data.data, {
+			headers: {
+				"Set-Cookie": await commitSession(session),
+			},
+		});
+	} catch (error) {
+		console.log((error as CustomizedApiError).response?.data);
+		return redirect("/", {
+			headers: {
+				"Set-Cookie": await destroySession(session),
+			},
+		});
+	}
 };
 
 export default function dashboard() {
@@ -45,7 +80,7 @@ export default function dashboard() {
 					<div className="ml-auto flex items-center space-x-4">
 						<Search />
 						<ModeToggle />
-						<UserNav user={data} />
+						<UserNav data={data} />
 					</div>
 				</MaxWithWrapper>
 			</div>

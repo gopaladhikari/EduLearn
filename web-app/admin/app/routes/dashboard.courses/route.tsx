@@ -38,6 +38,12 @@ import {
 	TableHeader,
 	TableRow,
 } from "~/components/ui/table";
+import {
+	json,
+	type LoaderFunction,
+	type MetaFunction,
+} from "@remix-run/node";
+import { axiosInstance } from "~/config/axios";
 
 const data: Payment[] = [
 	{
@@ -131,12 +137,11 @@ export const columns: ColumnDef<Payment>[] = [
 		),
 	},
 	{
-		accessorKey: "amount",
-		header: () => <div className="text-right">Amount</div>,
+		accessorKey: "price",
+		header: () => <div className="text-right">Price</div>,
 		cell: ({ row }) => {
-			const amount = parseFloat(row.getValue("amount"));
+			const amount = parseFloat(row.getValue("price"));
 
-			// Format the amount as a dollar amount
 			const formatted = new Intl.NumberFormat("en-US", {
 				style: "currency",
 				currency: "USD",
@@ -180,7 +185,24 @@ export const columns: ColumnDef<Payment>[] = [
 	},
 ];
 
-export default function DataTableDemo() {
+export const meta: MetaFunction = () => {
+	return [
+		{ title: "Courses | E learning" },
+		{ name: "description", content: "Courses of E-learning" },
+		{ property: "og:title", content: "Courses" },
+	];
+};
+
+export const loader: LoaderFunction = async ({ request }) => {
+	try {
+		const response = await axiosInstance.get("");
+		return json(response.data);
+	} catch (error) {
+		return json(error);
+	}
+};
+
+export default function route() {
 	const [sorting, setSorting] = React.useState<SortingState>([]);
 	const [columnFilters, setColumnFilters] =
 		React.useState<ColumnFiltersState>([]);

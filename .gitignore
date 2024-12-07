@@ -138,3 +138,7 @@ dist
 
 # End of https://www.toptal.com/developers/gitignore/api/node
 src/config/firebase.json
+
+# Build apps
+build/
+dist/

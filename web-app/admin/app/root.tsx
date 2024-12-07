@@ -15,9 +15,13 @@ import {
 	type LoaderFunction,
 } from "react-router-dom";
 import { themeSessionResolver } from "./lib/session";
-import "./tailwind.css";
+import type { LinksFunction } from "@remix-run/node";
+import tailwind from "./tailwind.css?url";
 
-// Return the theme from the session storage using the loader
+export const links: LinksFunction = () => {
+	return [{ rel: "stylesheet", href: tailwind }];
+};
+
 export const loader: LoaderFunction = async ({ request }) => {
 	const { getTheme } = await themeSessionResolver(request);
 	return {

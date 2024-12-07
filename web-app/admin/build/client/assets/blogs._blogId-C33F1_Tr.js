@@ -1,1 +1,0 @@
-import{j as t}from"./jsx-runtime-BMrMXMSG.js";import{M as a}from"./MaxWithWrapper-BT1pLmlj.js";import{q as o}from"./components-m8iHZQPM.js";function n(){const r=o();return r?t.jsx(a,{children:JSON.stringify(r)}):null}export{n as default};

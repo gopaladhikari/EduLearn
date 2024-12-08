@@ -2,4 +2,8 @@
 export default {
 	tailwind: true,
 	postcss: true,
+	future: {
+		unstable_optimizeDeps: true,
+	},
+	sourcemaps: true,
 };

@@ -85,7 +85,7 @@
 	}
 
 	main {
-		@apply min-h-screen;
+		@apply min-h-dvh;
 	}
 
 	body {

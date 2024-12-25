@@ -1,9 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
-import { compare } from 'bcrypt';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import type { Response } from 'express';
 import type { UserDocument } from 'src/users/entities/user.entity';
@@ -40,11 +35,14 @@ export class AuthService {
 
   async verifyUser(email: string, password: string) {
     try {
-      const user = await this.users.getUser({ email });
-      const isPasswordValid = await compare(password, user.password);
+      const user = (await this.users.getUser({
+        email,
+      })) as UserDocument;
+
+      const isPasswordValid = await user.comparePassword(password);
 
       if (!isPasswordValid)
-        throw new UnauthorizedException('Invalid email or password');
+        throw new BadRequestException('Invalid email or password');
       return user;
     } catch (error) {
       throw new BadRequestException(error.message);
@@ -64,5 +62,13 @@ export class AuthService {
     });
 
     return user;
+  }
+
+  logout(response: Response) {
+    response.clearCookie('access_token');
+    return {
+      status: 'ok',
+      message: 'You have been logged out successfully',
+    };
   }
 }

@@ -32,4 +32,13 @@ export class UsersService {
       throw new BadRequestException(error.message);
     }
   }
+
+  async getAllUser() {
+    try {
+      const users = await this.User.find({});
+      return users;
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
+  }
 }

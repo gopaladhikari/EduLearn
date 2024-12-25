@@ -24,7 +24,7 @@ Students can:
 
 ## Technologies Used 🛠️
 
-- Backend Framework: Node.js with Express.js
+- Backend Framework: Node.js with Nest.js
 - Database: MongoDB
 - Caching: `node-cache` for in-memory caching
 - Authentication: JSON Web Tokens (JWT) for secure access and authorization.

@@ -3,7 +3,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
 import { UserSchema, User } from './entities/user.entity';
-import { compare, hash, genSalt } from 'bcrypt';
+import { hash, genSalt, compare } from 'bcrypt';
 
 @Module({
   imports: [
@@ -22,10 +22,14 @@ import { compare, hash, genSalt } from 'bcrypt';
           });
 
           schema.methods.comparePassword = async function (
-            password: string,
-          ): Promise<boolean> {
-            const isEqual = await compare(password, this.password);
-            return isEqual;
+            candidatePassword: string,
+          ) {
+            const isPasswordValid = await compare(
+              candidatePassword,
+              this.password,
+            );
+
+            return isPasswordValid;
           };
 
           return schema;

@@ -5,11 +5,12 @@ import {
   Body,
   UseGuards,
   ForbiddenException,
+  Patch,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { JwtGuard } from 'src/auth/guards/jwt-auth.guard';
-import { CurrentUser } from 'src/auth/current-user.decorator';
+import { JwtGuard } from 'src/modules/auth/guards/jwt-auth.guard';
+import { CurrentUser } from 'src/modules/auth/current-user.decorator';
 import type { UserDocument } from './entities/user.entity';
 
 @Controller('users')
@@ -35,4 +36,11 @@ export class UsersController {
   async getCurrentUser(@CurrentUser() user: UserDocument) {
     return user;
   }
+
+  @Patch()
+  @UseGuards(JwtGuard)
+  async updateUser(
+    @CurrentUser() user: UserDocument,
+    @Body() updateUserDto: CreateUserDto,
+  ) {}
 }

@@ -4,6 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { InjectModel } from '@nestjs/mongoose';
 import type { FilterQuery, Model } from 'mongoose';
@@ -41,4 +42,6 @@ export class UsersService {
       throw new BadRequestException(error.message);
     }
   }
+
+  async updateUser(id: string, updateUserDto: UpdateUserDto) {}
 }

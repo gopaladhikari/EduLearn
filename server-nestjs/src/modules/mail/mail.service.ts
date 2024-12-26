@@ -10,6 +10,7 @@ type Placeholders = { [key: string]: string };
 @Injectable()
 export class MailService {
   private readonly resend: Resend;
+
   constructor(private readonly configService: ConfigService) {
     this.resend = new Resend(
       this.configService.getOrThrow('RESEND_API_KEY'),
@@ -62,19 +63,43 @@ export class MailService {
       return {
         status: 'ok',
         data,
+        message: 'Email sent successfully',
       };
     } catch (error) {
       throw new HttpException(error.message, 500);
     }
   }
 
-  async sendConfirmForgotPasswordMail(
+  async sendVerifyEmail(
+    fullName: string,
+    email: string,
     token: string,
-    password: string,
-  ) {}
+  ) {
+    try {
+      const html = await this.loadTemplate('verifyEmail.html', {
+        CONFIRMATION_LINK: `https://localhost:3000/verify-email?token=${token}`,
+        Name: fullName ?? 'User',
+      });
+      const { data, error } = await this.resend.emails.send({
+        from: 'E-Learning <e-learning@gopal-adhikari.com.np>',
+        to: [email],
+        subject: 'Verify email',
+        html: html,
+      });
 
-  async sendResetPasswordMail(
-    oldPassword: string,
-    newPassword: string,
-  ) {}
+      if (error)
+        throw new HttpException('Sending email failed', 500, {
+          cause: new Error(),
+          description: error.message,
+        });
+
+      return {
+        status: 'ok',
+        data,
+        message: 'Email sent successfully',
+      };
+    } catch (error) {
+      throw new HttpException(error.message, 500);
+    }
+  }
 }

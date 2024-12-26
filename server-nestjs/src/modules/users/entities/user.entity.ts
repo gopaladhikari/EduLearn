@@ -22,6 +22,9 @@ export class User {
   @Prop({ required: true, enum: ['admin', 'user'] })
   role: 'admin' | 'user';
 
+  @Prop({ required: true, default: false })
+  verified: boolean;
+
   @Prop()
   avatarUrl: string;
 

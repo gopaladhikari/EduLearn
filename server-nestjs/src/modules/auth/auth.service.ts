@@ -12,7 +12,6 @@ import { compare } from 'bcrypt';
 import { MailService } from '../mail/mail.service';
 import type { Types } from 'mongoose';
 import type { ConfirmForgotPasswordDto } from './dto/confirm-forgot-password.dto';
-import type { UpdatePasswordDto } from './dto/update-password.dtl';
 
 export type JwtPayload = {
   _id: Types.ObjectId;
@@ -114,19 +113,6 @@ export class AuthService {
     user.jwtToken = undefined;
     await user.save();
     response.clearCookie('access_token');
-    return user;
-  }
-
-  async resetPassword(
-    user: UserDocument,
-    { password }: UpdatePasswordDto,
-  ) {
-    if (!password)
-      throw new BadRequestException('Password is required');
-
-    user.password = password;
-
-    await user.save();
     return user;
   }
 }

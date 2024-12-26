@@ -4,6 +4,8 @@ import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
 import { UserSchema, User } from './entities/user.entity';
 import { hash, genSalt } from 'bcrypt';
+import { MailService } from '../mail/mail.service';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -25,9 +27,10 @@ import { hash, genSalt } from 'bcrypt';
         },
       },
     ]),
+    JwtModule,
   ],
   controllers: [UsersController],
-  providers: [UsersService],
+  providers: [UsersService, MailService],
   exports: [UsersService],
 })
 export class UsersModule {}

@@ -1,9 +1,12 @@
 import {
   Body,
   Controller,
+  Param,
+  Patch,
   Post,
   Res,
   UseGuards,
+  ValidationPipe,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LocalGuard } from './guards/local-auth.guard';
@@ -11,6 +14,8 @@ import { CurrentUser } from './current-user.decorator';
 import { JwtGuard } from './guards/jwt-auth.guard';
 import type { UserDocument } from 'src/modules/users/entities/user.entity';
 import type { Response } from 'express';
+import { ConfirmForgotPasswordDto } from './dto/confirm-forgot-password.dto';
+import { UpdatePasswordDto } from './dto/update-password.dtl';
 
 @Controller('auth')
 export class AuthController {
@@ -34,5 +39,27 @@ export class AuthController {
   @Post('forgot-password')
   requestForgotPassword(@Body('email') email: string) {
     return this.authService.requestForgotPassword(email);
+  }
+
+  @Patch('forgot-password/:token')
+  confirmForgotPassword(
+    @Param('token') token: string,
+    @Body(ValidationPipe) body: ConfirmForgotPasswordDto,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    return this.authService.confirmForgotPassword(
+      token,
+      body,
+      response,
+    );
+  }
+
+  @Patch('update-password')
+  @UseGuards(JwtGuard)
+  resetPassword(
+    @CurrentUser() user: UserDocument,
+    @Body() body: UpdatePasswordDto,
+  ) {
+    return this.authService.resetPassword(user, body);
   }
 }

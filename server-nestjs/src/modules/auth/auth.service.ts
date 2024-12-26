@@ -1,6 +1,5 @@
 import {
   BadRequestException,
-  HttpException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -12,6 +11,8 @@ import { ConfigService } from '@nestjs/config';
 import { compare } from 'bcrypt';
 import { MailService } from '../mail/mail.service';
 import type { Types } from 'mongoose';
+import type { ConfirmForgotPasswordDto } from './dto/confirm-forgot-password.dto';
+import type { UpdatePasswordDto } from './dto/update-password.dtl';
 
 export type JwtPayload = {
   _id: Types.ObjectId;
@@ -41,19 +42,15 @@ export class AuthService {
   }
 
   async verifyUser(email: string, password: string) {
-    try {
-      const user = (await this.users.getUser({
-        email,
-      })) as UserDocument;
+    const user = (await this.users.getUser({
+      email,
+    })) as UserDocument;
 
-      const isPasswordValid = await compare(password, user.password);
+    const isPasswordValid = await compare(password, user.password);
 
-      if (!isPasswordValid)
-        throw new BadRequestException('Invalid email or password');
-      return user;
-    } catch (error) {
-      throw new HttpException(error.message, 500);
-    }
+    if (!isPasswordValid)
+      throw new BadRequestException('Invalid email or password');
+    return user;
   }
 
   login(user: UserDocument, response: Response) {
@@ -80,27 +77,56 @@ export class AuthService {
   }
 
   async requestForgotPassword(email: string) {
-    try {
-      const user = await this.users.getUser({ email });
+    const user = await this.users.getUser({ email });
 
-      if (!user) throw new NotFoundException('User not found');
+    if (!user) throw new NotFoundException('User not found');
 
-      const accessToken = this.generateJwtToken(user);
+    const accessToken = this.generateJwtToken(user);
 
-      const data = await this.mail.sendRequestForgotPasswordMail(
-        user.fullName,
-        email,
-        accessToken,
-      );
-      user.jwtToken = accessToken;
-      await user.save();
-      return data;
-    } catch (error) {
-      throw new HttpException(error.message, 500);
-    }
+    const data = await this.mail.sendRequestForgotPasswordMail(
+      user.fullName,
+      email,
+      accessToken,
+    );
+    user.jwtToken = accessToken;
+    await user.save();
+    return data;
   }
 
-  async confirmForgotPassword(token: string, password: string) {}
+  async confirmForgotPassword(
+    token: string,
+    { email, password, confirmPassword }: ConfirmForgotPasswordDto,
+    response: Response,
+  ) {
+    const user = await this.users.getUser({ email });
 
-  async resetPassword(oldPassword: string, newPassword: string) {}
+    if (!user) throw new NotFoundException('User not found');
+
+    if (user.jwtToken !== token)
+      throw new BadRequestException('Invalid token');
+
+    if (password !== confirmPassword)
+      throw new BadRequestException(
+        'Passsowrd and confirm password do not match',
+      );
+
+    user.password = password;
+    user.jwtToken = undefined;
+    await user.save();
+    response.clearCookie('access_token');
+    return user;
+  }
+
+  async resetPassword(
+    user: UserDocument,
+    { password }: UpdatePasswordDto,
+  ) {
+    if (!password)
+      throw new BadRequestException('Password is required');
+
+    user.password = password;
+
+    await user.save();
+    return user;
+  }
 }

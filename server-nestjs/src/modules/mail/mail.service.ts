@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { Resend } from 'resend';
 import * as path from 'path';
 import * as fs from 'fs';
+import { site } from 'src/config/constant';
 
 type Templates = 'forgotPassword.html' | 'verifyEmail.html';
 type Placeholders = { [key: string]: string };
@@ -44,7 +45,7 @@ export class MailService {
   ) {
     try {
       const html = await this.loadTemplate('forgotPassword.html', {
-        RESET_LINK: `https://localhost:3000/forgot-password?token=${accessToken}`,
+        RESET_LINK: `${site.domain}/forgot-password?token=${accessToken}`,
         Name: fullName ?? 'User',
       });
       const { data, error } = await this.resend.emails.send({
@@ -77,7 +78,7 @@ export class MailService {
   ) {
     try {
       const html = await this.loadTemplate('verifyEmail.html', {
-        CONFIRMATION_LINK: `https://localhost:3000/verify-email?token=${token}`,
+        CONFIRMATION_LINK: `${site.domain}/verify-email?token=${token}`,
         Name: fullName ?? 'User',
       });
       const { data, error } = await this.resend.emails.send({

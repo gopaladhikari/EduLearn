@@ -1,10 +1,13 @@
-import { createRootRoute, Link, Outlet } from "@tanstack/react-router";
+import { ThemeProvider } from "@/context/ThemeContext";
+import { createRootRoute, Outlet } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 
 export const Route = createRootRoute({
   component: () => (
     <>
-      <Outlet />
+      <ThemeProvider>
+        <Outlet />
+      </ThemeProvider>
       <TanStackRouterDevtools />
     </>
   ),

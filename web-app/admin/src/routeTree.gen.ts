@@ -8,73 +8,169 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute } from '@tanstack/react-router'
 
 // Import Routes
 
-import { Route as rootRoute } from "./routes/__root";
+import { Route as rootRoute } from './routes/__root'
+import { Route as authLayoutImport } from './routes/(auth)/_layout'
+import { Route as authLayoutRegisterImport } from './routes/(auth)/_layout.register'
+import { Route as authLayoutLoginImport } from './routes/(auth)/_layout.login'
 
 // Create Virtual Routes
 
-const IndexLazyImport = createFileRoute("/")();
+const authImport = createFileRoute('/(auth)')()
+const unprotectedIndexLazyImport = createFileRoute('/(unprotected)/')()
 
 // Create/Update Routes
 
-const IndexLazyRoute = IndexLazyImport.update({
-  id: "/",
-  path: "/",
+const authRoute = authImport.update({
+  id: '/(auth)',
   getParentRoute: () => rootRoute,
-} as any).lazy(() => import("./routes/index.lazy").then((d) => d.Route));
+} as any)
+
+const unprotectedIndexLazyRoute = unprotectedIndexLazyImport
+  .update({
+    id: '/(unprotected)/',
+    path: '/',
+    getParentRoute: () => rootRoute,
+  } as any)
+  .lazy(() => import('./routes/(unprotected)/index.lazy').then((d) => d.Route))
+
+const authLayoutRoute = authLayoutImport.update({
+  id: '/_layout',
+  getParentRoute: () => authRoute,
+} as any)
+
+const authLayoutRegisterRoute = authLayoutRegisterImport.update({
+  id: '/register',
+  path: '/register',
+  getParentRoute: () => authLayoutRoute,
+} as any)
+
+const authLayoutLoginRoute = authLayoutLoginImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => authLayoutRoute,
+} as any)
 
 // Populate the FileRoutesByPath interface
 
-declare module "@tanstack/react-router" {
+declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    "/": {
-      id: "/";
-      path: "/";
-      fullPath: "/";
-      preLoaderRoute: typeof IndexLazyImport;
-      parentRoute: typeof rootRoute;
-    };
+    '/(auth)': {
+      id: '/(auth)'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof authImport
+      parentRoute: typeof rootRoute
+    }
+    '/(auth)/_layout': {
+      id: '/(auth)/_layout'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof authLayoutImport
+      parentRoute: typeof authRoute
+    }
+    '/(unprotected)/': {
+      id: '/(unprotected)/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof unprotectedIndexLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/(auth)/_layout/login': {
+      id: '/(auth)/_layout/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof authLayoutLoginImport
+      parentRoute: typeof authLayoutImport
+    }
+    '/(auth)/_layout/register': {
+      id: '/(auth)/_layout/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof authLayoutRegisterImport
+      parentRoute: typeof authLayoutImport
+    }
   }
 }
 
 // Create and export the route tree
 
+interface authLayoutRouteChildren {
+  authLayoutLoginRoute: typeof authLayoutLoginRoute
+  authLayoutRegisterRoute: typeof authLayoutRegisterRoute
+}
+
+const authLayoutRouteChildren: authLayoutRouteChildren = {
+  authLayoutLoginRoute: authLayoutLoginRoute,
+  authLayoutRegisterRoute: authLayoutRegisterRoute,
+}
+
+const authLayoutRouteWithChildren = authLayoutRoute._addFileChildren(
+  authLayoutRouteChildren,
+)
+
+interface authRouteChildren {
+  authLayoutRoute: typeof authLayoutRouteWithChildren
+}
+
+const authRouteChildren: authRouteChildren = {
+  authLayoutRoute: authLayoutRouteWithChildren,
+}
+
+const authRouteWithChildren = authRoute._addFileChildren(authRouteChildren)
+
 export interface FileRoutesByFullPath {
-  "/": typeof IndexLazyRoute;
+  '/': typeof unprotectedIndexLazyRoute
+  '/login': typeof authLayoutLoginRoute
+  '/register': typeof authLayoutRegisterRoute
 }
 
 export interface FileRoutesByTo {
-  "/": typeof IndexLazyRoute;
+  '/': typeof unprotectedIndexLazyRoute
+  '/login': typeof authLayoutLoginRoute
+  '/register': typeof authLayoutRegisterRoute
 }
 
 export interface FileRoutesById {
-  __root__: typeof rootRoute;
-  "/": typeof IndexLazyRoute;
+  __root__: typeof rootRoute
+  '/(auth)': typeof authRouteWithChildren
+  '/(auth)/_layout': typeof authLayoutRouteWithChildren
+  '/(unprotected)/': typeof unprotectedIndexLazyRoute
+  '/(auth)/_layout/login': typeof authLayoutLoginRoute
+  '/(auth)/_layout/register': typeof authLayoutRegisterRoute
 }
 
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath;
-  fullPaths: "/";
-  fileRoutesByTo: FileRoutesByTo;
-  to: "/";
-  id: "__root__" | "/";
-  fileRoutesById: FileRoutesById;
+  fileRoutesByFullPath: FileRoutesByFullPath
+  fullPaths: '/' | '/login' | '/register'
+  fileRoutesByTo: FileRoutesByTo
+  to: '/' | '/login' | '/register'
+  id:
+    | '__root__'
+    | '/(auth)'
+    | '/(auth)/_layout'
+    | '/(unprotected)/'
+    | '/(auth)/_layout/login'
+    | '/(auth)/_layout/register'
+  fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
-  IndexLazyRoute: typeof IndexLazyRoute;
+  authRoute: typeof authRouteWithChildren
+  unprotectedIndexLazyRoute: typeof unprotectedIndexLazyRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexLazyRoute: IndexLazyRoute,
-};
+  authRoute: authRouteWithChildren,
+  unprotectedIndexLazyRoute: unprotectedIndexLazyRoute,
+}
 
 export const routeTree = rootRoute
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>();
+  ._addFileTypes<FileRouteTypes>()
 
 /* ROUTE_MANIFEST_START
 {
@@ -82,11 +178,34 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/"
+        "/(auth)",
+        "/(unprotected)/"
       ]
     },
-    "/": {
-      "filePath": "index.lazy.tsx"
+    "/(auth)": {
+      "filePath": "(auth)",
+      "children": [
+        "/(auth)/_layout"
+      ]
+    },
+    "/(auth)/_layout": {
+      "filePath": "(auth)/_layout.tsx",
+      "parent": "/(auth)",
+      "children": [
+        "/(auth)/_layout/login",
+        "/(auth)/_layout/register"
+      ]
+    },
+    "/(unprotected)/": {
+      "filePath": "(unprotected)/index.lazy.tsx"
+    },
+    "/(auth)/_layout/login": {
+      "filePath": "(auth)/_layout.login.tsx",
+      "parent": "/(auth)/_layout"
+    },
+    "/(auth)/_layout/register": {
+      "filePath": "(auth)/_layout.register.tsx",
+      "parent": "/(auth)/_layout"
     }
   }
 }

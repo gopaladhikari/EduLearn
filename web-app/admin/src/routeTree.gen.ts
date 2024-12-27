@@ -14,6 +14,7 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as authLayoutImport } from './routes/(auth)/_layout'
+import { Route as authLayoutVerifyEmailImport } from './routes/(auth)/_layout.verify-email'
 import { Route as authLayoutRegisterImport } from './routes/(auth)/_layout.register'
 import { Route as authLayoutLoginImport } from './routes/(auth)/_layout.login'
 
@@ -40,6 +41,12 @@ const unprotectedIndexLazyRoute = unprotectedIndexLazyImport
 const authLayoutRoute = authLayoutImport.update({
   id: '/_layout',
   getParentRoute: () => authRoute,
+} as any)
+
+const authLayoutVerifyEmailRoute = authLayoutVerifyEmailImport.update({
+  id: '/verify-email',
+  path: '/verify-email',
+  getParentRoute: () => authLayoutRoute,
 } as any)
 
 const authLayoutRegisterRoute = authLayoutRegisterImport.update({
@@ -93,6 +100,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authLayoutRegisterImport
       parentRoute: typeof authLayoutImport
     }
+    '/(auth)/_layout/verify-email': {
+      id: '/(auth)/_layout/verify-email'
+      path: '/verify-email'
+      fullPath: '/verify-email'
+      preLoaderRoute: typeof authLayoutVerifyEmailImport
+      parentRoute: typeof authLayoutImport
+    }
   }
 }
 
@@ -101,11 +115,13 @@ declare module '@tanstack/react-router' {
 interface authLayoutRouteChildren {
   authLayoutLoginRoute: typeof authLayoutLoginRoute
   authLayoutRegisterRoute: typeof authLayoutRegisterRoute
+  authLayoutVerifyEmailRoute: typeof authLayoutVerifyEmailRoute
 }
 
 const authLayoutRouteChildren: authLayoutRouteChildren = {
   authLayoutLoginRoute: authLayoutLoginRoute,
   authLayoutRegisterRoute: authLayoutRegisterRoute,
+  authLayoutVerifyEmailRoute: authLayoutVerifyEmailRoute,
 }
 
 const authLayoutRouteWithChildren = authLayoutRoute._addFileChildren(
@@ -126,12 +142,14 @@ export interface FileRoutesByFullPath {
   '/': typeof unprotectedIndexLazyRoute
   '/login': typeof authLayoutLoginRoute
   '/register': typeof authLayoutRegisterRoute
+  '/verify-email': typeof authLayoutVerifyEmailRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof unprotectedIndexLazyRoute
   '/login': typeof authLayoutLoginRoute
   '/register': typeof authLayoutRegisterRoute
+  '/verify-email': typeof authLayoutVerifyEmailRoute
 }
 
 export interface FileRoutesById {
@@ -141,13 +159,14 @@ export interface FileRoutesById {
   '/(unprotected)/': typeof unprotectedIndexLazyRoute
   '/(auth)/_layout/login': typeof authLayoutLoginRoute
   '/(auth)/_layout/register': typeof authLayoutRegisterRoute
+  '/(auth)/_layout/verify-email': typeof authLayoutVerifyEmailRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/register'
+  fullPaths: '/' | '/login' | '/register' | '/verify-email'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/register'
+  to: '/' | '/login' | '/register' | '/verify-email'
   id:
     | '__root__'
     | '/(auth)'
@@ -155,6 +174,7 @@ export interface FileRouteTypes {
     | '/(unprotected)/'
     | '/(auth)/_layout/login'
     | '/(auth)/_layout/register'
+    | '/(auth)/_layout/verify-email'
   fileRoutesById: FileRoutesById
 }
 
@@ -193,7 +213,8 @@ export const routeTree = rootRoute
       "parent": "/(auth)",
       "children": [
         "/(auth)/_layout/login",
-        "/(auth)/_layout/register"
+        "/(auth)/_layout/register",
+        "/(auth)/_layout/verify-email"
       ]
     },
     "/(unprotected)/": {
@@ -205,6 +226,10 @@ export const routeTree = rootRoute
     },
     "/(auth)/_layout/register": {
       "filePath": "(auth)/_layout.register.tsx",
+      "parent": "/(auth)/_layout"
+    },
+    "/(auth)/_layout/verify-email": {
+      "filePath": "(auth)/_layout.verify-email.tsx",
       "parent": "/(auth)/_layout"
     }
   }

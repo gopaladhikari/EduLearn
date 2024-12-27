@@ -7,7 +7,6 @@ import {
   ForbiddenException,
   Patch,
   ValidationPipe,
-  Param,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -57,13 +56,5 @@ export class UsersController {
     @Body(ValidationPipe) updatePasswordDto: UpdatePasswordDto,
   ) {
     return this.usersService.updatePassword(user, updatePasswordDto);
-  }
-
-  @Patch('verify-email/:token')
-  verifyEmail(
-    @Body('email') email: string,
-    @Param('token') token: string,
-  ) {
-    return this.usersService.verifyEmail(email, token);
   }
 }

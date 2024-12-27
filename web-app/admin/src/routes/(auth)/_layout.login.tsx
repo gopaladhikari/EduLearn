@@ -36,7 +36,7 @@ function RouteComponent() {
       </CardHeader>
       <CardContent>
         <form className="space-y-3">
-          <div>
+          <div className="space-y-3">
             <form.Field
               name="email"
               validators={{
@@ -75,7 +75,7 @@ function RouteComponent() {
               }}
             />
           </div>
-          <div>
+          <div className="space-y-3">
             <form.Field
               name="password"
               validators={{
@@ -119,7 +119,7 @@ function RouteComponent() {
 
       <CardFooter>
         <Button type="submit" className="w-full">
-          Login
+          {form.state.isSubmitting ? "Signing in..." : "Sign In"}
         </Button>
       </CardFooter>
     </Card>

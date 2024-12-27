@@ -52,4 +52,12 @@ export class AuthController {
       response,
     );
   }
+
+  @Patch('verify-email/:token')
+  verifyEmail(
+    @Body('email') email: string,
+    @Param('token') token: string,
+  ) {
+    return this.authService.verifyEmail(email, token);
+  }
 }

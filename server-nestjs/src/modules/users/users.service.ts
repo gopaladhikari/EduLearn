@@ -7,7 +7,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User, type UserDocument } from './entities/user.entity';
 import { InjectModel } from '@nestjs/mongoose';
-import type { FilterQuery, Model } from 'mongoose';
+import { type FilterQuery, type Model } from 'mongoose';
 import type { UpdatePasswordDto } from './dto/update-password.dto';
 import { compare } from 'bcrypt';
 import { MailService } from '../mail/mail.service';
@@ -52,6 +52,13 @@ export class UsersService {
 
       return data;
     } catch (error) {
+      if (error.code === 11000) {
+        const duplicateField = Object.keys(error.keyPattern)[0];
+        throw new BadRequestException(
+          `A user with this ${duplicateField} already exists`,
+        );
+      }
+
       throw new BadRequestException(error.message);
     }
   }
@@ -120,25 +127,6 @@ export class UsersService {
       await user.save();
       return user;
     } catch (error) {
-      throw new BadRequestException(error.message);
-    }
-  }
-
-  async verifyEmail(email: string, token: string) {
-    try {
-      if (!email) throw new BadRequestException('Email is required');
-      const user = await this.getUser({ email });
-
-      if (!user) throw new NotFoundException('User not found');
-
-      if (user.jwtToken !== token)
-        throw new BadRequestException('Invalid token');
-      user.verified = true;
-      user.jwtToken = undefined;
-      await user.save();
-      return user;
-    } catch (error) {
-      if (error instanceof NotFoundException) throw error;
       throw new BadRequestException(error.message);
     }
   }

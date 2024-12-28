@@ -1,4 +1,9 @@
-import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  Link,
+  redirect,
+  useNavigate,
+} from "@tanstack/react-router";
 import { useForm } from "@tanstack/react-form";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,6 +19,7 @@ import { Input } from "@/components/ui/input";
 import { useSeo } from "@/hooks/useSeo";
 import { loginMutation } from "@/lib/mutations/auth.mutation";
 import { useMutation } from "@tanstack/react-query";
+import { useAuth } from "@/context/AuthContext";
 
 export const Route = createFileRoute("/_auth/_layout/login")({
   component: RouteComponent,
@@ -27,6 +33,8 @@ export const Route = createFileRoute("/_auth/_layout/login")({
 
 function RouteComponent() {
   const navigate = useNavigate();
+
+  const { isLoggedIn } = useAuth();
 
   const mutation = useMutation({
     mutationFn: loginMutation,
@@ -49,6 +57,9 @@ function RouteComponent() {
     title: "Login",
     description: "Login to your account",
   });
+
+  if (isLoggedIn) navigate({ to: "/dashboard" });
+
   return (
     <Card>
       <CardHeader>
@@ -132,6 +143,11 @@ function RouteComponent() {
                 );
               }}
             />
+          </div>
+          <div className="text-end">
+            <Link to="/forgot-password" className="text-sm hover:underline">
+              Forgot your password?
+            </Link>
           </div>
           {mutation.error && (
             <p className="text-destructive">{mutation.error.message}</p>

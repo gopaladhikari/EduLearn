@@ -21,6 +21,8 @@ import { Route as ProtectedDashboardIndexImport } from './routes/_protected/dash
 import { Route as AuthLayoutVerifyEmailImport } from './routes/_auth/_layout.verify-email'
 import { Route as AuthLayoutRegisterImport } from './routes/_auth/_layout.register'
 import { Route as AuthLayoutLoginImport } from './routes/_auth/_layout.login'
+import { Route as AuthLayoutForgotPasswordImport } from './routes/_auth/_layout.forgot-password'
+import { Route as AuthLayoutConfirmPasswordImport } from './routes/_auth/_layout.confirm-password'
 
 // Create/Update Routes
 
@@ -82,6 +84,18 @@ const AuthLayoutLoginRoute = AuthLayoutLoginImport.update({
   getParentRoute: () => AuthLayoutRoute,
 } as any)
 
+const AuthLayoutForgotPasswordRoute = AuthLayoutForgotPasswordImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
+  getParentRoute: () => AuthLayoutRoute,
+} as any)
+
+const AuthLayoutConfirmPasswordRoute = AuthLayoutConfirmPasswordImport.update({
+  id: '/confirm-password',
+  path: '/confirm-password',
+  getParentRoute: () => AuthLayoutRoute,
+} as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -127,6 +141,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof UnprotectedIndexImport
       parentRoute: typeof UnprotectedImport
+    }
+    '/_auth/_layout/confirm-password': {
+      id: '/_auth/_layout/confirm-password'
+      path: '/confirm-password'
+      fullPath: '/confirm-password'
+      preLoaderRoute: typeof AuthLayoutConfirmPasswordImport
+      parentRoute: typeof AuthLayoutImport
+    }
+    '/_auth/_layout/forgot-password': {
+      id: '/_auth/_layout/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof AuthLayoutForgotPasswordImport
+      parentRoute: typeof AuthLayoutImport
     }
     '/_auth/_layout/login': {
       id: '/_auth/_layout/login'
@@ -190,12 +218,16 @@ const UnprotectedRouteWithChildren = UnprotectedRoute._addFileChildren(
 )
 
 interface AuthLayoutRouteChildren {
+  AuthLayoutConfirmPasswordRoute: typeof AuthLayoutConfirmPasswordRoute
+  AuthLayoutForgotPasswordRoute: typeof AuthLayoutForgotPasswordRoute
   AuthLayoutLoginRoute: typeof AuthLayoutLoginRoute
   AuthLayoutRegisterRoute: typeof AuthLayoutRegisterRoute
   AuthLayoutVerifyEmailRoute: typeof AuthLayoutVerifyEmailRoute
 }
 
 const AuthLayoutRouteChildren: AuthLayoutRouteChildren = {
+  AuthLayoutConfirmPasswordRoute: AuthLayoutConfirmPasswordRoute,
+  AuthLayoutForgotPasswordRoute: AuthLayoutForgotPasswordRoute,
   AuthLayoutLoginRoute: AuthLayoutLoginRoute,
   AuthLayoutRegisterRoute: AuthLayoutRegisterRoute,
   AuthLayoutVerifyEmailRoute: AuthLayoutVerifyEmailRoute,
@@ -210,6 +242,8 @@ export interface FileRoutesByFullPath {
   '/privacy-policy': typeof UnprotectedPrivacyPolicyRoute
   '/terms-and-condition': typeof UnprotectedTermsAndConditionRoute
   '/': typeof UnprotectedIndexRoute
+  '/confirm-password': typeof AuthLayoutConfirmPasswordRoute
+  '/forgot-password': typeof AuthLayoutForgotPasswordRoute
   '/login': typeof AuthLayoutLoginRoute
   '/register': typeof AuthLayoutRegisterRoute
   '/verify-email': typeof AuthLayoutVerifyEmailRoute
@@ -221,6 +255,8 @@ export interface FileRoutesByTo {
   '/privacy-policy': typeof UnprotectedPrivacyPolicyRoute
   '/terms-and-condition': typeof UnprotectedTermsAndConditionRoute
   '/': typeof UnprotectedIndexRoute
+  '/confirm-password': typeof AuthLayoutConfirmPasswordRoute
+  '/forgot-password': typeof AuthLayoutForgotPasswordRoute
   '/login': typeof AuthLayoutLoginRoute
   '/register': typeof AuthLayoutRegisterRoute
   '/verify-email': typeof AuthLayoutVerifyEmailRoute
@@ -235,6 +271,8 @@ export interface FileRoutesById {
   '/_unprotected/privacy-policy': typeof UnprotectedPrivacyPolicyRoute
   '/_unprotected/terms-and-condition': typeof UnprotectedTermsAndConditionRoute
   '/_unprotected/': typeof UnprotectedIndexRoute
+  '/_auth/_layout/confirm-password': typeof AuthLayoutConfirmPasswordRoute
+  '/_auth/_layout/forgot-password': typeof AuthLayoutForgotPasswordRoute
   '/_auth/_layout/login': typeof AuthLayoutLoginRoute
   '/_auth/_layout/register': typeof AuthLayoutRegisterRoute
   '/_auth/_layout/verify-email': typeof AuthLayoutVerifyEmailRoute
@@ -248,6 +286,8 @@ export interface FileRouteTypes {
     | '/privacy-policy'
     | '/terms-and-condition'
     | '/'
+    | '/confirm-password'
+    | '/forgot-password'
     | '/login'
     | '/register'
     | '/verify-email'
@@ -258,6 +298,8 @@ export interface FileRouteTypes {
     | '/privacy-policy'
     | '/terms-and-condition'
     | '/'
+    | '/confirm-password'
+    | '/forgot-password'
     | '/login'
     | '/register'
     | '/verify-email'
@@ -270,6 +312,8 @@ export interface FileRouteTypes {
     | '/_unprotected/privacy-policy'
     | '/_unprotected/terms-and-condition'
     | '/_unprotected/'
+    | '/_auth/_layout/confirm-password'
+    | '/_auth/_layout/forgot-password'
     | '/_auth/_layout/login'
     | '/_auth/_layout/register'
     | '/_auth/_layout/verify-email'
@@ -321,6 +365,8 @@ export const routeTree = rootRoute
     "/_auth/_layout": {
       "filePath": "_auth/_layout.tsx",
       "children": [
+        "/_auth/_layout/confirm-password",
+        "/_auth/_layout/forgot-password",
         "/_auth/_layout/login",
         "/_auth/_layout/register",
         "/_auth/_layout/verify-email"
@@ -337,6 +383,14 @@ export const routeTree = rootRoute
     "/_unprotected/": {
       "filePath": "_unprotected/index.tsx",
       "parent": "/_unprotected"
+    },
+    "/_auth/_layout/confirm-password": {
+      "filePath": "_auth/_layout.confirm-password.tsx",
+      "parent": "/_auth/_layout"
+    },
+    "/_auth/_layout/forgot-password": {
+      "filePath": "_auth/_layout.forgot-password.tsx",
+      "parent": "/_auth/_layout"
     },
     "/_auth/_layout/login": {
       "filePath": "_auth/_layout.login.tsx",

@@ -62,6 +62,7 @@ export class AuthService {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       expires: date,
+      sameSite: 'strict',
     });
 
     return user;

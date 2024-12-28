@@ -1,4 +1,9 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  Link,
+  redirect,
+  useNavigate,
+} from "@tanstack/react-router";
 import { useForm } from "@tanstack/react-form";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,6 +19,7 @@ import { Input } from "@/components/ui/input";
 import { useMutation } from "@tanstack/react-query";
 import { registerMutation } from "@/lib/mutations/auth.mutation";
 import { useSeo } from "@/hooks/useSeo";
+import { useAuth } from "@/context/AuthContext";
 
 export const Route = createFileRoute("/_auth/_layout/register")({
   component: RouteComponent,
@@ -26,6 +32,8 @@ export const Route = createFileRoute("/_auth/_layout/register")({
 });
 
 function RouteComponent() {
+  const { isLoggedIn } = useAuth();
+  const navigate = useNavigate();
   useSeo({
     title: "Register",
     description: "Register to your account",
@@ -47,6 +55,8 @@ function RouteComponent() {
     },
   });
 
+  if (isLoggedIn) navigate({ to: "/dashboard" });
+
   return (
     <Card>
       <CardHeader>
@@ -56,7 +66,7 @@ function RouteComponent() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form className="space-y-3" method="POST">
+        <form className="space-y-3">
           <div className="space-y-3">
             <form.Field
               name="email"
@@ -130,6 +140,11 @@ function RouteComponent() {
                 );
               }}
             />
+          </div>
+          <div className="text-end">
+            <Link to="/login" className="text-sm hover:underline">
+              Login?
+            </Link>
           </div>
           {mutatation.error && (
             <div className="text-destructive">{mutatation.error.message}</div>

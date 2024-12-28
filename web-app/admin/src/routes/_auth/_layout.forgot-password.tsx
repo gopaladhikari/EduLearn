@@ -1,4 +1,5 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { useSeo } from "@/hooks/useSeo";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useForm } from "@tanstack/react-form";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,52 +12,45 @@ import {
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { verifyEmailMutation } from "@/lib/mutations/auth.mutation";
 import { useMutation } from "@tanstack/react-query";
+import { requestForgotPassword } from "@/lib/mutations/auth.mutation";
 
-export const Route = createFileRoute("/_auth/_layout/verify-email")({
+export const Route = createFileRoute("/_auth/_layout/forgot-password")({
   component: RouteComponent,
-
-  validateSearch: (search) => {
-    const token = search?.token;
-
-    return {
-      token: String(token) || "",
-    };
-  },
 });
 
 function RouteComponent() {
-  const { token } = Route.useSearch();
+  const mutation = useMutation({
+    mutationFn: requestForgotPassword,
+    onSuccess() {
+      form.reset();
+    },
+  });
 
   const form = useForm({
     defaultValues: {
       email: "",
     },
-    onSubmit: ({ value: { email } }) => {
-      mutatation.mutate(email);
+    onSubmit: async ({ value }) => {
+      mutation.mutate(value.email);
     },
   });
 
-  const mutatation = useMutation({
-    mutationFn: (email: string) => verifyEmailMutation(email, token),
-    onSuccess() {
-      redirect({
-        to: "/login",
-      });
-    },
+  useSeo({
+    title: "Forgot Password",
+    description: "Forgot Password",
   });
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-3xl">Verify Email</CardTitle>
+        <CardTitle className="text-3xl">Forgot Password</CardTitle>
         <CardDescription>
-          Enter your email to verify your account.
+          Enter your email to reset your password.
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form className="space-y-3" onSubmit={form.handleSubmit}>
+        <form className="space-y-3">
           <div className="space-y-3">
             <form.Field
               name="email"
@@ -94,17 +88,26 @@ function RouteComponent() {
               }}
             />
           </div>
-          {mutatation.error && (
-            <div className="text-destructive">{mutatation.error.message}</div>
-          )}
 
-          <CardFooter>
-            <Button type="submit" className="w-full">
-              {form.state.isSubmitting ? "Submitting..." : "Submit"}
-            </Button>
-          </CardFooter>
+          <div className="text-end">
+            <Link to="/login" className="text-sm hover:underline">
+              Login ?
+            </Link>
+          </div>
+          {mutation.error && (
+            <p className="text-destructive">{mutation.error.message}</p>
+          )}
+          {mutation.isSuccess && (
+            <div className="text-green-600">{mutation.data.message}</div>
+          )}
         </form>
       </CardContent>
+
+      <CardFooter>
+        <Button type="button" className="w-full" onClick={form.handleSubmit}>
+          {form.state.isSubmitting ? "Submitting..." : "Submit"}
+        </Button>
+      </CardFooter>
     </Card>
   );
 }

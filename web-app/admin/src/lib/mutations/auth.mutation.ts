@@ -22,16 +22,29 @@ export const registerMutation = async (formData: Data) => {
   return data;
 };
 
-export const verifyEmailMutation = async (
-  email: string,
-  token: string
-) => {
+export const verifyEmailMutation = async (email: string, token: string) => {
   const res = await fetch(`/api/auth/verify-email/${token}`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ email }),
+  });
+
+  const data = await res.json();
+
+  if (!res.ok) throw new Error(data.message);
+
+  return data;
+};
+
+export const loginMutation = async (formData: Data) => {
+  const res = await fetch("/api/auth/login", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(formData),
   });
 
   const data = await res.json();

@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useForm } from "@tanstack/react-form";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,31 +11,52 @@ import {
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { useMutation } from "@tanstack/react-query";
+import { registerMutation } from "@/lib/mutations/auth.mutation";
+import { useSeo } from "@/hooks/useSeo";
 
-export const Route = createFileRoute("/(auth)/_layout/login")({
+export const Route = createFileRoute("/_auth/_layout/register")({
   component: RouteComponent,
+  async beforeLoad({ context }) {
+    if (context.isLoggedIn)
+      throw redirect({
+        to: "/dashboard",
+      });
+  },
 });
 
 function RouteComponent() {
+  useSeo({
+    title: "Register",
+    description: "Register to your account",
+  });
   const form = useForm({
     defaultValues: {
       email: "",
       password: "",
     },
-    onSubmit: async ({ value }) => {
-      console.log(value);
+    onSubmit: ({ value }) => {
+      return mutatation.mutate(value);
     },
   });
+
+  const mutatation = useMutation({
+    mutationFn: registerMutation,
+    onSuccess() {
+      form.reset();
+    },
+  });
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-3xl">Login</CardTitle>
+        <CardTitle className="text-3xl">Create New Account</CardTitle>
         <CardDescription>
-          Enter your email and password to login.
+          Enter your email and password to sign up.
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form className="space-y-3">
+        <form className="space-y-3" method="POST">
           <div className="space-y-3">
             <form.Field
               name="email"
@@ -48,9 +69,7 @@ function RouteComponent() {
                       : undefined,
                 onChangeAsyncDebounceMs: 500,
                 onChangeAsync: async ({ value }) => {
-                  await new Promise((resolve) =>
-                    setTimeout(resolve, 1000)
-                  );
+                  await new Promise((resolve) => setTimeout(resolve, 1000));
                   return (
                     value.includes("error") &&
                     'No "error" allowed in first name'
@@ -87,9 +106,7 @@ function RouteComponent() {
                       : undefined,
                 onChangeAsyncDebounceMs: 500,
                 onChangeAsync: async ({ value }) => {
-                  await new Promise((resolve) =>
-                    setTimeout(resolve, 1000)
-                  );
+                  await new Promise((resolve) => setTimeout(resolve, 1000));
                   return (
                     value.includes("error") &&
                     'No "error" allowed in first name'
@@ -114,12 +131,18 @@ function RouteComponent() {
               }}
             />
           </div>
+          {mutatation.error && (
+            <div className="text-destructive">{mutatation.error.message}</div>
+          )}
+          {mutatation.isSuccess && (
+            <div className="text-green-600">{mutatation.data.message}</div>
+          )}
         </form>
       </CardContent>
 
       <CardFooter>
-        <Button type="submit" className="w-full">
-          {form.state.isSubmitting ? "Signing in..." : "Sign In"}
+        <Button type="button" className="w-full" onClick={form.handleSubmit}>
+          {form.state.isSubmitting ? "Sign Uping..." : "Sign Up"}
         </Button>
       </CardFooter>
     </Card>

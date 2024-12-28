@@ -1,11 +1,9 @@
-import { Link, useLocation } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { MaxWithWrapper } from "./MaxWithWrapper";
 import { menu } from "@/config/site";
-import { cn } from "@/lib/utils";
 import { ModeToggle } from "./mode-toggle";
 
 export function Header() {
-  const { pathname } = useLocation();
   return (
     <header className="shadow-md dark:border-b dark:shadow-none">
       <MaxWithWrapper as="section">
@@ -23,12 +21,12 @@ export function Header() {
               <ModeToggle />
             </li>
             {menu.main.map((item) => (
-              <li
-                key={item.name}
-                role="menubar"
-                className={cn(pathname === item.to && "text-primary")}
-              >
-                <Link to={item.to} role="menuitem">
+              <li key={item.name} role="menubar">
+                <Link
+                  to={item.to}
+                  role="menuitem"
+                  activeProps={{ className: "text-primary" }}
+                >
                   {item.name}
                 </Link>
               </li>

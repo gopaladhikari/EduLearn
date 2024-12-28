@@ -8,184 +8,285 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { createFileRoute } from '@tanstack/react-router'
-
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as authLayoutImport } from './routes/(auth)/_layout'
-import { Route as authLayoutVerifyEmailImport } from './routes/(auth)/_layout.verify-email'
-import { Route as authLayoutRegisterImport } from './routes/(auth)/_layout.register'
-import { Route as authLayoutLoginImport } from './routes/(auth)/_layout.login'
-
-// Create Virtual Routes
-
-const authImport = createFileRoute('/(auth)')()
-const unprotectedIndexLazyImport = createFileRoute('/(unprotected)/')()
+import { Route as UnprotectedImport } from './routes/_unprotected'
+import { Route as ProtectedImport } from './routes/_protected'
+import { Route as UnprotectedIndexImport } from './routes/_unprotected/index'
+import { Route as UnprotectedTermsAndConditionImport } from './routes/_unprotected/terms-and-condition'
+import { Route as UnprotectedPrivacyPolicyImport } from './routes/_unprotected/privacy-policy'
+import { Route as AuthLayoutImport } from './routes/_auth/_layout'
+import { Route as ProtectedDashboardIndexImport } from './routes/_protected/dashboard/index'
+import { Route as AuthLayoutVerifyEmailImport } from './routes/_auth/_layout.verify-email'
+import { Route as AuthLayoutRegisterImport } from './routes/_auth/_layout.register'
+import { Route as AuthLayoutLoginImport } from './routes/_auth/_layout.login'
 
 // Create/Update Routes
 
-const authRoute = authImport.update({
-  id: '/(auth)',
+const UnprotectedRoute = UnprotectedImport.update({
+  id: '/_unprotected',
   getParentRoute: () => rootRoute,
 } as any)
 
-const unprotectedIndexLazyRoute = unprotectedIndexLazyImport
-  .update({
-    id: '/(unprotected)/',
-    path: '/',
-    getParentRoute: () => rootRoute,
-  } as any)
-  .lazy(() => import('./routes/(unprotected)/index.lazy').then((d) => d.Route))
-
-const authLayoutRoute = authLayoutImport.update({
-  id: '/_layout',
-  getParentRoute: () => authRoute,
+const ProtectedRoute = ProtectedImport.update({
+  id: '/_protected',
+  getParentRoute: () => rootRoute,
 } as any)
 
-const authLayoutVerifyEmailRoute = authLayoutVerifyEmailImport.update({
+const UnprotectedIndexRoute = UnprotectedIndexImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => UnprotectedRoute,
+} as any)
+
+const UnprotectedTermsAndConditionRoute =
+  UnprotectedTermsAndConditionImport.update({
+    id: '/terms-and-condition',
+    path: '/terms-and-condition',
+    getParentRoute: () => UnprotectedRoute,
+  } as any)
+
+const UnprotectedPrivacyPolicyRoute = UnprotectedPrivacyPolicyImport.update({
+  id: '/privacy-policy',
+  path: '/privacy-policy',
+  getParentRoute: () => UnprotectedRoute,
+} as any)
+
+const AuthLayoutRoute = AuthLayoutImport.update({
+  id: '/_auth/_layout',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ProtectedDashboardIndexRoute = ProtectedDashboardIndexImport.update({
+  id: '/dashboard/',
+  path: '/dashboard/',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+
+const AuthLayoutVerifyEmailRoute = AuthLayoutVerifyEmailImport.update({
   id: '/verify-email',
   path: '/verify-email',
-  getParentRoute: () => authLayoutRoute,
+  getParentRoute: () => AuthLayoutRoute,
 } as any)
 
-const authLayoutRegisterRoute = authLayoutRegisterImport.update({
+const AuthLayoutRegisterRoute = AuthLayoutRegisterImport.update({
   id: '/register',
   path: '/register',
-  getParentRoute: () => authLayoutRoute,
+  getParentRoute: () => AuthLayoutRoute,
 } as any)
 
-const authLayoutLoginRoute = authLayoutLoginImport.update({
+const AuthLayoutLoginRoute = AuthLayoutLoginImport.update({
   id: '/login',
   path: '/login',
-  getParentRoute: () => authLayoutRoute,
+  getParentRoute: () => AuthLayoutRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/(auth)': {
-      id: '/(auth)'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof authImport
+    '/_protected': {
+      id: '/_protected'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof ProtectedImport
       parentRoute: typeof rootRoute
     }
-    '/(auth)/_layout': {
-      id: '/(auth)/_layout'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof authLayoutImport
-      parentRoute: typeof authRoute
-    }
-    '/(unprotected)/': {
-      id: '/(unprotected)/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof unprotectedIndexLazyImport
+    '/_unprotected': {
+      id: '/_unprotected'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof UnprotectedImport
       parentRoute: typeof rootRoute
     }
-    '/(auth)/_layout/login': {
-      id: '/(auth)/_layout/login'
+    '/_auth/_layout': {
+      id: '/_auth/_layout'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AuthLayoutImport
+      parentRoute: typeof rootRoute
+    }
+    '/_unprotected/privacy-policy': {
+      id: '/_unprotected/privacy-policy'
+      path: '/privacy-policy'
+      fullPath: '/privacy-policy'
+      preLoaderRoute: typeof UnprotectedPrivacyPolicyImport
+      parentRoute: typeof UnprotectedImport
+    }
+    '/_unprotected/terms-and-condition': {
+      id: '/_unprotected/terms-and-condition'
+      path: '/terms-and-condition'
+      fullPath: '/terms-and-condition'
+      preLoaderRoute: typeof UnprotectedTermsAndConditionImport
+      parentRoute: typeof UnprotectedImport
+    }
+    '/_unprotected/': {
+      id: '/_unprotected/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof UnprotectedIndexImport
+      parentRoute: typeof UnprotectedImport
+    }
+    '/_auth/_layout/login': {
+      id: '/_auth/_layout/login'
       path: '/login'
       fullPath: '/login'
-      preLoaderRoute: typeof authLayoutLoginImport
-      parentRoute: typeof authLayoutImport
+      preLoaderRoute: typeof AuthLayoutLoginImport
+      parentRoute: typeof AuthLayoutImport
     }
-    '/(auth)/_layout/register': {
-      id: '/(auth)/_layout/register'
+    '/_auth/_layout/register': {
+      id: '/_auth/_layout/register'
       path: '/register'
       fullPath: '/register'
-      preLoaderRoute: typeof authLayoutRegisterImport
-      parentRoute: typeof authLayoutImport
+      preLoaderRoute: typeof AuthLayoutRegisterImport
+      parentRoute: typeof AuthLayoutImport
     }
-    '/(auth)/_layout/verify-email': {
-      id: '/(auth)/_layout/verify-email'
+    '/_auth/_layout/verify-email': {
+      id: '/_auth/_layout/verify-email'
       path: '/verify-email'
       fullPath: '/verify-email'
-      preLoaderRoute: typeof authLayoutVerifyEmailImport
-      parentRoute: typeof authLayoutImport
+      preLoaderRoute: typeof AuthLayoutVerifyEmailImport
+      parentRoute: typeof AuthLayoutImport
+    }
+    '/_protected/dashboard/': {
+      id: '/_protected/dashboard/'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof ProtectedDashboardIndexImport
+      parentRoute: typeof ProtectedImport
     }
   }
 }
 
 // Create and export the route tree
 
-interface authLayoutRouteChildren {
-  authLayoutLoginRoute: typeof authLayoutLoginRoute
-  authLayoutRegisterRoute: typeof authLayoutRegisterRoute
-  authLayoutVerifyEmailRoute: typeof authLayoutVerifyEmailRoute
+interface ProtectedRouteChildren {
+  ProtectedDashboardIndexRoute: typeof ProtectedDashboardIndexRoute
 }
 
-const authLayoutRouteChildren: authLayoutRouteChildren = {
-  authLayoutLoginRoute: authLayoutLoginRoute,
-  authLayoutRegisterRoute: authLayoutRegisterRoute,
-  authLayoutVerifyEmailRoute: authLayoutVerifyEmailRoute,
+const ProtectedRouteChildren: ProtectedRouteChildren = {
+  ProtectedDashboardIndexRoute: ProtectedDashboardIndexRoute,
 }
 
-const authLayoutRouteWithChildren = authLayoutRoute._addFileChildren(
-  authLayoutRouteChildren,
+const ProtectedRouteWithChildren = ProtectedRoute._addFileChildren(
+  ProtectedRouteChildren,
 )
 
-interface authRouteChildren {
-  authLayoutRoute: typeof authLayoutRouteWithChildren
+interface UnprotectedRouteChildren {
+  UnprotectedPrivacyPolicyRoute: typeof UnprotectedPrivacyPolicyRoute
+  UnprotectedTermsAndConditionRoute: typeof UnprotectedTermsAndConditionRoute
+  UnprotectedIndexRoute: typeof UnprotectedIndexRoute
 }
 
-const authRouteChildren: authRouteChildren = {
-  authLayoutRoute: authLayoutRouteWithChildren,
+const UnprotectedRouteChildren: UnprotectedRouteChildren = {
+  UnprotectedPrivacyPolicyRoute: UnprotectedPrivacyPolicyRoute,
+  UnprotectedTermsAndConditionRoute: UnprotectedTermsAndConditionRoute,
+  UnprotectedIndexRoute: UnprotectedIndexRoute,
 }
 
-const authRouteWithChildren = authRoute._addFileChildren(authRouteChildren)
+const UnprotectedRouteWithChildren = UnprotectedRoute._addFileChildren(
+  UnprotectedRouteChildren,
+)
+
+interface AuthLayoutRouteChildren {
+  AuthLayoutLoginRoute: typeof AuthLayoutLoginRoute
+  AuthLayoutRegisterRoute: typeof AuthLayoutRegisterRoute
+  AuthLayoutVerifyEmailRoute: typeof AuthLayoutVerifyEmailRoute
+}
+
+const AuthLayoutRouteChildren: AuthLayoutRouteChildren = {
+  AuthLayoutLoginRoute: AuthLayoutLoginRoute,
+  AuthLayoutRegisterRoute: AuthLayoutRegisterRoute,
+  AuthLayoutVerifyEmailRoute: AuthLayoutVerifyEmailRoute,
+}
+
+const AuthLayoutRouteWithChildren = AuthLayoutRoute._addFileChildren(
+  AuthLayoutRouteChildren,
+)
 
 export interface FileRoutesByFullPath {
-  '/': typeof unprotectedIndexLazyRoute
-  '/login': typeof authLayoutLoginRoute
-  '/register': typeof authLayoutRegisterRoute
-  '/verify-email': typeof authLayoutVerifyEmailRoute
+  '': typeof AuthLayoutRouteWithChildren
+  '/privacy-policy': typeof UnprotectedPrivacyPolicyRoute
+  '/terms-and-condition': typeof UnprotectedTermsAndConditionRoute
+  '/': typeof UnprotectedIndexRoute
+  '/login': typeof AuthLayoutLoginRoute
+  '/register': typeof AuthLayoutRegisterRoute
+  '/verify-email': typeof AuthLayoutVerifyEmailRoute
+  '/dashboard': typeof ProtectedDashboardIndexRoute
 }
 
 export interface FileRoutesByTo {
-  '/': typeof unprotectedIndexLazyRoute
-  '/login': typeof authLayoutLoginRoute
-  '/register': typeof authLayoutRegisterRoute
-  '/verify-email': typeof authLayoutVerifyEmailRoute
+  '': typeof AuthLayoutRouteWithChildren
+  '/privacy-policy': typeof UnprotectedPrivacyPolicyRoute
+  '/terms-and-condition': typeof UnprotectedTermsAndConditionRoute
+  '/': typeof UnprotectedIndexRoute
+  '/login': typeof AuthLayoutLoginRoute
+  '/register': typeof AuthLayoutRegisterRoute
+  '/verify-email': typeof AuthLayoutVerifyEmailRoute
+  '/dashboard': typeof ProtectedDashboardIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
-  '/(auth)': typeof authRouteWithChildren
-  '/(auth)/_layout': typeof authLayoutRouteWithChildren
-  '/(unprotected)/': typeof unprotectedIndexLazyRoute
-  '/(auth)/_layout/login': typeof authLayoutLoginRoute
-  '/(auth)/_layout/register': typeof authLayoutRegisterRoute
-  '/(auth)/_layout/verify-email': typeof authLayoutVerifyEmailRoute
+  '/_protected': typeof ProtectedRouteWithChildren
+  '/_unprotected': typeof UnprotectedRouteWithChildren
+  '/_auth/_layout': typeof AuthLayoutRouteWithChildren
+  '/_unprotected/privacy-policy': typeof UnprotectedPrivacyPolicyRoute
+  '/_unprotected/terms-and-condition': typeof UnprotectedTermsAndConditionRoute
+  '/_unprotected/': typeof UnprotectedIndexRoute
+  '/_auth/_layout/login': typeof AuthLayoutLoginRoute
+  '/_auth/_layout/register': typeof AuthLayoutRegisterRoute
+  '/_auth/_layout/verify-email': typeof AuthLayoutVerifyEmailRoute
+  '/_protected/dashboard/': typeof ProtectedDashboardIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/register' | '/verify-email'
+  fullPaths:
+    | ''
+    | '/privacy-policy'
+    | '/terms-and-condition'
+    | '/'
+    | '/login'
+    | '/register'
+    | '/verify-email'
+    | '/dashboard'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/register' | '/verify-email'
+  to:
+    | ''
+    | '/privacy-policy'
+    | '/terms-and-condition'
+    | '/'
+    | '/login'
+    | '/register'
+    | '/verify-email'
+    | '/dashboard'
   id:
     | '__root__'
-    | '/(auth)'
-    | '/(auth)/_layout'
-    | '/(unprotected)/'
-    | '/(auth)/_layout/login'
-    | '/(auth)/_layout/register'
-    | '/(auth)/_layout/verify-email'
+    | '/_protected'
+    | '/_unprotected'
+    | '/_auth/_layout'
+    | '/_unprotected/privacy-policy'
+    | '/_unprotected/terms-and-condition'
+    | '/_unprotected/'
+    | '/_auth/_layout/login'
+    | '/_auth/_layout/register'
+    | '/_auth/_layout/verify-email'
+    | '/_protected/dashboard/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
-  authRoute: typeof authRouteWithChildren
-  unprotectedIndexLazyRoute: typeof unprotectedIndexLazyRoute
+  ProtectedRoute: typeof ProtectedRouteWithChildren
+  UnprotectedRoute: typeof UnprotectedRouteWithChildren
+  AuthLayoutRoute: typeof AuthLayoutRouteWithChildren
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  authRoute: authRouteWithChildren,
-  unprotectedIndexLazyRoute: unprotectedIndexLazyRoute,
+  ProtectedRoute: ProtectedRouteWithChildren,
+  UnprotectedRoute: UnprotectedRouteWithChildren,
+  AuthLayoutRoute: AuthLayoutRouteWithChildren,
 }
 
 export const routeTree = rootRoute
@@ -198,39 +299,60 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/(auth)",
-        "/(unprotected)/"
+        "/_protected",
+        "/_unprotected",
+        "/_auth/_layout"
       ]
     },
-    "/(auth)": {
-      "filePath": "(auth)",
+    "/_protected": {
+      "filePath": "_protected.tsx",
       "children": [
-        "/(auth)/_layout"
+        "/_protected/dashboard/"
       ]
     },
-    "/(auth)/_layout": {
-      "filePath": "(auth)/_layout.tsx",
-      "parent": "/(auth)",
+    "/_unprotected": {
+      "filePath": "_unprotected.tsx",
       "children": [
-        "/(auth)/_layout/login",
-        "/(auth)/_layout/register",
-        "/(auth)/_layout/verify-email"
+        "/_unprotected/privacy-policy",
+        "/_unprotected/terms-and-condition",
+        "/_unprotected/"
       ]
     },
-    "/(unprotected)/": {
-      "filePath": "(unprotected)/index.lazy.tsx"
+    "/_auth/_layout": {
+      "filePath": "_auth/_layout.tsx",
+      "children": [
+        "/_auth/_layout/login",
+        "/_auth/_layout/register",
+        "/_auth/_layout/verify-email"
+      ]
     },
-    "/(auth)/_layout/login": {
-      "filePath": "(auth)/_layout.login.tsx",
-      "parent": "/(auth)/_layout"
+    "/_unprotected/privacy-policy": {
+      "filePath": "_unprotected/privacy-policy.tsx",
+      "parent": "/_unprotected"
     },
-    "/(auth)/_layout/register": {
-      "filePath": "(auth)/_layout.register.tsx",
-      "parent": "/(auth)/_layout"
+    "/_unprotected/terms-and-condition": {
+      "filePath": "_unprotected/terms-and-condition.tsx",
+      "parent": "/_unprotected"
     },
-    "/(auth)/_layout/verify-email": {
-      "filePath": "(auth)/_layout.verify-email.tsx",
-      "parent": "/(auth)/_layout"
+    "/_unprotected/": {
+      "filePath": "_unprotected/index.tsx",
+      "parent": "/_unprotected"
+    },
+    "/_auth/_layout/login": {
+      "filePath": "_auth/_layout.login.tsx",
+      "parent": "/_auth/_layout"
+    },
+    "/_auth/_layout/register": {
+      "filePath": "_auth/_layout.register.tsx",
+      "parent": "/_auth/_layout"
+    },
+    "/_auth/_layout/verify-email": {
+      "filePath": "_auth/_layout.verify-email.tsx",
+      "parent": "/_auth/_layout"
+    },
+    "/_protected/dashboard/": {
+      "filePath": "_protected/dashboard/index.tsx",
+      "parent": "/_protected"
     }
   }
 }

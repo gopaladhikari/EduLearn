@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { useForm } from "@tanstack/react-form";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,41 +11,54 @@ import {
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { useSeo } from "@/hooks/useSeo";
+import { loginMutation } from "@/lib/mutations/auth.mutation";
 import { useMutation } from "@tanstack/react-query";
-import { registerMutation } from "@/lib/mutations/auth.mutation";
 
-export const Route = createFileRoute("/(auth)/_layout/register")({
+export const Route = createFileRoute("/_auth/_layout/login")({
   component: RouteComponent,
+  async beforeLoad({ context }) {
+    if (context.isLoggedIn)
+      throw redirect({
+        to: "/dashboard",
+      });
+  },
 });
 
 function RouteComponent() {
+  const navigate = useNavigate();
+
+  const mutation = useMutation({
+    mutationFn: loginMutation,
+    onSuccess() {
+      navigate({ to: "/dashboard" });
+    },
+  });
+
   const form = useForm({
     defaultValues: {
       email: "",
       password: "",
     },
-    onSubmit: ({ value }) => {
-      return mutatation.mutate(value);
+    onSubmit: async ({ value }) => {
+      mutation.mutate(value);
     },
   });
 
-  const mutatation = useMutation({
-    mutationFn: registerMutation,
-    onSuccess() {
-      form.reset();
-    },
+  useSeo({
+    title: "Login",
+    description: "Login to your account",
   });
-
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-3xl">Create New Account</CardTitle>
+        <CardTitle className="text-3xl">Login</CardTitle>
         <CardDescription>
-          Enter your email and password to sign up.
+          Enter your email and password to login.
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form className="space-y-3" method="POST">
+        <form className="space-y-3">
           <div className="space-y-3">
             <form.Field
               name="email"
@@ -58,9 +71,7 @@ function RouteComponent() {
                       : undefined,
                 onChangeAsyncDebounceMs: 500,
                 onChangeAsync: async ({ value }) => {
-                  await new Promise((resolve) =>
-                    setTimeout(resolve, 1000)
-                  );
+                  await new Promise((resolve) => setTimeout(resolve, 1000));
                   return (
                     value.includes("error") &&
                     'No "error" allowed in first name'
@@ -97,9 +108,7 @@ function RouteComponent() {
                       : undefined,
                 onChangeAsyncDebounceMs: 500,
                 onChangeAsync: async ({ value }) => {
-                  await new Promise((resolve) =>
-                    setTimeout(resolve, 1000)
-                  );
+                  await new Promise((resolve) => setTimeout(resolve, 1000));
                   return (
                     value.includes("error") &&
                     'No "error" allowed in first name'
@@ -124,24 +133,15 @@ function RouteComponent() {
               }}
             />
           </div>
-          {mutatation.error && (
-            <div className="text-destructive">
-              {mutatation.error.message}
-            </div>
-          )}
-          {mutatation.isSuccess && (
-            <div className="text-green-600">{mutatation.data.message}</div>
+          {mutation.error && (
+            <p className="text-destructive">{mutation.error.message}</p>
           )}
         </form>
       </CardContent>
 
       <CardFooter>
-        <Button
-          type="button"
-          className="w-full"
-          onClick={form.handleSubmit}
-        >
-          {form.state.isSubmitting ? "Sign Uping..." : "Sign Up"}
+        <Button type="button" className="w-full" onClick={form.handleSubmit}>
+          {form.state.isSubmitting ? "Signing in..." : "Sign In"}
         </Button>
       </CardFooter>
     </Card>

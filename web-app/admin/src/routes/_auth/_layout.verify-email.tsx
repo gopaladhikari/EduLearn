@@ -1,6 +1,6 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useForm } from "@tanstack/react-form";
-import { Button } from "@/components/ui/button";
+import { createFileRoute, redirect } from '@tanstack/react-router'
+import { useForm } from '@tanstack/react-form'
+import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
@@ -8,49 +8,51 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { verifyEmailMutation } from "@/lib/mutations/auth.mutation";
-import { useMutation } from "@tanstack/react-query";
+} from '@/components/ui/card'
+import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
+import { verifyEmailMutation } from '@/lib/mutations/auth.mutation'
+import { useMutation } from '@tanstack/react-query'
 
-export const Route = createFileRoute("/(auth)/_layout/verify-email")({
+export const Route = createFileRoute('/_auth/_layout/verify-email')({
   component: RouteComponent,
-});
 
-type Search = {
-  token: string;
-};
+  validateSearch: (search) => {
+    const token = search?.token
+
+    return {
+      token: String(token) || '',
+    }
+  },
+})
 
 function RouteComponent() {
-  const search = Route.useSearch() as Search;
-  const navigate = useNavigate();
+  const { token } = Route.useSearch()
 
   const form = useForm({
     defaultValues: {
-      email: "",
+      email: '',
     },
     onSubmit: ({ value: { email } }) => {
-      return mutatation.mutate(email);
+      return mutatation.mutate(email)
     },
-  });
+  })
 
   const mutatation = useMutation({
-    mutationFn: (email: string) =>
-      verifyEmailMutation(email, search.token),
+    mutationFn: (email: string) => verifyEmailMutation(email, token),
     onSuccess() {
-      navigate({
-        to: "/login",
-      });
+      redirect({
+        to: '/login',
+      })
     },
-  });
+  })
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-3xl">Create New Account</CardTitle>
+        <CardTitle className="text-3xl">Verify Email</CardTitle>
         <CardDescription>
-          Enter your email and password to sign up.
+          Enter your email to verify your account.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -61,19 +63,17 @@ function RouteComponent() {
               validators={{
                 onChange: ({ value }) =>
                   !value
-                    ? "A first name is required"
+                    ? 'A first name is required'
                     : value.length < 3
-                      ? "First name must be at least 3 characters"
+                      ? 'First name must be at least 3 characters'
                       : undefined,
                 onChangeAsyncDebounceMs: 500,
                 onChangeAsync: async ({ value }) => {
-                  await new Promise((resolve) =>
-                    setTimeout(resolve, 1000)
-                  );
+                  await new Promise((resolve) => setTimeout(resolve, 1000))
                   return (
-                    value.includes("error") &&
+                    value.includes('error') &&
                     'No "error" allowed in first name'
-                  );
+                  )
                 },
               }}
               children={(field) => {
@@ -90,27 +90,21 @@ function RouteComponent() {
                       onChange={(e) => field.handleChange(e.target.value)}
                     />
                   </>
-                );
+                )
               }}
             />
           </div>
           {mutatation.error && (
-            <div className="text-destructive">
-              {mutatation.error.message}
-            </div>
+            <div className="text-destructive">{mutatation.error.message}</div>
           )}
         </form>
       </CardContent>
 
       <CardFooter>
-        <Button
-          type="button"
-          className="w-full"
-          onClick={form.handleSubmit}
-        >
-          {form.state.isSubmitting ? "Submitting..." : "Submit"}
+        <Button type="button" className="w-full" onClick={form.handleSubmit}>
+          {form.state.isSubmitting ? 'Submitting...' : 'Submit'}
         </Button>
       </CardFooter>
     </Card>
-  );
+  )
 }

@@ -41,9 +41,9 @@ export class AuthService {
   }
 
   async verifyUser(email: string, password: string) {
-    const user = (await this.users.getUser({
+    const user = await this.users.getUser({
       email,
-    })) as UserDocument;
+    });
 
     const isPasswordValid = await compare(password, user.password);
 

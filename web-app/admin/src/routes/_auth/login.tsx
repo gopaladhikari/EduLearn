@@ -1,9 +1,4 @@
-import {
-  createFileRoute,
-  Link,
-  redirect,
-  useNavigate,
-} from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useForm } from "@tanstack/react-form";
 import { Button } from "@/components/ui/button";
 import {
@@ -23,12 +18,6 @@ import { useAuth } from "@/context/AuthContext";
 
 export const Route = createFileRoute("/_auth/login")({
   component: RouteComponent,
-  async beforeLoad({ context }) {
-    if (context.isLoggedIn)
-      throw redirect({
-        to: "/dashboard",
-      });
-  },
 });
 
 function RouteComponent() {
@@ -39,6 +28,7 @@ function RouteComponent() {
   const mutation = useMutation({
     mutationFn: loginMutation,
     onSuccess() {
+      sessionStorage.setItem("loggedIn", "true");
       navigate({ to: "/dashboard" });
     },
   });
@@ -48,7 +38,7 @@ function RouteComponent() {
       email: "",
       password: "",
     },
-    onSubmit: async ({ value }) => {
+    onSubmit: ({ value }) => {
       mutation.mutate(value);
     },
   });

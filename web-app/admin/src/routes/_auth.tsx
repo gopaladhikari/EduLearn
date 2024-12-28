@@ -2,7 +2,7 @@ import { Header } from "@/components/partials/Header";
 import { MaxWithWrapper } from "@/components/partials/MaxWithWrapper";
 import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/_auth/_layout")({
+export const Route = createFileRoute("/_auth")({
   component: RouteComponent,
 });
 

@@ -21,7 +21,7 @@ import { loginMutation } from "@/lib/mutations/auth.mutation";
 import { useMutation } from "@tanstack/react-query";
 import { useAuth } from "@/context/AuthContext";
 
-export const Route = createFileRoute("/_auth/_layout/login")({
+export const Route = createFileRoute("/_auth/login")({
   component: RouteComponent,
   async beforeLoad({ context }) {
     if (context.isLoggedIn)

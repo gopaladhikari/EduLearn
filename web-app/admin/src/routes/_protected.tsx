@@ -1,25 +1,15 @@
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
 export const Route = createFileRoute("/_protected")({
   component: RouteComponent,
-  async beforeLoad({ context, location }) {
+  async beforeLoad({ context }) {
     if (!context.isLoggedIn)
-      redirect({
+      throw redirect({
         to: "/login",
-        search: location.href,
       });
   },
 });
 
 function RouteComponent() {
-  return (
-    <>
-      <header>Nav</header>
-      <main>
-        <Outlet />
-      </main>
-    </>
-  );
+  return <Outlet />;
 }

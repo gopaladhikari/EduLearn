@@ -13,16 +13,20 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as UnprotectedImport } from './routes/_unprotected'
 import { Route as ProtectedImport } from './routes/_protected'
+import { Route as AuthImport } from './routes/_auth'
 import { Route as UnprotectedIndexImport } from './routes/_unprotected/index'
 import { Route as UnprotectedTermsAndConditionImport } from './routes/_unprotected/terms-and-condition'
 import { Route as UnprotectedPrivacyPolicyImport } from './routes/_unprotected/privacy-policy'
-import { Route as AuthLayoutImport } from './routes/_auth/_layout'
-import { Route as ProtectedDashboardIndexImport } from './routes/_protected/dashboard/index'
-import { Route as AuthLayoutVerifyEmailImport } from './routes/_auth/_layout.verify-email'
-import { Route as AuthLayoutRegisterImport } from './routes/_auth/_layout.register'
-import { Route as AuthLayoutLoginImport } from './routes/_auth/_layout.login'
-import { Route as AuthLayoutForgotPasswordImport } from './routes/_auth/_layout.forgot-password'
-import { Route as AuthLayoutConfirmPasswordImport } from './routes/_auth/_layout.confirm-password'
+import { Route as ProtectedDashboardImport } from './routes/_protected/_dashboard'
+import { Route as AuthVerifyEmailImport } from './routes/_auth/verify-email'
+import { Route as AuthRegisterImport } from './routes/_auth/register'
+import { Route as AuthLoginImport } from './routes/_auth/login'
+import { Route as AuthForgotPasswordImport } from './routes/_auth/forgot-password'
+import { Route as AuthConfirmPasswordImport } from './routes/_auth/confirm-password'
+import { Route as ProtectedDashboardDashboardIndexImport } from './routes/_protected/_dashboard/dashboard/index'
+import { Route as ProtectedDashboardDashboardSettingsImport } from './routes/_protected/_dashboard/dashboard/settings'
+import { Route as ProtectedDashboardDashboardCustomersImport } from './routes/_protected/_dashboard/dashboard/customers'
+import { Route as ProtectedDashboardDashboardCoursesImport } from './routes/_protected/_dashboard/dashboard/courses'
 
 // Create/Update Routes
 
@@ -33,6 +37,11 @@ const UnprotectedRoute = UnprotectedImport.update({
 
 const ProtectedRoute = ProtectedImport.update({
   id: '/_protected',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AuthRoute = AuthImport.update({
+  id: '/_auth',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -55,51 +64,80 @@ const UnprotectedPrivacyPolicyRoute = UnprotectedPrivacyPolicyImport.update({
   getParentRoute: () => UnprotectedRoute,
 } as any)
 
-const AuthLayoutRoute = AuthLayoutImport.update({
-  id: '/_auth/_layout',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const ProtectedDashboardIndexRoute = ProtectedDashboardIndexImport.update({
-  id: '/dashboard/',
-  path: '/dashboard/',
+const ProtectedDashboardRoute = ProtectedDashboardImport.update({
+  id: '/_dashboard',
   getParentRoute: () => ProtectedRoute,
 } as any)
 
-const AuthLayoutVerifyEmailRoute = AuthLayoutVerifyEmailImport.update({
+const AuthVerifyEmailRoute = AuthVerifyEmailImport.update({
   id: '/verify-email',
   path: '/verify-email',
-  getParentRoute: () => AuthLayoutRoute,
+  getParentRoute: () => AuthRoute,
 } as any)
 
-const AuthLayoutRegisterRoute = AuthLayoutRegisterImport.update({
+const AuthRegisterRoute = AuthRegisterImport.update({
   id: '/register',
   path: '/register',
-  getParentRoute: () => AuthLayoutRoute,
+  getParentRoute: () => AuthRoute,
 } as any)
 
-const AuthLayoutLoginRoute = AuthLayoutLoginImport.update({
+const AuthLoginRoute = AuthLoginImport.update({
   id: '/login',
   path: '/login',
-  getParentRoute: () => AuthLayoutRoute,
+  getParentRoute: () => AuthRoute,
 } as any)
 
-const AuthLayoutForgotPasswordRoute = AuthLayoutForgotPasswordImport.update({
+const AuthForgotPasswordRoute = AuthForgotPasswordImport.update({
   id: '/forgot-password',
   path: '/forgot-password',
-  getParentRoute: () => AuthLayoutRoute,
+  getParentRoute: () => AuthRoute,
 } as any)
 
-const AuthLayoutConfirmPasswordRoute = AuthLayoutConfirmPasswordImport.update({
+const AuthConfirmPasswordRoute = AuthConfirmPasswordImport.update({
   id: '/confirm-password',
   path: '/confirm-password',
-  getParentRoute: () => AuthLayoutRoute,
+  getParentRoute: () => AuthRoute,
 } as any)
+
+const ProtectedDashboardDashboardIndexRoute =
+  ProtectedDashboardDashboardIndexImport.update({
+    id: '/dashboard/',
+    path: '/dashboard/',
+    getParentRoute: () => ProtectedDashboardRoute,
+  } as any)
+
+const ProtectedDashboardDashboardSettingsRoute =
+  ProtectedDashboardDashboardSettingsImport.update({
+    id: '/dashboard/settings',
+    path: '/dashboard/settings',
+    getParentRoute: () => ProtectedDashboardRoute,
+  } as any)
+
+const ProtectedDashboardDashboardCustomersRoute =
+  ProtectedDashboardDashboardCustomersImport.update({
+    id: '/dashboard/customers',
+    path: '/dashboard/customers',
+    getParentRoute: () => ProtectedDashboardRoute,
+  } as any)
+
+const ProtectedDashboardDashboardCoursesRoute =
+  ProtectedDashboardDashboardCoursesImport.update({
+    id: '/dashboard/courses',
+    path: '/dashboard/courses',
+    getParentRoute: () => ProtectedDashboardRoute,
+  } as any)
 
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/_auth': {
+      id: '/_auth'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AuthImport
+      parentRoute: typeof rootRoute
+    }
     '/_protected': {
       id: '/_protected'
       path: ''
@@ -114,12 +152,47 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UnprotectedImport
       parentRoute: typeof rootRoute
     }
-    '/_auth/_layout': {
-      id: '/_auth/_layout'
+    '/_auth/confirm-password': {
+      id: '/_auth/confirm-password'
+      path: '/confirm-password'
+      fullPath: '/confirm-password'
+      preLoaderRoute: typeof AuthConfirmPasswordImport
+      parentRoute: typeof AuthImport
+    }
+    '/_auth/forgot-password': {
+      id: '/_auth/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof AuthForgotPasswordImport
+      parentRoute: typeof AuthImport
+    }
+    '/_auth/login': {
+      id: '/_auth/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof AuthLoginImport
+      parentRoute: typeof AuthImport
+    }
+    '/_auth/register': {
+      id: '/_auth/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof AuthRegisterImport
+      parentRoute: typeof AuthImport
+    }
+    '/_auth/verify-email': {
+      id: '/_auth/verify-email'
+      path: '/verify-email'
+      fullPath: '/verify-email'
+      preLoaderRoute: typeof AuthVerifyEmailImport
+      parentRoute: typeof AuthImport
+    }
+    '/_protected/_dashboard': {
+      id: '/_protected/_dashboard'
       path: ''
       fullPath: ''
-      preLoaderRoute: typeof AuthLayoutImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof ProtectedDashboardImport
+      parentRoute: typeof ProtectedImport
     }
     '/_unprotected/privacy-policy': {
       id: '/_unprotected/privacy-policy'
@@ -142,59 +215,83 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UnprotectedIndexImport
       parentRoute: typeof UnprotectedImport
     }
-    '/_auth/_layout/confirm-password': {
-      id: '/_auth/_layout/confirm-password'
-      path: '/confirm-password'
-      fullPath: '/confirm-password'
-      preLoaderRoute: typeof AuthLayoutConfirmPasswordImport
-      parentRoute: typeof AuthLayoutImport
+    '/_protected/_dashboard/dashboard/courses': {
+      id: '/_protected/_dashboard/dashboard/courses'
+      path: '/dashboard/courses'
+      fullPath: '/dashboard/courses'
+      preLoaderRoute: typeof ProtectedDashboardDashboardCoursesImport
+      parentRoute: typeof ProtectedDashboardImport
     }
-    '/_auth/_layout/forgot-password': {
-      id: '/_auth/_layout/forgot-password'
-      path: '/forgot-password'
-      fullPath: '/forgot-password'
-      preLoaderRoute: typeof AuthLayoutForgotPasswordImport
-      parentRoute: typeof AuthLayoutImport
+    '/_protected/_dashboard/dashboard/customers': {
+      id: '/_protected/_dashboard/dashboard/customers'
+      path: '/dashboard/customers'
+      fullPath: '/dashboard/customers'
+      preLoaderRoute: typeof ProtectedDashboardDashboardCustomersImport
+      parentRoute: typeof ProtectedDashboardImport
     }
-    '/_auth/_layout/login': {
-      id: '/_auth/_layout/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof AuthLayoutLoginImport
-      parentRoute: typeof AuthLayoutImport
+    '/_protected/_dashboard/dashboard/settings': {
+      id: '/_protected/_dashboard/dashboard/settings'
+      path: '/dashboard/settings'
+      fullPath: '/dashboard/settings'
+      preLoaderRoute: typeof ProtectedDashboardDashboardSettingsImport
+      parentRoute: typeof ProtectedDashboardImport
     }
-    '/_auth/_layout/register': {
-      id: '/_auth/_layout/register'
-      path: '/register'
-      fullPath: '/register'
-      preLoaderRoute: typeof AuthLayoutRegisterImport
-      parentRoute: typeof AuthLayoutImport
-    }
-    '/_auth/_layout/verify-email': {
-      id: '/_auth/_layout/verify-email'
-      path: '/verify-email'
-      fullPath: '/verify-email'
-      preLoaderRoute: typeof AuthLayoutVerifyEmailImport
-      parentRoute: typeof AuthLayoutImport
-    }
-    '/_protected/dashboard/': {
-      id: '/_protected/dashboard/'
+    '/_protected/_dashboard/dashboard/': {
+      id: '/_protected/_dashboard/dashboard/'
       path: '/dashboard'
       fullPath: '/dashboard'
-      preLoaderRoute: typeof ProtectedDashboardIndexImport
-      parentRoute: typeof ProtectedImport
+      preLoaderRoute: typeof ProtectedDashboardDashboardIndexImport
+      parentRoute: typeof ProtectedDashboardImport
     }
   }
 }
 
 // Create and export the route tree
 
+interface AuthRouteChildren {
+  AuthConfirmPasswordRoute: typeof AuthConfirmPasswordRoute
+  AuthForgotPasswordRoute: typeof AuthForgotPasswordRoute
+  AuthLoginRoute: typeof AuthLoginRoute
+  AuthRegisterRoute: typeof AuthRegisterRoute
+  AuthVerifyEmailRoute: typeof AuthVerifyEmailRoute
+}
+
+const AuthRouteChildren: AuthRouteChildren = {
+  AuthConfirmPasswordRoute: AuthConfirmPasswordRoute,
+  AuthForgotPasswordRoute: AuthForgotPasswordRoute,
+  AuthLoginRoute: AuthLoginRoute,
+  AuthRegisterRoute: AuthRegisterRoute,
+  AuthVerifyEmailRoute: AuthVerifyEmailRoute,
+}
+
+const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
+
+interface ProtectedDashboardRouteChildren {
+  ProtectedDashboardDashboardCoursesRoute: typeof ProtectedDashboardDashboardCoursesRoute
+  ProtectedDashboardDashboardCustomersRoute: typeof ProtectedDashboardDashboardCustomersRoute
+  ProtectedDashboardDashboardSettingsRoute: typeof ProtectedDashboardDashboardSettingsRoute
+  ProtectedDashboardDashboardIndexRoute: typeof ProtectedDashboardDashboardIndexRoute
+}
+
+const ProtectedDashboardRouteChildren: ProtectedDashboardRouteChildren = {
+  ProtectedDashboardDashboardCoursesRoute:
+    ProtectedDashboardDashboardCoursesRoute,
+  ProtectedDashboardDashboardCustomersRoute:
+    ProtectedDashboardDashboardCustomersRoute,
+  ProtectedDashboardDashboardSettingsRoute:
+    ProtectedDashboardDashboardSettingsRoute,
+  ProtectedDashboardDashboardIndexRoute: ProtectedDashboardDashboardIndexRoute,
+}
+
+const ProtectedDashboardRouteWithChildren =
+  ProtectedDashboardRoute._addFileChildren(ProtectedDashboardRouteChildren)
+
 interface ProtectedRouteChildren {
-  ProtectedDashboardIndexRoute: typeof ProtectedDashboardIndexRoute
+  ProtectedDashboardRoute: typeof ProtectedDashboardRouteWithChildren
 }
 
 const ProtectedRouteChildren: ProtectedRouteChildren = {
-  ProtectedDashboardIndexRoute: ProtectedDashboardIndexRoute,
+  ProtectedDashboardRoute: ProtectedDashboardRouteWithChildren,
 }
 
 const ProtectedRouteWithChildren = ProtectedRoute._addFileChildren(
@@ -217,120 +314,120 @@ const UnprotectedRouteWithChildren = UnprotectedRoute._addFileChildren(
   UnprotectedRouteChildren,
 )
 
-interface AuthLayoutRouteChildren {
-  AuthLayoutConfirmPasswordRoute: typeof AuthLayoutConfirmPasswordRoute
-  AuthLayoutForgotPasswordRoute: typeof AuthLayoutForgotPasswordRoute
-  AuthLayoutLoginRoute: typeof AuthLayoutLoginRoute
-  AuthLayoutRegisterRoute: typeof AuthLayoutRegisterRoute
-  AuthLayoutVerifyEmailRoute: typeof AuthLayoutVerifyEmailRoute
-}
-
-const AuthLayoutRouteChildren: AuthLayoutRouteChildren = {
-  AuthLayoutConfirmPasswordRoute: AuthLayoutConfirmPasswordRoute,
-  AuthLayoutForgotPasswordRoute: AuthLayoutForgotPasswordRoute,
-  AuthLayoutLoginRoute: AuthLayoutLoginRoute,
-  AuthLayoutRegisterRoute: AuthLayoutRegisterRoute,
-  AuthLayoutVerifyEmailRoute: AuthLayoutVerifyEmailRoute,
-}
-
-const AuthLayoutRouteWithChildren = AuthLayoutRoute._addFileChildren(
-  AuthLayoutRouteChildren,
-)
-
 export interface FileRoutesByFullPath {
-  '': typeof AuthLayoutRouteWithChildren
+  '': typeof ProtectedDashboardRouteWithChildren
+  '/confirm-password': typeof AuthConfirmPasswordRoute
+  '/forgot-password': typeof AuthForgotPasswordRoute
+  '/login': typeof AuthLoginRoute
+  '/register': typeof AuthRegisterRoute
+  '/verify-email': typeof AuthVerifyEmailRoute
   '/privacy-policy': typeof UnprotectedPrivacyPolicyRoute
   '/terms-and-condition': typeof UnprotectedTermsAndConditionRoute
   '/': typeof UnprotectedIndexRoute
-  '/confirm-password': typeof AuthLayoutConfirmPasswordRoute
-  '/forgot-password': typeof AuthLayoutForgotPasswordRoute
-  '/login': typeof AuthLayoutLoginRoute
-  '/register': typeof AuthLayoutRegisterRoute
-  '/verify-email': typeof AuthLayoutVerifyEmailRoute
-  '/dashboard': typeof ProtectedDashboardIndexRoute
+  '/dashboard/courses': typeof ProtectedDashboardDashboardCoursesRoute
+  '/dashboard/customers': typeof ProtectedDashboardDashboardCustomersRoute
+  '/dashboard/settings': typeof ProtectedDashboardDashboardSettingsRoute
+  '/dashboard': typeof ProtectedDashboardDashboardIndexRoute
 }
 
 export interface FileRoutesByTo {
-  '': typeof AuthLayoutRouteWithChildren
+  '': typeof ProtectedDashboardRouteWithChildren
+  '/confirm-password': typeof AuthConfirmPasswordRoute
+  '/forgot-password': typeof AuthForgotPasswordRoute
+  '/login': typeof AuthLoginRoute
+  '/register': typeof AuthRegisterRoute
+  '/verify-email': typeof AuthVerifyEmailRoute
   '/privacy-policy': typeof UnprotectedPrivacyPolicyRoute
   '/terms-and-condition': typeof UnprotectedTermsAndConditionRoute
   '/': typeof UnprotectedIndexRoute
-  '/confirm-password': typeof AuthLayoutConfirmPasswordRoute
-  '/forgot-password': typeof AuthLayoutForgotPasswordRoute
-  '/login': typeof AuthLayoutLoginRoute
-  '/register': typeof AuthLayoutRegisterRoute
-  '/verify-email': typeof AuthLayoutVerifyEmailRoute
-  '/dashboard': typeof ProtectedDashboardIndexRoute
+  '/dashboard/courses': typeof ProtectedDashboardDashboardCoursesRoute
+  '/dashboard/customers': typeof ProtectedDashboardDashboardCustomersRoute
+  '/dashboard/settings': typeof ProtectedDashboardDashboardSettingsRoute
+  '/dashboard': typeof ProtectedDashboardDashboardIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
+  '/_auth': typeof AuthRouteWithChildren
   '/_protected': typeof ProtectedRouteWithChildren
   '/_unprotected': typeof UnprotectedRouteWithChildren
-  '/_auth/_layout': typeof AuthLayoutRouteWithChildren
+  '/_auth/confirm-password': typeof AuthConfirmPasswordRoute
+  '/_auth/forgot-password': typeof AuthForgotPasswordRoute
+  '/_auth/login': typeof AuthLoginRoute
+  '/_auth/register': typeof AuthRegisterRoute
+  '/_auth/verify-email': typeof AuthVerifyEmailRoute
+  '/_protected/_dashboard': typeof ProtectedDashboardRouteWithChildren
   '/_unprotected/privacy-policy': typeof UnprotectedPrivacyPolicyRoute
   '/_unprotected/terms-and-condition': typeof UnprotectedTermsAndConditionRoute
   '/_unprotected/': typeof UnprotectedIndexRoute
-  '/_auth/_layout/confirm-password': typeof AuthLayoutConfirmPasswordRoute
-  '/_auth/_layout/forgot-password': typeof AuthLayoutForgotPasswordRoute
-  '/_auth/_layout/login': typeof AuthLayoutLoginRoute
-  '/_auth/_layout/register': typeof AuthLayoutRegisterRoute
-  '/_auth/_layout/verify-email': typeof AuthLayoutVerifyEmailRoute
-  '/_protected/dashboard/': typeof ProtectedDashboardIndexRoute
+  '/_protected/_dashboard/dashboard/courses': typeof ProtectedDashboardDashboardCoursesRoute
+  '/_protected/_dashboard/dashboard/customers': typeof ProtectedDashboardDashboardCustomersRoute
+  '/_protected/_dashboard/dashboard/settings': typeof ProtectedDashboardDashboardSettingsRoute
+  '/_protected/_dashboard/dashboard/': typeof ProtectedDashboardDashboardIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | ''
-    | '/privacy-policy'
-    | '/terms-and-condition'
-    | '/'
     | '/confirm-password'
     | '/forgot-password'
     | '/login'
     | '/register'
     | '/verify-email'
+    | '/privacy-policy'
+    | '/terms-and-condition'
+    | '/'
+    | '/dashboard/courses'
+    | '/dashboard/customers'
+    | '/dashboard/settings'
     | '/dashboard'
   fileRoutesByTo: FileRoutesByTo
   to:
     | ''
-    | '/privacy-policy'
-    | '/terms-and-condition'
-    | '/'
     | '/confirm-password'
     | '/forgot-password'
     | '/login'
     | '/register'
     | '/verify-email'
+    | '/privacy-policy'
+    | '/terms-and-condition'
+    | '/'
+    | '/dashboard/courses'
+    | '/dashboard/customers'
+    | '/dashboard/settings'
     | '/dashboard'
   id:
     | '__root__'
+    | '/_auth'
     | '/_protected'
     | '/_unprotected'
-    | '/_auth/_layout'
+    | '/_auth/confirm-password'
+    | '/_auth/forgot-password'
+    | '/_auth/login'
+    | '/_auth/register'
+    | '/_auth/verify-email'
+    | '/_protected/_dashboard'
     | '/_unprotected/privacy-policy'
     | '/_unprotected/terms-and-condition'
     | '/_unprotected/'
-    | '/_auth/_layout/confirm-password'
-    | '/_auth/_layout/forgot-password'
-    | '/_auth/_layout/login'
-    | '/_auth/_layout/register'
-    | '/_auth/_layout/verify-email'
-    | '/_protected/dashboard/'
+    | '/_protected/_dashboard/dashboard/courses'
+    | '/_protected/_dashboard/dashboard/customers'
+    | '/_protected/_dashboard/dashboard/settings'
+    | '/_protected/_dashboard/dashboard/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
+  AuthRoute: typeof AuthRouteWithChildren
   ProtectedRoute: typeof ProtectedRouteWithChildren
   UnprotectedRoute: typeof UnprotectedRouteWithChildren
-  AuthLayoutRoute: typeof AuthLayoutRouteWithChildren
 }
 
 const rootRouteChildren: RootRouteChildren = {
+  AuthRoute: AuthRouteWithChildren,
   ProtectedRoute: ProtectedRouteWithChildren,
   UnprotectedRoute: UnprotectedRouteWithChildren,
-  AuthLayoutRoute: AuthLayoutRouteWithChildren,
 }
 
 export const routeTree = rootRoute
@@ -343,15 +440,25 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
+        "/_auth",
         "/_protected",
-        "/_unprotected",
-        "/_auth/_layout"
+        "/_unprotected"
+      ]
+    },
+    "/_auth": {
+      "filePath": "_auth.tsx",
+      "children": [
+        "/_auth/confirm-password",
+        "/_auth/forgot-password",
+        "/_auth/login",
+        "/_auth/register",
+        "/_auth/verify-email"
       ]
     },
     "/_protected": {
       "filePath": "_protected.tsx",
       "children": [
-        "/_protected/dashboard/"
+        "/_protected/_dashboard"
       ]
     },
     "/_unprotected": {
@@ -362,14 +469,34 @@ export const routeTree = rootRoute
         "/_unprotected/"
       ]
     },
-    "/_auth/_layout": {
-      "filePath": "_auth/_layout.tsx",
+    "/_auth/confirm-password": {
+      "filePath": "_auth/confirm-password.tsx",
+      "parent": "/_auth"
+    },
+    "/_auth/forgot-password": {
+      "filePath": "_auth/forgot-password.tsx",
+      "parent": "/_auth"
+    },
+    "/_auth/login": {
+      "filePath": "_auth/login.tsx",
+      "parent": "/_auth"
+    },
+    "/_auth/register": {
+      "filePath": "_auth/register.tsx",
+      "parent": "/_auth"
+    },
+    "/_auth/verify-email": {
+      "filePath": "_auth/verify-email.tsx",
+      "parent": "/_auth"
+    },
+    "/_protected/_dashboard": {
+      "filePath": "_protected/_dashboard.tsx",
+      "parent": "/_protected",
       "children": [
-        "/_auth/_layout/confirm-password",
-        "/_auth/_layout/forgot-password",
-        "/_auth/_layout/login",
-        "/_auth/_layout/register",
-        "/_auth/_layout/verify-email"
+        "/_protected/_dashboard/dashboard/courses",
+        "/_protected/_dashboard/dashboard/customers",
+        "/_protected/_dashboard/dashboard/settings",
+        "/_protected/_dashboard/dashboard/"
       ]
     },
     "/_unprotected/privacy-policy": {
@@ -384,29 +511,21 @@ export const routeTree = rootRoute
       "filePath": "_unprotected/index.tsx",
       "parent": "/_unprotected"
     },
-    "/_auth/_layout/confirm-password": {
-      "filePath": "_auth/_layout.confirm-password.tsx",
-      "parent": "/_auth/_layout"
+    "/_protected/_dashboard/dashboard/courses": {
+      "filePath": "_protected/_dashboard/dashboard/courses.tsx",
+      "parent": "/_protected/_dashboard"
     },
-    "/_auth/_layout/forgot-password": {
-      "filePath": "_auth/_layout.forgot-password.tsx",
-      "parent": "/_auth/_layout"
+    "/_protected/_dashboard/dashboard/customers": {
+      "filePath": "_protected/_dashboard/dashboard/customers.tsx",
+      "parent": "/_protected/_dashboard"
     },
-    "/_auth/_layout/login": {
-      "filePath": "_auth/_layout.login.tsx",
-      "parent": "/_auth/_layout"
+    "/_protected/_dashboard/dashboard/settings": {
+      "filePath": "_protected/_dashboard/dashboard/settings.tsx",
+      "parent": "/_protected/_dashboard"
     },
-    "/_auth/_layout/register": {
-      "filePath": "_auth/_layout.register.tsx",
-      "parent": "/_auth/_layout"
-    },
-    "/_auth/_layout/verify-email": {
-      "filePath": "_auth/_layout.verify-email.tsx",
-      "parent": "/_auth/_layout"
-    },
-    "/_protected/dashboard/": {
-      "filePath": "_protected/dashboard/index.tsx",
-      "parent": "/_protected"
+    "/_protected/_dashboard/dashboard/": {
+      "filePath": "_protected/_dashboard/dashboard/index.tsx",
+      "parent": "/_protected/_dashboard"
     }
   }
 }

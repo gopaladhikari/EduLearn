@@ -1,55 +1,55 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { Button } from "@/components/ui/button";
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { confirmForgotPassword } from "@/lib/mutations/auth.mutation";
-import { useMutation } from "@tanstack/react-query";
-import { useForm, type SubmitHandler } from "react-hook-form";
+} from '@/components/ui/card'
+import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
+import { confirmForgotPassword } from '@/lib/mutations/auth.mutation'
+import { useMutation } from '@tanstack/react-query'
+import { useForm, type SubmitHandler } from 'react-hook-form'
 import {
   confirmPasswordSchema,
   ConfirmPasswordSchema,
-} from "@/schemas/confirm-password.schema";
-import { zodResolver } from "@hookform/resolvers/zod";
+} from '@/schemas/confirm-password.schema'
+import { zodResolver } from '@hookform/resolvers/zod'
 
-export const Route = createFileRoute("/_auth/_layout/confirm-password")({
+export const Route = createFileRoute('/_auth/confirm-password')({
   component: RouteComponent,
   validateSearch: (search) => {
-    const token = search?.token;
+    const token = search?.token
 
     return {
-      token: String(token) || "",
-    };
+      token: String(token) || '',
+    }
   },
-});
+})
 
 function RouteComponent() {
-  const { token } = Route.useSearch();
-  const navigate = useNavigate();
+  const { token } = Route.useSearch()
+  const navigate = useNavigate()
 
   const mutation = useMutation({
     mutationFn: (formData: ConfirmPasswordSchema) =>
       confirmForgotPassword(formData, token),
     onSuccess() {
       navigate({
-        to: "/login",
-      });
+        to: '/login',
+      })
     },
-  });
+  })
 
   const { register, handleSubmit, formState } = useForm<ConfirmPasswordSchema>({
     resolver: zodResolver(confirmPasswordSchema),
-  });
+  })
 
   const onSubmit: SubmitHandler<ConfirmPasswordSchema> = async (data) => {
-    mutation.mutate(data);
-  };
+    mutation.mutate(data)
+  }
 
   return (
     <Card>
@@ -64,7 +64,7 @@ function RouteComponent() {
         <form className="space-y-3" onSubmit={handleSubmit(onSubmit)}>
           <div className="space-y-3">
             <Label htmlFor="email">Email</Label>
-            <Input {...register("email")} placeholder="Enter your email" />
+            <Input {...register('email')} placeholder="Enter your email" />
             {formState.errors.email && (
               <p className="text-destructive">
                 {formState.errors.email.message}
@@ -75,7 +75,7 @@ function RouteComponent() {
             <Label htmlFor="password">Password</Label>
             <Input
               type="password"
-              {...register("password")}
+              {...register('password')}
               placeholder="Enter your password"
             />
 
@@ -89,7 +89,7 @@ function RouteComponent() {
             <Label htmlFor="confirmPassword">Confirm Password</Label>
             <Input
               type="password"
-              {...register("confirmPassword")}
+              {...register('confirmPassword')}
               placeholder="Enter your confirm password"
             />
             {formState.errors.confirmPassword && (
@@ -107,10 +107,10 @@ function RouteComponent() {
           )}
 
           <Button type="submit" className="w-full">
-            {formState.isSubmitting ? "Confirming..." : "Confirm"}
+            {formState.isSubmitting ? 'Confirming...' : 'Confirm'}
           </Button>
         </form>
       </CardContent>
     </Card>
-  );
+  )
 }

@@ -90,8 +90,10 @@ export class UsersService {
   async updateUser(user: UserDocument, updateUserDto: UpdateUserDto) {
     if (updateUserDto.fullName)
       user.fullName = updateUserDto.fullName;
+
     if (updateUserDto.phoneNumber)
       user.phoneNumber = updateUserDto.phoneNumber;
+
     if (updateUserDto.bio) user.bio = updateUserDto.bio;
 
     try {

@@ -1,4 +1,5 @@
 import { IsEmail, IsEnum, IsStrongPassword } from 'class-validator';
+import { Role } from '../entities/user.entity';
 
 export class CreateUserDto {
   @IsEmail()
@@ -7,6 +8,6 @@ export class CreateUserDto {
   @IsStrongPassword()
   password: string;
 
-  @IsEnum(['admin', 'user'])
-  role: 'admin' | 'user';
+  @IsEnum(Role)
+  role: Role;
 }

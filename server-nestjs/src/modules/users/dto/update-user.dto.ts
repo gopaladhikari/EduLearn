@@ -6,7 +6,7 @@ class updateUserDto {
   fullName: string;
 
   @IsPhoneNumber()
-  phoneNumber: string;
+  phoneNumber: number;
 
   @IsString()
   bio: string;

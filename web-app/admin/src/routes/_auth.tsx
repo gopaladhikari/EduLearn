@@ -1,9 +1,11 @@
 import { Header } from "@/components/partials/Header";
 import { MaxWithWrapper } from "@/components/partials/MaxWithWrapper";
+import { NotFound } from "@/components/partials/NotFound";
 import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_auth")({
   component: RouteComponent,
+  notFoundComponent: NotFound,
 });
 
 function RouteComponent() {

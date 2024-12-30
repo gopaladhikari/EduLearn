@@ -1,12 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "@tanstack/react-router";
 import { MaxWithWrapper } from "./MaxWithWrapper";
-import { Header } from "./Header";
 
 export function NotFound() {
   return (
     <>
-      <Header />
       <main className="flex">
         <MaxWithWrapper as="section" className="mt-16 lg:mt-24">
           <div className="max-w-screen-sm text-center">

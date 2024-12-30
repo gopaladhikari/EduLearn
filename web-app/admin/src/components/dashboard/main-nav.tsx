@@ -8,7 +8,7 @@ export function MainNav({
   return (
     <nav className={className} {...props}>
       <menu className="flex items-center space-x-4 lg:space-x-6">
-        {menu.dashboard.map((item) => {
+        {menu.auth.map((item) => {
           return (
             <li key={item.name}>
               <Link

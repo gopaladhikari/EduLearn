@@ -10,11 +10,11 @@ export const menu = {
     { name: "Register", to: "/register" },
   ],
 
-  dashboard: [
+  auth: [
     { name: "Dashboard", to: "/dashboard" },
-    { name: "Customers", to: "/dashboard/customers" },
-    { name: "Courses", to: "/dashboard/courses" },
-    { name: "Settings", to: "/dashboard/settings" },
+    { name: "Customers", to: "/customers" },
+    { name: "Courses", to: "/courses" },
+    { name: "Settings", to: "/settings" },
   ],
 
   settings: [

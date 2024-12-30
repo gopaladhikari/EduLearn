@@ -1,11 +1,6 @@
-import {
-  createFileRoute,
-  Link,
-  redirect,
-  useNavigate,
-} from '@tanstack/react-router'
-import { useForm } from '@tanstack/react-form'
-import { Button } from '@/components/ui/button'
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useForm } from "@tanstack/react-form";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -13,49 +8,43 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card'
-import { Label } from '@/components/ui/label'
-import { Input } from '@/components/ui/input'
-import { useMutation } from '@tanstack/react-query'
-import { registerMutation } from '@/lib/mutations/auth.mutation'
-import { useSeo } from '@/hooks/useSeo'
-import { useAuth } from '@/context/AuthContext'
+} from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { useMutation } from "@tanstack/react-query";
+import { registerMutation } from "@/lib/mutations/auth.mutation";
+import { useSeo } from "@/hooks/useSeo";
+import { useAuth } from "@/context/AuthContext";
 
-export const Route = createFileRoute('/_auth/register')({
+export const Route = createFileRoute("/_auth/register")({
   component: RouteComponent,
-  async beforeLoad({ context }) {
-    if (context.isLoggedIn)
-      throw redirect({
-        to: '/dashboard',
-      })
-  },
-})
+});
 
 function RouteComponent() {
-  const { isLoggedIn } = useAuth()
-  const navigate = useNavigate()
+  const { isLoggedIn } = useAuth();
+  const navigate = useNavigate();
   useSeo({
-    title: 'Register',
-    description: 'Register to your account',
-  })
+    title: "Register",
+    description: "Register to your account",
+  });
   const form = useForm({
     defaultValues: {
-      email: '',
-      password: '',
+      email: "",
+      password: "",
     },
     onSubmit: ({ value }) => {
-      return mutatation.mutate(value)
+      return mutatation.mutate(value);
     },
-  })
+  });
 
   const mutatation = useMutation({
     mutationFn: registerMutation,
     onSuccess() {
-      form.reset()
+      form.reset();
     },
-  })
+  });
 
-  if (isLoggedIn) navigate({ to: '/dashboard' })
+  if (isLoggedIn) navigate({ to: "/dashboard" });
 
   return (
     <Card>
@@ -73,17 +62,17 @@ function RouteComponent() {
               validators={{
                 onChange: ({ value }) =>
                   !value
-                    ? 'A first name is required'
+                    ? "A first name is required"
                     : value.length < 3
-                      ? 'First name must be at least 3 characters'
+                      ? "First name must be at least 3 characters"
                       : undefined,
                 onChangeAsyncDebounceMs: 500,
                 onChangeAsync: async ({ value }) => {
-                  await new Promise((resolve) => setTimeout(resolve, 1000))
+                  await new Promise((resolve) => setTimeout(resolve, 1000));
                   return (
-                    value.includes('error') &&
+                    value.includes("error") &&
                     'No "error" allowed in first name'
-                  )
+                  );
                 },
               }}
               children={(field) => {
@@ -100,7 +89,7 @@ function RouteComponent() {
                       onChange={(e) => field.handleChange(e.target.value)}
                     />
                   </>
-                )
+                );
               }}
             />
           </div>
@@ -110,17 +99,17 @@ function RouteComponent() {
               validators={{
                 onChange: ({ value }) =>
                   !value
-                    ? 'Full name is required'
+                    ? "Full name is required"
                     : value.length < 3
-                      ? 'First name must be at least 3 characters'
+                      ? "First name must be at least 3 characters"
                       : undefined,
                 onChangeAsyncDebounceMs: 500,
                 onChangeAsync: async ({ value }) => {
-                  await new Promise((resolve) => setTimeout(resolve, 1000))
+                  await new Promise((resolve) => setTimeout(resolve, 1000));
                   return (
-                    value.includes('error') &&
+                    value.includes("error") &&
                     'No "error" allowed in first name'
-                  )
+                  );
                 },
               }}
               children={(field) => {
@@ -137,7 +126,7 @@ function RouteComponent() {
                       onChange={(e) => field.handleChange(e.target.value)}
                     />
                   </>
-                )
+                );
               }}
             />
           </div>
@@ -157,9 +146,9 @@ function RouteComponent() {
 
       <CardFooter>
         <Button type="button" className="w-full" onClick={form.handleSubmit}>
-          {form.state.isSubmitting ? 'Sign Uping...' : 'Sign Up'}
+          {form.state.isSubmitting ? "Sign Uping..." : "Sign Up"}
         </Button>
       </CardFooter>
     </Card>
-  )
+  );
 }

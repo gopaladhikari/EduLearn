@@ -1,6 +1,6 @@
-import type { User } from "@/types";
+import type { CustomResponse, User } from "@/types";
 
-export const me = async (): Promise<User> => {
+export const me = async (): CustomResponse<User> => {
   const res = await fetch("/api/users/me");
 
   const data = await res.json();

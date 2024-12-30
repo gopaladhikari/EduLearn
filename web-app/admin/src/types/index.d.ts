@@ -29,3 +29,10 @@ export type User = {
   updatedAt: string;
   __v: number;
 };
+
+export type CustomResponse<T> = Promise<{
+  data: T;
+  status: boolean;
+  message: string;
+  path: string;
+}>;

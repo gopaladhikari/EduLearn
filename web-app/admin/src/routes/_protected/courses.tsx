@@ -38,18 +38,18 @@ import { ArrowUpDown, PlusCircle, Search } from "lucide-react";
 import { TableSkeleton } from "@/components/skeletons/TableSkeleton";
 import { Button } from "@/components/ui/button";
 
-export const Route = createFileRoute(
-  "/_protected/_dashboard/dashboard/courses",
-)({
+export const Route = createFileRoute("/_protected/courses")({
   component: RouteComponent,
 });
 
-const itemsPerPage = [10, 20, 30, 40, 50, 100];
+const itemsPerPageArray = [10, 20, 30, 40, 50, 100];
 
 function RouteComponent() {
   const coulmnHelper = createColumnHelper<Course>();
   const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState("");
+
+  const itemsPerPage = sessionStorage.getItem("itemsPerPage") || "10";
 
   const { data, isPending } = useQuery({
     queryKey: ["courses"],
@@ -86,10 +86,18 @@ function RouteComponent() {
   );
 
   const table = useReactTable({
-    data: data as Course[],
+    data: data?.data as Course[],
     columns,
     getCoreRowModel: getCoreRowModel(),
-    state: { sorting, globalFilter },
+    state: {
+      sorting,
+      globalFilter,
+    },
+    initialState: {
+      pagination: {
+        pageSize: parseInt(itemsPerPage),
+      },
+    },
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -180,7 +188,8 @@ function RouteComponent() {
       )}
       <Select
         onValueChange={(value) => {
-          table.setPageSize(Number(value));
+          sessionStorage.setItem("itemsPerPage", value);
+          table.setPageSize(parseInt(value));
         }}
         defaultValue={String(table.getState().pagination.pageSize)}
       >
@@ -190,7 +199,7 @@ function RouteComponent() {
         <SelectContent>
           <SelectGroup>
             <SelectLabel>Items per page</SelectLabel>
-            {itemsPerPage.map((item) => (
+            {itemsPerPageArray.map((item) => (
               <SelectItem key={item} value={String(item)}>
                 {item}
               </SelectItem>

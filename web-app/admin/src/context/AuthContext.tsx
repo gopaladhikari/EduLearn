@@ -28,7 +28,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
   return (
     <AuthContext
       value={{
-        user: data,
+        user: data?.data,
         isLoggedIn,
       }}
     >

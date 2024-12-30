@@ -1,6 +1,6 @@
-import type { Course } from "@/types";
+import type { Course, CustomResponse } from "@/types";
 
-export const getAllCourses = async (): Promise<Course[]> => {
+export const getAllCourses = async (): CustomResponse<Course[]> => {
   const res = await fetch("/api/courses");
 
   const data = await res.json();
@@ -10,7 +10,7 @@ export const getAllCourses = async (): Promise<Course[]> => {
   return data;
 };
 
-export const getCourseById = async (id: string): Promise<Course> => {
+export const getCourseById = async (id: string): CustomResponse<Course> => {
   const res = await fetch(`/api/courses/${id}`);
 
   const data = await res.json();

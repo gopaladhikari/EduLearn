@@ -17,16 +17,15 @@ import { Route as AuthImport } from './routes/_auth'
 import { Route as UnprotectedIndexImport } from './routes/_unprotected/index'
 import { Route as UnprotectedTermsAndConditionImport } from './routes/_unprotected/terms-and-condition'
 import { Route as UnprotectedPrivacyPolicyImport } from './routes/_unprotected/privacy-policy'
-import { Route as ProtectedDashboardImport } from './routes/_protected/_dashboard'
+import { Route as ProtectedSettingsImport } from './routes/_protected/settings'
+import { Route as ProtectedDashboardImport } from './routes/_protected/dashboard'
+import { Route as ProtectedCustomersImport } from './routes/_protected/customers'
+import { Route as ProtectedCoursesImport } from './routes/_protected/courses'
 import { Route as AuthVerifyEmailImport } from './routes/_auth/verify-email'
 import { Route as AuthRegisterImport } from './routes/_auth/register'
 import { Route as AuthLoginImport } from './routes/_auth/login'
 import { Route as AuthForgotPasswordImport } from './routes/_auth/forgot-password'
 import { Route as AuthConfirmPasswordImport } from './routes/_auth/confirm-password'
-import { Route as ProtectedDashboardDashboardIndexImport } from './routes/_protected/_dashboard/dashboard/index'
-import { Route as ProtectedDashboardDashboardSettingsImport } from './routes/_protected/_dashboard/dashboard/settings'
-import { Route as ProtectedDashboardDashboardCustomersImport } from './routes/_protected/_dashboard/dashboard/customers'
-import { Route as ProtectedDashboardDashboardCoursesImport } from './routes/_protected/_dashboard/dashboard/courses'
 
 // Create/Update Routes
 
@@ -64,8 +63,27 @@ const UnprotectedPrivacyPolicyRoute = UnprotectedPrivacyPolicyImport.update({
   getParentRoute: () => UnprotectedRoute,
 } as any)
 
+const ProtectedSettingsRoute = ProtectedSettingsImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+
 const ProtectedDashboardRoute = ProtectedDashboardImport.update({
-  id: '/_dashboard',
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+
+const ProtectedCustomersRoute = ProtectedCustomersImport.update({
+  id: '/customers',
+  path: '/customers',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+
+const ProtectedCoursesRoute = ProtectedCoursesImport.update({
+  id: '/courses',
+  path: '/courses',
   getParentRoute: () => ProtectedRoute,
 } as any)
 
@@ -98,34 +116,6 @@ const AuthConfirmPasswordRoute = AuthConfirmPasswordImport.update({
   path: '/confirm-password',
   getParentRoute: () => AuthRoute,
 } as any)
-
-const ProtectedDashboardDashboardIndexRoute =
-  ProtectedDashboardDashboardIndexImport.update({
-    id: '/dashboard/',
-    path: '/dashboard/',
-    getParentRoute: () => ProtectedDashboardRoute,
-  } as any)
-
-const ProtectedDashboardDashboardSettingsRoute =
-  ProtectedDashboardDashboardSettingsImport.update({
-    id: '/dashboard/settings',
-    path: '/dashboard/settings',
-    getParentRoute: () => ProtectedDashboardRoute,
-  } as any)
-
-const ProtectedDashboardDashboardCustomersRoute =
-  ProtectedDashboardDashboardCustomersImport.update({
-    id: '/dashboard/customers',
-    path: '/dashboard/customers',
-    getParentRoute: () => ProtectedDashboardRoute,
-  } as any)
-
-const ProtectedDashboardDashboardCoursesRoute =
-  ProtectedDashboardDashboardCoursesImport.update({
-    id: '/dashboard/courses',
-    path: '/dashboard/courses',
-    getParentRoute: () => ProtectedDashboardRoute,
-  } as any)
 
 // Populate the FileRoutesByPath interface
 
@@ -187,11 +177,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthVerifyEmailImport
       parentRoute: typeof AuthImport
     }
-    '/_protected/_dashboard': {
-      id: '/_protected/_dashboard'
-      path: ''
-      fullPath: ''
+    '/_protected/courses': {
+      id: '/_protected/courses'
+      path: '/courses'
+      fullPath: '/courses'
+      preLoaderRoute: typeof ProtectedCoursesImport
+      parentRoute: typeof ProtectedImport
+    }
+    '/_protected/customers': {
+      id: '/_protected/customers'
+      path: '/customers'
+      fullPath: '/customers'
+      preLoaderRoute: typeof ProtectedCustomersImport
+      parentRoute: typeof ProtectedImport
+    }
+    '/_protected/dashboard': {
+      id: '/_protected/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
       preLoaderRoute: typeof ProtectedDashboardImport
+      parentRoute: typeof ProtectedImport
+    }
+    '/_protected/settings': {
+      id: '/_protected/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof ProtectedSettingsImport
       parentRoute: typeof ProtectedImport
     }
     '/_unprotected/privacy-policy': {
@@ -214,34 +225,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof UnprotectedIndexImport
       parentRoute: typeof UnprotectedImport
-    }
-    '/_protected/_dashboard/dashboard/courses': {
-      id: '/_protected/_dashboard/dashboard/courses'
-      path: '/dashboard/courses'
-      fullPath: '/dashboard/courses'
-      preLoaderRoute: typeof ProtectedDashboardDashboardCoursesImport
-      parentRoute: typeof ProtectedDashboardImport
-    }
-    '/_protected/_dashboard/dashboard/customers': {
-      id: '/_protected/_dashboard/dashboard/customers'
-      path: '/dashboard/customers'
-      fullPath: '/dashboard/customers'
-      preLoaderRoute: typeof ProtectedDashboardDashboardCustomersImport
-      parentRoute: typeof ProtectedDashboardImport
-    }
-    '/_protected/_dashboard/dashboard/settings': {
-      id: '/_protected/_dashboard/dashboard/settings'
-      path: '/dashboard/settings'
-      fullPath: '/dashboard/settings'
-      preLoaderRoute: typeof ProtectedDashboardDashboardSettingsImport
-      parentRoute: typeof ProtectedDashboardImport
-    }
-    '/_protected/_dashboard/dashboard/': {
-      id: '/_protected/_dashboard/dashboard/'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof ProtectedDashboardDashboardIndexImport
-      parentRoute: typeof ProtectedDashboardImport
     }
   }
 }
@@ -266,32 +249,18 @@ const AuthRouteChildren: AuthRouteChildren = {
 
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
-interface ProtectedDashboardRouteChildren {
-  ProtectedDashboardDashboardCoursesRoute: typeof ProtectedDashboardDashboardCoursesRoute
-  ProtectedDashboardDashboardCustomersRoute: typeof ProtectedDashboardDashboardCustomersRoute
-  ProtectedDashboardDashboardSettingsRoute: typeof ProtectedDashboardDashboardSettingsRoute
-  ProtectedDashboardDashboardIndexRoute: typeof ProtectedDashboardDashboardIndexRoute
-}
-
-const ProtectedDashboardRouteChildren: ProtectedDashboardRouteChildren = {
-  ProtectedDashboardDashboardCoursesRoute:
-    ProtectedDashboardDashboardCoursesRoute,
-  ProtectedDashboardDashboardCustomersRoute:
-    ProtectedDashboardDashboardCustomersRoute,
-  ProtectedDashboardDashboardSettingsRoute:
-    ProtectedDashboardDashboardSettingsRoute,
-  ProtectedDashboardDashboardIndexRoute: ProtectedDashboardDashboardIndexRoute,
-}
-
-const ProtectedDashboardRouteWithChildren =
-  ProtectedDashboardRoute._addFileChildren(ProtectedDashboardRouteChildren)
-
 interface ProtectedRouteChildren {
-  ProtectedDashboardRoute: typeof ProtectedDashboardRouteWithChildren
+  ProtectedCoursesRoute: typeof ProtectedCoursesRoute
+  ProtectedCustomersRoute: typeof ProtectedCustomersRoute
+  ProtectedDashboardRoute: typeof ProtectedDashboardRoute
+  ProtectedSettingsRoute: typeof ProtectedSettingsRoute
 }
 
 const ProtectedRouteChildren: ProtectedRouteChildren = {
-  ProtectedDashboardRoute: ProtectedDashboardRouteWithChildren,
+  ProtectedCoursesRoute: ProtectedCoursesRoute,
+  ProtectedCustomersRoute: ProtectedCustomersRoute,
+  ProtectedDashboardRoute: ProtectedDashboardRoute,
+  ProtectedSettingsRoute: ProtectedSettingsRoute,
 }
 
 const ProtectedRouteWithChildren = ProtectedRoute._addFileChildren(
@@ -315,35 +284,35 @@ const UnprotectedRouteWithChildren = UnprotectedRoute._addFileChildren(
 )
 
 export interface FileRoutesByFullPath {
-  '': typeof ProtectedDashboardRouteWithChildren
+  '': typeof UnprotectedRouteWithChildren
   '/confirm-password': typeof AuthConfirmPasswordRoute
   '/forgot-password': typeof AuthForgotPasswordRoute
   '/login': typeof AuthLoginRoute
   '/register': typeof AuthRegisterRoute
   '/verify-email': typeof AuthVerifyEmailRoute
+  '/courses': typeof ProtectedCoursesRoute
+  '/customers': typeof ProtectedCustomersRoute
+  '/dashboard': typeof ProtectedDashboardRoute
+  '/settings': typeof ProtectedSettingsRoute
   '/privacy-policy': typeof UnprotectedPrivacyPolicyRoute
   '/terms-and-condition': typeof UnprotectedTermsAndConditionRoute
   '/': typeof UnprotectedIndexRoute
-  '/dashboard/courses': typeof ProtectedDashboardDashboardCoursesRoute
-  '/dashboard/customers': typeof ProtectedDashboardDashboardCustomersRoute
-  '/dashboard/settings': typeof ProtectedDashboardDashboardSettingsRoute
-  '/dashboard': typeof ProtectedDashboardDashboardIndexRoute
 }
 
 export interface FileRoutesByTo {
-  '': typeof ProtectedDashboardRouteWithChildren
+  '': typeof ProtectedRouteWithChildren
   '/confirm-password': typeof AuthConfirmPasswordRoute
   '/forgot-password': typeof AuthForgotPasswordRoute
   '/login': typeof AuthLoginRoute
   '/register': typeof AuthRegisterRoute
   '/verify-email': typeof AuthVerifyEmailRoute
+  '/courses': typeof ProtectedCoursesRoute
+  '/customers': typeof ProtectedCustomersRoute
+  '/dashboard': typeof ProtectedDashboardRoute
+  '/settings': typeof ProtectedSettingsRoute
   '/privacy-policy': typeof UnprotectedPrivacyPolicyRoute
   '/terms-and-condition': typeof UnprotectedTermsAndConditionRoute
   '/': typeof UnprotectedIndexRoute
-  '/dashboard/courses': typeof ProtectedDashboardDashboardCoursesRoute
-  '/dashboard/customers': typeof ProtectedDashboardDashboardCustomersRoute
-  '/dashboard/settings': typeof ProtectedDashboardDashboardSettingsRoute
-  '/dashboard': typeof ProtectedDashboardDashboardIndexRoute
 }
 
 export interface FileRoutesById {
@@ -356,14 +325,13 @@ export interface FileRoutesById {
   '/_auth/login': typeof AuthLoginRoute
   '/_auth/register': typeof AuthRegisterRoute
   '/_auth/verify-email': typeof AuthVerifyEmailRoute
-  '/_protected/_dashboard': typeof ProtectedDashboardRouteWithChildren
+  '/_protected/courses': typeof ProtectedCoursesRoute
+  '/_protected/customers': typeof ProtectedCustomersRoute
+  '/_protected/dashboard': typeof ProtectedDashboardRoute
+  '/_protected/settings': typeof ProtectedSettingsRoute
   '/_unprotected/privacy-policy': typeof UnprotectedPrivacyPolicyRoute
   '/_unprotected/terms-and-condition': typeof UnprotectedTermsAndConditionRoute
   '/_unprotected/': typeof UnprotectedIndexRoute
-  '/_protected/_dashboard/dashboard/courses': typeof ProtectedDashboardDashboardCoursesRoute
-  '/_protected/_dashboard/dashboard/customers': typeof ProtectedDashboardDashboardCustomersRoute
-  '/_protected/_dashboard/dashboard/settings': typeof ProtectedDashboardDashboardSettingsRoute
-  '/_protected/_dashboard/dashboard/': typeof ProtectedDashboardDashboardIndexRoute
 }
 
 export interface FileRouteTypes {
@@ -375,13 +343,13 @@ export interface FileRouteTypes {
     | '/login'
     | '/register'
     | '/verify-email'
+    | '/courses'
+    | '/customers'
+    | '/dashboard'
+    | '/settings'
     | '/privacy-policy'
     | '/terms-and-condition'
     | '/'
-    | '/dashboard/courses'
-    | '/dashboard/customers'
-    | '/dashboard/settings'
-    | '/dashboard'
   fileRoutesByTo: FileRoutesByTo
   to:
     | ''
@@ -390,13 +358,13 @@ export interface FileRouteTypes {
     | '/login'
     | '/register'
     | '/verify-email'
+    | '/courses'
+    | '/customers'
+    | '/dashboard'
+    | '/settings'
     | '/privacy-policy'
     | '/terms-and-condition'
     | '/'
-    | '/dashboard/courses'
-    | '/dashboard/customers'
-    | '/dashboard/settings'
-    | '/dashboard'
   id:
     | '__root__'
     | '/_auth'
@@ -407,14 +375,13 @@ export interface FileRouteTypes {
     | '/_auth/login'
     | '/_auth/register'
     | '/_auth/verify-email'
-    | '/_protected/_dashboard'
+    | '/_protected/courses'
+    | '/_protected/customers'
+    | '/_protected/dashboard'
+    | '/_protected/settings'
     | '/_unprotected/privacy-policy'
     | '/_unprotected/terms-and-condition'
     | '/_unprotected/'
-    | '/_protected/_dashboard/dashboard/courses'
-    | '/_protected/_dashboard/dashboard/customers'
-    | '/_protected/_dashboard/dashboard/settings'
-    | '/_protected/_dashboard/dashboard/'
   fileRoutesById: FileRoutesById
 }
 
@@ -458,7 +425,10 @@ export const routeTree = rootRoute
     "/_protected": {
       "filePath": "_protected.tsx",
       "children": [
-        "/_protected/_dashboard"
+        "/_protected/courses",
+        "/_protected/customers",
+        "/_protected/dashboard",
+        "/_protected/settings"
       ]
     },
     "/_unprotected": {
@@ -489,15 +459,21 @@ export const routeTree = rootRoute
       "filePath": "_auth/verify-email.tsx",
       "parent": "/_auth"
     },
-    "/_protected/_dashboard": {
-      "filePath": "_protected/_dashboard.tsx",
-      "parent": "/_protected",
-      "children": [
-        "/_protected/_dashboard/dashboard/courses",
-        "/_protected/_dashboard/dashboard/customers",
-        "/_protected/_dashboard/dashboard/settings",
-        "/_protected/_dashboard/dashboard/"
-      ]
+    "/_protected/courses": {
+      "filePath": "_protected/courses.tsx",
+      "parent": "/_protected"
+    },
+    "/_protected/customers": {
+      "filePath": "_protected/customers.tsx",
+      "parent": "/_protected"
+    },
+    "/_protected/dashboard": {
+      "filePath": "_protected/dashboard.tsx",
+      "parent": "/_protected"
+    },
+    "/_protected/settings": {
+      "filePath": "_protected/settings.tsx",
+      "parent": "/_protected"
     },
     "/_unprotected/privacy-policy": {
       "filePath": "_unprotected/privacy-policy.tsx",
@@ -510,22 +486,6 @@ export const routeTree = rootRoute
     "/_unprotected/": {
       "filePath": "_unprotected/index.tsx",
       "parent": "/_unprotected"
-    },
-    "/_protected/_dashboard/dashboard/courses": {
-      "filePath": "_protected/_dashboard/dashboard/courses.tsx",
-      "parent": "/_protected/_dashboard"
-    },
-    "/_protected/_dashboard/dashboard/customers": {
-      "filePath": "_protected/_dashboard/dashboard/customers.tsx",
-      "parent": "/_protected/_dashboard"
-    },
-    "/_protected/_dashboard/dashboard/settings": {
-      "filePath": "_protected/_dashboard/dashboard/settings.tsx",
-      "parent": "/_protected/_dashboard"
-    },
-    "/_protected/_dashboard/dashboard/": {
-      "filePath": "_protected/_dashboard/dashboard/index.tsx",
-      "parent": "/_protected/_dashboard"
     }
   }
 }

@@ -53,6 +53,7 @@ export class CoursesService {
               quality: 'auto',
               fetch_format: 'auto',
             },
+            eager_async: true,
           },
         );
 
@@ -71,7 +72,10 @@ export class CoursesService {
 
   async getAllCourses() {
     try {
-      const courses = await this.Course.find();
+      const courses = await this.Course.find().populate({
+        path: 'uploadedBy',
+        select: ['fullName', 'email'],
+      });
 
       if (!courses.length)
         throw new NotFoundException('No course found');

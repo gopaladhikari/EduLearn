@@ -4,6 +4,8 @@ import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import type { AuthContextType } from "@/context/AuthContext";
 import { Footer } from "@/components/partials/Footer";
+import { NotFound } from "@/components/partials/NotFound";
+import { ErrorPage } from "@/components/partials/Errorpage";
 
 export const Route = createRootRouteWithContext<AuthContextType>()({
   component: () => {
@@ -18,4 +20,6 @@ export const Route = createRootRouteWithContext<AuthContextType>()({
       </>
     );
   },
+  notFoundComponent: NotFound,
+  errorComponent: ErrorPage,
 });

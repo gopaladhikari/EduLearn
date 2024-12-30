@@ -29,9 +29,11 @@ function RouteComponent() {
           </div>
         </MaxWithWrapper>
       </div>
-      <MaxWithWrapper>
-        <Outlet />
-      </MaxWithWrapper>
+      <main>
+        <MaxWithWrapper className="space-y-2">
+          <Outlet />
+        </MaxWithWrapper>
+      </main>
     </>
   );
 }

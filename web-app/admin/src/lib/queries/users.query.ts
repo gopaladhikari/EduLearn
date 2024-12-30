@@ -1,4 +1,6 @@
-export const me = async () => {
+import type { User } from "@/types";
+
+export const me = async (): Promise<User> => {
   const res = await fetch("/api/users/me");
 
   const data = await res.json();

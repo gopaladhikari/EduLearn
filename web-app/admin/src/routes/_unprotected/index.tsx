@@ -29,6 +29,7 @@ function RouteComponent() {
   return (
     <>
       <Header />
+
       <MaxWithWrapper className="space-y-5">
         <div className="relative flex flex-col items-center justify-center pb-12 pt-12 md:pt-0">
           <div className="relative isolate overflow-hidden bg-background">

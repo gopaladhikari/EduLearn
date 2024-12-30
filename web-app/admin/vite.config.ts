@@ -19,7 +19,6 @@ export default defineConfig(({ mode }) => {
         "/api": {
           target: backendApi,
           changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/api/, "/api/v1"),
         },
       },
     },

@@ -13,7 +13,7 @@ async function bootstrap() {
   app.useGlobalInterceptors(new ResponseInterceptor());
 
   app.use(cookieParser());
-  app.setGlobalPrefix('api/v1', {
+  app.setGlobalPrefix('api', {
     exclude: [
       {
         path: '/',

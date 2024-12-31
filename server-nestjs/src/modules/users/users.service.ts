@@ -31,6 +31,7 @@ export class UsersService {
 
     const token = this.jwtService.sign(payload, {
       secret: this.configService.getOrThrow('JWT_SECRET'),
+      expiresIn: '7d',
     });
     return token;
   }

@@ -12,7 +12,6 @@ import { compare } from 'bcrypt';
 import { MailService } from '../mail/mail.service';
 import type { Types } from 'mongoose';
 import type { ConfirmForgotPasswordDto } from './dto/confirm-forgot-password.dto';
-import { site } from 'src/config/constant';
 
 export type JwtPayload = {
   _id: Types.ObjectId;
@@ -37,6 +36,7 @@ export class AuthService {
 
     const token = this.jwtService.sign(payload, {
       secret: this.configService.getOrThrow('JWT_SECRET'),
+      expiresIn: '7d',
     });
     return token;
   }
@@ -55,7 +55,7 @@ export class AuthService {
 
   login(user: UserDocument, response: Response) {
     const date = new Date();
-    date.setMilliseconds(date.getTime() + 60 * 60 * 24 * 7 * 1000);
+    date.setMilliseconds(date.getTime() + 60 * 60 * 24 * 7 * 1000); // 7 days
 
     const accessToken = this.generateJwtToken(user);
 
@@ -63,8 +63,11 @@ export class AuthService {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       expires: date,
-      sameSite: 'strict',
-      domain: '.gopal-adhikari.com.np',
+      sameSite: 'lax',
+      domain:
+        process.env.NODE_ENV === 'production'
+          ? '.gopal-adhikari.com.np'
+          : 'localhost',
     });
 
     return user;
@@ -118,7 +121,10 @@ export class AuthService {
     user.jwtToken = undefined;
     await user.save();
     response.clearCookie('access_token', {
-      domain: '.gopal-adhikari.com.np',
+      domain:
+        process.env.NODE_ENV === 'production'
+          ? '.gopal-adhikari.com.np'
+          : 'localhost',
     });
     return user;
   }

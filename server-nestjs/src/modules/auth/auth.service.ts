@@ -12,6 +12,7 @@ import { compare } from 'bcrypt';
 import { MailService } from '../mail/mail.service';
 import type { Types } from 'mongoose';
 import type { ConfirmForgotPasswordDto } from './dto/confirm-forgot-password.dto';
+import { site } from 'src/config/constant';
 
 export type JwtPayload = {
   _id: Types.ObjectId;
@@ -63,13 +64,16 @@ export class AuthService {
       secure: process.env.NODE_ENV === 'production',
       expires: date,
       sameSite: 'strict',
+      domain: '.gopal-adhikari.com.np',
     });
 
     return user;
   }
 
   logout(response: Response) {
-    response.clearCookie('access_token');
+    response.clearCookie('access_token', {
+      domain: '.gopal-adhikari.com.np',
+    });
     return {
       status: 'ok',
       message: 'You have been logged out successfully',
@@ -114,10 +118,7 @@ export class AuthService {
     user.jwtToken = undefined;
     await user.save();
     response.clearCookie('access_token', {
-      domain:
-        process.env.NODE_ENV === 'production'
-          ? '.gopal-adhikari.com.np'
-          : 'localhost',
+      domain: '.gopal-adhikari.com.np',
     });
     return user;
   }

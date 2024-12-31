@@ -41,6 +41,7 @@ export class CoursesService {
       const course = new this.Course({
         ...createCourseDto,
         uploadedBy: user._id,
+        slug: createCourseDto.title,
       });
 
       if (video && fs.existsSync(localFilePath)) {
@@ -93,6 +94,7 @@ export class CoursesService {
   }
 
   update(id: number, updateCourseDto: UpdateCourseDto) {
+    console.log(updateCourseDto);
     return `This action updates a #${id} course`;
   }
 

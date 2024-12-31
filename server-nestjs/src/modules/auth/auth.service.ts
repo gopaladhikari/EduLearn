@@ -59,11 +59,13 @@ export class AuthService {
 
     const accessToken = this.generateJwtToken(user);
 
+    // TODO: Check samesite lax for production
+
     response.cookie('access_token', accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       expires: date,
-      sameSite: 'none',
+      sameSite: 'lax',
       domain:
         process.env.NODE_ENV === 'production'
           ? '.gopal-adhikari.com.np'

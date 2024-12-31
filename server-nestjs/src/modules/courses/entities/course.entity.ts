@@ -86,6 +86,9 @@ export class Course {
   @Prop({ required: true })
   description: string;
 
+  @Prop({ required: true, unique: true })
+  slug: string;
+
   @Prop({
     required: true,
     type: [

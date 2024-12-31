@@ -1,6 +1,6 @@
 import { getAllCourses } from "@/lib/queries/courses.query";
 import { useQuery } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import type { Course } from "@/types";
 import {
   Select,
@@ -38,7 +38,7 @@ import { ArrowUpDown, PlusCircle, Search } from "lucide-react";
 import { TableSkeleton } from "@/components/skeletons/TableSkeleton";
 import { Button } from "@/components/ui/button";
 
-export const Route = createFileRoute("/_protected/courses")({
+export const Route = createFileRoute("/_protected/courses/")({
   component: RouteComponent,
 });
 
@@ -48,6 +48,7 @@ function RouteComponent() {
   const coulmnHelper = createColumnHelper<Course>();
   const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState("");
+  const navigate = useNavigate();
 
   const itemsPerPage = sessionStorage.getItem("itemsPerPage") || "10";
 
@@ -58,9 +59,21 @@ function RouteComponent() {
   });
 
   const columnHeaderArray = useMemo(
-    (): Array<keyof Course> => ["createdAt", "title", "category", "price"],
+    (): Array<keyof Course> => [
+      "createdAt",
+      "title",
+      "category",
+      "price",
+    ],
     [],
   );
+
+  const handleNavigate = (slug: string) => {
+    navigate({
+      to: `/courses/$slug`,
+      params: { slug },
+    });
+  };
 
   const columns = useMemo(
     () =>
@@ -113,9 +126,15 @@ function RouteComponent() {
           <input
             id="filter-courses"
             placeholder="Filter courses..."
-            value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
+            value={
+              (table
+                .getColumn("title")
+                ?.getFilterValue() as string) ?? ""
+            }
             onChange={(event) =>
-              table.getColumn("title")?.setFilterValue(event.target.value)
+              table
+                .getColumn("title")
+                ?.setFilterValue(event.target.value)
             }
             className="bg-transparent placeholder:text-sm focus:outline-none group-active:border-primary"
           />
@@ -161,6 +180,7 @@ function RouteComponent() {
                   <TableRow
                     key={row.id}
                     data-state={row.getIsSelected() && "selected"}
+                    onClick={() => handleNavigate(row.original._id)}
                   >
                     {row.getVisibleCells().map((cell) => (
                       <TableCell key={cell.id}>

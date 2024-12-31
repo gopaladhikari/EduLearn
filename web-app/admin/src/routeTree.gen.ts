@@ -20,12 +20,13 @@ import { Route as UnprotectedPrivacyPolicyImport } from './routes/_unprotected/p
 import { Route as ProtectedSettingsImport } from './routes/_protected/settings'
 import { Route as ProtectedDashboardImport } from './routes/_protected/dashboard'
 import { Route as ProtectedCustomersImport } from './routes/_protected/customers'
-import { Route as ProtectedCoursesImport } from './routes/_protected/courses'
 import { Route as AuthVerifyEmailImport } from './routes/_auth/verify-email'
 import { Route as AuthRegisterImport } from './routes/_auth/register'
 import { Route as AuthLoginImport } from './routes/_auth/login'
 import { Route as AuthForgotPasswordImport } from './routes/_auth/forgot-password'
 import { Route as AuthConfirmPasswordImport } from './routes/_auth/confirm-password'
+import { Route as ProtectedCoursesIndexImport } from './routes/_protected/courses/index'
+import { Route as ProtectedCoursesSlugImport } from './routes/_protected/courses/$slug'
 
 // Create/Update Routes
 
@@ -81,12 +82,6 @@ const ProtectedCustomersRoute = ProtectedCustomersImport.update({
   getParentRoute: () => ProtectedRoute,
 } as any)
 
-const ProtectedCoursesRoute = ProtectedCoursesImport.update({
-  id: '/courses',
-  path: '/courses',
-  getParentRoute: () => ProtectedRoute,
-} as any)
-
 const AuthVerifyEmailRoute = AuthVerifyEmailImport.update({
   id: '/verify-email',
   path: '/verify-email',
@@ -115,6 +110,18 @@ const AuthConfirmPasswordRoute = AuthConfirmPasswordImport.update({
   id: '/confirm-password',
   path: '/confirm-password',
   getParentRoute: () => AuthRoute,
+} as any)
+
+const ProtectedCoursesIndexRoute = ProtectedCoursesIndexImport.update({
+  id: '/courses/',
+  path: '/courses/',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+
+const ProtectedCoursesSlugRoute = ProtectedCoursesSlugImport.update({
+  id: '/courses/$slug',
+  path: '/courses/$slug',
+  getParentRoute: () => ProtectedRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -177,13 +184,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthVerifyEmailImport
       parentRoute: typeof AuthImport
     }
-    '/_protected/courses': {
-      id: '/_protected/courses'
-      path: '/courses'
-      fullPath: '/courses'
-      preLoaderRoute: typeof ProtectedCoursesImport
-      parentRoute: typeof ProtectedImport
-    }
     '/_protected/customers': {
       id: '/_protected/customers'
       path: '/customers'
@@ -226,6 +226,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UnprotectedIndexImport
       parentRoute: typeof UnprotectedImport
     }
+    '/_protected/courses/$slug': {
+      id: '/_protected/courses/$slug'
+      path: '/courses/$slug'
+      fullPath: '/courses/$slug'
+      preLoaderRoute: typeof ProtectedCoursesSlugImport
+      parentRoute: typeof ProtectedImport
+    }
+    '/_protected/courses/': {
+      id: '/_protected/courses/'
+      path: '/courses'
+      fullPath: '/courses'
+      preLoaderRoute: typeof ProtectedCoursesIndexImport
+      parentRoute: typeof ProtectedImport
+    }
   }
 }
 
@@ -250,17 +264,19 @@ const AuthRouteChildren: AuthRouteChildren = {
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
 interface ProtectedRouteChildren {
-  ProtectedCoursesRoute: typeof ProtectedCoursesRoute
   ProtectedCustomersRoute: typeof ProtectedCustomersRoute
   ProtectedDashboardRoute: typeof ProtectedDashboardRoute
   ProtectedSettingsRoute: typeof ProtectedSettingsRoute
+  ProtectedCoursesSlugRoute: typeof ProtectedCoursesSlugRoute
+  ProtectedCoursesIndexRoute: typeof ProtectedCoursesIndexRoute
 }
 
 const ProtectedRouteChildren: ProtectedRouteChildren = {
-  ProtectedCoursesRoute: ProtectedCoursesRoute,
   ProtectedCustomersRoute: ProtectedCustomersRoute,
   ProtectedDashboardRoute: ProtectedDashboardRoute,
   ProtectedSettingsRoute: ProtectedSettingsRoute,
+  ProtectedCoursesSlugRoute: ProtectedCoursesSlugRoute,
+  ProtectedCoursesIndexRoute: ProtectedCoursesIndexRoute,
 }
 
 const ProtectedRouteWithChildren = ProtectedRoute._addFileChildren(
@@ -290,13 +306,14 @@ export interface FileRoutesByFullPath {
   '/login': typeof AuthLoginRoute
   '/register': typeof AuthRegisterRoute
   '/verify-email': typeof AuthVerifyEmailRoute
-  '/courses': typeof ProtectedCoursesRoute
   '/customers': typeof ProtectedCustomersRoute
   '/dashboard': typeof ProtectedDashboardRoute
   '/settings': typeof ProtectedSettingsRoute
   '/privacy-policy': typeof UnprotectedPrivacyPolicyRoute
   '/terms-and-condition': typeof UnprotectedTermsAndConditionRoute
   '/': typeof UnprotectedIndexRoute
+  '/courses/$slug': typeof ProtectedCoursesSlugRoute
+  '/courses': typeof ProtectedCoursesIndexRoute
 }
 
 export interface FileRoutesByTo {
@@ -306,13 +323,14 @@ export interface FileRoutesByTo {
   '/login': typeof AuthLoginRoute
   '/register': typeof AuthRegisterRoute
   '/verify-email': typeof AuthVerifyEmailRoute
-  '/courses': typeof ProtectedCoursesRoute
   '/customers': typeof ProtectedCustomersRoute
   '/dashboard': typeof ProtectedDashboardRoute
   '/settings': typeof ProtectedSettingsRoute
   '/privacy-policy': typeof UnprotectedPrivacyPolicyRoute
   '/terms-and-condition': typeof UnprotectedTermsAndConditionRoute
   '/': typeof UnprotectedIndexRoute
+  '/courses/$slug': typeof ProtectedCoursesSlugRoute
+  '/courses': typeof ProtectedCoursesIndexRoute
 }
 
 export interface FileRoutesById {
@@ -325,13 +343,14 @@ export interface FileRoutesById {
   '/_auth/login': typeof AuthLoginRoute
   '/_auth/register': typeof AuthRegisterRoute
   '/_auth/verify-email': typeof AuthVerifyEmailRoute
-  '/_protected/courses': typeof ProtectedCoursesRoute
   '/_protected/customers': typeof ProtectedCustomersRoute
   '/_protected/dashboard': typeof ProtectedDashboardRoute
   '/_protected/settings': typeof ProtectedSettingsRoute
   '/_unprotected/privacy-policy': typeof UnprotectedPrivacyPolicyRoute
   '/_unprotected/terms-and-condition': typeof UnprotectedTermsAndConditionRoute
   '/_unprotected/': typeof UnprotectedIndexRoute
+  '/_protected/courses/$slug': typeof ProtectedCoursesSlugRoute
+  '/_protected/courses/': typeof ProtectedCoursesIndexRoute
 }
 
 export interface FileRouteTypes {
@@ -343,13 +362,14 @@ export interface FileRouteTypes {
     | '/login'
     | '/register'
     | '/verify-email'
-    | '/courses'
     | '/customers'
     | '/dashboard'
     | '/settings'
     | '/privacy-policy'
     | '/terms-and-condition'
     | '/'
+    | '/courses/$slug'
+    | '/courses'
   fileRoutesByTo: FileRoutesByTo
   to:
     | ''
@@ -358,13 +378,14 @@ export interface FileRouteTypes {
     | '/login'
     | '/register'
     | '/verify-email'
-    | '/courses'
     | '/customers'
     | '/dashboard'
     | '/settings'
     | '/privacy-policy'
     | '/terms-and-condition'
     | '/'
+    | '/courses/$slug'
+    | '/courses'
   id:
     | '__root__'
     | '/_auth'
@@ -375,13 +396,14 @@ export interface FileRouteTypes {
     | '/_auth/login'
     | '/_auth/register'
     | '/_auth/verify-email'
-    | '/_protected/courses'
     | '/_protected/customers'
     | '/_protected/dashboard'
     | '/_protected/settings'
     | '/_unprotected/privacy-policy'
     | '/_unprotected/terms-and-condition'
     | '/_unprotected/'
+    | '/_protected/courses/$slug'
+    | '/_protected/courses/'
   fileRoutesById: FileRoutesById
 }
 
@@ -425,10 +447,11 @@ export const routeTree = rootRoute
     "/_protected": {
       "filePath": "_protected.tsx",
       "children": [
-        "/_protected/courses",
         "/_protected/customers",
         "/_protected/dashboard",
-        "/_protected/settings"
+        "/_protected/settings",
+        "/_protected/courses/$slug",
+        "/_protected/courses/"
       ]
     },
     "/_unprotected": {
@@ -459,10 +482,6 @@ export const routeTree = rootRoute
       "filePath": "_auth/verify-email.tsx",
       "parent": "/_auth"
     },
-    "/_protected/courses": {
-      "filePath": "_protected/courses.tsx",
-      "parent": "/_protected"
-    },
     "/_protected/customers": {
       "filePath": "_protected/customers.tsx",
       "parent": "/_protected"
@@ -486,6 +505,14 @@ export const routeTree = rootRoute
     "/_unprotected/": {
       "filePath": "_unprotected/index.tsx",
       "parent": "/_unprotected"
+    },
+    "/_protected/courses/$slug": {
+      "filePath": "_protected/courses/$slug.tsx",
+      "parent": "/_protected"
+    },
+    "/_protected/courses/": {
+      "filePath": "_protected/courses/index.tsx",
+      "parent": "/_protected"
     }
   }
 }

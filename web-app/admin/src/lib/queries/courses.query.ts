@@ -10,11 +10,11 @@ export const getAllCourses = async (): CustomResponse<Course[]> => {
   }
 };
 
-export const getCourseById = async (
-  id: string,
+export const getCourseBySlug = async (
+  slug: string,
 ): CustomResponse<Course> => {
   try {
-    const { data } = await axiosInstance.get(`/api/courses/${id}`);
+    const { data } = await axiosInstance.get(`/api/courses/${slug}`);
     return data;
   } catch (error) {
     throw new Error((error as Error).message);

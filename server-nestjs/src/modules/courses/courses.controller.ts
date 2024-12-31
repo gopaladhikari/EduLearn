@@ -52,9 +52,9 @@ export class CoursesController {
     return this.coursesService.getAllCourses();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.coursesService.findOne(+id);
+  @Get(':slug')
+  findOne(@Param('slug') slug: string) {
+    return this.coursesService.getCourseBySlug(slug);
   }
 
   @Patch(':id')

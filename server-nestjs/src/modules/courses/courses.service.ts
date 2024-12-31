@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -65,7 +61,7 @@ export class CoursesService {
 
       return course;
     } catch (error) {
-      throw new BadRequestException(error.message);
+      throw new Error(error.message);
     } finally {
       fs.unlinkSync(localFilePath);
     }
@@ -85,7 +81,26 @@ export class CoursesService {
     } catch (error) {
       if (error instanceof NotFoundException) throw error;
 
-      throw new BadRequestException(error.message);
+      throw new Error(error.message);
+    }
+  }
+
+  async getCourseBySlug(slug: string) {
+    try {
+      const course = await this.Course.findOne({
+        slug: slug,
+      }).populate({
+        path: 'instructor',
+        select: ['-password'],
+      });
+
+      if (!course) throw new NotFoundException('Course not found');
+
+      return course;
+    } catch (error) {
+      if (error instanceof NotFoundException) throw error;
+
+      throw new Error(error.message);
     }
   }
 

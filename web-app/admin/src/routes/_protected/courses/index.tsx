@@ -180,7 +180,8 @@ function RouteComponent() {
                   <TableRow
                     key={row.id}
                     data-state={row.getIsSelected() && "selected"}
-                    onClick={() => handleNavigate(row.original._id)}
+                    className="cursor-pointer"
+                    onClick={() => handleNavigate(row.original.slug)}
                   >
                     {row.getVisibleCells().map((cell) => (
                       <TableCell key={cell.id}>

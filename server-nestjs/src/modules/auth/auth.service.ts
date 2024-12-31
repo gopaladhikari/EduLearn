@@ -63,7 +63,7 @@ export class AuthService {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       expires: date,
-      sameSite: 'lax',
+      sameSite: 'none',
       domain:
         process.env.NODE_ENV === 'production'
           ? '.gopal-adhikari.com.np'

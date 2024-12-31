@@ -16,7 +16,6 @@ async function bootstrap() {
     origin: site.domain,
     credentials: true,
     optionsSuccessStatus: 204,
-    preflightContinue: true,
   });
   app.use(cookieParser());
   app.setGlobalPrefix('api', {

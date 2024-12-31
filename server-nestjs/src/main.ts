@@ -4,6 +4,7 @@ import { RequestMethod, ValidationPipe } from '@nestjs/common';
 import * as cookieParser from 'cookie-parser';
 import type { NestExpressApplication } from '@nestjs/platform-express';
 import { ResponseInterceptor } from './interceptors/response/response.interceptor';
+import { site } from './config/constant';
 
 async function bootstrap() {
   const app =
@@ -11,7 +12,10 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalInterceptors(new ResponseInterceptor());
-
+  app.enableCors({
+    origin: site.domain,
+    credentials: true,
+  });
   app.use(cookieParser());
   app.setGlobalPrefix('api', {
     exclude: [

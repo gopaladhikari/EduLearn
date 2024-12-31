@@ -113,7 +113,12 @@ export class AuthService {
     user.password = password;
     user.jwtToken = undefined;
     await user.save();
-    response.clearCookie('access_token');
+    response.clearCookie('access_token', {
+      domain:
+        process.env.NODE_ENV === 'production'
+          ? '.gopal-adhikari.com.np'
+          : 'localhost',
+    });
     return user;
   }
 

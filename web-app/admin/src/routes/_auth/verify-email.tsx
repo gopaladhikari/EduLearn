@@ -1,6 +1,6 @@
-import { createFileRoute, redirect } from '@tanstack/react-router'
-import { useForm } from '@tanstack/react-form'
-import { Button } from '@/components/ui/button'
+import { createFileRoute, redirect } from "@tanstack/react-router";
+import { useForm } from "@tanstack/react-form";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -8,44 +8,44 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card'
-import { Label } from '@/components/ui/label'
-import { Input } from '@/components/ui/input'
-import { verifyEmailMutation } from '@/lib/mutations/auth.mutation'
-import { useMutation } from '@tanstack/react-query'
+} from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { verifyEmailMutation } from "@/lib/mutations/auth.mutation";
+import { useMutation } from "@tanstack/react-query";
 
-export const Route = createFileRoute('/_auth/verify-email')({
+export const Route = createFileRoute("/_auth/verify-email")({
   component: RouteComponent,
 
   validateSearch: (search) => {
-    const token = search?.token
+    const token = search?.token;
 
     return {
-      token: String(token) || '',
-    }
+      token: String(token) || "",
+    };
   },
-})
+});
 
 function RouteComponent() {
-  const { token } = Route.useSearch()
+  const { token } = Route.useSearch();
 
   const form = useForm({
     defaultValues: {
-      email: '',
+      email: "",
     },
     onSubmit: ({ value: { email } }) => {
-      mutatation.mutate(email)
+      mutatation.mutate(email);
     },
-  })
+  });
 
   const mutatation = useMutation({
     mutationFn: (email: string) => verifyEmailMutation(email, token),
     onSuccess() {
       redirect({
-        to: '/login',
-      })
+        to: "/login",
+      });
     },
-  })
+  });
 
   return (
     <Card>
@@ -63,17 +63,19 @@ function RouteComponent() {
               validators={{
                 onChange: ({ value }) =>
                   !value
-                    ? 'A first name is required'
+                    ? "A first name is required"
                     : value.length < 3
-                      ? 'First name must be at least 3 characters'
+                      ? "First name must be at least 3 characters"
                       : undefined,
                 onChangeAsyncDebounceMs: 500,
                 onChangeAsync: async ({ value }) => {
-                  await new Promise((resolve) => setTimeout(resolve, 1000))
+                  await new Promise((resolve) =>
+                    setTimeout(resolve, 1000),
+                  );
                   return (
-                    value.includes('error') &&
+                    value.includes("error") &&
                     'No "error" allowed in first name'
-                  )
+                  );
                 },
               }}
               children={(field) => {
@@ -87,24 +89,28 @@ function RouteComponent() {
                       type="email"
                       onBlur={field.handleBlur}
                       placeholder="Enter your email"
-                      onChange={(e) => field.handleChange(e.target.value)}
+                      onChange={(e) =>
+                        field.handleChange(e.target.value)
+                      }
                     />
                   </>
-                )
+                );
               }}
             />
           </div>
           {mutatation.error && (
-            <div className="text-destructive">{mutatation.error.message}</div>
+            <div className="text-destructive">
+              {mutatation.error.message}
+            </div>
           )}
 
           <CardFooter>
             <Button type="submit" className="w-full">
-              {form.state.isSubmitting ? 'Submitting...' : 'Submit'}
+              {form.state.isSubmitting ? "Submitting..." : "Submit"}
             </Button>
           </CardFooter>
         </form>
       </CardContent>
     </Card>
-  )
+  );
 }

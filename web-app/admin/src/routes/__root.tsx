@@ -25,10 +25,9 @@ export const Route = createRootRouteWithContext<AuthContextType>()({
           <Outlet />
           <Footer />
           <ScrollRestoration />
-
-          <ReactQueryDevtools initialIsOpen={false} />
+          {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
         </ThemeProvider>
-        <TanStackRouterDevtools />
+        {import.meta.env.DEV && <TanStackRouterDevtools />}
       </>
     );
   },

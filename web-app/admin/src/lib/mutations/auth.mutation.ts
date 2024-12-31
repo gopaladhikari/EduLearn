@@ -1,3 +1,4 @@
+import { axiosInstance } from "@/config/axios";
 import type { ConfirmPasswordSchema } from "@/schemas/confirm-password.schema";
 
 type Data = {
@@ -6,103 +7,94 @@ type Data = {
 };
 
 export const registerMutation = async (formData: Data) => {
-  const res = await fetch("/api/users", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
+  console.log(formData);
+  try {
+    const { data } = await axiosInstance.post("/api/users", {
       ...formData,
       role: "admin",
-    }),
-  });
+    });
 
-  const data = await res.json();
-
-  if (!res.ok) throw new Error(data.message);
-
-  return data;
-};
-
-export const verifyEmailMutation = async (email: string, token: string) => {
-  const res = await fetch(`/api/auth/verify-email/${token}`, {
-    method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ email }),
-  });
-
-  const data = await res.json();
-
-  if (!res.ok) throw new Error(data.message);
-
-  return data;
+    return data;
+  } catch (error) {
+    throw new Error((error as Error).message);
+  }
 };
 
 export const loginMutation = async (formData: Data) => {
-  const res = await fetch("/api/auth/login", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(formData),
-  });
-
-  const data = await res.json();
-
-  if (!res.ok) throw new Error(data.message);
-
-  return data;
+  try {
+    const { data } = await axiosInstance.post(
+      "/api/auth/login",
+      formData,
+    );
+    return data;
+  } catch (error) {
+    console.log(error);
+    throw new Error((error as Error).message);
+  }
 };
 
 export const requestForgotPassword = async (email: string) => {
-  const res = await fetch(`/api/auth/forgot-password`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ email }),
-  });
+  try {
+    const { data } = await axiosInstance.post(
+      "/api/auth/forgot-password",
+      {
+        email,
+      },
+    );
 
-  const data = await res.json();
-
-  if (!res.ok) throw new Error(data.message);
-
-  return data;
+    return data;
+  } catch (error) {
+    throw new Error((error as Error).message);
+  }
 };
 
 export const confirmForgotPassword = async (
   formData: ConfirmPasswordSchema,
   token: string,
 ) => {
-  const res = await fetch(`/api/auth/forgot-password/${token}`, {
-    method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(formData),
-  });
+  try {
+    const { data } = await axiosInstance.post(
+      "/api/auth/confirm-forgot-password",
+      {
+        ...formData,
+        token,
+      },
+    );
 
-  const data = await res.json();
-
-  if (!res.ok) throw new Error(data.message);
-
-  return data;
+    return data;
+  } catch (error) {
+    throw new Error((error as Error).message);
+  }
 };
 
 export const resetPasswordMutation = async (formData: Data) => {
-  const res = await fetch(`/api/auth/reset-password`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(formData),
-  });
+  try {
+    const { data } = await axiosInstance.post(
+      "/api/auth/reset-password",
+      formData,
+    );
 
-  const data = await res.json();
+    return data;
+  } catch (error) {
+    throw new Error((error as Error).message);
+  }
+};
 
-  if (!res.ok) throw new Error(data.message);
+export const verifyEmailMutation = async (
+  email: string,
+  token: string,
+) => {
+  try {
+    const { data } = await axiosInstance.post(
+      "/api/auth/verify-email",
+      {
+        email,
+        token,
+      },
+    );
 
-  return data;
+    return data;
+  } catch (error) {
+    throw new Error((error as Error).message);
+  }
 };

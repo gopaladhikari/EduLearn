@@ -1,4 +1,8 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  Link,
+  useNavigate,
+} from "@tanstack/react-router";
 import { useForm } from "@tanstack/react-form";
 import { Button } from "@/components/ui/button";
 import {
@@ -72,7 +76,9 @@ function RouteComponent() {
                       : undefined,
                 onChangeAsyncDebounceMs: 500,
                 onChangeAsync: async ({ value }) => {
-                  await new Promise((resolve) => setTimeout(resolve, 1000));
+                  await new Promise((resolve) =>
+                    setTimeout(resolve, 1000),
+                  );
                   return (
                     value.includes("error") &&
                     'No "error" allowed in first name'
@@ -90,7 +96,9 @@ function RouteComponent() {
                       type="email"
                       onBlur={field.handleBlur}
                       placeholder="Enter your email"
-                      onChange={(e) => field.handleChange(e.target.value)}
+                      onChange={(e) =>
+                        field.handleChange(e.target.value)
+                      }
                     />
                   </>
                 );
@@ -109,7 +117,9 @@ function RouteComponent() {
                       : undefined,
                 onChangeAsyncDebounceMs: 500,
                 onChangeAsync: async ({ value }) => {
-                  await new Promise((resolve) => setTimeout(resolve, 1000));
+                  await new Promise((resolve) =>
+                    setTimeout(resolve, 1000),
+                  );
                   return (
                     value.includes("error") &&
                     'No "error" allowed in first name'
@@ -127,7 +137,9 @@ function RouteComponent() {
                       value={field.state.value}
                       placeholder="Enter your password"
                       onBlur={field.handleBlur}
-                      onChange={(e) => field.handleChange(e.target.value)}
+                      onChange={(e) =>
+                        field.handleChange(e.target.value)
+                      }
                     />
                   </>
                 );
@@ -135,18 +147,27 @@ function RouteComponent() {
             />
           </div>
           <div className="text-end">
-            <Link to="/forgot-password" className="text-sm hover:underline">
+            <Link
+              to="/forgot-password"
+              className="text-sm hover:underline"
+            >
               Forgot your password?
             </Link>
           </div>
           {mutation.error && (
-            <p className="text-destructive">{mutation.error.message}</p>
+            <p className="text-destructive">
+              {mutation.error.message}
+            </p>
           )}
         </form>
       </CardContent>
 
       <CardFooter>
-        <Button type="button" className="w-full" onClick={form.handleSubmit}>
+        <Button
+          type="button"
+          className="w-full"
+          onClick={form.handleSubmit}
+        >
           {form.state.isSubmitting ? "Signing in..." : "Sign In"}
         </Button>
       </CardFooter>

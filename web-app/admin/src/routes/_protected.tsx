@@ -4,7 +4,6 @@ import UserNav from "@/components/dashboard/user-nav";
 import { MaxWithWrapper } from "@/components/partials/MaxWithWrapper";
 import { ModeToggle } from "@/components/partials/mode-toggle";
 import { NotFound } from "@/components/partials/NotFound";
-import { useAuth } from "@/context/AuthContext";
 import {
   createFileRoute,
   Link,
@@ -20,7 +19,7 @@ export const Route = createFileRoute("/_protected")({
 function RouteComponent() {
   const navigate = useNavigate();
 
-  const { isLoggedIn } = useAuth();
+  const isLoggedIn = sessionStorage.getItem("loggedIn") === "true";
 
   if (!isLoggedIn) navigate({ to: "/login" });
 

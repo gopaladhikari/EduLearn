@@ -16,6 +16,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
   const { data, isSuccess, isPending } = useQuery({
     queryKey: ["user"],
     queryFn: me,
+    staleTime: 1000 * 60 * 3, // 3 minutes
   });
 
   if (!isPending) {

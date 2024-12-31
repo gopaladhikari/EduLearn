@@ -2,8 +2,8 @@ import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import TanstackRouterProvider from "./components/partials/TanstackRouterProvider";
-import { AuthProvider } from "./context/AuthContext";
 import "./index.css";
+import { AuthProvider } from "./context/AuthContext";
 
 const queryClient = new QueryClient();
 

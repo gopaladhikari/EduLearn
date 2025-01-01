@@ -139,7 +139,13 @@ function RouteComponent() {
             className="bg-transparent placeholder:text-sm focus:outline-none group-active:border-primary"
           />
         </div>
-        <Button>
+        <Button
+          onClick={() =>
+            navigate({
+              to: "/courses/add",
+            })
+          }
+        >
           <PlusCircle size={20} />
           Add Course
         </Button>

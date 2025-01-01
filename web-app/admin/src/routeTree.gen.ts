@@ -26,6 +26,7 @@ import { Route as AuthLoginImport } from './routes/_auth/login'
 import { Route as AuthForgotPasswordImport } from './routes/_auth/forgot-password'
 import { Route as AuthConfirmPasswordImport } from './routes/_auth/confirm-password'
 import { Route as ProtectedCoursesIndexImport } from './routes/_protected/courses/index'
+import { Route as ProtectedCoursesAddImport } from './routes/_protected/courses/add'
 import { Route as ProtectedCoursesSlugImport } from './routes/_protected/courses/$slug'
 
 // Create/Update Routes
@@ -115,6 +116,12 @@ const AuthConfirmPasswordRoute = AuthConfirmPasswordImport.update({
 const ProtectedCoursesIndexRoute = ProtectedCoursesIndexImport.update({
   id: '/courses/',
   path: '/courses/',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+
+const ProtectedCoursesAddRoute = ProtectedCoursesAddImport.update({
+  id: '/courses/add',
+  path: '/courses/add',
   getParentRoute: () => ProtectedRoute,
 } as any)
 
@@ -233,6 +240,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedCoursesSlugImport
       parentRoute: typeof ProtectedImport
     }
+    '/_protected/courses/add': {
+      id: '/_protected/courses/add'
+      path: '/courses/add'
+      fullPath: '/courses/add'
+      preLoaderRoute: typeof ProtectedCoursesAddImport
+      parentRoute: typeof ProtectedImport
+    }
     '/_protected/courses/': {
       id: '/_protected/courses/'
       path: '/courses'
@@ -268,6 +282,7 @@ interface ProtectedRouteChildren {
   ProtectedDashboardRoute: typeof ProtectedDashboardRoute
   ProtectedSettingsRoute: typeof ProtectedSettingsRoute
   ProtectedCoursesSlugRoute: typeof ProtectedCoursesSlugRoute
+  ProtectedCoursesAddRoute: typeof ProtectedCoursesAddRoute
   ProtectedCoursesIndexRoute: typeof ProtectedCoursesIndexRoute
 }
 
@@ -276,6 +291,7 @@ const ProtectedRouteChildren: ProtectedRouteChildren = {
   ProtectedDashboardRoute: ProtectedDashboardRoute,
   ProtectedSettingsRoute: ProtectedSettingsRoute,
   ProtectedCoursesSlugRoute: ProtectedCoursesSlugRoute,
+  ProtectedCoursesAddRoute: ProtectedCoursesAddRoute,
   ProtectedCoursesIndexRoute: ProtectedCoursesIndexRoute,
 }
 
@@ -313,6 +329,7 @@ export interface FileRoutesByFullPath {
   '/terms-and-condition': typeof UnprotectedTermsAndConditionRoute
   '/': typeof UnprotectedIndexRoute
   '/courses/$slug': typeof ProtectedCoursesSlugRoute
+  '/courses/add': typeof ProtectedCoursesAddRoute
   '/courses': typeof ProtectedCoursesIndexRoute
 }
 
@@ -330,6 +347,7 @@ export interface FileRoutesByTo {
   '/terms-and-condition': typeof UnprotectedTermsAndConditionRoute
   '/': typeof UnprotectedIndexRoute
   '/courses/$slug': typeof ProtectedCoursesSlugRoute
+  '/courses/add': typeof ProtectedCoursesAddRoute
   '/courses': typeof ProtectedCoursesIndexRoute
 }
 
@@ -350,6 +368,7 @@ export interface FileRoutesById {
   '/_unprotected/terms-and-condition': typeof UnprotectedTermsAndConditionRoute
   '/_unprotected/': typeof UnprotectedIndexRoute
   '/_protected/courses/$slug': typeof ProtectedCoursesSlugRoute
+  '/_protected/courses/add': typeof ProtectedCoursesAddRoute
   '/_protected/courses/': typeof ProtectedCoursesIndexRoute
 }
 
@@ -369,6 +388,7 @@ export interface FileRouteTypes {
     | '/terms-and-condition'
     | '/'
     | '/courses/$slug'
+    | '/courses/add'
     | '/courses'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -385,6 +405,7 @@ export interface FileRouteTypes {
     | '/terms-and-condition'
     | '/'
     | '/courses/$slug'
+    | '/courses/add'
     | '/courses'
   id:
     | '__root__'
@@ -403,6 +424,7 @@ export interface FileRouteTypes {
     | '/_unprotected/terms-and-condition'
     | '/_unprotected/'
     | '/_protected/courses/$slug'
+    | '/_protected/courses/add'
     | '/_protected/courses/'
   fileRoutesById: FileRoutesById
 }
@@ -451,6 +473,7 @@ export const routeTree = rootRoute
         "/_protected/dashboard",
         "/_protected/settings",
         "/_protected/courses/$slug",
+        "/_protected/courses/add",
         "/_protected/courses/"
       ]
     },
@@ -508,6 +531,10 @@ export const routeTree = rootRoute
     },
     "/_protected/courses/$slug": {
       "filePath": "_protected/courses/$slug.tsx",
+      "parent": "/_protected"
+    },
+    "/_protected/courses/add": {
+      "filePath": "_protected/courses/add.tsx",
       "parent": "/_protected"
     },
     "/_protected/courses/": {

@@ -77,7 +77,10 @@ export class UsersService {
 
   async getAllUser() {
     try {
-      const users = await this.User.find({});
+      const users = await this.User.find({
+        verified: true,
+        status: 'active',
+      });
 
       if (!users.length) throw new NotFoundException('No user found');
 

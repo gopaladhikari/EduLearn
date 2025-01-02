@@ -14,7 +14,7 @@ const AuthContext = createContext<AuthContextType>({
 
 function AuthProvider({ children }: { children: React.ReactNode }) {
   const { data, isSuccess, isPending } = useQuery({
-    queryKey: ["user"],
+    queryKey: ["me"],
     queryFn: me,
     staleTime: 1000 * 60 * 3, // 3 minutes
   });
@@ -41,7 +41,8 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
 function useAuth() {
   const context = useContext(AuthContext);
 
-  if (!context) throw new Error("useAuth must be used within a AuthProvider");
+  if (!context)
+    throw new Error("useAuth must be used within a AuthProvider");
 
   return context;
 }

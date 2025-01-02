@@ -21,6 +21,7 @@ import {
   TrendingUp,
 } from "lucide-react";
 import { CourseDetailPageSkeleton } from "@/components/skeletons/CourseDetailPageSkeleton";
+import { useSeo } from "@/hooks/useSeo";
 
 export const Route = createFileRoute("/_protected/courses/$slug")({
   component: RouteComponent,
@@ -55,6 +56,11 @@ function RouteComponent() {
     queryKey: ["course", slug],
     queryFn: () => getCourseBySlug(slug),
     staleTime: 1000 * 60 * 15, // 15 minutes
+  });
+
+  useSeo({
+    title: data?.data.title || "",
+    description: data?.data.description,
   });
 
   if (isPending) return <CourseDetailPageSkeleton />;

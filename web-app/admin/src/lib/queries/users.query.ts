@@ -9,3 +9,23 @@ export const me = async (): CustomResponse<User> => {
     throw new Error((error as Error).message);
   }
 };
+
+export const getAllUsers = async (): CustomResponse<User[]> => {
+  try {
+    const { data } = await axiosInstance.get("/api/users");
+    return data;
+  } catch (error) {
+    throw new Error((error as Error).message);
+  }
+};
+
+export const getUserById = async (
+  id: string,
+): CustomResponse<User> => {
+  try {
+    const { data } = await axiosInstance.get(`/api/users/${id}`);
+    return data;
+  } catch (error) {
+    throw new Error((error as Error).message);
+  }
+};

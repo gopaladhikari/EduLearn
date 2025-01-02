@@ -19,5 +19,7 @@ declare module "@tanstack/react-router" {
 export default function TanstackRouterProvider() {
   const { isLoggedIn, user } = useAuth();
 
-  return <RouterProvider router={router} context={{ isLoggedIn, user }} />;
+  return (
+    <RouterProvider router={router} context={{ isLoggedIn, user }} />
+  );
 }

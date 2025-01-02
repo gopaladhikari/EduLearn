@@ -15,7 +15,7 @@ export type Course = {
   title: string;
   description: string;
   slug: string;
-  instructor: string[] | User[];
+  instructor: string[];
   uploadedBy: {
     _id: string;
     fullName: string;
@@ -39,3 +39,7 @@ export type CustomResponse<T> = Promise<{
   message: string;
   path: string;
 }>;
+
+export type CourseWithInstructors = Omit<Course, "instructor"> & {
+  instructor: User[];
+};

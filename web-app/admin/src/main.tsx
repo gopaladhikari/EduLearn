@@ -1,11 +1,21 @@
 import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import {
+  QueryClient,
+  QueryClientProvider,
+} from "@tanstack/react-query";
 import TanstackRouterProvider from "./components/partials/TanstackRouterProvider";
 import "./index.css";
 import { AuthProvider } from "./context/AuthContext";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      staleTime: 1000 * 60 * 15, // 15 minutes
+    },
+  },
+});
 
 function App() {
   return (

@@ -20,9 +20,18 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
+  type PaginationState,
   type SortingState,
 } from "@tanstack/react-table";
-
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 import { format } from "date-fns";
 
 import {
@@ -48,6 +57,12 @@ function RouteComponent() {
   const coulmnHelper = createColumnHelper<Course>();
   const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState("");
+
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  });
+
   const navigate = useNavigate();
 
   const itemsPerPage = sessionStorage.getItem("itemsPerPage") || "10";
@@ -55,7 +70,7 @@ function RouteComponent() {
   const { data, isPending } = useQuery({
     queryKey: ["courses"],
     queryFn: getAllCourses,
-    staleTime: 1000 * 60 * 15, // 15 minutes
+    staleTime: 1000 * 60 * 15,
   });
 
   const columnHeaderArray = useMemo(
@@ -99,10 +114,11 @@ function RouteComponent() {
   );
 
   const table = useReactTable({
-    data: data?.data as Course[],
+    data: data?.data || [],
     columns,
     getCoreRowModel: getCoreRowModel(),
     state: {
+      pagination,
       sorting,
       globalFilter,
     },
@@ -116,7 +132,10 @@ function RouteComponent() {
     getFilteredRowModel: getFilteredRowModel(),
     onGlobalFilterChange: setGlobalFilter,
     getPaginationRowModel: getPaginationRowModel(),
+    onPaginationChange: setPagination,
   });
+
+  const totalPages = table.getPageCount();
 
   return (
     <>
@@ -153,7 +172,7 @@ function RouteComponent() {
       {isPending ? (
         <TableSkeleton page={table.getState().pagination.pageSize} />
       ) : (
-        <section>
+        <section className={"min-h-[407px]"}>
           <Table>
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (
@@ -202,7 +221,7 @@ function RouteComponent() {
               ) : (
                 <TableRow>
                   <TableCell
-                    colSpan={columns.length}
+                    colSpan={columns?.length}
                     className="h-24 text-center"
                   >
                     No results.
@@ -213,27 +232,92 @@ function RouteComponent() {
           </Table>
         </section>
       )}
-      <Select
-        onValueChange={(value) => {
-          sessionStorage.setItem("itemsPerPage", value);
-          table.setPageSize(parseInt(value));
-        }}
-        defaultValue={String(table.getState().pagination.pageSize)}
-      >
-        <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder="Items per page" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
-            <SelectLabel>Items per page</SelectLabel>
-            {itemsPerPageArray.map((item) => (
-              <SelectItem key={item} value={String(item)}>
-                {item}
-              </SelectItem>
-            ))}
-          </SelectGroup>
-        </SelectContent>
-      </Select>
+      <div className="flex items-start justify-between gap-4">
+        <Select
+          onValueChange={(value) => {
+            sessionStorage.setItem("itemsPerPage", value);
+            table.setPageSize(parseInt(value));
+          }}
+          defaultValue={String(table.getState().pagination.pageSize)}
+        >
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Items per page" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectLabel>Items per page</SelectLabel>
+              {itemsPerPageArray.map((item) => (
+                <SelectItem key={item} value={String(item)}>
+                  {item}
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+        <Pagination>
+          <PaginationContent className="ml-auto">
+            <PaginationItem
+              onClick={() => table?.previousPage()}
+              aria-disabled={!table?.getCanPreviousPage()}
+              className="aria-disabled:pointer-events-none aria-disabled:opacity-50"
+            >
+              <PaginationPrevious />
+            </PaginationItem>
+
+            {totalPages > 7 ? (
+              <>
+                {Array.from({ length: 5 }, (_, i) => (
+                  <>
+                    <PaginationItem key={i}>
+                      <PaginationLink
+                        onClick={() => table?.setPageIndex(i)}
+                        aria-current={
+                          i === table?.getState().pagination.pageIndex
+                        }
+                        className="aria-[current='true']:bg-secondary"
+                      >
+                        {i + 1}
+                      </PaginationLink>
+                    </PaginationItem>
+                  </>
+                ))}
+                <PaginationItem>
+                  <PaginationEllipsis />
+                </PaginationItem>
+                <PaginationItem
+                  onClick={() => table?.setPageIndex(totalPages)}
+                >
+                  <PaginationLink>{totalPages}</PaginationLink>
+                </PaginationItem>
+              </>
+            ) : (
+              <>
+                {Array.from({ length: totalPages }, (_, i) => (
+                  <PaginationItem key={i}>
+                    <PaginationLink
+                      onClick={() => table?.setPageIndex(i)}
+                      aria-current={
+                        i === table?.getState().pagination.pageIndex
+                      }
+                      className="aria-[current='true']:bg-secondary"
+                    >
+                      {i + 1}
+                    </PaginationLink>
+                  </PaginationItem>
+                ))}
+              </>
+            )}
+
+            <PaginationItem
+              onClick={() => table?.nextPage()}
+              aria-disabled={!table?.getCanNextPage()}
+              className="aria-disabled:pointer-events-none aria-disabled:opacity-50"
+            >
+              <PaginationNext />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
+      </div>
     </>
   );
 }

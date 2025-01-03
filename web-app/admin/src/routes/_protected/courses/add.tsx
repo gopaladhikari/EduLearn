@@ -17,6 +17,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
+  CourseCategory,
   courseSchema,
   type CourseSchema,
 } from "@/schemas/courses.schema";
@@ -26,6 +27,18 @@ import { useSeo } from "@/hooks/useSeo";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { UploadIcon, XIcon } from "lucide-react";
 import { MultiSelect } from "@/components/ui/multi-select";
+import { axiosInstance } from "@/config/axios";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useToast } from "@/hooks/use-toast";
+import { AxiosError } from "axios";
+import { useNavigate } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_protected/courses/add")({
   component: RouteComponent,
@@ -35,18 +48,26 @@ function RouteComponent() {
   const [preview, setPreview] = useState("");
   const [tags, setTags] = useState<string[]>([]);
 
+  const navigate = useNavigate();
+
+  const { toast } = useToast();
+
+  const form = useForm<CourseSchema>({
+    resolver: zodResolver(courseSchema),
+  });
+
   const handleAddTag = (
     event: React.KeyboardEvent<HTMLInputElement>,
   ) => {
     if (event.key === "Enter" || event.key === ",") {
       event.preventDefault();
 
-      const value = event.currentTarget.value.trim();
+      const value = event.currentTarget.value;
 
       if (value && !tags.includes(value)) {
         setTags((prevTags) => [...prevTags, value]);
-
-        form.setValue("tags", [...tags, value]);
+        form.clearErrors("tags");
+        form.setValue("tags", tags);
       }
 
       event.currentTarget.value = "";
@@ -70,23 +91,54 @@ function RouteComponent() {
     queryKey: ["users"],
   });
 
-  const form = useForm<CourseSchema>({
-    resolver: zodResolver(courseSchema),
-    defaultValues: {
-      video: new File([], ""),
-    },
-  });
+  const onSubmit: SubmitHandler<CourseSchema> = async (FormData) => {
+    try {
+      const { data } = await axiosInstance.post(
+        "/api/courses",
+        FormData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        },
+      );
+      if (data) {
+        toast({
+          title: "Course Added",
+          description: "Your course has been added successfully",
+          variant: "success",
+        });
 
-  const onSubmit: SubmitHandler<CourseSchema> = (data) => {
-    console.log(data);
+        navigate({
+          to: "/courses/$slug",
+          params: {
+            slug: data.data.slug,
+          },
+        });
+      }
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        toast({
+          title: error.response?.data?.message || "Error",
+          description:
+            error.response?.data.error || "Failed to add course",
+          variant: "destructive",
+        });
+      } else
+        toast({
+          title: "Error",
+          description: "Something went wrong",
+          variant: "destructive",
+        });
+    }
   };
 
   const onDrop = useCallback(
     (files: File[]) => {
       const file = files[0];
       form.setValue("video", file);
+      form.clearErrors("video");
       const previewUrl = URL.createObjectURL(file);
-
       setPreview(previewUrl);
     },
     [form],
@@ -107,6 +159,7 @@ function RouteComponent() {
       <h1 className="mb-5 text-2xl font-bold text-primary">
         Add New Course
       </h1>
+
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -205,6 +258,45 @@ function RouteComponent() {
           />
           <FormField
             control={form.control}
+            name="category"
+            render={({ field: { onChange, value, ...rest } }) => (
+              <FormItem>
+                <FormLabel>Course Category</FormLabel>
+                <FormControl>
+                  <Select
+                    value={value}
+                    onValueChange={onChange}
+                    {...rest}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        {Object.values(CourseCategory).map(
+                          (category) => (
+                            <SelectItem
+                              key={category}
+                              value={category}
+                            >
+                              {category}
+                            </SelectItem>
+                          ),
+                        )}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+                <FormDescription>
+                  A brief description of your course (max 500
+                  characters)
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
             name="instructor"
             render={({ field }) => (
               <FormItem>
@@ -235,7 +327,8 @@ function RouteComponent() {
                 <FormLabel>Price</FormLabel>
                 <FormControl>
                   <Input
-                    type="text"
+                    type="number"
+                    inputMode="numeric"
                     placeholder="Enter course price"
                     {...field}
                   />
@@ -270,7 +363,7 @@ function RouteComponent() {
                           <Button
                             size="icon"
                             type="button"
-                            onClick={() => handleRemoveTag(tag)} // Remove tag
+                            onClick={() => handleRemoveTag(tag)}
                           >
                             <XIcon className="h-4 w-4" />
                             <span className="sr-only">

@@ -16,6 +16,7 @@ import { MaxWithWrapper } from "@/components/partials/MaxWithWrapper";
 import Search from "@/components/dashboard/search";
 import { ModeToggle } from "@/components/partials/mode-toggle";
 import UserNav from "@/components/dashboard/user-nav";
+import { Toaster } from "@/components/ui/toaster";
 
 export const Route = createRootRouteWithContext<AuthContextType>()({
   component: () => {
@@ -23,9 +24,12 @@ export const Route = createRootRouteWithContext<AuthContextType>()({
       <>
         <ThemeProvider>
           <Outlet />
+          <Toaster />
           <Footer />
           <ScrollRestoration />
-          {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
+          {import.meta.env.DEV && (
+            <ReactQueryDevtools initialIsOpen={false} />
+          )}
         </ThemeProvider>
         {import.meta.env.DEV && <TanStackRouterDevtools />}
       </>

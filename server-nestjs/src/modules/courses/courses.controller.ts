@@ -20,6 +20,7 @@ import { JwtGuard } from '../auth/guards/jwt-auth.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CurrentUser } from '../auth/current-user.decorator';
 import type { UserDocument } from '../users/entities/user.entity';
+import { isValidObjectId } from 'mongoose';
 
 @Controller('courses')
 @UseGuards(JwtGuard)
@@ -66,7 +67,15 @@ export class CoursesController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.coursesService.remove(+id);
+  remove(@Param('id') id: string, @CurrentUser() user: UserDocument) {
+    if (user.role !== 'admin')
+      throw new ForbiddenException(
+        'You are not authorized to delete a course',
+      );
+
+    if (!isValidObjectId(id))
+      throw new BadRequestException('Invalid id');
+
+    return this.coursesService.remove(id);
   }
 }

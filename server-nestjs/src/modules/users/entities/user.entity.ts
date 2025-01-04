@@ -25,7 +25,7 @@ export class User {
   password: string;
 
   @Prop({ required: true, enum: Role })
-  role: Role;
+  role: 'admin' | 'user';
 
   @Prop({ required: true, default: false })
   verified: boolean;

@@ -22,6 +22,7 @@ export type Course = {
     email: string;
   };
   lessons: string[];
+  isPublished: boolean;
   category: string;
   tags: string[];
   price: number;

@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -67,19 +71,23 @@ export class CoursesService {
     }
   }
 
-  async getAllCourses() {
+  async getAllCourses(user: UserDocument) {
+    let courses: Course[];
     try {
-      const courses = await this.Course.find().populate({
-        path: 'uploadedBy',
-        select: ['fullName', 'email'],
-      });
+      if (user.role === 'admin') courses = await this.Course.find();
+      else if (user.role === 'user')
+        courses = await this.Course.find({
+          isPublished: true,
+        });
+      else throw new ForbiddenException('You are not authorized');
 
       if (!courses.length)
-        throw new NotFoundException('No course found');
+        throw new NotFoundException('Course not found');
 
       return courses;
     } catch (error) {
       if (error instanceof NotFoundException) throw error;
+      if (error instanceof ForbiddenException) throw error;
 
       throw new Error(error.message);
     }

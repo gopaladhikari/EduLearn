@@ -110,6 +110,9 @@ export class Course {
   @Prop()
   lessons: string[];
 
+  @Prop({ default: false })
+  isPublished: boolean;
+
   @Prop({
     required: true,
     enum: CourseCategory,

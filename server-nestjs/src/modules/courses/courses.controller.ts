@@ -48,8 +48,8 @@ export class CoursesController {
   }
 
   @Get()
-  getAllCourses() {
-    return this.coursesService.getAllCourses();
+  getAllCourses(@CurrentUser() user: UserDocument) {
+    return this.coursesService.getAllCourses(user);
   }
 
   @Get(':slug')

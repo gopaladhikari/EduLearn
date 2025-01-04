@@ -1,6 +1,12 @@
 import { getAllCourses } from "@/lib/queries/courses.query";
 import { useQuery } from "@tanstack/react-query";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  Link,
+  useNavigate,
+} from "@tanstack/react-router";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import type { Course } from "@/types";
 import {
   Select,
@@ -11,7 +17,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   createColumnHelper,
   flexRender,
@@ -43,9 +57,16 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useMemo, useState } from "react";
-import { ArrowUpDown, PlusCircle, Search } from "lucide-react";
+import {
+  ArrowDown,
+  ArrowUp,
+  Menu,
+  PlusCircle,
+  Search,
+} from "lucide-react";
 import { TableSkeleton } from "@/components/skeletons/TableSkeleton";
 import { Button } from "@/components/ui/button";
+import { useSeo } from "@/hooks/useSeo";
 
 export const Route = createFileRoute("/_protected/courses/")({
   component: RouteComponent,
@@ -55,17 +76,23 @@ const itemsPerPageArray = [10, 20, 30, 40, 50, 100];
 
 function RouteComponent() {
   const coulmnHelper = createColumnHelper<Course>();
+
   const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState("");
 
+  const itemsPerPage = sessionStorage.getItem("itemsPerPage") || "10";
+
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
-    pageSize: 10,
+    pageSize: parseInt(itemsPerPage),
   });
 
   const navigate = useNavigate();
 
-  const itemsPerPage = sessionStorage.getItem("itemsPerPage") || "10";
+  useSeo({
+    title: "Courses",
+    description: "Courses",
+  });
 
   const { data, isPending } = useQuery({
     queryKey: ["courses"],
@@ -73,49 +100,90 @@ function RouteComponent() {
     staleTime: 1000 * 60 * 15,
   });
 
-  const columnHeaderArray = useMemo(
-    (): Array<keyof Course> => [
-      "createdAt",
-      "title",
-      "category",
-      "price",
-    ],
-    [],
-  );
-
-  const handleNavigate = (slug: string) => {
-    navigate({
-      to: `/courses/$slug`,
-      params: { slug },
-    });
-  };
-
-  const columns = useMemo(
-    () =>
-      columnHeaderArray.map((header) => {
-        return coulmnHelper.accessor(header, {
-          header: () => {
-            if (header === "createdAt") return "Created At";
-            if (header === "_id") return "ID";
-            return header.at(0)!.toUpperCase() + header.slice(1);
-          },
-          cell: (info) => {
-            if (header === "createdAt") {
-              const data = info.getValue() as string;
-              const date = format(data, "dd/MM/yyyy");
-              return date.toString();
-            }
-
-            return info.getValue().toString();
-          },
-        });
+  const columnDefs = useMemo(() => {
+    return [
+      coulmnHelper.accessor("createdAt", {
+        id: "createdAt",
+        header: "Created At",
+        cell: (info) => {
+          const data = info.getValue() as string;
+          const date = format(data, "dd/MM/yyyy");
+          return date.toString();
+        },
       }),
-    [coulmnHelper, columnHeaderArray],
-  );
+      coulmnHelper.accessor("title", {
+        id: "title",
+        header: "Title",
+        cell: (info) => info.getValue(),
+      }),
+      coulmnHelper.accessor("category", {
+        id: "category",
+        header: "Category",
+        cell: (info) => info.getValue(),
+      }),
+      coulmnHelper.accessor("isPublished", {
+        id: "isPublished",
+        header: "Is Published",
+        cell: (info) => {
+          return info.getValue() ? "Yes" : "No";
+        },
+      }),
+      coulmnHelper.accessor("price", {
+        id: "price",
+        header: "Price",
+        cell: (info) => `$${info.getValue()}`,
+      }),
+      // @ts-expect-error no Error
+      coulmnHelper.accessor("edit", {
+        id: "edit",
+        header: "",
+        cell: () => {
+          return (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button type="button" className="cursor-pointer">
+                  <Menu size={18} />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56">
+                <DropdownMenuLabel>Edit</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuGroup>
+                  <DropdownMenuItem
+                    onSelect={(e) => e.preventDefault()}
+                    className="flex cursor-pointer justify-between"
+                  >
+                    <Label
+                      htmlFor="publish-course"
+                      className="cursor-pointer"
+                    >
+                      Publish
+                    </Label>
+                    <Switch
+                      id="publish-course"
+                      onCheckedChange={(checked) =>
+                        console.log(checked)
+                      }
+                    />
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    className="cursor-pointer"
+                    onSelect={(e) => e.preventDefault()}
+                  >
+                    Delete
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          );
+        },
+      }),
+    ];
+  }, [coulmnHelper]);
 
   const table = useReactTable({
     data: data?.data || [],
-    columns,
+    columns: columnDefs,
     getCoreRowModel: getCoreRowModel(),
     state: {
       pagination,
@@ -170,7 +238,7 @@ function RouteComponent() {
         </Button>
       </section>
       {isPending ? (
-        <TableSkeleton page={table.getState().pagination.pageSize} />
+        <TableSkeleton page={parseInt(itemsPerPage) * 1.5} />
       ) : (
         <section className={"min-h-[407px]"}>
           <Table>
@@ -190,7 +258,16 @@ function RouteComponent() {
                               header.column.columnDef.header,
                               header.getContext(),
                             )}
-                            <ArrowUpDown size={14} />
+                            {header.id !== "edit" && (
+                              <>
+                                {table.getState().sorting[0]?.id ===
+                                header.id ? (
+                                  <ArrowDown size={16} />
+                                ) : (
+                                  <ArrowUp size={16} />
+                                )}
+                              </>
+                            )}
                           </button>
                         )}
                       </TableHead>
@@ -206,13 +283,28 @@ function RouteComponent() {
                     key={row.id}
                     data-state={row.getIsSelected() && "selected"}
                     className="cursor-pointer"
-                    onClick={() => handleNavigate(row.original.slug)}
                   >
                     {row.getVisibleCells().map((cell) => (
                       <TableCell key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext(),
+                        {cell.column.id === "title" ? (
+                          <Link
+                            to={`/courses/$slug`}
+                            params={{
+                              slug: cell.row.original.slug,
+                            }}
+                          >
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext(),
+                            )}
+                          </Link>
+                        ) : (
+                          <>
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext(),
+                            )}
+                          </>
                         )}
                       </TableCell>
                     ))}
@@ -221,8 +313,8 @@ function RouteComponent() {
               ) : (
                 <TableRow>
                   <TableCell
-                    colSpan={columns?.length}
-                    className="h-24 text-center"
+                    colSpan={columnDefs?.length}
+                    className="h-[240px] text-center"
                   >
                     No results.
                   </TableCell>
@@ -259,7 +351,7 @@ function RouteComponent() {
             <PaginationItem
               onClick={() => table?.previousPage()}
               aria-disabled={!table?.getCanPreviousPage()}
-              className="aria-disabled:pointer-events-none aria-disabled:opacity-50"
+              className="cursor-pointer aria-disabled:pointer-events-none aria-disabled:opacity-50"
             >
               <PaginationPrevious />
             </PaginationItem>
@@ -274,7 +366,7 @@ function RouteComponent() {
                         aria-current={
                           i === table?.getState().pagination.pageIndex
                         }
-                        className="aria-[current='true']:bg-secondary"
+                        className="cursor-pointer aria-[current='true']:bg-secondary"
                       >
                         {i + 1}
                       </PaginationLink>
@@ -287,7 +379,9 @@ function RouteComponent() {
                 <PaginationItem
                   onClick={() => table?.setPageIndex(totalPages)}
                 >
-                  <PaginationLink>{totalPages}</PaginationLink>
+                  <PaginationLink className="cursor-pointer">
+                    {totalPages}
+                  </PaginationLink>
                 </PaginationItem>
               </>
             ) : (
@@ -299,7 +393,7 @@ function RouteComponent() {
                       aria-current={
                         i === table?.getState().pagination.pageIndex
                       }
-                      className="aria-[current='true']:bg-secondary"
+                      className="cursor-pointer aria-[current='true']:bg-secondary"
                     >
                       {i + 1}
                     </PaginationLink>
@@ -311,7 +405,7 @@ function RouteComponent() {
             <PaginationItem
               onClick={() => table?.nextPage()}
               aria-disabled={!table?.getCanNextPage()}
-              className="aria-disabled:pointer-events-none aria-disabled:opacity-50"
+              className="cursor-pointer aria-disabled:pointer-events-none aria-disabled:opacity-50"
             >
               <PaginationNext />
             </PaginationItem>

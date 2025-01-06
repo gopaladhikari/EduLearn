@@ -121,17 +121,15 @@ export class CoursesService {
     return `This action updates a #${id} course`;
   }
 
-  remove(id: string) {
+  async remove(id: string) {
     try {
-      const deletedCourse = this.Course.findByIdAndDelete(id);
+      const deletedCourse = await this.Course.findByIdAndDelete(id);
 
       if (!deletedCourse)
         throw new NotFoundException('Course not found');
-
       return null;
     } catch (error) {
       if (error instanceof NotFoundException) throw error;
-
       throw new Error(error.message);
     }
   }

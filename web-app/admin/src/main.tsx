@@ -8,7 +8,7 @@ import TanstackRouterProvider from "./components/partials/TanstackRouterProvider
 import "./index.css";
 import { AuthProvider } from "./context/AuthContext";
 
-const queryClient = new QueryClient({
+export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       refetchOnWindowFocus: false,

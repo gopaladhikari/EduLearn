@@ -32,6 +32,7 @@ import { Button } from "@/components/ui/button";
 import { useSeo } from "@/hooks/useSeo";
 import { PaginationControls } from "@/components/courses/PaginationControls";
 import { useCoursesTable } from "@/hooks/useCoursesTable";
+import { SessionStorage } from "@/config/constants";
 
 export const Route = createFileRoute("/_protected/courses/")({
   component: RouteComponent,
@@ -40,7 +41,9 @@ export const Route = createFileRoute("/_protected/courses/")({
 const itemsPerPageArray = [10, 20, 30, 40, 50, 100];
 
 function RouteComponent() {
-  const itemsPerPage = sessionStorage.getItem("itemsPerPage") || "10";
+  const itemsPerPage =
+    Number(sessionStorage.getItem(SessionStorage.Items_Per_Page)) ||
+    10;
 
   const navigate = useNavigate();
 
@@ -55,13 +58,15 @@ function RouteComponent() {
     staleTime: 1000 * 60 * 15,
   });
 
-  const { table } = useCoursesTable(
-    data?.data,
-    parseInt(itemsPerPage),
-  );
+  const { table } = useCoursesTable(data?.data, itemsPerPage);
+
+  const tableRowCount =
+    Number(sessionStorage.getItem(SessionStorage.Table_Row_Count)) ||
+    itemsPerPage;
 
   return (
     <>
+      <h1 className="text-xl font-bold">All Courses</h1>
       <section className="flex items-center justify-between py-4">
         <div className="flex w-1/3 items-center gap-4 rounded-md border-2 px-4 py-2 focus-within:border-primary">
           <Search size={18} />
@@ -93,7 +98,7 @@ function RouteComponent() {
         </Button>
       </section>
       {isPending ? (
-        <TableSkeleton page={parseInt(itemsPerPage) * 1.5} />
+        <TableSkeleton page={tableRowCount} />
       ) : (
         <section className={"min-h-[407px]"}>
           <Table>

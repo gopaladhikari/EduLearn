@@ -131,8 +131,17 @@ export class Course {
   @Prop()
   isBestSeller: boolean;
 
-  @Prop()
-  video: string;
+  @Prop({
+    required: true,
+    type: {
+      url: String,
+      publicId: String,
+    },
+  })
+  video: {
+    url: string;
+    publicId: string;
+  };
 }
 
 export const CourseSchema = SchemaFactory.createForClass(Course);

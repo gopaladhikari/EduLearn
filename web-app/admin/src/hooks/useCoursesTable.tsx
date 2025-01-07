@@ -8,6 +8,7 @@ import {
   useReactTable,
   type CellContext,
   type PaginationState,
+  type RowSelectionState,
   type SortingState,
 } from "@tanstack/react-table";
 import { format } from "date-fns";
@@ -37,9 +38,12 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { LocalStorage } from "@/config/constants";
+import { LocalStorage, SessionStorage } from "@/config/constants";
 import { useMutation } from "@tanstack/react-query";
-import { deleteCourse } from "@/lib/mutations/courses.mutation";
+import {
+  deleteCourse,
+  togglePublishCourse,
+} from "@/lib/mutations/courses.mutation";
 import { queryClient } from "@/main";
 
 type CachedCourses = {
@@ -50,16 +54,33 @@ export function useCoursesTable(
   data: Course[] | undefined,
   itemsPerPage: number,
 ) {
-  const columnHelper = createColumnHelper<Course>();
+  const columnHelper = useMemo(
+    () => createColumnHelper<Course>(),
+    [],
+  );
 
   const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState("");
+  const [rowSelection, setRowSelection] = useState<RowSelectionState>(
+    {},
+  );
+
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: itemsPerPage,
   });
 
-  const { mutate } = useMutation({
+  const { mutate: publishCourse } = useMutation({
+    mutationKey: ["publishCourse"],
+    mutationFn: (id: string) => togglePublishCourse(id),
+    onSettled: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["courses"],
+      });
+    },
+  });
+
+  const { mutate: deleteCourseMutation } = useMutation({
     mutationKey: ["deleteCourse"],
     mutationFn: (id: string) => deleteCourse(id),
     onMutate: async (id: string) => {
@@ -79,11 +100,7 @@ export function useCoursesTable(
 
       return data;
     },
-    onError: (error, id, courses) => {
-      console.log("error", error);
-      console.log("id", id);
-      console.log("context", courses);
-
+    onError: (_error, _id, courses) => {
       queryClient.setQueryData(["courses"], {
         data: courses,
       });
@@ -142,13 +159,16 @@ export function useCoursesTable(
                   <Menu size={18} />
                 </button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56">
+              <DropdownMenuContent
+                className="w-56"
+                onCloseAutoFocus={(e) => e.preventDefault()}
+              >
                 <DropdownMenuLabel>Edit</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
                   <DropdownMenuItem
-                    onSelect={(e) => e.preventDefault()}
                     className="flex cursor-pointer justify-between"
+                    onSelect={(e) => e.preventDefault()}
                   >
                     <Label
                       htmlFor="publish-course"
@@ -158,16 +178,20 @@ export function useCoursesTable(
                     </Label>
                     <Switch
                       id="publish-course"
+                      defaultChecked={info.row.original.isPublished}
                       onCheckedChange={(checked) => {
                         if (checked)
                           localStorage.setItem(
                             LocalStorage.DONT_ASK_AGAIN,
                             "true",
                           );
-                        else
+                        else {
                           localStorage.removeItem(
                             LocalStorage.DONT_ASK_AGAIN,
                           );
+                          publishCourse(info.row.original._id);
+                        }
+                        publishCourse(info.row.original._id);
                       }}
                     />
                   </DropdownMenuItem>
@@ -180,7 +204,7 @@ export function useCoursesTable(
                         type="button"
                         className="w-full"
                         onClick={() => {
-                          mutate(info.row.original._id);
+                          deleteCourseMutation(info.row.original._id);
                         }}
                         variant="destructive"
                       >
@@ -234,7 +258,9 @@ export function useCoursesTable(
                             <Button
                               type="button"
                               onClick={() => {
-                                mutate(info.row.original._id);
+                                deleteCourseMutation(
+                                  info.row.original._id,
+                                );
                               }}
                             >
                               Continue
@@ -251,7 +277,7 @@ export function useCoursesTable(
         },
       },
     ],
-    [columnHelper, mutate],
+    [columnHelper, deleteCourseMutation, publishCourse],
   );
 
   const table = useReactTable({
@@ -260,6 +286,7 @@ export function useCoursesTable(
     state: {
       sorting,
       globalFilter,
+      rowSelection,
       pagination,
     },
     getCoreRowModel: getCoreRowModel(),
@@ -268,7 +295,15 @@ export function useCoursesTable(
     getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: setSorting,
     onPaginationChange: setPagination,
+    onRowSelectionChange: setRowSelection,
   });
+
+  const tableRowCount = table.getRowCount();
+
+  sessionStorage.setItem(
+    SessionStorage.Table_Row_Count,
+    String(tableRowCount),
+  );
 
   return { table, setGlobalFilter };
 }

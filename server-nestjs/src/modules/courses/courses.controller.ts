@@ -66,6 +66,22 @@ export class CoursesController {
     return this.coursesService.update(+id, updateCourseDto);
   }
 
+  @Patch('publish/:id')
+  toggleCoursePublish(
+    @Param('id') id: string,
+    @CurrentUser() user: UserDocument,
+  ) {
+    if (user.role !== 'admin')
+      throw new ForbiddenException(
+        'You are not authorized to publish a course',
+      );
+
+    if (!isValidObjectId(id))
+      throw new BadRequestException('Invalid id');
+
+    return this.coursesService.toggleCoursePublish(id);
+  }
+
   @Delete(':id')
   remove(@Param('id') id: string, @CurrentUser() user: UserDocument) {
     if (user.role !== 'admin')

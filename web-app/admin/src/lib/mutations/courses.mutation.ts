@@ -9,3 +9,14 @@ export const deleteCourse = async (id: string) => {
     throw new Error((error as AxiosError).message);
   }
 };
+
+export const togglePublishCourse = async (id: string) => {
+  try {
+    const { data } = await axiosInstance.patch(
+      `/api/courses/publish/${id}`,
+    );
+    return data;
+  } catch (error) {
+    throw new Error((error as AxiosError).message);
+  }
+};

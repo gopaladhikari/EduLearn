@@ -87,10 +87,7 @@ export const courseSchema = z.object({
     message: "The uploaded file must be a valid video format",
   }),
   category: z.nativeEnum(CourseCategory),
-  tags: z
-    .array(z.string())
-    .min(1, "At least one tag is required")
-    .optional(),
+  tags: z.string().array().optional(),
 });
 
 export type CourseSchema = z.infer<typeof courseSchema>;

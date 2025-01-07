@@ -158,7 +158,7 @@ function RouteComponent() {
         <h3 className="mb-4 text-xl font-semibold">Course Preview</h3>
         <div className="aspect-video">
           <video
-            src={data?.data.video}
+            src={data?.data.video.url}
             controls
             className="h-full w-full rounded-lg object-cover"
           >

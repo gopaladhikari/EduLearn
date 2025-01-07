@@ -57,8 +57,10 @@ export class CoursesService {
             eager_async: true,
           },
         );
-
-        course.video = result.url;
+        course.video = {
+          url: result.url,
+          publicId: result.public_id,
+        };
       }
 
       await course.save();
@@ -121,12 +123,39 @@ export class CoursesService {
     return `This action updates a #${id} course`;
   }
 
+  async toggleCoursePublish(id: string) {
+    try {
+      const course = await this.Course.findById(id);
+
+      if (!course) throw new NotFoundException('Course not found');
+
+      if (course.isPublished) course.isPublished = false;
+      else course.isPublished = true;
+
+      await course.save();
+
+      return course;
+    } catch (error) {
+      if (error instanceof NotFoundException) throw error;
+      throw new Error(error.message);
+    }
+  }
+
   async remove(id: string) {
     try {
       const deletedCourse = await this.Course.findByIdAndDelete(id);
 
       if (!deletedCourse)
         throw new NotFoundException('Course not found');
+
+      await this.cloudinary.api.delete_resources(
+        [deletedCourse.video.publicId.toString()],
+        {
+          resource_type: 'video',
+          type: 'upload',
+        },
+      );
+
       return null;
     } catch (error) {
       if (error instanceof NotFoundException) throw error;

@@ -26,7 +26,10 @@ export type Course = {
   category: string;
   tags: string[];
   price: number;
-  video: string;
+  video: {
+    url: string;
+    publicId: string;
+  };
   isPopular: boolean;
   isBestSeller: boolean;
   createdAt: string;

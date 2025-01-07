@@ -39,6 +39,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { AxiosError } from "axios";
 import { useNavigate } from "@tanstack/react-router";
+import { queryClient } from "@/main";
 
 export const Route = createFileRoute("/_protected/courses/add")({
   component: RouteComponent,
@@ -107,6 +108,10 @@ function RouteComponent() {
           title: "Course Added",
           description: "Your course has been added successfully",
           variant: "success",
+        });
+
+        queryClient.invalidateQueries({
+          queryKey: ["courses"],
         });
 
         navigate({

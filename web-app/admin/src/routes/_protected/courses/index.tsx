@@ -97,10 +97,14 @@ function RouteComponent() {
           Add Course
         </Button>
       </section>
+
       {isPending ? (
-        <TableSkeleton page={tableRowCount} />
+        <TableSkeleton
+          page={tableRowCount}
+          className="mt-72 min-h-[407px]"
+        />
       ) : (
-        <section className={"min-h-[407px]"}>
+        <section className="min-h-[407px]">
           <Table>
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (
@@ -172,7 +176,10 @@ function RouteComponent() {
                 ))
               ) : (
                 <TableRow>
-                  <TableCell className="h-[240px] text-center">
+                  <TableCell
+                    className="mt-4 h-[240px] text-center"
+                    colSpan={5}
+                  >
                     No results.
                   </TableCell>
                 </TableRow>
@@ -181,6 +188,7 @@ function RouteComponent() {
           </Table>
         </section>
       )}
+
       <div className="flex items-start justify-between gap-4">
         <Select
           onValueChange={(value) => {

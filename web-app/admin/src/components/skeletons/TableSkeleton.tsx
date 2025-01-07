@@ -11,7 +11,7 @@ export function TableSkeleton({
   className,
   ...rest
 }: TableSkeletonProps) {
-  const length = page * 1.4;
+  const length = page * 1.5;
 
   return (
     <div className={cn("space-y-3", className)} {...rest}>

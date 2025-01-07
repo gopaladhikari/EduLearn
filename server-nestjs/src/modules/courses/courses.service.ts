@@ -141,7 +141,7 @@ export class CoursesService {
     }
   }
 
-  async remove(id: string) {
+  async deleteById(id: string) {
     try {
       const deletedCourse = await this.Course.findByIdAndDelete(id);
 
@@ -155,6 +155,50 @@ export class CoursesService {
           type: 'upload',
         },
       );
+
+      return null;
+    } catch (error) {
+      if (error instanceof NotFoundException) throw error;
+      throw new Error(error.message);
+    }
+  }
+
+  async deleteManyById(ids: string[]) {
+    try {
+      const courses = await this.Course.find({
+        _id: { $in: ids },
+      });
+
+      if (!courses.length)
+        throw new NotFoundException('Course not found');
+
+      const videoIds = courses.map((course) => course.video.publicId);
+
+      const cloudinaryResponse =
+        await this.cloudinary.api.delete_resources(videoIds, {
+          resource_type: 'video',
+          type: 'upload',
+        });
+
+      if (cloudinaryResponse.deleted) {
+        const failedDeletes = Object.entries(
+          cloudinaryResponse.deleted,
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        ).filter(([_x, status]) => status !== 'deleted');
+
+        if (failedDeletes.length) {
+          throw new Error(
+            `Failed to delete some videos: ${failedDeletes.map(([id]) => id).join(', ')}`,
+          );
+        }
+      }
+
+      const result = await this.Course.deleteMany({
+        _id: { $in: ids },
+      });
+
+      if (!result.deletedCount)
+        throw new NotFoundException('Course not found');
 
       return null;
     } catch (error) {

@@ -27,6 +27,15 @@ import { isValidObjectId } from 'mongoose';
 export class CoursesController {
   constructor(private readonly coursesService: CoursesService) {}
 
+  @Get()
+  getAllCourses(@CurrentUser() user: UserDocument) {
+    return this.coursesService.getAllCourses(user);
+  }
+
+  @Get(':slug')
+  findOne(@Param('slug') slug: string) {
+    return this.coursesService.getCourseBySlug(slug);
+  }
   @Post()
   @UseInterceptors(FileInterceptor('video'))
   createCourse(
@@ -46,16 +55,6 @@ export class CoursesController {
       video,
       createCourseDto,
     );
-  }
-
-  @Get()
-  getAllCourses(@CurrentUser() user: UserDocument) {
-    return this.coursesService.getAllCourses(user);
-  }
-
-  @Get(':slug')
-  findOne(@Param('slug') slug: string) {
-    return this.coursesService.getCourseBySlug(slug);
   }
 
   @Patch(':id')
@@ -82,6 +81,22 @@ export class CoursesController {
     return this.coursesService.toggleCoursePublish(id);
   }
 
+  @Delete('bulk')
+  removeAll(
+    @CurrentUser() user: UserDocument,
+    @Body('ids') ids: string[],
+  ) {
+    if (user.role !== 'admin')
+      throw new ForbiddenException(
+        'You are not authorized to delete a course',
+      );
+
+    if (!ids.length)
+      throw new BadRequestException('No course ids provided');
+
+    return this.coursesService.deleteManyById(ids);
+  }
+
   @Delete(':id')
   remove(@Param('id') id: string, @CurrentUser() user: UserDocument) {
     if (user.role !== 'admin')
@@ -92,6 +107,6 @@ export class CoursesController {
     if (!isValidObjectId(id))
       throw new BadRequestException('Invalid id');
 
-    return this.coursesService.remove(id);
+    return this.coursesService.deleteById(id);
   }
 }

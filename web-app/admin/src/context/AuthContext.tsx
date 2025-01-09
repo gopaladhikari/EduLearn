@@ -1,36 +1,54 @@
+import { SessionStorage } from "@/config/constants";
 import { me } from "@/lib/queries/users.query";
 import { useQuery } from "@tanstack/react-query";
-import { createContext, useContext } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 export type AuthContextType = {
-  user: unknown;
   isLoggedIn: boolean;
+  isPending: boolean;
+  setIsLoggedIn: (value: boolean) => void;
 };
 
 const AuthContext = createContext<AuthContextType>({
-  user: null,
   isLoggedIn: false,
+  isPending: false,
+  setIsLoggedIn: () => null,
 });
 
 function AuthProvider({ children }: { children: React.ReactNode }) {
-  const { data, isSuccess, isPending } = useQuery({
+  const sessionLoggedIn =
+    sessionStorage.getItem(SessionStorage.IS_LOGGED_IN) === "true";
+
+  const [isLoggedIn, setIsLoggedIn] = useState(sessionLoggedIn);
+
+  const { isSuccess, isPending } = useQuery({
     queryKey: ["me"],
     queryFn: me,
-    staleTime: 1000 * 60 * 3, // 3 minutes
   });
 
-  if (!isPending) {
-    if (isSuccess) sessionStorage.setItem("loggedIn", "true");
-    else sessionStorage.setItem("loggedIn", "false");
-  }
-
-  const isLoggedIn = sessionStorage.getItem("loggedIn") === "true";
+  useEffect(() => {
+    if (!isPending) {
+      if (isSuccess) {
+        setIsLoggedIn(true);
+        sessionStorage.setItem(SessionStorage.IS_LOGGED_IN, "true");
+      } else {
+        setIsLoggedIn(false);
+        sessionStorage.removeItem(SessionStorage.IS_LOGGED_IN);
+      }
+    }
+  }, [isPending, isSuccess]);
 
   return (
     <AuthContext
       value={{
-        user: data?.data,
         isLoggedIn,
+        isPending,
+        setIsLoggedIn,
       }}
     >
       {children}

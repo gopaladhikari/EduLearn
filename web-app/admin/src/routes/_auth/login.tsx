@@ -19,6 +19,7 @@ import { useSeo } from "@/hooks/useSeo";
 import { loginMutation } from "@/lib/mutations/auth.mutation";
 import { useMutation } from "@tanstack/react-query";
 import { useAuth } from "@/context/AuthContext";
+import { useEffect } from "react";
 
 export const Route = createFileRoute("/_auth/login")({
   component: RouteComponent,
@@ -27,13 +28,16 @@ export const Route = createFileRoute("/_auth/login")({
 function RouteComponent() {
   const navigate = useNavigate();
 
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, setIsLoggedIn, isPending } = useAuth();
 
   const mutation = useMutation({
     mutationFn: loginMutation,
     onSuccess() {
-      sessionStorage.setItem("loggedIn", "true");
+      setIsLoggedIn(true);
       navigate({ to: "/dashboard" });
+    },
+    onError() {
+      setIsLoggedIn(false);
     },
   });
 
@@ -47,12 +51,14 @@ function RouteComponent() {
     },
   });
 
+  useEffect(() => {
+    if (!isPending && isLoggedIn) navigate({ to: "/dashboard" });
+  }, [isPending, isLoggedIn, navigate]);
+
   useSeo({
     title: "Login",
     description: "Login to your account",
   });
-
-  if (isLoggedIn) navigate({ to: "/dashboard" });
 
   return (
     <Card>
@@ -162,13 +168,24 @@ function RouteComponent() {
         </form>
       </CardContent>
 
-      <CardFooter>
+      <CardFooter className="flex-col gap-4">
         <Button
           type="button"
           className="w-full"
           onClick={form.handleSubmit}
         >
           {form.state.isSubmitting ? "Signing in..." : "Sign In"}
+        </Button>
+        <Button
+          type="button"
+          className="w-full"
+          variant="secondary"
+          onClick={() => {
+            form.setFieldValue("email", "guest@example.com");
+            form.setFieldValue("password", "Guest@123");
+          }}
+        >
+          Guest User
         </Button>
       </CardFooter>
     </Card>

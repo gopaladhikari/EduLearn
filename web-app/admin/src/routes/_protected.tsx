@@ -4,12 +4,15 @@ import UserNav from "@/components/dashboard/user-nav";
 import { MaxWithWrapper } from "@/components/partials/MaxWithWrapper";
 import { ModeToggle } from "@/components/partials/mode-toggle";
 import { NotFound } from "@/components/partials/NotFound";
+import { Loading } from "@/components/skeletons/Spinner";
+import { useAuth } from "@/context/AuthContext";
 import {
   createFileRoute,
   Link,
   Outlet,
   useNavigate,
 } from "@tanstack/react-router";
+import { useEffect } from "react";
 
 export const Route = createFileRoute("/_protected")({
   component: RouteComponent,
@@ -19,9 +22,13 @@ export const Route = createFileRoute("/_protected")({
 function RouteComponent() {
   const navigate = useNavigate();
 
-  const isLoggedIn = sessionStorage.getItem("loggedIn") === "true";
+  const { isLoggedIn, isPending } = useAuth();
 
-  if (!isLoggedIn) navigate({ to: "/login" });
+  useEffect(() => {
+    if (!isPending) {
+      if (!isLoggedIn) navigate({ to: "/login" });
+    }
+  }, [isLoggedIn, isPending, navigate]);
 
   return (
     <>
@@ -43,9 +50,13 @@ function RouteComponent() {
         </MaxWithWrapper>
       </div>
       <main>
-        <MaxWithWrapper className="space-y-3">
-          <Outlet />
-        </MaxWithWrapper>
+        {isPending ? (
+          <Loading />
+        ) : (
+          <MaxWithWrapper className="h-full space-y-3">
+            <Outlet />
+          </MaxWithWrapper>
+        )}
       </main>
     </>
   );

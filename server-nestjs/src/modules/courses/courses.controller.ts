@@ -23,20 +23,21 @@ import { isValidObjectId } from 'mongoose';
 import type { UserDocument } from '../users/entities/user.entity';
 
 @Controller('courses')
-@UseGuards(JwtGuard)
 export class CoursesController {
   constructor(private readonly coursesService: CoursesService) {}
 
   @Get()
-  getAllCourses(@CurrentUser() user: UserDocument) {
-    return this.coursesService.getAllCourses(user);
+  getAllCourses() {
+    return this.coursesService.getAllCourses();
   }
 
   @Get(':slug')
   findOne(@Param('slug') slug: string) {
     return this.coursesService.getCourseBySlug(slug);
   }
+
   @Post()
+  @UseGuards(JwtGuard)
   @UseInterceptors(FileInterceptor('video'))
   createCourse(
     @Body(ValidationPipe) createCourseDto: CreateCourseDto,
@@ -58,6 +59,7 @@ export class CoursesController {
   }
 
   @Patch(':id')
+  @UseGuards(JwtGuard)
   update(
     @Param('id') id: string,
     @Body() updateCourseDto: UpdateCourseDto,
@@ -66,6 +68,7 @@ export class CoursesController {
   }
 
   @Patch('publish/:id')
+  @UseGuards(JwtGuard)
   toggleCoursePublish(
     @Param('id') id: string,
     @CurrentUser() user: UserDocument,
@@ -82,6 +85,7 @@ export class CoursesController {
   }
 
   @Delete('bulk')
+  @UseGuards(JwtGuard)
   removeAll(
     @CurrentUser() user: UserDocument,
     @Body('ids') ids: string[],
@@ -98,6 +102,7 @@ export class CoursesController {
   }
 
   @Delete(':id')
+  @UseGuards(JwtGuard)
   remove(@Param('id') id: string, @CurrentUser() user: UserDocument) {
     if (user.role !== 'admin')
       throw new ForbiddenException(

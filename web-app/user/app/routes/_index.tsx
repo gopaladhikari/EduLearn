@@ -1,20 +1,24 @@
+import { getAllCourses } from "@/lib/tanstack/courses";
 import type { MetaFunction } from "@remix-run/node";
-import { Button } from "@/components/ui/button";
-import { ModeToggle } from "@/components/partials/mode-toggle";
+import { useQuery } from "@tanstack/react-query";
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "New Remix App" },
-    { name: "description", content: "Welcome to Remix!" },
+    { title: "E Learning" },
+    { name: "description", content: "Welcome to E learning!" },
   ];
 };
 
 export default function Index() {
+  const { data } = useQuery({
+    queryKey: ["courses"],
+    queryFn: getAllCourses,
+    staleTime: 1000 * 60 * 5,
+  });
+
   return (
-    <div>
-      <h1>Hello world</h1>
-      <ModeToggle />
-      <Button>Click me</Button>
-    </div>
+    <section>
+      <h1>Welcome to Remix!</h1>
+    </section>
   );
 }

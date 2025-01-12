@@ -22,12 +22,10 @@ export const togglePublishCourse = async (id: string) => {
 };
 
 export const deleteManyCourses = async (ids: string[]) => {
-  console.log(ids);
   try {
     const { data } = await axiosInstance.delete(`/api/courses/bulk`, {
       data: { ids },
     });
-    console.log(data);
     return data;
   } catch (error) {
     throw new Error((error as AxiosError).message);

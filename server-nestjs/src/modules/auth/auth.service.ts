@@ -55,11 +55,9 @@ export class AuthService {
 
   login(user: UserDocument, response: Response) {
     const date = new Date();
-    date.setMilliseconds(date.getTime() + 60 * 60 * 24 * 7 * 1000); // 7 days
+    date.setMilliseconds(date.getTime() + 60 * 60 * 24 * 7 * 1000);
 
     const accessToken = this.generateJwtToken(user);
-
-    // TODO: Check samesite lax for production
 
     response.cookie('access_token', accessToken, {
       httpOnly: true,

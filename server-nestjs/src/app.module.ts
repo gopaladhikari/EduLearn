@@ -7,6 +7,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './modules/auth/auth.module';
 import { MailService } from './modules/mail/mail.service';
 import { CoursesModule } from './modules/courses/courses.module';
+import { AnalyticsModule } from './modules/analytics/analytics.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { CoursesModule } from './modules/courses/courses.module';
     UsersModule,
     AuthModule,
     CoursesModule,
+    AnalyticsModule,
   ],
   controllers: [AppController],
   providers: [AppService, MailService],

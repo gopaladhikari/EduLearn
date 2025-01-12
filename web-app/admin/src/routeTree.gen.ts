@@ -10,261 +10,294 @@
 
 // Import Routes
 
-import { Route as rootRoute } from './routes/__root'
-import { Route as UnprotectedImport } from './routes/_unprotected'
-import { Route as ProtectedImport } from './routes/_protected'
-import { Route as AuthImport } from './routes/_auth'
-import { Route as UnprotectedIndexImport } from './routes/_unprotected/index'
-import { Route as UnprotectedTermsAndConditionImport } from './routes/_unprotected/terms-and-condition'
-import { Route as UnprotectedPrivacyPolicyImport } from './routes/_unprotected/privacy-policy'
-import { Route as ProtectedSettingsImport } from './routes/_protected/settings'
-import { Route as ProtectedDashboardImport } from './routes/_protected/dashboard'
-import { Route as ProtectedCustomersImport } from './routes/_protected/customers'
-import { Route as AuthVerifyEmailImport } from './routes/_auth/verify-email'
-import { Route as AuthRegisterImport } from './routes/_auth/register'
-import { Route as AuthLoginImport } from './routes/_auth/login'
-import { Route as AuthForgotPasswordImport } from './routes/_auth/forgot-password'
-import { Route as AuthConfirmPasswordImport } from './routes/_auth/confirm-password'
-import { Route as ProtectedCoursesIndexImport } from './routes/_protected/courses/index'
-import { Route as ProtectedCoursesAddImport } from './routes/_protected/courses/add'
-import { Route as ProtectedCoursesSlugImport } from './routes/_protected/courses/$slug'
+import { Route as rootRoute } from "./routes/__root";
+import { Route as UnprotectedImport } from "./routes/_unprotected";
+import { Route as ProtectedImport } from "./routes/_protected";
+import { Route as AuthImport } from "./routes/_auth";
+import { Route as UnprotectedIndexImport } from "./routes/_unprotected/index";
+import { Route as UnprotectedTermsAndConditionImport } from "./routes/_unprotected/terms-and-condition";
+import { Route as UnprotectedPrivacyPolicyImport } from "./routes/_unprotected/privacy-policy";
+import { Route as ProtectedSettingsImport } from "./routes/_protected/settings";
+import { Route as ProtectedDashboardImport } from "./routes/_protected/dashboard";
+import { Route as ProtectedCustomersImport } from "./routes/_protected/customers";
+import { Route as AuthVerifyEmailImport } from "./routes/_auth/verify-email";
+import { Route as AuthRegisterImport } from "./routes/_auth/register";
+import { Route as AuthLoginImport } from "./routes/_auth/login";
+import { Route as AuthForgotPasswordImport } from "./routes/_auth/forgot-password";
+import { Route as AuthConfirmPasswordImport } from "./routes/_auth/confirm-password";
+import { Route as ProtectedCoursesIndexImport } from "./routes/_protected/courses/index";
+import { Route as ProtectedAnalyticsIndexImport } from "./routes/_protected/analytics/index";
+import { Route as ProtectedCoursesAddImport } from "./routes/_protected/courses/add";
+import { Route as ProtectedCoursesSlugImport } from "./routes/_protected/courses/$slug";
+import { Route as ProtectedAnalyticsSlugImport } from "./routes/_protected/analytics/$slug";
 
 // Create/Update Routes
 
 const UnprotectedRoute = UnprotectedImport.update({
-  id: '/_unprotected',
+  id: "/_unprotected",
   getParentRoute: () => rootRoute,
-} as any)
+} as any);
 
 const ProtectedRoute = ProtectedImport.update({
-  id: '/_protected',
+  id: "/_protected",
   getParentRoute: () => rootRoute,
-} as any)
+} as any);
 
 const AuthRoute = AuthImport.update({
-  id: '/_auth',
+  id: "/_auth",
   getParentRoute: () => rootRoute,
-} as any)
+} as any);
 
 const UnprotectedIndexRoute = UnprotectedIndexImport.update({
-  id: '/',
-  path: '/',
+  id: "/",
+  path: "/",
   getParentRoute: () => UnprotectedRoute,
-} as any)
+} as any);
 
 const UnprotectedTermsAndConditionRoute =
   UnprotectedTermsAndConditionImport.update({
-    id: '/terms-and-condition',
-    path: '/terms-and-condition',
+    id: "/terms-and-condition",
+    path: "/terms-and-condition",
     getParentRoute: () => UnprotectedRoute,
-  } as any)
+  } as any);
 
-const UnprotectedPrivacyPolicyRoute = UnprotectedPrivacyPolicyImport.update({
-  id: '/privacy-policy',
-  path: '/privacy-policy',
-  getParentRoute: () => UnprotectedRoute,
-} as any)
+const UnprotectedPrivacyPolicyRoute =
+  UnprotectedPrivacyPolicyImport.update({
+    id: "/privacy-policy",
+    path: "/privacy-policy",
+    getParentRoute: () => UnprotectedRoute,
+  } as any);
 
 const ProtectedSettingsRoute = ProtectedSettingsImport.update({
-  id: '/settings',
-  path: '/settings',
+  id: "/settings",
+  path: "/settings",
   getParentRoute: () => ProtectedRoute,
-} as any)
+} as any);
 
 const ProtectedDashboardRoute = ProtectedDashboardImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
+  id: "/dashboard",
+  path: "/dashboard",
   getParentRoute: () => ProtectedRoute,
-} as any)
+} as any);
 
 const ProtectedCustomersRoute = ProtectedCustomersImport.update({
-  id: '/customers',
-  path: '/customers',
+  id: "/customers",
+  path: "/customers",
   getParentRoute: () => ProtectedRoute,
-} as any)
+} as any);
 
 const AuthVerifyEmailRoute = AuthVerifyEmailImport.update({
-  id: '/verify-email',
-  path: '/verify-email',
+  id: "/verify-email",
+  path: "/verify-email",
   getParentRoute: () => AuthRoute,
-} as any)
+} as any);
 
 const AuthRegisterRoute = AuthRegisterImport.update({
-  id: '/register',
-  path: '/register',
+  id: "/register",
+  path: "/register",
   getParentRoute: () => AuthRoute,
-} as any)
+} as any);
 
 const AuthLoginRoute = AuthLoginImport.update({
-  id: '/login',
-  path: '/login',
+  id: "/login",
+  path: "/login",
   getParentRoute: () => AuthRoute,
-} as any)
+} as any);
 
 const AuthForgotPasswordRoute = AuthForgotPasswordImport.update({
-  id: '/forgot-password',
-  path: '/forgot-password',
+  id: "/forgot-password",
+  path: "/forgot-password",
   getParentRoute: () => AuthRoute,
-} as any)
+} as any);
 
 const AuthConfirmPasswordRoute = AuthConfirmPasswordImport.update({
-  id: '/confirm-password',
-  path: '/confirm-password',
+  id: "/confirm-password",
+  path: "/confirm-password",
   getParentRoute: () => AuthRoute,
-} as any)
+} as any);
 
-const ProtectedCoursesIndexRoute = ProtectedCoursesIndexImport.update({
-  id: '/courses/',
-  path: '/courses/',
-  getParentRoute: () => ProtectedRoute,
-} as any)
+const ProtectedCoursesIndexRoute = ProtectedCoursesIndexImport.update(
+  {
+    id: "/courses/",
+    path: "/courses/",
+    getParentRoute: () => ProtectedRoute,
+  } as any,
+);
+
+const ProtectedAnalyticsIndexRoute =
+  ProtectedAnalyticsIndexImport.update({
+    id: "/analytics/",
+    path: "/analytics/",
+    getParentRoute: () => ProtectedRoute,
+  } as any);
 
 const ProtectedCoursesAddRoute = ProtectedCoursesAddImport.update({
-  id: '/courses/add',
-  path: '/courses/add',
+  id: "/courses/add",
+  path: "/courses/add",
   getParentRoute: () => ProtectedRoute,
-} as any)
+} as any);
 
 const ProtectedCoursesSlugRoute = ProtectedCoursesSlugImport.update({
-  id: '/courses/$slug',
-  path: '/courses/$slug',
+  id: "/courses/$slug",
+  path: "/courses/$slug",
   getParentRoute: () => ProtectedRoute,
-} as any)
+} as any);
+
+const ProtectedAnalyticsSlugRoute =
+  ProtectedAnalyticsSlugImport.update({
+    id: "/analytics/$slug",
+    path: "/analytics/$slug",
+    getParentRoute: () => ProtectedRoute,
+  } as any);
 
 // Populate the FileRoutesByPath interface
 
-declare module '@tanstack/react-router' {
+declare module "@tanstack/react-router" {
   interface FileRoutesByPath {
-    '/_auth': {
-      id: '/_auth'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof AuthImport
-      parentRoute: typeof rootRoute
-    }
-    '/_protected': {
-      id: '/_protected'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof ProtectedImport
-      parentRoute: typeof rootRoute
-    }
-    '/_unprotected': {
-      id: '/_unprotected'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof UnprotectedImport
-      parentRoute: typeof rootRoute
-    }
-    '/_auth/confirm-password': {
-      id: '/_auth/confirm-password'
-      path: '/confirm-password'
-      fullPath: '/confirm-password'
-      preLoaderRoute: typeof AuthConfirmPasswordImport
-      parentRoute: typeof AuthImport
-    }
-    '/_auth/forgot-password': {
-      id: '/_auth/forgot-password'
-      path: '/forgot-password'
-      fullPath: '/forgot-password'
-      preLoaderRoute: typeof AuthForgotPasswordImport
-      parentRoute: typeof AuthImport
-    }
-    '/_auth/login': {
-      id: '/_auth/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof AuthLoginImport
-      parentRoute: typeof AuthImport
-    }
-    '/_auth/register': {
-      id: '/_auth/register'
-      path: '/register'
-      fullPath: '/register'
-      preLoaderRoute: typeof AuthRegisterImport
-      parentRoute: typeof AuthImport
-    }
-    '/_auth/verify-email': {
-      id: '/_auth/verify-email'
-      path: '/verify-email'
-      fullPath: '/verify-email'
-      preLoaderRoute: typeof AuthVerifyEmailImport
-      parentRoute: typeof AuthImport
-    }
-    '/_protected/customers': {
-      id: '/_protected/customers'
-      path: '/customers'
-      fullPath: '/customers'
-      preLoaderRoute: typeof ProtectedCustomersImport
-      parentRoute: typeof ProtectedImport
-    }
-    '/_protected/dashboard': {
-      id: '/_protected/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof ProtectedDashboardImport
-      parentRoute: typeof ProtectedImport
-    }
-    '/_protected/settings': {
-      id: '/_protected/settings'
-      path: '/settings'
-      fullPath: '/settings'
-      preLoaderRoute: typeof ProtectedSettingsImport
-      parentRoute: typeof ProtectedImport
-    }
-    '/_unprotected/privacy-policy': {
-      id: '/_unprotected/privacy-policy'
-      path: '/privacy-policy'
-      fullPath: '/privacy-policy'
-      preLoaderRoute: typeof UnprotectedPrivacyPolicyImport
-      parentRoute: typeof UnprotectedImport
-    }
-    '/_unprotected/terms-and-condition': {
-      id: '/_unprotected/terms-and-condition'
-      path: '/terms-and-condition'
-      fullPath: '/terms-and-condition'
-      preLoaderRoute: typeof UnprotectedTermsAndConditionImport
-      parentRoute: typeof UnprotectedImport
-    }
-    '/_unprotected/': {
-      id: '/_unprotected/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof UnprotectedIndexImport
-      parentRoute: typeof UnprotectedImport
-    }
-    '/_protected/courses/$slug': {
-      id: '/_protected/courses/$slug'
-      path: '/courses/$slug'
-      fullPath: '/courses/$slug'
-      preLoaderRoute: typeof ProtectedCoursesSlugImport
-      parentRoute: typeof ProtectedImport
-    }
-    '/_protected/courses/add': {
-      id: '/_protected/courses/add'
-      path: '/courses/add'
-      fullPath: '/courses/add'
-      preLoaderRoute: typeof ProtectedCoursesAddImport
-      parentRoute: typeof ProtectedImport
-    }
-    '/_protected/courses/': {
-      id: '/_protected/courses/'
-      path: '/courses'
-      fullPath: '/courses'
-      preLoaderRoute: typeof ProtectedCoursesIndexImport
-      parentRoute: typeof ProtectedImport
-    }
+    "/_auth": {
+      id: "/_auth";
+      path: "";
+      fullPath: "";
+      preLoaderRoute: typeof AuthImport;
+      parentRoute: typeof rootRoute;
+    };
+    "/_protected": {
+      id: "/_protected";
+      path: "";
+      fullPath: "";
+      preLoaderRoute: typeof ProtectedImport;
+      parentRoute: typeof rootRoute;
+    };
+    "/_unprotected": {
+      id: "/_unprotected";
+      path: "";
+      fullPath: "";
+      preLoaderRoute: typeof UnprotectedImport;
+      parentRoute: typeof rootRoute;
+    };
+    "/_auth/confirm-password": {
+      id: "/_auth/confirm-password";
+      path: "/confirm-password";
+      fullPath: "/confirm-password";
+      preLoaderRoute: typeof AuthConfirmPasswordImport;
+      parentRoute: typeof AuthImport;
+    };
+    "/_auth/forgot-password": {
+      id: "/_auth/forgot-password";
+      path: "/forgot-password";
+      fullPath: "/forgot-password";
+      preLoaderRoute: typeof AuthForgotPasswordImport;
+      parentRoute: typeof AuthImport;
+    };
+    "/_auth/login": {
+      id: "/_auth/login";
+      path: "/login";
+      fullPath: "/login";
+      preLoaderRoute: typeof AuthLoginImport;
+      parentRoute: typeof AuthImport;
+    };
+    "/_auth/register": {
+      id: "/_auth/register";
+      path: "/register";
+      fullPath: "/register";
+      preLoaderRoute: typeof AuthRegisterImport;
+      parentRoute: typeof AuthImport;
+    };
+    "/_auth/verify-email": {
+      id: "/_auth/verify-email";
+      path: "/verify-email";
+      fullPath: "/verify-email";
+      preLoaderRoute: typeof AuthVerifyEmailImport;
+      parentRoute: typeof AuthImport;
+    };
+    "/_protected/customers": {
+      id: "/_protected/customers";
+      path: "/customers";
+      fullPath: "/customers";
+      preLoaderRoute: typeof ProtectedCustomersImport;
+      parentRoute: typeof ProtectedImport;
+    };
+    "/_protected/dashboard": {
+      id: "/_protected/dashboard";
+      path: "/dashboard";
+      fullPath: "/dashboard";
+      preLoaderRoute: typeof ProtectedDashboardImport;
+      parentRoute: typeof ProtectedImport;
+    };
+    "/_protected/settings": {
+      id: "/_protected/settings";
+      path: "/settings";
+      fullPath: "/settings";
+      preLoaderRoute: typeof ProtectedSettingsImport;
+      parentRoute: typeof ProtectedImport;
+    };
+    "/_unprotected/privacy-policy": {
+      id: "/_unprotected/privacy-policy";
+      path: "/privacy-policy";
+      fullPath: "/privacy-policy";
+      preLoaderRoute: typeof UnprotectedPrivacyPolicyImport;
+      parentRoute: typeof UnprotectedImport;
+    };
+    "/_unprotected/terms-and-condition": {
+      id: "/_unprotected/terms-and-condition";
+      path: "/terms-and-condition";
+      fullPath: "/terms-and-condition";
+      preLoaderRoute: typeof UnprotectedTermsAndConditionImport;
+      parentRoute: typeof UnprotectedImport;
+    };
+    "/_unprotected/": {
+      id: "/_unprotected/";
+      path: "/";
+      fullPath: "/";
+      preLoaderRoute: typeof UnprotectedIndexImport;
+      parentRoute: typeof UnprotectedImport;
+    };
+    "/_protected/analytics/$slug": {
+      id: "/_protected/analytics/$slug";
+      path: "/analytics/$slug";
+      fullPath: "/analytics/$slug";
+      preLoaderRoute: typeof ProtectedAnalyticsSlugImport;
+      parentRoute: typeof ProtectedImport;
+    };
+    "/_protected/courses/$slug": {
+      id: "/_protected/courses/$slug";
+      path: "/courses/$slug";
+      fullPath: "/courses/$slug";
+      preLoaderRoute: typeof ProtectedCoursesSlugImport;
+      parentRoute: typeof ProtectedImport;
+    };
+    "/_protected/courses/add": {
+      id: "/_protected/courses/add";
+      path: "/courses/add";
+      fullPath: "/courses/add";
+      preLoaderRoute: typeof ProtectedCoursesAddImport;
+      parentRoute: typeof ProtectedImport;
+    };
+    "/_protected/analytics/": {
+      id: "/_protected/analytics/";
+      path: "/analytics";
+      fullPath: "/analytics";
+      preLoaderRoute: typeof ProtectedAnalyticsIndexImport;
+      parentRoute: typeof ProtectedImport;
+    };
+    "/_protected/courses/": {
+      id: "/_protected/courses/";
+      path: "/courses";
+      fullPath: "/courses";
+      preLoaderRoute: typeof ProtectedCoursesIndexImport;
+      parentRoute: typeof ProtectedImport;
+    };
   }
 }
 
 // Create and export the route tree
 
 interface AuthRouteChildren {
-  AuthConfirmPasswordRoute: typeof AuthConfirmPasswordRoute
-  AuthForgotPasswordRoute: typeof AuthForgotPasswordRoute
-  AuthLoginRoute: typeof AuthLoginRoute
-  AuthRegisterRoute: typeof AuthRegisterRoute
-  AuthVerifyEmailRoute: typeof AuthVerifyEmailRoute
+  AuthConfirmPasswordRoute: typeof AuthConfirmPasswordRoute;
+  AuthForgotPasswordRoute: typeof AuthForgotPasswordRoute;
+  AuthLoginRoute: typeof AuthLoginRoute;
+  AuthRegisterRoute: typeof AuthRegisterRoute;
+  AuthVerifyEmailRoute: typeof AuthVerifyEmailRoute;
 }
 
 const AuthRouteChildren: AuthRouteChildren = {
@@ -273,177 +306,194 @@ const AuthRouteChildren: AuthRouteChildren = {
   AuthLoginRoute: AuthLoginRoute,
   AuthRegisterRoute: AuthRegisterRoute,
   AuthVerifyEmailRoute: AuthVerifyEmailRoute,
-}
+};
 
-const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
+const AuthRouteWithChildren =
+  AuthRoute._addFileChildren(AuthRouteChildren);
 
 interface ProtectedRouteChildren {
-  ProtectedCustomersRoute: typeof ProtectedCustomersRoute
-  ProtectedDashboardRoute: typeof ProtectedDashboardRoute
-  ProtectedSettingsRoute: typeof ProtectedSettingsRoute
-  ProtectedCoursesSlugRoute: typeof ProtectedCoursesSlugRoute
-  ProtectedCoursesAddRoute: typeof ProtectedCoursesAddRoute
-  ProtectedCoursesIndexRoute: typeof ProtectedCoursesIndexRoute
+  ProtectedCustomersRoute: typeof ProtectedCustomersRoute;
+  ProtectedDashboardRoute: typeof ProtectedDashboardRoute;
+  ProtectedSettingsRoute: typeof ProtectedSettingsRoute;
+  ProtectedAnalyticsSlugRoute: typeof ProtectedAnalyticsSlugRoute;
+  ProtectedCoursesSlugRoute: typeof ProtectedCoursesSlugRoute;
+  ProtectedCoursesAddRoute: typeof ProtectedCoursesAddRoute;
+  ProtectedAnalyticsIndexRoute: typeof ProtectedAnalyticsIndexRoute;
+  ProtectedCoursesIndexRoute: typeof ProtectedCoursesIndexRoute;
 }
 
 const ProtectedRouteChildren: ProtectedRouteChildren = {
   ProtectedCustomersRoute: ProtectedCustomersRoute,
   ProtectedDashboardRoute: ProtectedDashboardRoute,
   ProtectedSettingsRoute: ProtectedSettingsRoute,
+  ProtectedAnalyticsSlugRoute: ProtectedAnalyticsSlugRoute,
   ProtectedCoursesSlugRoute: ProtectedCoursesSlugRoute,
   ProtectedCoursesAddRoute: ProtectedCoursesAddRoute,
+  ProtectedAnalyticsIndexRoute: ProtectedAnalyticsIndexRoute,
   ProtectedCoursesIndexRoute: ProtectedCoursesIndexRoute,
-}
+};
 
 const ProtectedRouteWithChildren = ProtectedRoute._addFileChildren(
   ProtectedRouteChildren,
-)
+);
 
 interface UnprotectedRouteChildren {
-  UnprotectedPrivacyPolicyRoute: typeof UnprotectedPrivacyPolicyRoute
-  UnprotectedTermsAndConditionRoute: typeof UnprotectedTermsAndConditionRoute
-  UnprotectedIndexRoute: typeof UnprotectedIndexRoute
+  UnprotectedPrivacyPolicyRoute: typeof UnprotectedPrivacyPolicyRoute;
+  UnprotectedTermsAndConditionRoute: typeof UnprotectedTermsAndConditionRoute;
+  UnprotectedIndexRoute: typeof UnprotectedIndexRoute;
 }
 
 const UnprotectedRouteChildren: UnprotectedRouteChildren = {
   UnprotectedPrivacyPolicyRoute: UnprotectedPrivacyPolicyRoute,
-  UnprotectedTermsAndConditionRoute: UnprotectedTermsAndConditionRoute,
+  UnprotectedTermsAndConditionRoute:
+    UnprotectedTermsAndConditionRoute,
   UnprotectedIndexRoute: UnprotectedIndexRoute,
-}
+};
 
-const UnprotectedRouteWithChildren = UnprotectedRoute._addFileChildren(
-  UnprotectedRouteChildren,
-)
+const UnprotectedRouteWithChildren =
+  UnprotectedRoute._addFileChildren(UnprotectedRouteChildren);
 
 export interface FileRoutesByFullPath {
-  '': typeof UnprotectedRouteWithChildren
-  '/confirm-password': typeof AuthConfirmPasswordRoute
-  '/forgot-password': typeof AuthForgotPasswordRoute
-  '/login': typeof AuthLoginRoute
-  '/register': typeof AuthRegisterRoute
-  '/verify-email': typeof AuthVerifyEmailRoute
-  '/customers': typeof ProtectedCustomersRoute
-  '/dashboard': typeof ProtectedDashboardRoute
-  '/settings': typeof ProtectedSettingsRoute
-  '/privacy-policy': typeof UnprotectedPrivacyPolicyRoute
-  '/terms-and-condition': typeof UnprotectedTermsAndConditionRoute
-  '/': typeof UnprotectedIndexRoute
-  '/courses/$slug': typeof ProtectedCoursesSlugRoute
-  '/courses/add': typeof ProtectedCoursesAddRoute
-  '/courses': typeof ProtectedCoursesIndexRoute
+  "": typeof UnprotectedRouteWithChildren;
+  "/confirm-password": typeof AuthConfirmPasswordRoute;
+  "/forgot-password": typeof AuthForgotPasswordRoute;
+  "/login": typeof AuthLoginRoute;
+  "/register": typeof AuthRegisterRoute;
+  "/verify-email": typeof AuthVerifyEmailRoute;
+  "/customers": typeof ProtectedCustomersRoute;
+  "/dashboard": typeof ProtectedDashboardRoute;
+  "/settings": typeof ProtectedSettingsRoute;
+  "/privacy-policy": typeof UnprotectedPrivacyPolicyRoute;
+  "/terms-and-condition": typeof UnprotectedTermsAndConditionRoute;
+  "/": typeof UnprotectedIndexRoute;
+  "/analytics/$slug": typeof ProtectedAnalyticsSlugRoute;
+  "/courses/$slug": typeof ProtectedCoursesSlugRoute;
+  "/courses/add": typeof ProtectedCoursesAddRoute;
+  "/analytics": typeof ProtectedAnalyticsIndexRoute;
+  "/courses": typeof ProtectedCoursesIndexRoute;
 }
 
 export interface FileRoutesByTo {
-  '': typeof ProtectedRouteWithChildren
-  '/confirm-password': typeof AuthConfirmPasswordRoute
-  '/forgot-password': typeof AuthForgotPasswordRoute
-  '/login': typeof AuthLoginRoute
-  '/register': typeof AuthRegisterRoute
-  '/verify-email': typeof AuthVerifyEmailRoute
-  '/customers': typeof ProtectedCustomersRoute
-  '/dashboard': typeof ProtectedDashboardRoute
-  '/settings': typeof ProtectedSettingsRoute
-  '/privacy-policy': typeof UnprotectedPrivacyPolicyRoute
-  '/terms-and-condition': typeof UnprotectedTermsAndConditionRoute
-  '/': typeof UnprotectedIndexRoute
-  '/courses/$slug': typeof ProtectedCoursesSlugRoute
-  '/courses/add': typeof ProtectedCoursesAddRoute
-  '/courses': typeof ProtectedCoursesIndexRoute
+  "": typeof ProtectedRouteWithChildren;
+  "/confirm-password": typeof AuthConfirmPasswordRoute;
+  "/forgot-password": typeof AuthForgotPasswordRoute;
+  "/login": typeof AuthLoginRoute;
+  "/register": typeof AuthRegisterRoute;
+  "/verify-email": typeof AuthVerifyEmailRoute;
+  "/customers": typeof ProtectedCustomersRoute;
+  "/dashboard": typeof ProtectedDashboardRoute;
+  "/settings": typeof ProtectedSettingsRoute;
+  "/privacy-policy": typeof UnprotectedPrivacyPolicyRoute;
+  "/terms-and-condition": typeof UnprotectedTermsAndConditionRoute;
+  "/": typeof UnprotectedIndexRoute;
+  "/analytics/$slug": typeof ProtectedAnalyticsSlugRoute;
+  "/courses/$slug": typeof ProtectedCoursesSlugRoute;
+  "/courses/add": typeof ProtectedCoursesAddRoute;
+  "/analytics": typeof ProtectedAnalyticsIndexRoute;
+  "/courses": typeof ProtectedCoursesIndexRoute;
 }
 
 export interface FileRoutesById {
-  __root__: typeof rootRoute
-  '/_auth': typeof AuthRouteWithChildren
-  '/_protected': typeof ProtectedRouteWithChildren
-  '/_unprotected': typeof UnprotectedRouteWithChildren
-  '/_auth/confirm-password': typeof AuthConfirmPasswordRoute
-  '/_auth/forgot-password': typeof AuthForgotPasswordRoute
-  '/_auth/login': typeof AuthLoginRoute
-  '/_auth/register': typeof AuthRegisterRoute
-  '/_auth/verify-email': typeof AuthVerifyEmailRoute
-  '/_protected/customers': typeof ProtectedCustomersRoute
-  '/_protected/dashboard': typeof ProtectedDashboardRoute
-  '/_protected/settings': typeof ProtectedSettingsRoute
-  '/_unprotected/privacy-policy': typeof UnprotectedPrivacyPolicyRoute
-  '/_unprotected/terms-and-condition': typeof UnprotectedTermsAndConditionRoute
-  '/_unprotected/': typeof UnprotectedIndexRoute
-  '/_protected/courses/$slug': typeof ProtectedCoursesSlugRoute
-  '/_protected/courses/add': typeof ProtectedCoursesAddRoute
-  '/_protected/courses/': typeof ProtectedCoursesIndexRoute
+  __root__: typeof rootRoute;
+  "/_auth": typeof AuthRouteWithChildren;
+  "/_protected": typeof ProtectedRouteWithChildren;
+  "/_unprotected": typeof UnprotectedRouteWithChildren;
+  "/_auth/confirm-password": typeof AuthConfirmPasswordRoute;
+  "/_auth/forgot-password": typeof AuthForgotPasswordRoute;
+  "/_auth/login": typeof AuthLoginRoute;
+  "/_auth/register": typeof AuthRegisterRoute;
+  "/_auth/verify-email": typeof AuthVerifyEmailRoute;
+  "/_protected/customers": typeof ProtectedCustomersRoute;
+  "/_protected/dashboard": typeof ProtectedDashboardRoute;
+  "/_protected/settings": typeof ProtectedSettingsRoute;
+  "/_unprotected/privacy-policy": typeof UnprotectedPrivacyPolicyRoute;
+  "/_unprotected/terms-and-condition": typeof UnprotectedTermsAndConditionRoute;
+  "/_unprotected/": typeof UnprotectedIndexRoute;
+  "/_protected/analytics/$slug": typeof ProtectedAnalyticsSlugRoute;
+  "/_protected/courses/$slug": typeof ProtectedCoursesSlugRoute;
+  "/_protected/courses/add": typeof ProtectedCoursesAddRoute;
+  "/_protected/analytics/": typeof ProtectedAnalyticsIndexRoute;
+  "/_protected/courses/": typeof ProtectedCoursesIndexRoute;
 }
 
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
+  fileRoutesByFullPath: FileRoutesByFullPath;
   fullPaths:
-    | ''
-    | '/confirm-password'
-    | '/forgot-password'
-    | '/login'
-    | '/register'
-    | '/verify-email'
-    | '/customers'
-    | '/dashboard'
-    | '/settings'
-    | '/privacy-policy'
-    | '/terms-and-condition'
-    | '/'
-    | '/courses/$slug'
-    | '/courses/add'
-    | '/courses'
-  fileRoutesByTo: FileRoutesByTo
+    | ""
+    | "/confirm-password"
+    | "/forgot-password"
+    | "/login"
+    | "/register"
+    | "/verify-email"
+    | "/customers"
+    | "/dashboard"
+    | "/settings"
+    | "/privacy-policy"
+    | "/terms-and-condition"
+    | "/"
+    | "/analytics/$slug"
+    | "/courses/$slug"
+    | "/courses/add"
+    | "/analytics"
+    | "/courses";
+  fileRoutesByTo: FileRoutesByTo;
   to:
-    | ''
-    | '/confirm-password'
-    | '/forgot-password'
-    | '/login'
-    | '/register'
-    | '/verify-email'
-    | '/customers'
-    | '/dashboard'
-    | '/settings'
-    | '/privacy-policy'
-    | '/terms-and-condition'
-    | '/'
-    | '/courses/$slug'
-    | '/courses/add'
-    | '/courses'
+    | ""
+    | "/confirm-password"
+    | "/forgot-password"
+    | "/login"
+    | "/register"
+    | "/verify-email"
+    | "/customers"
+    | "/dashboard"
+    | "/settings"
+    | "/privacy-policy"
+    | "/terms-and-condition"
+    | "/"
+    | "/analytics/$slug"
+    | "/courses/$slug"
+    | "/courses/add"
+    | "/analytics"
+    | "/courses";
   id:
-    | '__root__'
-    | '/_auth'
-    | '/_protected'
-    | '/_unprotected'
-    | '/_auth/confirm-password'
-    | '/_auth/forgot-password'
-    | '/_auth/login'
-    | '/_auth/register'
-    | '/_auth/verify-email'
-    | '/_protected/customers'
-    | '/_protected/dashboard'
-    | '/_protected/settings'
-    | '/_unprotected/privacy-policy'
-    | '/_unprotected/terms-and-condition'
-    | '/_unprotected/'
-    | '/_protected/courses/$slug'
-    | '/_protected/courses/add'
-    | '/_protected/courses/'
-  fileRoutesById: FileRoutesById
+    | "__root__"
+    | "/_auth"
+    | "/_protected"
+    | "/_unprotected"
+    | "/_auth/confirm-password"
+    | "/_auth/forgot-password"
+    | "/_auth/login"
+    | "/_auth/register"
+    | "/_auth/verify-email"
+    | "/_protected/customers"
+    | "/_protected/dashboard"
+    | "/_protected/settings"
+    | "/_unprotected/privacy-policy"
+    | "/_unprotected/terms-and-condition"
+    | "/_unprotected/"
+    | "/_protected/analytics/$slug"
+    | "/_protected/courses/$slug"
+    | "/_protected/courses/add"
+    | "/_protected/analytics/"
+    | "/_protected/courses/";
+  fileRoutesById: FileRoutesById;
 }
 
 export interface RootRouteChildren {
-  AuthRoute: typeof AuthRouteWithChildren
-  ProtectedRoute: typeof ProtectedRouteWithChildren
-  UnprotectedRoute: typeof UnprotectedRouteWithChildren
+  AuthRoute: typeof AuthRouteWithChildren;
+  ProtectedRoute: typeof ProtectedRouteWithChildren;
+  UnprotectedRoute: typeof UnprotectedRouteWithChildren;
 }
 
 const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRouteWithChildren,
   ProtectedRoute: ProtectedRouteWithChildren,
   UnprotectedRoute: UnprotectedRouteWithChildren,
-}
+};
 
 export const routeTree = rootRoute
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>()
+  ._addFileTypes<FileRouteTypes>();
 
 /* ROUTE_MANIFEST_START
 {
@@ -472,8 +522,10 @@ export const routeTree = rootRoute
         "/_protected/customers",
         "/_protected/dashboard",
         "/_protected/settings",
+        "/_protected/analytics/$slug",
         "/_protected/courses/$slug",
         "/_protected/courses/add",
+        "/_protected/analytics/",
         "/_protected/courses/"
       ]
     },
@@ -529,12 +581,20 @@ export const routeTree = rootRoute
       "filePath": "_unprotected/index.tsx",
       "parent": "/_unprotected"
     },
+    "/_protected/analytics/$slug": {
+      "filePath": "_protected/analytics/$slug.tsx",
+      "parent": "/_protected"
+    },
     "/_protected/courses/$slug": {
       "filePath": "_protected/courses/$slug.tsx",
       "parent": "/_protected"
     },
     "/_protected/courses/add": {
       "filePath": "_protected/courses/add.tsx",
+      "parent": "/_protected"
+    },
+    "/_protected/analytics/": {
+      "filePath": "_protected/analytics/index.tsx",
       "parent": "/_protected"
     },
     "/_protected/courses/": {

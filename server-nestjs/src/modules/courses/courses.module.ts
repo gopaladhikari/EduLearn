@@ -26,7 +26,6 @@ import slugify from 'slugify';
 
           schema.pre('save', async function (next) {
             if (this.isModified('title')) {
-              // Generate the base slug
               const baseSlug = slugify(this.title, {
                 lower: true,
                 strict: true,

@@ -19,8 +19,8 @@ import { UpdateCourseDto } from './dto/update-course.dto';
 import { JwtGuard } from '../auth/guards/jwt-auth.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CurrentUser } from '../auth/current-user.decorator';
-import type { UserDocument } from '../users/entities/user.entity';
 import { isValidObjectId } from 'mongoose';
+import type { UserDocument } from '../users/entities/user.entity';
 
 @Controller('courses')
 @UseGuards(JwtGuard)

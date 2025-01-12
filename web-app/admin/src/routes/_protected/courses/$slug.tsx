@@ -1,6 +1,6 @@
 import { getCourseBySlug } from "@/lib/queries/courses.query";
 import { useQuery } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -26,28 +26,6 @@ import { useSeo } from "@/hooks/useSeo";
 export const Route = createFileRoute("/_protected/courses/$slug")({
   component: RouteComponent,
 });
-
-const course = {
-  id: "1",
-  title: "Advanced Web Development",
-  description:
-    "Master the latest web technologies and frameworks in this comprehensive course.",
-  instructor: [{ name: "Jane Doe", avatar: "/avatars/jane-doe.jpg" }],
-  uploadedBy: { name: "John Smith" },
-  lessons: [
-    "HTML & CSS Basics",
-    "JavaScript Fundamentals",
-    "React Essentials",
-    "Backend with Node.js",
-    "Database Integration",
-  ],
-  category: "Web Development",
-  tags: ["JavaScript", "React", "Node.js", "MongoDB"],
-  price: 99.99,
-  isPopular: true,
-  isBestSeller: true,
-  video: "https://example.com/course-preview.mp4",
-};
 
 function RouteComponent() {
   const { slug } = Route.useParams();
@@ -108,13 +86,13 @@ function RouteComponent() {
             <h3 className="mb-4 text-xl font-semibold">
               What You'll Learn
             </h3>
-            <ul className="list-disc space-y-2 pl-5">
+            {/* <ul className="list-disc space-y-2 pl-5">
               {course.lessons.map((lesson, index) => (
                 <li key={index} className="text-muted-foreground">
                   {lesson}
                 </li>
               ))}
-            </ul>
+            </ul> */}
           </div>
           <div>
             <Card>
@@ -124,7 +102,7 @@ function RouteComponent() {
               <CardContent className="space-y-4">
                 <div className="flex items-center gap-2">
                   <User className="h-5 w-5 text-muted-foreground" />
-                  <span>Instructor: {course.instructor[0].name}</span>
+                  {/* <span>Instructor: {course.instructor[0].name}</span> */}
                 </div>
                 <div className="flex items-center gap-2">
                   <DollarSign className="h-5 w-5 text-muted-foreground" />
@@ -132,7 +110,7 @@ function RouteComponent() {
                 </div>
                 <div className="flex items-center gap-2">
                   <BookOpen className="h-5 w-5 text-muted-foreground" />
-                  <span>{course.lessons.length} lessons</span>
+                  {/* <span>{course.lessons.length} lessons</span> */}
                 </div>
                 <div className="mt-4 flex flex-wrap gap-2">
                   {data?.data.tags.map((tag) => (
@@ -148,7 +126,16 @@ function RouteComponent() {
                 </div>
               </CardContent>
               <CardFooter>
-                <Button className="w-full">Enroll Now</Button>
+                <Button className="w-full">
+                  <Link
+                    to="/analytics/$slug"
+                    params={{
+                      slug: data?.data.slug as string,
+                    }}
+                  >
+                    View Analytics
+                  </Link>
+                </Button>
               </CardFooter>
             </Card>
           </div>

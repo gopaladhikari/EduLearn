@@ -7,7 +7,6 @@ type Data = {
   password: string;
 };
 export const registerMutation = async (formData: Data) => {
-  console.log(formData);
   try {
     const { data } = await axiosInstance.post("/api/users", {
       ...formData,

@@ -16,7 +16,10 @@ export function Header() {
   return (
     <MaxWidthWrapper className="border-b">
       <div className="mx-auto flex h-16 items-center gap-6 px-4">
-        <Link to="/" className="flex items-center gap-2 text-xl font-semibold">
+        <Link
+          to="/"
+          className="flex items-center gap-2 text-xl font-semibold"
+        >
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground">
             E
           </div>
@@ -45,10 +48,11 @@ export function Header() {
 
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="sm">
-            Log in
+            <Link to="/login">Log in</Link>
           </Button>
+
           <Button size="sm" className="rounded-sm">
-            Sign up
+            <Link to="/register">Register</Link>
           </Button>
           <Button variant="ghost" size="icon" className="rounded-full">
             🌐
@@ -59,13 +63,19 @@ export function Header() {
       <div className="no-scrollbar overflow-auto border-t">
         <NavigationMenu className="py-2">
           <NavigationMenuList>
-            {Object.values(CourseCategory).map((item) => (
-              <NavigationMenuItem key={item} className="cursor-pointer">
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                  {item}
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-            ))}
+            {Object.values(CourseCategory).map((item) => {
+              const href = `/category/${item.toLocaleLowerCase().replaceAll(" ", "-")}`;
+              return (
+                <NavigationMenuItem key={item} className="cursor-pointer">
+                  <NavigationMenuLink
+                    className={navigationMenuTriggerStyle()}
+                    href={href}
+                  >
+                    {item}
+                  </NavigationMenuLink>
+                </NavigationMenuItem>
+              );
+            })}
           </NavigationMenuList>
         </NavigationMenu>
       </div>

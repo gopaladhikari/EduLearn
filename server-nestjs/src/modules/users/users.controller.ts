@@ -12,9 +12,9 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { JwtGuard } from 'src/modules/auth/guards/jwt-auth.guard';
 import { CurrentUser } from 'src/modules/auth/current-user.decorator';
-import type { UserDocument } from './entities/user.entity';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
+import type { UserDocument } from './entities/user.entity';
 
 @Controller('users')
 export class UsersController {

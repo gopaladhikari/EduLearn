@@ -18,8 +18,8 @@ import { Header } from "./components/partials/Header";
 import { MaxWidthWrapper } from "./components/partials/MaxWidthWrapper";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useState } from "react";
 import "./tailwind.css";
+import { useState } from "react";
 
 export const links: LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -41,30 +41,25 @@ export async function loader({ request }: LoaderFunctionArgs) {
   };
 }
 
-export const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 1000 * 60 * 5, // 5 minutes
-    },
-  },
-});
-
 export function App() {
   const data = useLoaderData<typeof loader>();
   const [theme] = useTheme();
+  const [queryClient] = useState(() => new QueryClient());
 
   return (
     <html lang="en" className={clsx(theme ?? "dark")}>
       <head>
         <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1"
+        />
         <Meta />
         <PreventFlashOnWrongTheme ssrTheme={Boolean(data.theme)} />
         <Links />
       </head>
       <body>
         <QueryClientProvider client={queryClient}>
-          <ReactQueryDevtools initialIsOpen={false} />
           <Header />
           <main>
             <MaxWidthWrapper>
@@ -82,7 +77,10 @@ export function App() {
 export default function AppWithProviders() {
   const data = useLoaderData<typeof loader>();
   return (
-    <ThemeProvider specifiedTheme={data.theme} themeAction="/action/set-theme">
+    <ThemeProvider
+      specifiedTheme={data.theme}
+      themeAction="/action/set-theme"
+    >
       <App />
     </ThemeProvider>
   );

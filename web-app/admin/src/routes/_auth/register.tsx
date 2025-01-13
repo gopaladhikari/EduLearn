@@ -166,7 +166,7 @@ function RouteComponent() {
           className="w-full"
           onClick={form.handleSubmit}
         >
-          {form.state.isSubmitting ? "Sign Uping..." : "Sign Up"}
+          {mutatation.isPending ? "Sign Uping..." : "Sign Up"}
         </Button>
       </CardFooter>
     </Card>

@@ -18,10 +18,7 @@ export function MaxWidthWrapper({
   ...props
 }: Props) {
   return (
-    <Component
-      className={cn("max-w-7xl mx-auto", className)}
-      {...props}
-    >
+    <Component className={cn("mx-auto max-w-7xl", className)} {...props}>
       {children}
     </Component>
   );

@@ -4,9 +4,16 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLoaderData,
 } from "@remix-run/react";
-import type { LinksFunction } from "@remix-run/node";
-
+import type {
+  ActionFunction,
+  LinksFunction,
+  LoaderFunction,
+} from "@remix-run/node";
+import { Header } from "./components/partials/Header";
+import { MaxWidthWrapper } from "./components/partials/MaxWidthWrapper";
+import { themeCookie } from "./sessions.server";
 import "./tailwind.css";
 
 export const links: LinksFunction = () => [
@@ -22,24 +29,62 @@ export const links: LinksFunction = () => [
   },
 ];
 
-export function Layout({ children }: { children: React.ReactNode }) {
+export const loader: LoaderFunction = async ({ request }) => {
+  const theme = request.headers.get("Cookie");
+
+  const parseTheme = await themeCookie.parse(theme);
+
+  return Response.json(
+    { theme: parseTheme },
+    {
+      headers: {
+        "Set-Cookie": await themeCookie.serialize(
+          parseTheme ?? "dark"
+        ),
+      },
+    }
+  );
+};
+
+export const action: ActionFunction = async ({ request }) => {
+  const formData = await request.formData();
+  const { theme } = Object.fromEntries(formData);
+
+  return Response.json(
+    { theme },
+    {
+      headers: {
+        "Set-Cookie": await themeCookie.serialize(theme),
+      },
+    }
+  );
+};
+
+export default function App() {
+  const { theme } = useLoaderData<typeof loader>();
+
   return (
     <html lang="en">
       <head>
         <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1"
+        />
         <Meta />
         <Links />
       </head>
-      <body>
-        {children}
+      <body className={theme}>
+        <Header />
+
+        <main>
+          <MaxWidthWrapper>
+            <Outlet />
+          </MaxWidthWrapper>
+        </main>
         <ScrollRestoration />
         <Scripts />
       </body>
     </html>
   );
-}
-
-export default function App() {
-  return <Outlet />;
 }

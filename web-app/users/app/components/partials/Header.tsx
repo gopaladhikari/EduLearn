@@ -1,3 +1,10 @@
+import { MaxWidthWrapper } from "./MaxWidthWrapper";
+import { ModeToggle } from "./mode-toggle";
+
 export function Header() {
-  return <div>Header</div>;
+  return (
+    <MaxWidthWrapper as="header">
+      <ModeToggle />
+    </MaxWidthWrapper>
+  );
 }

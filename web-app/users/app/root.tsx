@@ -15,6 +15,7 @@ import { Header } from "./components/partials/Header";
 import { MaxWidthWrapper } from "./components/partials/MaxWidthWrapper";
 import { themeCookie } from "./sessions.server";
 import "./tailwind.css";
+import Footer from "./components/partials/Footer";
 
 export const links: LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -82,6 +83,7 @@ export default function App() {
             <Outlet />
           </MaxWidthWrapper>
         </main>
+        <Footer />
         <ScrollRestoration />
         <Scripts />
       </body>

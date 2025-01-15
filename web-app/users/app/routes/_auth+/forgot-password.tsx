@@ -17,23 +17,27 @@ import {
 import { Input } from "@/components/ui/input";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { loginSchema, type LoginSchema } from "@/schemas/auth.schema";
+import {
+  forgotPasswordSchema,
+  type ForgotPasswordSchema,
+} from "@/schemas/auth.schema";
 
-export default function Login() {
-  const form = useForm<LoginSchema>({
-    resolver: zodResolver(loginSchema),
+export default function ForgotPassword() {
+  const form = useForm<ForgotPasswordSchema>({
+    resolver: zodResolver(forgotPasswordSchema),
   });
 
-  const onSubmit: SubmitHandler<LoginSchema> = async (data) => {
+  const onSubmit: SubmitHandler<ForgotPasswordSchema> = async (
+    data
+  ) => {
     console.log(data);
   };
-
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-3xl">Login</CardTitle>
+        <CardTitle className="text-3xl">Forgot Password</CardTitle>
         <CardDescription>
-          Enter your email and password to login.
+          Enter your email to reset your password.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -50,23 +54,6 @@ export default function Login() {
                   <FormLabel>Email</FormLabel>
                   <FormControl>
                     <Input placeholder="Your email" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="*******"
-                      type="password"
-                      {...field}
-                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

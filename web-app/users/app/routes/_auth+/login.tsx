@@ -18,6 +18,20 @@ import { Input } from "@/components/ui/input";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, type LoginSchema } from "@/schemas/auth.schema";
+import { Link } from "@remix-run/react";
+import type { MetaFunction } from "@remix-run/node";
+
+export const meta: MetaFunction = () => {
+  return [
+    {
+      title: "Login",
+    },
+    {
+      name: "description",
+      content: "Login page",
+    },
+  ];
+};
 
 export default function Login() {
   const form = useForm<LoginSchema>({
@@ -38,10 +52,7 @@ export default function Login() {
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form
-            className="space-y-8"
-            onSubmit={form.handleSubmit(onSubmit)}
-          >
+          <form className="space-y-8" onSubmit={form.handleSubmit(onSubmit)}>
             <FormField
               control={form.control}
               name="email"
@@ -62,16 +73,17 @@ export default function Login() {
                 <FormItem>
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="*******"
-                      type="password"
-                      {...field}
-                    />
+                    <Input placeholder="*******" type="password" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
+            <div className="text-end">
+              <Link to="/forgot-password" className="text-sm hover:underline">
+                Forgot your password?
+              </Link>
+            </div>
             <Button type="submit">Submit</Button>
           </form>
         </Form>

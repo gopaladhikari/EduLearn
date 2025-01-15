@@ -17,33 +17,53 @@ import {
 import { Input } from "@/components/ui/input";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  registerSchema,
-  type RegisterSchema,
-} from "@/schemas/auth.schema";
+import { registerSchema, type RegisterSchema } from "@/schemas/auth.schema";
+import type { MetaFunction } from "@remix-run/node";
+
+export const meta: MetaFunction = () => {
+  return [
+    {
+      title: "Register",
+    },
+    {
+      name: "description",
+      content: "Register page",
+    },
+  ];
+};
 
 export default function Register() {
   const form = useForm<RegisterSchema>({
     resolver: zodResolver(registerSchema),
   });
 
-  const onSubmit: SubmitHandler<LoginSchema> = async (data) => {
+  const onSubmit: SubmitHandler<RegisterSchema> = async (data) => {
     console.log(data);
   };
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-3xl">Login</CardTitle>
+        <CardTitle className="text-3xl">Register</CardTitle>
         <CardDescription>
-          Enter your email and password to login.
+          Enter your full name, email and password to register.
         </CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form
-            className="space-y-8"
-            onSubmit={form.handleSubmit(onSubmit)}
-          >
+          <form className="space-y-8" onSubmit={form.handleSubmit(onSubmit)}>
+            <FormField
+              control={form.control}
+              name="fullName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Full Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Your email" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <FormField
               control={form.control}
               name="email"
@@ -64,11 +84,7 @@ export default function Register() {
                 <FormItem>
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="*******"
-                      type="password"
-                      {...field}
-                    />
+                    <Input placeholder="*******" type="password" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

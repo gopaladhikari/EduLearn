@@ -27,9 +27,7 @@ export default function ForgotPassword() {
     resolver: zodResolver(forgotPasswordSchema),
   });
 
-  const onSubmit: SubmitHandler<ForgotPasswordSchema> = async (
-    data
-  ) => {
+  const onSubmit: SubmitHandler<ForgotPasswordSchema> = async (data) => {
     console.log(data);
   };
   return (
@@ -42,10 +40,7 @@ export default function ForgotPassword() {
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form
-            className="space-y-8"
-            onSubmit={form.handleSubmit(onSubmit)}
-          >
+          <form className="space-y-8" onSubmit={form.handleSubmit(onSubmit)}>
             <FormField
               control={form.control}
               name="email"
@@ -59,7 +54,9 @@ export default function ForgotPassword() {
                 </FormItem>
               )}
             />
-            <Button type="submit">Submit</Button>
+            <Button type="submit" className="w-full">
+              Submit
+            </Button>
           </form>
         </Form>
       </CardContent>

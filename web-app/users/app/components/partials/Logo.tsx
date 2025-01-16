@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import { Link } from "@remix-run/react";
+import { BookOpen } from "lucide-react";
 import type { ComponentProps } from "react";
 
 type Props = ComponentProps<"a">;
@@ -11,10 +12,10 @@ export function Logo({ href = "/", className, ...props }: Props) {
       {...props}
       className={cn("flex items-center gap-2", className)}
     >
-      <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground font-bold">
-        E
+      <div className="flex items-center gap-2">
+        <BookOpen className="text-blue-400" />
+        <span className="text-2xl font-bold">EduLearn</span>
       </div>
-      <span>Learning</span>
     </Link>
   );
 }

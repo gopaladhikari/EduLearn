@@ -3,6 +3,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -18,8 +19,11 @@ import { Input } from "@/components/ui/input";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, type LoginSchema } from "@/schemas/auth.schema";
-import { Link } from "@remix-run/react";
+import { Link, useNavigate } from "@remix-run/react";
 import type { MetaFunction } from "@remix-run/node";
+import { axiosInstance } from "@/config/axios";
+import type { User } from "@/types";
+import { useAuth } from "@/hooks/useAuth";
 
 export const meta: MetaFunction = () => {
   return [
@@ -33,13 +37,34 @@ export const meta: MetaFunction = () => {
   ];
 };
 
+type Res = {
+  data: User;
+};
+
 export default function Login() {
+  const navigate = useNavigate();
+  const { setUser, setIsLoggedIn } = useAuth();
+
   const form = useForm<LoginSchema>({
     resolver: zodResolver(loginSchema),
   });
 
-  const onSubmit: SubmitHandler<LoginSchema> = async (data) => {
-    console.log(data);
+  const onSubmit: SubmitHandler<LoginSchema> = async (formData) => {
+    try {
+      const { data } = await axiosInstance.post<Res>(
+        "/api/auth/login",
+        formData,
+      );
+      if (data.data) {
+        setUser(data.data);
+        setIsLoggedIn(true);
+        navigate("/dashboard");
+      }
+    } catch (error) {
+      form.setError("root", {
+        message: (error as Error).message,
+      });
+    }
   };
 
   return (
@@ -84,10 +109,29 @@ export default function Login() {
                 Forgot your password?
               </Link>
             </div>
-            <Button type="submit">Submit</Button>
           </form>
         </Form>
       </CardContent>
+      <CardFooter className="flex-col gap-4">
+        <Button
+          type="button"
+          className="w-full"
+          onClick={form.handleSubmit(onSubmit)}
+        >
+          {form.formState.isSubmitting ? "Signing in..." : "Sign In"}
+        </Button>
+        <Button
+          type="button"
+          className="w-full"
+          variant="secondary"
+          onClick={() => {
+            form.setValue("email", "user@e-learning.com");
+            form.setValue("password", "User@123");
+          }}
+        >
+          Guest User
+        </Button>
+      </CardFooter>
     </Card>
   );
 }

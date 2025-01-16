@@ -16,6 +16,7 @@ import { MaxWidthWrapper } from "./components/partials/MaxWidthWrapper";
 import { themeCookie } from "./sessions.server";
 import "./tailwind.css";
 import Footer from "./components/partials/Footer";
+import { AuthProvider } from "./context/AuthContext";
 
 export const links: LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -39,11 +40,9 @@ export const loader: LoaderFunction = async ({ request }) => {
     { theme: parseTheme },
     {
       headers: {
-        "Set-Cookie": await themeCookie.serialize(
-          parseTheme ?? "dark"
-        ),
+        "Set-Cookie": await themeCookie.serialize(parseTheme ?? "dark"),
       },
-    }
+    },
   );
 };
 
@@ -57,7 +56,7 @@ export const action: ActionFunction = async ({ request }) => {
       headers: {
         "Set-Cookie": await themeCookie.serialize(theme),
       },
-    }
+    },
   );
 };
 
@@ -68,22 +67,21 @@ export default function App() {
     <html lang="en">
       <head>
         <meta charSet="utf-8" />
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1"
-        />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
       </head>
       <body className={theme}>
-        <Header />
+        <AuthProvider>
+          <Header />
 
-        <main>
-          <MaxWidthWrapper>
-            <Outlet />
-          </MaxWidthWrapper>
-        </main>
-        <Footer />
+          <main>
+            <MaxWidthWrapper>
+              <Outlet />
+            </MaxWidthWrapper>
+          </main>
+          <Footer />
+        </AuthProvider>
         <ScrollRestoration />
         <Scripts />
       </body>

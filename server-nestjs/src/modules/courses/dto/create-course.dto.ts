@@ -6,7 +6,7 @@ import {
   IsEnum,
   IsNumberString,
 } from 'class-validator';
-import { CourseCategory } from '../entities/course.entity';
+import { CourseCategory } from 'src/config/constant';
 
 export class CreateCourseDto {
   @IsString()

@@ -1,4 +1,4 @@
-import { Form, NavLink } from "@remix-run/react";
+import { Form, Link, NavLink } from "@remix-run/react";
 import { MaxWidthWrapper } from "./MaxWidthWrapper";
 import { ModeToggle } from "./mode-toggle";
 import {
@@ -18,71 +18,88 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuPortal,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/hooks/useAuth";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 function UserMenu() {
+  const { user } = useAuth();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline">Open</Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56" align="end">
-        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+      <DropdownMenuContent className="w-72" align="end">
+        <DropdownMenuLabel className="flex items-start gap-6">
+          <Avatar>
+            <AvatarImage src="https://github.com/shadcn.png" />
+            <AvatarFallback>CN</AvatarFallback>
+          </Avatar>
+          <div>
+            <strong>{user?.fullName}</strong>
+            <p className="text-muted-foreground">{user?.email}</p>
+          </div>
+        </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem>
-            Profile
-            <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+            <Link to="/my-courses" className="w-full">
+              My learning
+            </Link>
           </DropdownMenuItem>
           <DropdownMenuItem>
-            Billing
-            <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
+            <Link to="/cart" className="w-full">
+              My cart
+            </Link>
           </DropdownMenuItem>
           <DropdownMenuItem>
-            Settings
-            <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            Keyboard shortcuts
-            <DropdownMenuShortcut>⌘K</DropdownMenuShortcut>
+            <Link to="/wishlist" className="w-full">
+              Wishlist
+            </Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem>Team</DropdownMenuItem>
-          <DropdownMenuSub>
-            <DropdownMenuSubTrigger>Invite users</DropdownMenuSubTrigger>
-            <DropdownMenuPortal>
-              <DropdownMenuSubContent>
-                <DropdownMenuItem>Email</DropdownMenuItem>
-                <DropdownMenuItem>Message</DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>More...</DropdownMenuItem>
-              </DropdownMenuSubContent>
-            </DropdownMenuPortal>
-          </DropdownMenuSub>
           <DropdownMenuItem>
-            New Team
-            <DropdownMenuShortcut>⌘+T</DropdownMenuShortcut>
+            <Link to="/notifications" className="w-full">
+              Notifications
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            <Link to="/messages" className="w-full">
+              Messages
+            </Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>GitHub</DropdownMenuItem>
-        <DropdownMenuItem>Support</DropdownMenuItem>
-        <DropdownMenuItem disabled>API</DropdownMenuItem>
+        <DropdownMenuGroup>
+          <DropdownMenuItem>
+            <Link to="/edit-account" className="w-full">
+              Account Settings
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            <Link to="/purchase-history" className="w-full">
+              Purchase history
+            </Link>
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          Log out
-          <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
-        </DropdownMenuItem>
+        <DropdownMenuGroup>
+          <DropdownMenuItem>
+            <Link to="/support" target="_blank" className="w-full">
+              Help and support
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem>
+            <Button className="w-full" variant="link">
+              Logout
+            </Button>
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>
   );

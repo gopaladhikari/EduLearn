@@ -1,15 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { site } from "@/config/site";
 import type { MetaFunction } from "@remix-run/node";
-import {
-  BookOpen,
-  Users,
-  Award,
-  TrendingUp,
-  Search,
-  Play,
-  Star,
-} from "lucide-react";
+import { BookOpen, Users, Award, Play, Star } from "lucide-react";
 
 export const meta: MetaFunction = () => {
   return [
@@ -20,32 +12,32 @@ export const meta: MetaFunction = () => {
 
 export default function Index() {
   return (
-    <div>
-      {/* Hero Section */}
-      <section className="bg-gradient-to-br pb-20 pt-32">
-        <div className="container mx-auto px-6">
-          <div className="flex flex-col items-center lg:flex-row">
-            <div className="lg:w-1/2 lg:pr-12">
-              <h1 className="mb-6 text-5xl font-bold">Learn Without Limits</h1>
-              <p className="mb-8 text-xl">
-                Start, switch, or advance your career with thousands of courses
-                from expert instructors.
-              </p>
-              <div className="flex space-x-4">
-                <Button variant="secondary">
-                  <Play />
-                  Start Learning
-                </Button>
-                <Button>Try For Free</Button>
-              </div>
+    <>
+      <section className="group pb-20 pt-16">
+        <div className="flex flex-col items-center lg:flex-row">
+          <div className="lg:w-1/2 lg:pr-12">
+            <h1 className="mb-6 text-5xl font-bold transition-colors ease-linear group-hover:text-primary">
+              Learn Without Limits
+            </h1>
+            <p className="mb-8 text-xl transition-colors ease-linear group-hover:dark:text-stone-300">
+              Start, switch, or advance your career with thousands of courses
+              from expert instructors.
+            </p>
+            <div className="flex space-x-4">
+              <Button variant="secondary">
+                <Play />
+                Start Learning
+              </Button>
+              <Button>Try For Free</Button>
             </div>
-            <div className="mt-12 lg:mt-0 lg:w-1/2">
-              <img
-                src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
-                alt="Students learning"
-                className="rounded-xl shadow-2xl"
-              />
-            </div>
+          </div>
+          <div className="mt-12 lg:mt-0 lg:w-1/2">
+            <img
+              src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
+              alt="Students learning"
+              title="Students learning"
+              className="rounded-xl shadow-2xl"
+            />
           </div>
         </div>
       </section>
@@ -128,7 +120,6 @@ export default function Index() {
         </div>
       </section>
 
-      {/* CTA Section */}
       <section className="bg-blue-600 py-20">
         <div className="container mx-auto px-6 text-center">
           <h2 className="mb-8 text-3xl font-bold text-white">
@@ -143,6 +134,6 @@ export default function Index() {
           </button>
         </div>
       </section>
-    </div>
+    </>
   );
 }

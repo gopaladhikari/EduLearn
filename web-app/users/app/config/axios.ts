@@ -1,7 +1,8 @@
 import axios, { AxiosError } from "axios";
+import { env } from "./env";
 
 const axiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_BACKEND_API,
+  baseURL: env.backendApi,
   withCredentials: true,
 });
 

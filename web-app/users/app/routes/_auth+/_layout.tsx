@@ -33,9 +33,7 @@ export default function Layout() {
             width={544}
             className="rounded-md"
           />
-          <figcaption className="sr-only">
-            Autentication Banner
-          </figcaption>
+          <figcaption className="sr-only">Autentication Banner</figcaption>
         </figure>
       </div>
     </section>

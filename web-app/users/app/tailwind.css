@@ -69,10 +69,16 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }
+
   main {
     @apply mt-4 min-h-dvh;
+  }
+
+  h1 {
+    @apply text-2xl font-bold md:text-3xl;
   }
 }

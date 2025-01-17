@@ -2,6 +2,7 @@ export type User = {
   _id: string;
   email: string;
   password: string;
+  fullName: string;
   role: string;
   verified: boolean;
   status: string;

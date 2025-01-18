@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Course } from "@/types";
+import type { CourseWithInstructors } from "@/types";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Accordion,
@@ -51,16 +51,12 @@ const course = {
   totalReviews: 120,
 };
 
-export default function CourseContent({ course: Hello }: { course: Course }) {
+export default function CourseContent({
+  course: Hello,
+}: {
+  course: CourseWithInstructors;
+}) {
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
-
-  const toggleSection = (sectionId: string) => {
-    setExpandedSections((prev) =>
-      prev.includes(sectionId)
-        ? prev.filter((id) => id !== sectionId)
-        : [...prev, sectionId],
-    );
-  };
 
   return (
     <Card className="mb-8">

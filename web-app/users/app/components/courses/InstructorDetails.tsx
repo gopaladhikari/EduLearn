@@ -13,23 +13,27 @@ export default function InstructorDetails({
         <CardTitle>
           Meet Your Instructor{instructors.length > 1 ? "s" : ""}
         </CardTitle>
+        <CardContent>
+          {instructors.map((instructor) => (
+            <div
+              key={instructor._id}
+              className="mb-4 flex items-start space-x-4"
+            >
+              <Avatar className="h-16 w-16">
+                <AvatarImage
+                  src="https://github.com/shadcn.png"
+                  alt={instructor.fullName}
+                />
+                <AvatarFallback>{instructor?.fullName}</AvatarFallback>
+              </Avatar>
+              <div>
+                <h3 className="text-lg font-semibold">{instructor.fullName}</h3>
+                {/* <p className="mt-2">{instructor.bio}</p> */}
+              </div>
+            </div>
+          ))}
+        </CardContent>
       </CardHeader>
     </Card>
   );
 }
-
-// <CardContent>
-// {instructors.map((instructor) => (
-//   <div key={instructor._id} className="mb-4 flex items-start space-x-4">
-//     <Avatar className="h-16 w-16">
-//       <AvatarImage src={instructor?.avatar} alt={instructor.name} />
-//       <AvatarFallback>{instructor?.fullName.charAt(0)}</AvatarFallback>
-//     </Avatar>
-//     <div>
-//       <h3 className="text-lg font-semibold">{instructor.name}</h3>
-//       <p className="text-sm text-gray-500">{instructor.title}</p>
-//       <p className="mt-2">{instructor.bio}</p>
-//     </div>
-//   </div>
-// ))}
-// </CardContent>

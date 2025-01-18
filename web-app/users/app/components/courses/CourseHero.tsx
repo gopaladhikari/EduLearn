@@ -1,8 +1,12 @@
-import { Course } from "@/types";
+import type { CourseWithInstructors } from "@/types";
 import { Button } from "@/components/ui/button";
 import { Badge } from "../ui/badge";
 
-export default function CourseHero({ course }: { course: Course }) {
+export default function CourseHero({
+  course,
+}: {
+  course: CourseWithInstructors;
+}) {
   return (
     <section className="flex w-full items-start gap-4 rounded-lg bg-gradient-to-r py-8 shadow-xl">
       <img

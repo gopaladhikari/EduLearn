@@ -20,31 +20,34 @@ export class CourseAnalytics {
   })
   courseSlug: string;
 
-  @Prop({ default: 0 })
+  @Prop({ type: Number, default: 0 })
   totalEnrollments: number;
 
-  @Prop({ default: 0 })
+  @Prop({ type: Number, default: 0 })
+  totalClicks: number;
+
+  @Prop({ type: Number, default: 0 })
   totalCompletions: number;
 
-  @Prop({ default: 0 })
+  @Prop({ type: Number, default: 0 })
   averageProgress: number;
 
-  @Prop({ default: 0 })
+  @Prop({ type: Number, default: 0 })
   activeUsers: number;
 
-  @Prop({ default: 0 })
+  @Prop({ type: Number, default: 0 })
   totalRevenue: number;
 
-  @Prop({ default: 0 })
+  @Prop({ type: Number, default: 0 })
   discountedSales: number;
 
-  @Prop({ default: 0 })
+  @Prop({ type: Number, default: 0 })
   refunds: number;
 
-  @Prop({ default: 0 })
+  @Prop({ type: Number, default: 0 })
   averageRating: number;
 
-  @Prop({ default: 0 })
+  @Prop({ type: Number, default: 0 })
   totalReviews: number;
 
   @Prop({ type: [String], default: [] })
@@ -56,13 +59,13 @@ export class CourseAnalytics {
   @Prop({ default: '' })
   dropOffPoint: string;
 
-  @Prop({ default: 0 })
+  @Prop({ type: Number, default: 0 })
   totalWatchTime: number;
 
-  @Prop({ default: 0 })
+  @Prop({ type: Number, default: 0 })
   popularityScore: number;
 
-  @Prop({ default: 0 })
+  @Prop({ type: Number, default: 0 })
   trendScore: number;
 }
 

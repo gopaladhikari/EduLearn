@@ -1,7 +1,11 @@
+import { CourseCard } from "@/components/courses/CourseCard";
 import { Button } from "@/components/ui/button";
+import { axiosInstance } from "@/config/axios";
 import { site } from "@/config/site";
-import type { MetaFunction } from "@remix-run/node";
-import { BookOpen, Users, Award, Play, Star } from "lucide-react";
+import type { Course } from "@/types";
+import type { LoaderFunction, MetaFunction } from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
+import { BookOpen, Users, Award, Play } from "lucide-react";
 
 export const meta: MetaFunction = () => {
   return [
@@ -10,7 +14,23 @@ export const meta: MetaFunction = () => {
   ];
 };
 
+type CourseResponse = {
+  data: Course[];
+};
+
+export const loader: LoaderFunction = async () => {
+  try {
+    const { data } = await axiosInstance.get("/api/courses");
+
+    return data;
+  } catch (error) {
+    throw new Error((error as Error).message);
+  }
+};
+
 export default function Index() {
+  const { data } = useLoaderData<CourseResponse>();
+
   return (
     <>
       <section className="group pb-20 pt-16">
@@ -78,44 +98,7 @@ export default function Index() {
             Featured Courses
           </h2>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {[1, 2, 3].map((course) => (
-              <div
-                key={course}
-                className="overflow-hidden rounded-xl shadow-lg transition-shadow hover:shadow-xl"
-              >
-                <img
-                  src={`https://images.unsplash.com/photo-151818${course}44484-6ef05ac4${course}6d4?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80`}
-                  alt="Course thumbnail"
-                  className="h-48 w-full object-cover"
-                />
-                <div className="p-6">
-                  <div className="mb-2 flex items-center space-x-2">
-                    <span className="rounded-full px-3 py-1 text-sm text-blue-600">
-                      Development
-                    </span>
-                    <div className="flex items-center text-yellow-400">
-                      <Star className="h-4 w-4 fill-current" />
-                      <span className="ml-1 text-sm">4.8</span>
-                    </div>
-                  </div>
-                  <h3 className="mb-2 text-xl font-semibold">
-                    Complete Web Development Course
-                  </h3>
-                  <p className="mb-4">
-                    Learn web development from scratch with practical projects
-                    and exercises.
-                  </p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-2xl font-bold text-blue-600">
-                      $49.99
-                    </span>
-                    <Button className="bg-blue-600 hover:bg-blue-700">
-                      Enroll Now
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            ))}
+            {data?.map((course) => <CourseCard key={course._id} {...course} />)}
           </div>
         </div>
       </section>

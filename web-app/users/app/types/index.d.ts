@@ -16,6 +16,7 @@ export type Course = {
   title: string;
   description: string;
   slug: string;
+  thumbnail: string;
   instructor: string[];
   uploadedBy: {
     _id: string;

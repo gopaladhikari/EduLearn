@@ -29,7 +29,10 @@ function UserMenu() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline">Open</Button>
+        <Avatar className="cursor-pointer">
+          <AvatarImage src="https://github.com/shadcn.png" />
+          <AvatarFallback>CN</AvatarFallback>
+        </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-72" align="end">
         <DropdownMenuLabel className="flex items-start gap-6">
@@ -147,7 +150,8 @@ export function Header() {
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
-        <div className="ml-auto space-x-4">
+        <div className="ml-auto flex items-center gap-4">
+          <ModeToggle />
           {isLoggedIn ? (
             <UserMenu />
           ) : (

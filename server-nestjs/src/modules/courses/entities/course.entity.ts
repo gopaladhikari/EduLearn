@@ -41,6 +41,9 @@ export class Course {
   @Prop({ default: false })
   isPublished: boolean;
 
+  @Prop({ required: true })
+  thumbnail: string;
+
   @Prop({
     required: true,
     enum: CourseCategory,

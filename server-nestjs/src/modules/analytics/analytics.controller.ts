@@ -10,7 +10,6 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 import { AnalyticsService } from './analytics.service';
-import { CreateAnalyticsDto } from './dto/create-analytics.dto';
 import { UpdateAnalyticsDto } from './dto/update-analytics.dto';
 import { JwtGuard } from '../auth/guards/jwt-auth.guard';
 import { CurrentUser } from '../auth/current-user.decorator';
@@ -33,9 +32,9 @@ export class AnalyticsController {
     return this.analyticsService.getAnalytics(slug);
   }
 
-  @Post()
-  create(@Body() createAnalyticsDto: CreateAnalyticsDto) {
-    return this.analyticsService.create(createAnalyticsDto);
+  @Post('total-clicks/:slug')
+  incrementTotalClicks(@Param('slug') slug: string) {
+    return this.analyticsService.incrementTotalClicks(slug);
   }
 
   @Get()

@@ -9,7 +9,7 @@ import { CourseAnalytics } from './entities/analytics.entity';
 export class AnalyticsService {
   constructor(
     @InjectModel(CourseAnalytics.name)
-    private readonly Analytics: Model<Document>,
+    private readonly Analytics: Model<CourseAnalytics>,
   ) {}
 
   async getAnalytics(slug: string) {
@@ -28,6 +28,29 @@ export class AnalyticsService {
 
   create(createAnalyticsDto: CreateAnalyticsDto) {
     return 'This action adds a new analytics';
+  }
+
+  async incrementTotalClicks(slug: string) {
+    try {
+      const analytics = await this.Analytics.findOneAndUpdate(
+        {
+          courseSlug: slug,
+        },
+        {
+          $inc: {
+            totalClicks: 1,
+          },
+        },
+        {
+          upsert: true,
+        },
+      );
+
+      return analytics;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
   }
 
   findAll() {

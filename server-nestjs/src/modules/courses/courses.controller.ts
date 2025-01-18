@@ -12,6 +12,7 @@ import {
   UploadedFile,
   ValidationPipe,
   BadRequestException,
+  Query,
 } from '@nestjs/common';
 import { CoursesService } from './courses.service';
 import { CreateCourseDto } from './dto/create-course.dto';
@@ -27,8 +28,11 @@ export class CoursesController {
   constructor(private readonly coursesService: CoursesService) {}
 
   @Get()
-  getAllCourses() {
-    return this.coursesService.getAllCourses();
+  getAllCourses(
+    @Query('limit') limit: number,
+    @Query('skip') skip: number,
+  ) {
+    return this.coursesService.getAllCourses(limit, skip);
   }
 
   @Get(':slug')

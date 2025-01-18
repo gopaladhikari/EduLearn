@@ -20,7 +20,12 @@ type Data = {
 
 export const loader: LoaderFunction = async () => {
   try {
-    const { data } = await axiosInstance.get("/api/courses");
+    const { data } = await axiosInstance.get("/api/courses", {
+      params: {
+        limit: 3,
+        skip: 0,
+      },
+    });
 
     return new Response(JSON.stringify(data), {
       status: 200,

@@ -41,7 +41,7 @@ export class Course {
   @Prop({ default: false })
   isPublished: boolean;
 
-  @Prop({ required: true })
+  @Prop({ type: String })
   thumbnail: string;
 
   @Prop({

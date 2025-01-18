@@ -1,6 +1,5 @@
 import { axiosInstance } from "@/config/axios";
 import type { ConfirmPasswordSchema } from "@/schemas/confirm-password.schema";
-import { throwError } from "../utils";
 
 type Data = {
   email: string;
@@ -15,7 +14,7 @@ export const registerMutation = async (formData: Data) => {
 
     return data;
   } catch (error) {
-    throwError(error as Error);
+    throw new Error((error as Error).message);
   }
 };
 
@@ -27,7 +26,7 @@ export const loginMutation = async (formData: Data) => {
     );
     return data;
   } catch (error) {
-    throwError(error as Error);
+    throw new Error((error as Error).message);
   }
 };
 
@@ -42,7 +41,7 @@ export const requestForgotPassword = async (email: string) => {
 
     return data;
   } catch (error) {
-    throwError(error as Error);
+    throw new Error((error as Error).message);
   }
 };
 
@@ -61,7 +60,7 @@ export const confirmForgotPassword = async (
 
     return data;
   } catch (error) {
-    throwError(error as Error);
+    throw new Error((error as Error).message);
   }
 };
 
@@ -74,7 +73,7 @@ export const resetPasswordMutation = async (formData: Data) => {
 
     return data;
   } catch (error) {
-    throwError(error as Error);
+    throw new Error((error as Error).message);
   }
 };
 
@@ -93,6 +92,6 @@ export const verifyEmailMutation = async (
 
     return data;
   } catch (error) {
-    throwError(error as Error);
+    throw new Error((error as Error).message);
   }
 };

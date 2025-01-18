@@ -181,8 +181,8 @@ function RouteComponent() {
           className="w-full"
           variant="secondary"
           onClick={() => {
-            form.setFieldValue("email", "guest@example.com");
-            form.setFieldValue("password", "Guest@123");
+            form.setFieldValue("email", "admin@edulearn.com");
+            form.setFieldValue("password", "Admin@123");
           }}
         >
           Guest User

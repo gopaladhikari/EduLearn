@@ -13,6 +13,7 @@ export const me = async (): CustomResponse<User> => {
 export const getAllUsers = async (): CustomResponse<User[]> => {
   try {
     const { data } = await axiosInstance.get("/api/users");
+    console.log(data);
     return data;
   } catch (error) {
     throw new Error((error as Error).message);

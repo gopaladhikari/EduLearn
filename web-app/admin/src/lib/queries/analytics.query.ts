@@ -1,5 +1,4 @@
 import { axiosInstance } from "@/config/axios";
-import { throwError } from "../utils";
 
 export const getCourseAnalyticsBySlug = async (slug: string) => {
   try {
@@ -8,7 +7,6 @@ export const getCourseAnalyticsBySlug = async (slug: string) => {
     );
     return data;
   } catch (error) {
-    console.log(error);
-    throwError(error);
+    throw new Error((error as Error).message);
   }
 };

@@ -37,7 +37,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { AxiosError } from "axios";
 import { useNavigate } from "@tanstack/react-router";
 import { queryClient } from "@/main";
 
@@ -122,19 +121,12 @@ function RouteComponent() {
         });
       }
     } catch (error) {
-      if (error instanceof AxiosError) {
-        toast({
-          title: error.response?.data?.message || "Error",
-          description:
-            error.response?.data.error || "Failed to add course",
-          variant: "destructive",
-        });
-      } else
-        toast({
-          title: "Error",
-          description: "Something went wrong",
-          variant: "destructive",
-        });
+      console.log(error);
+      toast({
+        title: "Error",
+        description: (error as Error).message,
+        variant: "destructive",
+      });
     }
   };
 

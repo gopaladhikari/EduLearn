@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -63,15 +67,17 @@ export class CoursesService {
 
       return course;
     } catch (error) {
-      throw new Error(error.message);
+      throw new BadRequestException(error.message);
     } finally {
       fs.unlinkSync(localFilePath);
     }
   }
 
-  async getAllCourses() {
+  async getAllCourses(limit: number, skip: number) {
     try {
-      const courses = await this.Course.find();
+      const courses = await this.Course.find()
+        .limit(limit)
+        .skip(skip);
 
       if (!courses) throw new NotFoundException('Course not found');
 
@@ -79,7 +85,7 @@ export class CoursesService {
     } catch (error) {
       if (error instanceof NotFoundException) throw error;
 
-      throw new Error(error.message);
+      throw new BadRequestException(error.message);
     }
   }
 
@@ -98,7 +104,7 @@ export class CoursesService {
     } catch (error) {
       if (error instanceof NotFoundException) throw error;
 
-      throw new Error(error.message);
+      throw new BadRequestException(error.message);
     }
   }
 
@@ -125,7 +131,7 @@ export class CoursesService {
       return course;
     } catch (error) {
       if (error instanceof NotFoundException) throw error;
-      throw new Error(error.message);
+      throw new BadRequestException(error.message);
     }
   }
 
@@ -147,7 +153,7 @@ export class CoursesService {
       return null;
     } catch (error) {
       if (error instanceof NotFoundException) throw error;
-      throw new Error(error.message);
+      throw new BadRequestException(error.message);
     }
   }
 
@@ -191,7 +197,7 @@ export class CoursesService {
       return null;
     } catch (error) {
       if (error instanceof NotFoundException) throw error;
-      throw new Error(error.message);
+      throw new BadRequestException(error.message);
     }
   }
 }

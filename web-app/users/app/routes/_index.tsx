@@ -14,7 +14,7 @@ export const meta: MetaFunction = () => {
   ];
 };
 
-type CourseResponse = {
+type Data = {
   data: Course[];
 };
 
@@ -22,14 +22,26 @@ export const loader: LoaderFunction = async () => {
   try {
     const { data } = await axiosInstance.get("/api/courses");
 
-    return data;
+    return new Response(JSON.stringify(data), {
+      status: 200,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
   } catch (error) {
-    throw new Error((error as Error).message);
+    return new Response((error as Error).message, {
+      status: 500,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
   }
 };
 
 export default function Index() {
-  const { data } = useLoaderData<CourseResponse>();
+  const data = useLoaderData<Data>();
+
+  // console.log(error);
 
   return (
     <>
@@ -98,7 +110,9 @@ export default function Index() {
             Featured Courses
           </h2>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {data?.map((course) => <CourseCard key={course._id} {...course} />)}
+            {data.data?.map((course) => (
+              <CourseCard key={course._id} {...course} />
+            ))}
           </div>
         </div>
       </section>

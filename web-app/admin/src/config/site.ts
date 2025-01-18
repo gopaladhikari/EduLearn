@@ -1,7 +1,7 @@
 export const site = {
-  title: "E-learning",
+  title: "EduLearn",
   description:
-    "Welcome to the E-Learning Platform, an online teaching and learning hub where educators can share their knowledge with students from around the globe. This platform empowers teachers to create, manage, and sell their courses while offering students a seamless experience to learn and grow at their own pace.",
+    "Welcome to the EduLearn Platform, an online teaching and learning hub where educators can share their knowledge with students from around the globe. This platform empowers teachers to create, manage, and sell their courses while offering students a seamless experience to learn and grow at their own pace.",
 } as const;
 
 export const menu = {

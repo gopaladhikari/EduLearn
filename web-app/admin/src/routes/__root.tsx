@@ -44,7 +44,7 @@ export const Route = createRootRouteWithContext<AuthContextType>()({
             <MaxWithWrapper className="flex items-center gap-4">
               <strong className="text-2xl">
                 <Link to="/dashboard" className="text-foreground">
-                  E-learning
+                  EduLearn
                 </Link>
               </strong>
               <header>

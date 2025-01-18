@@ -18,15 +18,15 @@ export default function TermsAndCondition() {
       <h1 className="mb-6 text-3xl font-bold">Terms and Conditions</h1>
       <p className="mb-4">Last updated: {new Date().toLocaleDateString()}</p>
       <p className="mb-4">
-        Welcome to the E-learning Platform. These Terms and Conditions govern
-        your use of our website and services. By accessing or using our
-        platform, you agree to be bound by these Terms.
+        Welcome to the EduLearn Platform. These Terms and Conditions govern your
+        use of our website and services. By accessing or using our platform, you
+        agree to be bound by these Terms.
       </p>
       <h2 className="mb-4 mt-6 text-2xl font-semibold">
         1. Acceptance of Terms
       </h2>
       <p className="mb-4">
-        By accessing or using our E-learning Platform, you agree to comply with
+        By accessing or using our EduLearn Platform, you agree to comply with
         and be bound by these Terms and Conditions. If you do not agree to these
         Terms, please do not use our platform.
       </p>
@@ -42,7 +42,7 @@ export default function TermsAndCondition() {
       </h2>
       <p className="mb-4">
         All content on our platform, including courses, videos, text, graphics,
-        and logos, is the property of the E-learning Platform or its content
+        and logos, is the property of the EduLearn Platform or its content
         providers and is protected by copyright and other intellectual property
         laws.
       </p>
@@ -64,9 +64,9 @@ export default function TermsAndCondition() {
         6. Limitation of Liability
       </h2>
       <p className="mb-4">
-        The E-learning Platform shall not be liable for any indirect,
-        incidental, special, consequential, or punitive damages resulting from
-        your use of or inability to use our platform.
+        The EduLearn Platform shall not be liable for any indirect, incidental,
+        special, consequential, or punitive damages resulting from your use of
+        or inability to use our platform.
       </p>
       <h2 className="mb-4 mt-6 text-2xl font-semibold">7. Changes to Terms</h2>
       <p className="mb-4">

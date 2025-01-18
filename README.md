@@ -1,6 +1,6 @@
-# E-Learning Platform 📚✨
+# EduLearn Platform 📚✨
 
-Welcome to the **E-Learning** Platform, an online teaching and learning hub where educators can share their knowledge with students from around the globe. This platform empowers teachers to create, manage, and sell their courses while offering students a seamless experience to learn and grow at their own pace.
+Welcome to the **EduLearn** Platform, an online teaching and learning hub where educators can share their knowledge with students from around the globe. This platform empowers teachers to create, manage, and sell their courses while offering students a seamless experience to learn and grow at their own pace.
 
 ## Features 🌟
 
@@ -44,4 +44,4 @@ Contributions are welcome! Please submit a pull request or open an issue if you 
 
 License
 
-This project is licensed under the MIT License - see the [LICENSE](https://github.com/gopaladhikari/e-learning?tab=MIT-1-ov-file) file for details.
+This project is licensed under the MIT License - see the [LICENSE](https://github.com/gopaladhikari/EduLearn?tab=MIT-1-ov-file) file for details.

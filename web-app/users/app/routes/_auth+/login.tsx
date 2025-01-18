@@ -126,7 +126,7 @@ export default function Login() {
           className="w-full"
           variant="secondary"
           onClick={() => {
-            form.setValue("email", "user@e-learning.com");
+            form.setValue("email", "user@edulearn.com");
             form.setValue("password", "User@123");
           }}
         >

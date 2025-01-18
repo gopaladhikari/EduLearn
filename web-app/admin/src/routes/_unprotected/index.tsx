@@ -2,7 +2,11 @@ import { Header } from "@/components/partials/Header";
 import { MaxWithWrapper } from "@/components/partials/MaxWithWrapper";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  Link,
+  useNavigate,
+} from "@tanstack/react-router";
 import {
   CheckIcon,
   CreditCard,
@@ -36,12 +40,12 @@ function RouteComponent() {
             <div className="mx-auto flex w-full max-w-7xl justify-start px-6 pb-24 pt-10 sm:pb-32 lg:flex lg:px-8 lg:py-24">
               <div className="mx-auto max-w-7xl justify-start lg:max-w-3xl">
                 <h1 className="wrap-balance mt-6 bg-black bg-gradient-to-br bg-clip-text text-center text-4xl font-medium leading-tight tracking-tight text-transparent dark:from-white dark:to-[hsla(0,0%,100%,.5)] sm:text-6xl sm:leading-[1.15]">
-                  <span>Welcome to E-learning</span>
+                  <span>Welcome to EduLearn</span>
                 </h1>
                 <p className="wrap-balance mt-6 text-center text-lg font-light leading-7 text-gray-700 dark:text-gray-400">
-                  Start, switch, or advance your career with more than 7,000
-                  courses, Professional Certificates, and degrees from
-                  world-class universities and companies.
+                  Start, switch, or advance your career with more than
+                  7,000 courses, Professional Certificates, and
+                  degrees from world-class universities and companies.
                 </p>
                 <div className="mt-10 flex items-center justify-center gap-x-6">
                   <Link to="/register">
@@ -60,9 +64,9 @@ function RouteComponent() {
               All your features in one place
             </h1>
             <p className="wrap-balance mt-6 text-left text-base font-light leading-7 text-gray-700 dark:text-gray-400 lg:text-lg">
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Hic
-              aliquid voluptas saepe maxime asperiores totam fuga assumenda iure
-              repudiandae. Ab, ipsum vitae!
+              Lorem ipsum dolor sit amet, consectetur adipisicing
+              elit. Hic aliquid voluptas saepe maxime asperiores totam
+              fuga assumenda iure repudiandae. Ab, ipsum vitae!
             </p>
           </div>
 

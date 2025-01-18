@@ -14,7 +14,7 @@ export function Header() {
               role="menubar"
             >
               <Link to="/" role="menuitem">
-                E-learning
+                EduLearn
               </Link>
             </li>
             <li>

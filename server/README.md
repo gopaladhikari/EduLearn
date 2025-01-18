@@ -1,6 +1,6 @@
-# E-learning
+# EduLearn
 
-E-learning is the software that allows teachers to upload courses and students to enroll in them. It provides a platform for managing course uploads, student enrollments, and caching for improved performance.
+EduLearn is the software that allows teachers to upload courses and students to enroll in them. It provides a platform for managing course uploads, student enrollments, and caching for improved performance.
 
 ## Requirements
 
@@ -13,7 +13,7 @@ E-learning is the software that allows teachers to upload courses and students t
 1. Clone the repository:
 
 ```bash
-git clone git@github.com:gopaladhikari/e-learning.git
+git clone https://github.com/gopaladhikari/EduLearn
 ```
 
 2. Install dependencies:

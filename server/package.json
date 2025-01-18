@@ -1,5 +1,5 @@
 {
-  "name": "e-learning",
+  "name": "edulearn",
   "version": "1.0.0",
   "description": "E learning is the application which allows people to buy and sell course",
   "main": "dist/index.js",
@@ -11,7 +11,7 @@
     "lint": "npx eslint src/**/*.ts"
   },
   "keywords": [
-    "e-learning"
+    "EduLearn"
   ],
   "author": "gopaladhikari",
   "license": "MIT",

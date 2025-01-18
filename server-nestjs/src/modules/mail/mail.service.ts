@@ -49,7 +49,7 @@ export class MailService {
         Name: fullName ?? 'User',
       });
       const { data, error } = await this.resend.emails.send({
-        from: 'E-Learning <e-learning@gopal-adhikari.com.np>',
+        from: 'EduLearn <edulearn@gopal-adhikari.com.np>',
         to: [email],
         subject: 'Request forgot password',
         html: html,
@@ -82,7 +82,7 @@ export class MailService {
         Name: fullName ?? 'User',
       });
       const { data, error } = await this.resend.emails.send({
-        from: 'E-Learning <e-learning@gopal-adhikari.com.np>',
+        from: 'EduLearn <edulearn@gopal-adhikari.com.np>',
         to: [email],
         subject: 'Verify email',
         html: html,

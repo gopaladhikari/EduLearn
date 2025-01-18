@@ -1,4 +1,4 @@
 export const site = {
-  title: "E-learning",
-  description: "Welcome to E-learning",
+  title: "EduLearn",
+  description: "Welcome to EduLearn",
 };

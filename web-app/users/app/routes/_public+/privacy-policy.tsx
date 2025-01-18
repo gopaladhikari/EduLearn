@@ -16,7 +16,7 @@ export default function PrivacyPolicy() {
       <h1 className="mb-6 text-3xl font-bold">Privacy Policy</h1>
       <p className="mb-4">Last updated: {new Date().toLocaleDateString()}</p>
       <p className="mb-4">
-        Welcome to the E-learning Platform. We are committed to protecting your
+        Welcome to the EduLearn Platform. We are committed to protecting your
         personal information and your right to privacy. This Privacy Policy
         explains how we collect, use, disclose, and safeguard your information
         when you visit our website and use our services.

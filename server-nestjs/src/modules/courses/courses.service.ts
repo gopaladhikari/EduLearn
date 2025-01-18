@@ -45,7 +45,7 @@ export class CoursesService {
           localFilePath,
           {
             resource_type: 'video',
-            folder: 'e-learning/courses',
+            folder: 'EduLearn/courses',
             transformation: {
               quality: 'auto',
               fetch_format: 'auto',

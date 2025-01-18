@@ -17,7 +17,7 @@ import { ApiSuccess } from "./utils/apiResponse";
 // Routes declaration
 
 app.get("/", (req, res) => {
-  res.status(200).json(new ApiSuccess("Welcome to E-learning", null));
+  res.status(200).json(new ApiSuccess("Welcome to EduLearn", null));
 });
 
 app.use("/api/v1/customer", customerRouter);

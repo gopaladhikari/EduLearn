@@ -1,5 +1,5 @@
 export const site = {
-  name: 'E-Learning',
+  name: 'EduLearn',
   domain: [
     'http://localhost:5173',
     'http://localhost:3001',

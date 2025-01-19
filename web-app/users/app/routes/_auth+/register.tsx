@@ -37,9 +37,7 @@ export default function Register() {
     resolver: zodResolver(registerSchema),
   });
 
-  const onSubmit: SubmitHandler<RegisterSchema> = async (data) => {
-    console.log(data);
-  };
+  const onSubmit: SubmitHandler<RegisterSchema> = async (data) => {};
   return (
     <Card>
       <CardHeader>

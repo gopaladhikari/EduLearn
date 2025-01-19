@@ -48,7 +48,6 @@ export class AnalyticsService {
 
       return analytics;
     } catch (error) {
-      console.log(error);
       throw error;
     }
   }

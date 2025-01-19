@@ -27,9 +27,7 @@ export default function ForgotPassword() {
     resolver: zodResolver(forgotPasswordSchema),
   });
 
-  const onSubmit: SubmitHandler<ForgotPasswordSchema> = async (data) => {
-    console.log(data);
-  };
+  const onSubmit: SubmitHandler<ForgotPasswordSchema> = async (data) => {};
   return (
     <Card>
       <CardHeader>

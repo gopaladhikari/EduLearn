@@ -12,8 +12,6 @@ export const createUserDetails = dbHandler(async (req, res) => {
     req.body
   );
 
-  console.log(data);
-
   if (!success) throw new ApiError(400, error.message);
 
   const cacheKey = `userDetails-${userId}`;
@@ -26,7 +24,8 @@ export const createUserDetails = dbHandler(async (req, res) => {
     // subjectIds: data.subjectIds,
   });
 
-  if (!userDetails) throw new ApiError(400, "User details not created");
+  if (!userDetails)
+    throw new ApiError(400, "User details not created");
 
   if (cache.has(cacheKey)) cache.del(cacheKey);
 

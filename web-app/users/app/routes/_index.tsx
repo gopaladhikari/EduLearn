@@ -5,6 +5,7 @@ import { site } from "@/config/site";
 import type { Course } from "@/types";
 import type { LoaderFunction, MetaFunction } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
+import { json } from "@remix-run/node";
 import { BookOpen, Users, Award, Play } from "lucide-react";
 
 export const meta: MetaFunction = () => {
@@ -27,24 +28,15 @@ export const loader: LoaderFunction = async () => {
       },
     });
 
-    return new Response(JSON.stringify(data), {
-      status: 200,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    return json(data);
   } catch (error) {
-    return new Response((error as Error).message, {
-      status: 500,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    return json(error);
   }
 };
 
 export default function Index() {
   const data = useLoaderData<Data>();
+  console.log(data);
 
   // console.log(error);
 

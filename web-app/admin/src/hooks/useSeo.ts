@@ -15,7 +15,7 @@ export function useSeo({ title, description }: SeoProps) {
         ?.setAttribute("content", description);
 
     return () => {
-      document.title = "EduLearn";
+      document.title = site.title;
       document
         .querySelector("meta[name=description]")
         ?.setAttribute("content", site.description);

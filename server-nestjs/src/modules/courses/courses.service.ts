@@ -117,6 +117,37 @@ export class CoursesService {
     return `This action updates a #${id} course`;
   }
 
+  async searchCourses(q: string, limit: number, skip: number) {
+    try {
+      const courses = await this.Course.find({
+        $or: [
+          {
+            title: {
+              $regex: q.trim(),
+              $options: 'i',
+            },
+          },
+          {
+            description: {
+              $regex: q,
+              $options: 'i',
+            },
+          },
+        ],
+      })
+        .limit(limit)
+        .skip(skip);
+
+      if (!courses.length)
+        throw new NotFoundException('Course not found');
+
+      return courses;
+    } catch (error) {
+      if (error instanceof NotFoundException) throw error;
+      throw new BadRequestException(error.message);
+    }
+  }
+
   async toggleCoursePublish(id: string) {
     try {
       const course = await this.Course.findById(id);

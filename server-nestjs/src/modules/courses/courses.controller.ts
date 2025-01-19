@@ -35,6 +35,15 @@ export class CoursesController {
     return this.coursesService.getAllCourses(limit, skip);
   }
 
+  @Get('/search')
+  searchCourses(
+    @Query('q') q: string,
+    @Query('limit') limit: number,
+    @Query('skip') skip: number,
+  ) {
+    return this.coursesService.searchCourses(q, limit, skip);
+  }
+
   @Get(':slug')
   findOne(@Param('slug') slug: string) {
     return this.coursesService.getCourseBySlug(slug);

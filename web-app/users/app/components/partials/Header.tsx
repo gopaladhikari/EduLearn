@@ -26,6 +26,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 function UserMenu() {
   const { user } = useAuth();
+  console.log(user);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -42,7 +43,7 @@ function UserMenu() {
           </Avatar>
           <div>
             <strong>{user?.fullName}</strong>
-            <p className="text-muted-foreground">{user?.email}</p>
+            <p className="text-sm text-muted-foreground">{user?.email}</p>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />

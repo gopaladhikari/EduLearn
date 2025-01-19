@@ -1,6 +1,7 @@
 import { MainNav } from "@/components/dashboard/main-nav";
 import Search from "@/components/dashboard/search";
 import UserNav from "@/components/dashboard/user-nav";
+import { Logo } from "@/components/partials/Logo";
 import { MaxWithWrapper } from "@/components/partials/MaxWithWrapper";
 import { ModeToggle } from "@/components/partials/mode-toggle";
 import { NotFound } from "@/components/partials/NotFound";
@@ -8,7 +9,6 @@ import { Loading } from "@/components/skeletons/Spinner";
 import { useAuth } from "@/context/AuthContext";
 import {
   createFileRoute,
-  Link,
   Outlet,
   useNavigate,
 } from "@tanstack/react-router";
@@ -34,11 +34,7 @@ function RouteComponent() {
     <>
       <div className="border-b shadow-md">
         <MaxWithWrapper className="flex items-center gap-4">
-          <strong className="text-2xl">
-            <Link to="/dashboard" className="text-foreground">
-              EduLearn
-            </Link>
-          </strong>
+          <Logo href="/dashboard" />
           <header>
             <MainNav className="mx-6" />
           </header>

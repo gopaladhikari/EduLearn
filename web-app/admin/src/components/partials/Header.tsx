@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { MaxWithWrapper } from "./MaxWithWrapper";
 import { menu } from "@/config/site";
 import { ModeToggle } from "./mode-toggle";
+import { Logo } from "./Logo";
 
 export function Header() {
   return (
@@ -13,9 +14,7 @@ export function Header() {
               className="mr-auto text-2xl font-bold text-primary"
               role="menubar"
             >
-              <Link to="/" role="menuitem">
-                EduLearn
-              </Link>
+              <Logo />
             </li>
             <li>
               <ModeToggle />

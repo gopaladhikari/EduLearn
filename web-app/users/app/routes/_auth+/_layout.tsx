@@ -1,6 +1,24 @@
-import { Link, Outlet } from "@remix-run/react";
+import { useAuth } from "@/hooks/useAuth";
+import { Link, Outlet, useNavigate } from "@remix-run/react";
+import { useEffect } from "react";
 
 export default function Layout() {
+  const { isPending, isMounted, isLoggedIn } = useAuth();
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isPending) {
+      if (isMounted) {
+        if (isLoggedIn) navigate("/");
+      }
+    }
+  }, [isLoggedIn, isPending, navigate, isMounted]);
+
+  if (!isMounted) return;
+
+  if (isPending) return <div>loading...</div>;
+
   return (
     <section>
       <div className="grid gap-8 md:grid-cols-2">

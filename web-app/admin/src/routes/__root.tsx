@@ -1,7 +1,6 @@
 import { ThemeProvider } from "@/context/ThemeContext";
 import {
   createRootRouteWithContext,
-  Link,
   Outlet,
   ScrollRestoration,
 } from "@tanstack/react-router";
@@ -17,6 +16,7 @@ import Search from "@/components/dashboard/search";
 import { ModeToggle } from "@/components/partials/mode-toggle";
 import UserNav from "@/components/dashboard/user-nav";
 import { Toaster } from "@/components/ui/toaster";
+import { Logo } from "@/components/partials/Logo";
 
 export const Route = createRootRouteWithContext<AuthContextType>()({
   component: () => {
@@ -42,12 +42,8 @@ export const Route = createRootRouteWithContext<AuthContextType>()({
         {isLoggedIn ? (
           <div className="border-b shadow-md">
             <MaxWithWrapper className="flex items-center gap-4">
-              <strong className="text-2xl">
-                <Link to="/dashboard" className="text-foreground">
-                  EduLearn
-                </Link>
-              </strong>
               <header>
+                <Logo />
                 <MainNav className="mx-6" />
               </header>
               <div className="ml-auto flex items-center space-x-4">

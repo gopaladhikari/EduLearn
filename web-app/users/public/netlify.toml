@@ -1,7 +1,0 @@
-[build]
-  command = "bun install && bun run build"
-  publish = "build/client"
-
-[dev]
-command = "bun run dev"
-framework = "vite"

@@ -15,7 +15,7 @@ export function MainNav({
                 to={item.to}
                 className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
                 activeOptions={{
-                  exact: true,
+                  exact: false,
                 }}
                 activeProps={{
                   className: "text-primary",

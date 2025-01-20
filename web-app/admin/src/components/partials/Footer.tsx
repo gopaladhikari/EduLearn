@@ -1,3 +1,5 @@
+import { Logo } from "./Logo";
+
 export function Footer() {
   return (
     <footer>
@@ -6,9 +8,7 @@ export function Footer() {
         <div className="mx-auto max-w-7xl px-6">
           <div className="flex flex-wrap">
             <div className="flex w-full flex-col sm:w-2/5">
-              <div className="flex items-center space-x-2">
-                EduLearn
-              </div>
+              <Logo />
               <p className="mt-3 text-sm text-gray-700 dark:text-gray-400">
                 Rangeli-08, Koshi, Nepal
               </p>

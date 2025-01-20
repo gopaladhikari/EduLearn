@@ -11,11 +11,11 @@ import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 import { NotFound } from "@/components/partials/NotFound";
 import { Header } from "@/components/partials/Header";
 import { MainNav } from "@/components/dashboard/main-nav";
-import { MaxWithWrapper } from "@/components/partials/MaxWithWrapper";
 import { ModeToggle } from "@/components/partials/mode-toggle";
 import { Toaster } from "@/components/ui/toaster";
 import { Logo } from "@/components/partials/Logo";
 import { UserNav } from "@/components/dashboard/user-nav";
+import { MaxWithWrapper } from "@/components/partials/MaxWithWrapper";
 
 export const Route = createRootRouteWithContext<AuthContextType>()({
   component: () => {
@@ -41,8 +41,8 @@ export const Route = createRootRouteWithContext<AuthContextType>()({
         {isLoggedIn ? (
           <div className="border-b shadow-md">
             <MaxWithWrapper className="flex items-center gap-4">
+              <Logo href="/dashboard" />
               <header>
-                <Logo />
                 <MainNav className="mx-6" />
               </header>
               <div className="ml-auto flex items-center space-x-4">
@@ -52,13 +52,9 @@ export const Route = createRootRouteWithContext<AuthContextType>()({
             </MaxWithWrapper>
           </div>
         ) : (
-          <>
-            <Header />
-          </>
+          <Header />
         )}
-        <MaxWithWrapper className="space-y-3">
-          <NotFound />
-        </MaxWithWrapper>
+        <NotFound />
       </>
     );
   },

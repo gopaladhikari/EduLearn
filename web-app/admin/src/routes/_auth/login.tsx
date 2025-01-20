@@ -18,7 +18,7 @@ import { Input } from "@/components/ui/input";
 import { useSeo } from "@/hooks/useSeo";
 import { loginMutation } from "@/lib/mutations/auth.mutation";
 import { useMutation } from "@tanstack/react-query";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/hooks/useAuth";
 import { useEffect } from "react";
 
 export const Route = createFileRoute("/_auth/login")({
@@ -138,6 +138,7 @@ function RouteComponent() {
                     <Label htmlFor={field.name}>Password</Label>
                     <Input
                       id={field.name}
+                      eye
                       name={field.name}
                       type="password"
                       value={field.state.value}

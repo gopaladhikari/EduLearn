@@ -4,7 +4,6 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { CreateCourseDto } from './dto/create-course.dto';
-import { UpdateCourseDto } from './dto/update-course.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Course } from './entities/course.entity';
 import type { Model } from 'mongoose';
@@ -108,13 +107,34 @@ export class CoursesService {
     }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} course`;
-  }
+  async getCourseAnalytics(slug: string) {
+    try {
+      const course = await this.Course.aggregate([
+        {
+          $match: {
+            slug: slug,
+          },
+        },
+        {
+          $lookup: {
+            from: 'courseanalytics',
+            localField: 'slug',
+            foreignField: 'courseSlug',
+            as: 'analytics',
+          },
+        },
+        {
+          $unwind: '$analytics',
+        },
+      ]);
+      if (!course.length)
+        throw new NotFoundException('Course not found');
 
-  update(id: number, updateCourseDto: UpdateCourseDto) {
-    console.log(updateCourseDto);
-    return `This action updates a #${id} course`;
+      return course.at(0);
+    } catch (error) {
+      if (error instanceof NotFoundException) throw error;
+      throw new BadRequestException(error.message);
+    }
   }
 
   async searchCourses(q: string, limit: number, skip: number) {

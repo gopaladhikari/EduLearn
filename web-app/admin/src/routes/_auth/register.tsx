@@ -18,7 +18,7 @@ import { Input } from "@/components/ui/input";
 import { useMutation } from "@tanstack/react-query";
 import { registerMutation } from "@/lib/mutations/auth.mutation";
 import { useSeo } from "@/hooks/useSeo";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/hooks/useAuth";
 
 export const Route = createFileRoute("/_auth/register")({
   component: RouteComponent,
@@ -33,6 +33,7 @@ function RouteComponent() {
   });
   const form = useForm({
     defaultValues: {
+      fullName: "",
       email: "",
       password: "",
     },
@@ -60,6 +61,47 @@ function RouteComponent() {
       </CardHeader>
       <CardContent>
         <form className="space-y-3">
+          <div className="space-y-3">
+            <form.Field
+              name="fullName"
+              validators={{
+                onChange: ({ value }) =>
+                  !value
+                    ? "A first name is required"
+                    : value.length < 3
+                      ? "First name must be at least 3 characters"
+                      : undefined,
+                onChangeAsyncDebounceMs: 500,
+                onChangeAsync: async ({ value }) => {
+                  await new Promise((resolve) =>
+                    setTimeout(resolve, 1000),
+                  );
+                  return (
+                    value.includes("error") &&
+                    'No "error" allowed in first name'
+                  );
+                },
+              }}
+              children={(field) => {
+                return (
+                  <>
+                    <Label htmlFor={field.name}>Full name</Label>
+                    <Input
+                      id={field.name}
+                      name={field.name}
+                      value={field.state.value}
+                      type="text"
+                      onBlur={field.handleBlur}
+                      placeholder="Enter your full name"
+                      onChange={(e) =>
+                        field.handleChange(e.target.value)
+                      }
+                    />
+                  </>
+                );
+              }}
+            />
+          </div>
           <div className="space-y-3">
             <form.Field
               name="email"
@@ -130,6 +172,7 @@ function RouteComponent() {
                       id={field.name}
                       name={field.name}
                       type="password"
+                      eye
                       value={field.state.value}
                       placeholder="Enter your password"
                       onBlur={field.handleBlur}

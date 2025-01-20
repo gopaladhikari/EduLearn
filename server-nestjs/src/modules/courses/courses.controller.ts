@@ -16,7 +16,6 @@ import {
 } from '@nestjs/common';
 import { CoursesService } from './courses.service';
 import { CreateCourseDto } from './dto/create-course.dto';
-import { UpdateCourseDto } from './dto/update-course.dto';
 import { JwtGuard } from '../auth/guards/jwt-auth.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CurrentUser } from '../auth/current-user.decorator';
@@ -44,8 +43,13 @@ export class CoursesController {
     return this.coursesService.searchCourses(q, limit, skip);
   }
 
+  @Get('analytics/:slug')
+  getCourseAnalytics(@Param('slug') slug: string) {
+    return this.coursesService.getCourseAnalytics(slug);
+  }
+
   @Get(':slug')
-  findOne(@Param('slug') slug: string) {
+  getCourseBySlug(@Param('slug') slug: string) {
     return this.coursesService.getCourseBySlug(slug);
   }
 
@@ -69,15 +73,6 @@ export class CoursesController {
       video,
       createCourseDto,
     );
-  }
-
-  @Patch(':id')
-  @UseGuards(JwtGuard)
-  update(
-    @Param('id') id: string,
-    @Body() updateCourseDto: UpdateCourseDto,
-  ) {
-    return this.coursesService.update(+id, updateCourseDto);
   }
 
   @Patch('publish/:id')

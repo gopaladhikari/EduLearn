@@ -12,11 +12,10 @@ import { NotFound } from "@/components/partials/NotFound";
 import { Header } from "@/components/partials/Header";
 import { MainNav } from "@/components/dashboard/main-nav";
 import { MaxWithWrapper } from "@/components/partials/MaxWithWrapper";
-import Search from "@/components/dashboard/search";
 import { ModeToggle } from "@/components/partials/mode-toggle";
-import UserNav from "@/components/dashboard/user-nav";
 import { Toaster } from "@/components/ui/toaster";
 import { Logo } from "@/components/partials/Logo";
+import { UserNav } from "@/components/dashboard/user-nav";
 
 export const Route = createRootRouteWithContext<AuthContextType>()({
   component: () => {
@@ -47,7 +46,6 @@ export const Route = createRootRouteWithContext<AuthContextType>()({
                 <MainNav className="mx-6" />
               </header>
               <div className="ml-auto flex items-center space-x-4">
-                <Search />
                 <ModeToggle />
                 <UserNav />
               </div>

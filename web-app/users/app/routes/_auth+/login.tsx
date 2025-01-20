@@ -56,7 +56,6 @@ export default function Login() {
         formData,
       );
       if (data.data) {
-        sessionStorage.setItem("user", JSON.stringify(data.data));
         setUser(data.data);
         setIsLoggedIn(true);
         navigate("/dashboard");

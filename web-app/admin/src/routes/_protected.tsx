@@ -1,12 +1,11 @@
 import { MainNav } from "@/components/dashboard/main-nav";
-import Search from "@/components/dashboard/search";
-import UserNav from "@/components/dashboard/user-nav";
+import { UserNav } from "@/components/dashboard/user-nav";
 import { Logo } from "@/components/partials/Logo";
 import { MaxWithWrapper } from "@/components/partials/MaxWithWrapper";
 import { ModeToggle } from "@/components/partials/mode-toggle";
 import { NotFound } from "@/components/partials/NotFound";
 import { Loading } from "@/components/skeletons/Spinner";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/hooks/useAuth";
 import {
   createFileRoute,
   Outlet,
@@ -39,7 +38,6 @@ function RouteComponent() {
             <MainNav className="mx-6" />
           </header>
           <div className="ml-auto flex items-center space-x-4">
-            <Search />
             <ModeToggle />
             <UserNav />
           </div>

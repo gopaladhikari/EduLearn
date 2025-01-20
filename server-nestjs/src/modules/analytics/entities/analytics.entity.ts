@@ -1,18 +1,11 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, { HydratedDocument } from 'mongoose';
+import { HydratedDocument } from 'mongoose';
 
 export type CourseAnalyticsDocument =
   HydratedDocument<CourseAnalytics>;
 
 @Schema({ timestamps: true })
 export class CourseAnalytics {
-  @Prop({
-    required: true,
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Course',
-  })
-  courseId: mongoose.Schema.Types.ObjectId;
-
   @Prop({
     required: true,
     type: String,

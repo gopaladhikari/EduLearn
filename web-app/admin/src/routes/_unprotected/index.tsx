@@ -1,7 +1,7 @@
 import { Header } from "@/components/partials/Header";
 import { MaxWithWrapper } from "@/components/partials/MaxWithWrapper";
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/hooks/useAuth";
 import {
   createFileRoute,
   Link,

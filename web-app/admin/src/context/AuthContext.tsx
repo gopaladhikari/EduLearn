@@ -1,14 +1,11 @@
 import { SessionStorage } from "@/config/constants";
 import { me } from "@/lib/queries/users.query";
+import type { User } from "@/types";
 import { useQuery } from "@tanstack/react-query";
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { createContext, useEffect, useState } from "react";
 
 export type AuthContextType = {
+  user: User | null;
   isLoggedIn: boolean;
   isPending: boolean;
   setIsLoggedIn: (value: boolean) => void;
@@ -17,6 +14,7 @@ export type AuthContextType = {
 const AuthContext = createContext<AuthContextType>({
   isLoggedIn: false,
   isPending: false,
+  user: null,
   setIsLoggedIn: () => null,
 });
 
@@ -26,7 +24,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const [isLoggedIn, setIsLoggedIn] = useState(sessionLoggedIn);
 
-  const { isSuccess, isPending } = useQuery({
+  const { isSuccess, isPending, data } = useQuery({
     queryKey: ["me"],
     queryFn: me,
   });
@@ -49,6 +47,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
         isLoggedIn,
         isPending,
         setIsLoggedIn,
+        user: data?.data || null,
       }}
     >
       {children}
@@ -56,13 +55,4 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
-function useAuth() {
-  const context = useContext(AuthContext);
-
-  if (!context)
-    throw new Error("useAuth must be used within a AuthProvider");
-
-  return context;
-}
-
-export { AuthProvider, useAuth };
+export { AuthProvider, AuthContext };

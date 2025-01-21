@@ -9,7 +9,7 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
-    console.log("error", error);
+    if (import.meta.env.DEV) console.log("error", error);
     if (error instanceof AxiosError)
       if (error.response?.data?.message)
         throw new Error(error.response.data.message);

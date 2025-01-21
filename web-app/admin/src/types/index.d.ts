@@ -6,6 +6,7 @@ export type User = {
   role: string;
   verified: boolean;
   status: string;
+  avatarUrl: string;
   createdAt: string;
   updatedAt: string;
   __v: number;

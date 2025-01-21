@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -12,12 +13,15 @@ import { ConfigService } from '@nestjs/config';
 import type { UserDocument } from '../users/entities/user.entity';
 import * as fs from 'fs';
 import * as path from 'path';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import type { Cache } from 'cache-manager';
 
 @Injectable()
 export class CoursesService {
   private readonly cloudinary = cloudinary;
 
   constructor(
+    @Inject(CACHE_MANAGER) private readonly cache: Cache,
     @InjectModel(Course.name)
     private readonly Course: Model<Course>,
     private readonly config: ConfigService,
@@ -63,6 +67,7 @@ export class CoursesService {
       }
 
       await course.save();
+      await this.cache.clear();
 
       return course;
     } catch (error) {
@@ -74,12 +79,17 @@ export class CoursesService {
 
   async getAllCourses(limit: number, skip: number) {
     try {
+      const cachedCourses = await this.cache.get('courses');
+
+      if (cachedCourses) return cachedCourses;
+
       const courses = await this.Course.find()
         .limit(limit)
         .skip(skip);
 
       if (!courses) throw new NotFoundException('Course not found');
 
+      await this.cache.set('courses', courses);
       return courses;
     } catch (error) {
       if (error instanceof NotFoundException) throw error;
@@ -90,6 +100,12 @@ export class CoursesService {
 
   async getCourseBySlug(slug: string) {
     try {
+      const cacheKey = `course_slug_${slug}`;
+
+      const cachedCourse = this.cache.get(cacheKey);
+
+      if (cachedCourse) return cachedCourse;
+
       const course = await this.Course.findOne({
         slug: slug,
       }).populate({
@@ -98,6 +114,8 @@ export class CoursesService {
       });
 
       if (!course) throw new NotFoundException('Course not found');
+
+      await this.cache.set(cacheKey, course);
 
       return course;
     } catch (error) {
@@ -109,6 +127,11 @@ export class CoursesService {
 
   async getCourseAnalytics(slug: string) {
     try {
+      const cacheKey = `course_analytics_${slug}`;
+
+      const cachedCourseAnalytics = this.cache.get(cacheKey);
+
+      if (cachedCourseAnalytics) return cachedCourseAnalytics;
       const course = await this.Course.aggregate([
         {
           $match: {
@@ -130,6 +153,7 @@ export class CoursesService {
       if (!course.length)
         throw new NotFoundException('Course not found');
 
+      await this.cache.set(cacheKey, course.at(0));
       return course.at(0);
     } catch (error) {
       if (error instanceof NotFoundException) throw error;
@@ -139,6 +163,12 @@ export class CoursesService {
 
   async searchCourses(q: string, limit: number, skip: number) {
     try {
+      const cacheKey = `courses_search_${q}_${limit}_${skip}`;
+
+      const cachedCourses = this.cache.get(cacheKey);
+
+      if (cachedCourses) return cachedCourses;
+
       const courses = await this.Course.find({
         $or: [
           {
@@ -161,6 +191,7 @@ export class CoursesService {
       if (!courses.length)
         throw new NotFoundException('Course not found');
 
+      await this.cache.set(cacheKey, courses);
       return courses;
     } catch (error) {
       if (error instanceof NotFoundException) throw error;
@@ -178,6 +209,10 @@ export class CoursesService {
       else course.isPublished = true;
 
       await course.save();
+
+      const cacheKey = `course_slug_${course.slug}`;
+
+      await this.cache.del(cacheKey);
 
       return course;
     } catch (error) {
@@ -200,6 +235,8 @@ export class CoursesService {
           type: 'upload',
         },
       );
+
+      await this.cache.clear();
 
       return null;
     } catch (error) {
@@ -245,6 +282,7 @@ export class CoursesService {
       if (!result.deletedCount)
         throw new NotFoundException('Course not found');
 
+      await this.cache.clear();
       return null;
     } catch (error) {
       if (error instanceof NotFoundException) throw error;

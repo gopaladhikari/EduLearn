@@ -16,6 +16,7 @@ function AuthNav() {
             to={item.to}
             role="menuitem"
             activeProps={{ className: "text-primary" }}
+            className="text-sm"
           >
             {item.name}
           </Link>

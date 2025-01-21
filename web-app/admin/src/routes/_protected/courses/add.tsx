@@ -152,9 +152,7 @@ function RouteComponent() {
 
   return (
     <section>
-      <h1 className="mb-5 text-2xl font-bold text-primary">
-        Add New Course
-      </h1>
+      <h1 className="mb-4">Add New Course</h1>
 
       <Form {...form}>
         <form

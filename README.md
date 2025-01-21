@@ -2,6 +2,10 @@
 
 Welcome to the **EduLearn** Platform, an online teaching and learning hub where educators can share their knowledge with students from around the globe. This platform empowers teachers to create, manage, and sell their courses while offering students a seamless experience to learn and grow at their own pace.
 
+## Live URL
+
+- [Admin](https://admin-edulearn.netlify.app/)
+
 ## Features 🌟
 
 ### Teacher Side
@@ -24,16 +28,16 @@ Students can:
 
 ## Technologies Used 🛠️
 
-- Backend Framework: Node.js with Nest.js
+- Backend Framework: Node.js and Express.js with Nest.js
 - Database: MongoDB
 - Caching: `node-cache` for in-memory caching
 - Authentication: JSON Web Tokens (JWT) for secure access and authorization.
-- Frontend Framework: Remix.run
+- Frontend Framework: Remix.run (User side) and React.js (Admin side)
 
 ## 🔒 Security Features
 
 - Secure authentication using JWT.
-- Password encryption for safe storage.
+- Password hasing for safe storage.
 - HTTPS for secure communication.
 
 ## Contributing

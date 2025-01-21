@@ -8,6 +8,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { MailService } from './modules/mail/mail.service';
 import { CoursesModule } from './modules/courses/courses.module';
 import { AnalyticsModule } from './modules/analytics/analytics.module';
+import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
   imports: [
@@ -18,7 +19,10 @@ import { AnalyticsModule } from './modules/analytics/analytics.module';
     MongooseModule.forRoot(process.env.MONGO_URI, {
       dbName: process.env.DB_NAME,
     }),
-
+    CacheModule.register({
+      ttl: 1000 * 60, // 1 minute
+      isGlobal: true,
+    }),
     UsersModule,
     AuthModule,
     CoursesModule,

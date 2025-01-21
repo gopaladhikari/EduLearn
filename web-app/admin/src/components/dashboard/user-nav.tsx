@@ -47,15 +47,17 @@ export function UserNav() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Avatar className="cursor-pointer">
-          <AvatarImage src="https://github.com/shadcn.png" />
-          <AvatarFallback>CN</AvatarFallback>
+          <AvatarImage src={user?.avatarUrl} />
+          <AvatarFallback>{user?.fullName?.charAt(0)}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-72" align="end">
         <DropdownMenuLabel className="flex items-start gap-6">
-          <Avatar>
-            <AvatarImage src="https://github.com/shadcn.png" />
-            <AvatarFallback>CN</AvatarFallback>
+          <Avatar className="cursor-pointer">
+            <AvatarImage src={user?.avatarUrl} />
+            <AvatarFallback>
+              {user?.fullName?.charAt(0)}
+            </AvatarFallback>
           </Avatar>
           <div>
             <strong>{user?.fullName}</strong>

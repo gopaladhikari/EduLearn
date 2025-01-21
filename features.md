@@ -1,4 +1,4 @@
-# **EduLearn Platform Features** 🚀
+# EduLearn Platform Features 🚀
 
 Welcome to the **EduLearn Platform**! Below is a detailed list of all the features/pages available in the platform to enhance both teaching and learning experiences.
 

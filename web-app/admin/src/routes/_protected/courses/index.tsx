@@ -117,7 +117,7 @@ function RouteComponent() {
 
   return (
     <>
-      <h1 className="text-xl font-bold">All Courses</h1>
+      <h1>All Courses</h1>
       <section className="flex items-center gap-6">
         <div className="flex w-1/3 items-center gap-4 rounded-md border-2 px-4 py-2 focus-within:border-primary">
           <Search size={18} />

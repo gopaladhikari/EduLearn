@@ -1,8 +1,4 @@
-import {
-  createFileRoute,
-  Link,
-  useNavigate,
-} from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useForm } from "@tanstack/react-form";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,15 +14,12 @@ import { Input } from "@/components/ui/input";
 import { useMutation } from "@tanstack/react-query";
 import { registerMutation } from "@/lib/mutations/auth.mutation";
 import { useSeo } from "@/hooks/useSeo";
-import { useAuth } from "@/hooks/useAuth";
 
 export const Route = createFileRoute("/_auth/register")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  const { isLoggedIn } = useAuth();
-  const navigate = useNavigate();
   useSeo({
     title: "Register",
     description: "Register to your account",
@@ -48,8 +41,6 @@ function RouteComponent() {
       form.reset();
     },
   });
-
-  if (isLoggedIn) navigate({ to: "/dashboard" });
 
   return (
     <Card>

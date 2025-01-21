@@ -82,4 +82,8 @@
   main {
     @apply min-h-dvh;
   }
+
+  h1 {
+    @apply text-2xl font-bold tracking-tight;
+  }
 }

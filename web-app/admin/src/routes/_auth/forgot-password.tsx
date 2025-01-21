@@ -63,7 +63,9 @@ function RouteComponent() {
                       : undefined,
                 onChangeAsyncDebounceMs: 500,
                 onChangeAsync: async ({ value }) => {
-                  await new Promise((resolve) => setTimeout(resolve, 1000));
+                  await new Promise((resolve) =>
+                    setTimeout(resolve, 1000),
+                  );
                   return (
                     value.includes("error") &&
                     'No "error" allowed in first name'
@@ -81,7 +83,9 @@ function RouteComponent() {
                       type="email"
                       onBlur={field.handleBlur}
                       placeholder="Enter your email"
-                      onChange={(e) => field.handleChange(e.target.value)}
+                      onChange={(e) =>
+                        field.handleChange(e.target.value)
+                      }
                     />
                   </>
                 );
@@ -95,16 +99,24 @@ function RouteComponent() {
             </Link>
           </div>
           {mutation.error && (
-            <p className="text-destructive">{mutation.error.message}</p>
+            <p className="text-destructive">
+              {mutation.error.message}
+            </p>
           )}
           {mutation.isSuccess && (
-            <div className="text-green-600">{mutation.data.message}</div>
+            <div className="text-green-600">
+              {mutation.data.message}
+            </div>
           )}
         </form>
       </CardContent>
 
       <CardFooter>
-        <Button type="button" className="w-full" onClick={form.handleSubmit}>
+        <Button
+          type="button"
+          className="w-full"
+          onClick={form.handleSubmit}
+        >
           {form.state.isSubmitting ? "Submitting..." : "Submit"}
         </Button>
       </CardFooter>

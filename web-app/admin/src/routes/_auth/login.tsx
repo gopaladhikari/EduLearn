@@ -19,7 +19,6 @@ import { useSeo } from "@/hooks/useSeo";
 import { loginMutation } from "@/lib/mutations/auth.mutation";
 import { useMutation } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/useAuth";
-import { useEffect } from "react";
 
 export const Route = createFileRoute("/_auth/login")({
   component: RouteComponent,
@@ -28,7 +27,7 @@ export const Route = createFileRoute("/_auth/login")({
 function RouteComponent() {
   const navigate = useNavigate();
 
-  const { isLoggedIn, setIsLoggedIn, isPending } = useAuth();
+  const { setIsLoggedIn } = useAuth();
 
   const mutation = useMutation({
     mutationFn: loginMutation,
@@ -50,10 +49,6 @@ function RouteComponent() {
       mutation.mutate(value);
     },
   });
-
-  useEffect(() => {
-    if (!isPending && isLoggedIn) navigate({ to: "/dashboard" });
-  }, [isPending, isLoggedIn, navigate]);
 
   useSeo({
     title: "Login",

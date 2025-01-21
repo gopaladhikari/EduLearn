@@ -62,8 +62,9 @@ export class AuthService {
     response.cookie('access_token', accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
+      sameSite:
+        process.env.NODE_ENV === 'production' ? 'none' : 'lax',
       expires: date,
-      sameSite: 'none',
     });
 
     return user;
@@ -71,15 +72,12 @@ export class AuthService {
 
   logout(response: Response) {
     response.clearCookie('access_token', {
-      domain:
-        process.env.NODE_ENV === 'production'
-          ? 'https://admin-edulearn.netlify.app'
-          : 'localhost',
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite:
+        process.env.NODE_ENV === 'production' ? 'none' : 'lax',
     });
-    return {
-      status: 'ok',
-      message: 'You have been logged out successfully',
-    };
+    return null;
   }
 
   async requestForgotPassword(email: string) {

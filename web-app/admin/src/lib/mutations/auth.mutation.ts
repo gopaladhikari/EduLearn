@@ -5,6 +5,7 @@ type Data = {
   email: string;
   password: string;
 };
+
 export const registerMutation = async (formData: Data) => {
   try {
     const { data } = await axiosInstance.post("/api/users", {
@@ -90,6 +91,16 @@ export const verifyEmailMutation = async (
       },
     );
 
+    return data;
+  } catch (error) {
+    throw new Error((error as Error).message);
+  }
+};
+
+export const logoutMutation = async () => {
+  try {
+    const { data } = await axiosInstance.post("/api/auth/logout");
+    console.log(data);
     return data;
   } catch (error) {
     throw new Error((error as Error).message);

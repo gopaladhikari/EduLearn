@@ -14,10 +14,34 @@ import {
   AvatarImage,
 } from "@/components/ui/avatar";
 import { useAuth } from "@/hooks/useAuth";
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { useMutation } from "@tanstack/react-query";
+import { logoutMutation } from "@/lib/mutations/auth.mutation";
+import { SessionStorage } from "@/config/constants";
+import { toast } from "@/hooks/use-toast";
 
 export function UserNav() {
-  const { user } = useAuth();
+  const { user, setIsLoggedIn } = useAuth();
+  const navigate = useNavigate();
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: logoutMutation,
+    onSuccess: () => {
+      sessionStorage.removeItem(SessionStorage.IS_LOGGED_IN);
+      setIsLoggedIn(false);
+
+      navigate({
+        to: "/",
+      });
+    },
+    onError: ({ message }) => {
+      toast({
+        title: message,
+        description: "Something went wrong",
+        variant: "destructive",
+      });
+    },
+  });
 
   return (
     <DropdownMenu>
@@ -93,8 +117,13 @@ export function UserNav() {
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem>
-            <Button className="w-full" variant="link">
-              Logout
+            <Button
+              className="w-full"
+              variant="link"
+              disabled={isPending}
+              onClick={() => mutate()}
+            >
+              {isPending ? "Logging out..." : "Logout"}
             </Button>
           </DropdownMenuItem>
         </DropdownMenuGroup>

@@ -27,6 +27,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
   const { isSuccess, isPending, data } = useQuery({
     queryKey: ["me"],
     queryFn: me,
+    retry: false,
   });
 
   useEffect(() => {

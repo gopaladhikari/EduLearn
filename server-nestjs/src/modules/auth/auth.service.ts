@@ -63,10 +63,10 @@ export class AuthService {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       expires: date,
-      sameSite: 'lax',
+      sameSite: 'none',
       domain:
         process.env.NODE_ENV === 'production'
-          ? '.gopal-adhikari.com.np'
+          ? 'https://admin-edulearn.netlify.app'
           : 'localhost',
     });
 
@@ -75,7 +75,10 @@ export class AuthService {
 
   logout(response: Response) {
     response.clearCookie('access_token', {
-      domain: '.gopal-adhikari.com.np',
+      domain:
+        process.env.NODE_ENV === 'production'
+          ? 'https://admin-edulearn.netlify.app'
+          : 'localhost',
     });
     return {
       status: 'ok',

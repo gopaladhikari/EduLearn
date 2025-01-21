@@ -63,11 +63,7 @@ export class AuthService {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       expires: date,
-      sameSite: 'none',
-      domain:
-        process.env.NODE_ENV === 'production'
-          ? 'https://admin-edulearn.netlify.app'
-          : 'localhost',
+      sameSite: 'lax',
     });
 
     return user;

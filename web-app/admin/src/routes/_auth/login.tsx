@@ -19,6 +19,7 @@ import { useSeo } from "@/hooks/useSeo";
 import { loginMutation } from "@/lib/mutations/auth.mutation";
 import { useMutation } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/useAuth";
+import { SessionStorage } from "@/config/constants";
 
 export const Route = createFileRoute("/_auth/login")({
   component: RouteComponent,
@@ -33,6 +34,7 @@ function RouteComponent() {
     mutationFn: loginMutation,
     onSuccess() {
       setIsLoggedIn(true);
+      sessionStorage.setItem(SessionStorage.IS_LOGGED_IN, "true");
       navigate({ to: "/dashboard" });
     },
     onError() {

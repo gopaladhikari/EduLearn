@@ -12,12 +12,12 @@ import { compare } from 'bcrypt';
 import { MailService } from '../mail/mail.service';
 import type { Types } from 'mongoose';
 import type { ConfirmForgotPasswordDto } from './dto/confirm-forgot-password.dto';
+import type { JwtPayload } from 'jsonwebtoken';
 
-export type JwtPayload = {
+export interface Payload extends JwtPayload {
   _id: Types.ObjectId;
   email: string;
-  phoneNumber: string;
-};
+}
 
 @Injectable()
 export class AuthService {
@@ -29,7 +29,7 @@ export class AuthService {
   ) {}
 
   generateJwtToken(user: UserDocument) {
-    const payload = {
+    const payload: Payload = {
       _id: user._id,
       email: user.email,
     };

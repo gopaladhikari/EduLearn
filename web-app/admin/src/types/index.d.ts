@@ -64,6 +64,15 @@ export type Analytics = {
   updatedAt: string;
 };
 
+export type PlatformAnalytics = {
+  totalCourses: number;
+  totalEnrollments: number;
+  totalRevenue: number;
+  totalRefunds: number;
+  averageCourseRating: number;
+  mostPopularCourse: string;
+};
+
 export type CustomResponse<T> = Promise<{
   data: T;
   status: boolean;

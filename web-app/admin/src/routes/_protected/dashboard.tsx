@@ -9,6 +9,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { getPlatformAnalytics } from "@/lib/queries/analytics.query";
+import { useQuery } from "@tanstack/react-query";
 
 import { createFileRoute } from "@tanstack/react-router";
 
@@ -17,6 +19,10 @@ export const Route = createFileRoute("/_protected/dashboard")({
 });
 
 function RouteComponent() {
+  const { data } = useQuery({
+    queryKey: ["platformAnalytics"],
+    queryFn: getPlatformAnalytics,
+  });
   return (
     <section className="space-y-6">
       <div className="flex items-center justify-between space-y-2">
@@ -46,7 +52,9 @@ function RouteComponent() {
             </svg>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">$45,231.89</div>
+            <div className="text-2xl font-bold">
+              {data?.data.totalRevenue}
+            </div>
             <p className="text-xs text-muted-foreground">
               +20.1% from last month
             </p>
@@ -55,7 +63,7 @@ function RouteComponent() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
-              Subscriptions
+              Total Enrollment
             </CardTitle>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -73,7 +81,9 @@ function RouteComponent() {
             </svg>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">+2350</div>
+            <div className="text-2xl font-bold">
+              {data?.data.totalEnrollments}
+            </div>
             <p className="text-xs text-muted-foreground">
               +180.1% from last month
             </p>
@@ -82,7 +92,7 @@ function RouteComponent() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
-              Sales
+              Average Rating
             </CardTitle>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -99,7 +109,9 @@ function RouteComponent() {
             </svg>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">+12,234</div>
+            <div className="text-2xl font-bold">
+              {data?.data.averageCourseRating}
+            </div>
             <p className="text-xs text-muted-foreground">
               +19% from last month
             </p>
@@ -108,7 +120,7 @@ function RouteComponent() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
-              Active Now
+              Total Courses
             </CardTitle>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -124,7 +136,9 @@ function RouteComponent() {
             </svg>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">+573</div>
+            <div className="text-2xl font-bold">
+              {data?.data.totalCourses}
+            </div>
             <p className="text-xs text-muted-foreground">
               +201 since last hour
             </p>

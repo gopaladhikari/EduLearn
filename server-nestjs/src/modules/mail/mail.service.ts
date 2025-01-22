@@ -45,7 +45,7 @@ export class MailService {
   ) {
     try {
       const html = await this.loadTemplate('forgotPassword.html', {
-        RESET_LINK: `${site.domain}/confirm-password?token=${accessToken}`,
+        RESET_LINK: `${site.domain[2]}/confirm-password?token=${accessToken}`,
         Name: fullName ?? 'User',
       });
       const { data, error } = await this.resend.emails.send({
@@ -78,7 +78,7 @@ export class MailService {
   ) {
     try {
       const html = await this.loadTemplate('verifyEmail.html', {
-        CONFIRMATION_LINK: `${site.domain}/verify-email?token=${token}`,
+        CONFIRMATION_LINK: `${site.domain[2]}/verify-email?token=${token}`,
         Name: fullName ?? 'User',
       });
       const { data, error } = await this.resend.emails.send({

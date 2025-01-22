@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -7,24 +8,28 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User, type UserDocument } from './entities/user.entity';
 import { InjectModel } from '@nestjs/mongoose';
-import { type FilterQuery, type Model } from 'mongoose';
+import mongoose, { type FilterQuery, type Model } from 'mongoose';
 import type { UpdatePasswordDto } from './dto/update-password.dto';
 import { compare } from 'bcrypt';
 import { MailService } from '../mail/mail.service';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import type { Cache } from 'cache-manager';
+import type { Payload } from '../auth/auth.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectModel(User.name) private readonly User: Model<User>,
+    @Inject(CACHE_MANAGER) private readonly cache: Cache,
     private readonly mail: MailService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
   ) {}
 
   generateJwtToken(user: UserDocument) {
-    const payload = {
+    const payload: Payload = {
       _id: user._id,
       email: user.email,
     };
@@ -51,23 +56,32 @@ export class UsersService {
       user.jwtToken = accessToken;
       await user.save();
 
+      await this.cache.clear();
       return data;
     } catch (error) {
-      if (error.code === 11000) {
+      if (error instanceof mongoose.mongo.MongoServerError) {
         const duplicateField = Object.keys(error.keyPattern)[0];
         throw new BadRequestException(
           `A user with this ${duplicateField} already exists`,
         );
       }
-
       throw new BadRequestException(error.message);
     }
   }
 
   async getUser(query?: FilterQuery<User>) {
     try {
+      const cacheKey = `user-${Object.values(query)[0]}`;
+
+      const cachedUser = await this.cache.get(cacheKey);
+
+      if (cachedUser) return cachedUser as UserDocument;
+
       const user = await this.User.findOne(query);
       if (!user) throw new NotFoundException('User not found');
+
+      await this.cache.set(cacheKey, user);
+
       return user;
     } catch (error) {
       if (error instanceof NotFoundException) throw error;
@@ -77,12 +91,20 @@ export class UsersService {
 
   async getAllUser() {
     try {
+      const cacheKey = 'allUsers';
+
+      const cachedUsers = await this.cache.get(cacheKey);
+
+      if (cachedUsers) return cachedUsers;
+
       const users = await this.User.find({
         verified: true,
         status: 'active',
       });
 
       if (!users.length) throw new NotFoundException('No user found');
+
+      await this.cache.set(cacheKey, cachedUsers);
 
       return users;
     } catch (error) {
@@ -102,6 +124,7 @@ export class UsersService {
 
     try {
       await user.save();
+      await this.cache.clear();
       return user;
     } catch (error) {
       throw new BadRequestException(error.message);
@@ -131,6 +154,7 @@ export class UsersService {
     user.password = updatePasswordDto.newPassword;
     try {
       await user.save();
+      await this.cache.clear();
       return user;
     } catch (error) {
       throw new BadRequestException(error.message);

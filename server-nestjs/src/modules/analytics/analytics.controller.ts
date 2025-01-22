@@ -1,4 +1,10 @@
-import { Controller, Post, Param, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Param,
+  UseGuards,
+  Get,
+} from '@nestjs/common';
 import { AnalyticsService } from './analytics.service';
 import { JwtGuard } from '../auth/guards/jwt-auth.guard';
 
@@ -6,6 +12,14 @@ import { JwtGuard } from '../auth/guards/jwt-auth.guard';
 @UseGuards(JwtGuard)
 export class AnalyticsController {
   constructor(private readonly analyticsService: AnalyticsService) {}
+
+  @Get('/platform')
+  getPlatformAnalytics() {
+    return this.analyticsService.getPlatformAnalytics();
+  }
+
+  @Get('/course/:slug')
+  getCourseAnalytics(@Param('slug') slug: string) {}
 
   @Post('total-clicks/:slug')
   incrementTotalClicks(@Param('slug') slug: string) {

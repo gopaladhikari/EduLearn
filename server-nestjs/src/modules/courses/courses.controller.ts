@@ -43,11 +43,6 @@ export class CoursesController {
     return this.coursesService.searchCourses(q, limit, skip);
   }
 
-  @Get('analytics/:slug')
-  getCourseAnalytics(@Param('slug') slug: string) {
-    return this.coursesService.getCourseAnalytics(slug);
-  }
-
   @Get(':slug')
   getCourseBySlug(@Param('slug') slug: string) {
     return this.coursesService.getCourseBySlug(slug);

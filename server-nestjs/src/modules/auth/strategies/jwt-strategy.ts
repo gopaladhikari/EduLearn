@@ -2,8 +2,8 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { UsersService } from 'src/modules/users/users.service';
-import type { JwtPayload } from '../auth.service';
 import type { Request } from 'express';
+import type { Payload } from '../auth.service';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -20,7 +20,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(payload: JwtPayload) {
+  async validate(payload: Payload) {
     const user = await this.user.getUser({ _id: payload._id });
     if (!user.verified)
       throw new UnauthorizedException('Email not verified');

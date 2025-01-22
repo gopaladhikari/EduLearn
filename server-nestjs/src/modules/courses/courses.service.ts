@@ -125,42 +125,6 @@ export class CoursesService {
     }
   }
 
-  async getCourseAnalytics(slug: string) {
-    try {
-      const cacheKey = `course_analytics_${slug}`;
-
-      const cachedCourseAnalytics = this.cache.get(cacheKey);
-
-      if (cachedCourseAnalytics) return cachedCourseAnalytics;
-      const course = await this.Course.aggregate([
-        {
-          $match: {
-            slug: slug,
-          },
-        },
-        {
-          $lookup: {
-            from: 'courseanalytics',
-            localField: 'slug',
-            foreignField: 'courseSlug',
-            as: 'analytics',
-          },
-        },
-        {
-          $unwind: '$analytics',
-        },
-      ]);
-      if (!course.length)
-        throw new NotFoundException('Course not found');
-
-      await this.cache.set(cacheKey, course.at(0));
-      return course.at(0);
-    } catch (error) {
-      if (error instanceof NotFoundException) throw error;
-      throw new BadRequestException(error.message);
-    }
-  }
-
   async searchCourses(q: string, limit: number, skip: number) {
     try {
       const cacheKey = `courses_search_${q}_${limit}_${skip}`;

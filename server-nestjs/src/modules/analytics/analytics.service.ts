@@ -35,7 +35,10 @@ export class AnalyticsService {
       );
 
       await this.cache.clear();
-      return analytics;
+      return {
+        message: 'Analytics updated successfully',
+        data: analytics,
+      };
     } catch (error) {
       throw error;
     }
@@ -97,14 +100,46 @@ export class AnalyticsService {
       await this.cache.set('platform_analytics', result);
 
       return {
-        totalCourses: result.totalCourses[0]?.total || 0,
-        totalEnrollments: result.totalEnrollments[0]?.total || 0,
-        totalRevenue: result.totalRevenue[0]?.total || 0,
-        totalRefunds: result.totalRefunds[0]?.total || 0,
-        averageCourseRating:
-          result.averageCourseRating[0]?.average || 0,
-        mostPopularCourse:
-          result.mostPopularCourse[0]?.courseSlug || null,
+        message: 'Platform analytics fetched successfully',
+        data: {
+          totalCourses: result.totalCourses[0]?.total || 0,
+          totalEnrollments: result.totalEnrollments[0]?.total || 0,
+          totalRevenue: result.totalRevenue[0]?.total || 0,
+          totalRefunds: result.totalRefunds[0]?.total || 0,
+          averageCourseRating:
+            result.averageCourseRating[0]?.average || 0,
+          mostPopularCourse:
+            result.mostPopularCourse[0]?.courseSlug || null,
+        },
+      };
+    } catch (error) {
+      if (error instanceof NotFoundException) throw error;
+      throw new BadRequestException(error.message);
+    }
+  }
+
+  async getCourseAnalytics(slug: string) {
+    try {
+      const cachedAnalytics = await this.cache.get(
+        `course_analytics_${slug}`,
+      );
+      if (cachedAnalytics) return cachedAnalytics;
+
+      const courseAnalytics = await this.Analytics.findOne({
+        courseSlug: slug,
+      });
+
+      if (!courseAnalytics)
+        throw new NotFoundException('Analytics not found');
+
+      await this.cache.set(
+        `course_analytics_${slug}`,
+        courseAnalytics,
+      );
+
+      return {
+        message: 'Course analytics fetched successfully',
+        data: courseAnalytics,
       };
     } catch (error) {
       if (error instanceof NotFoundException) throw error;

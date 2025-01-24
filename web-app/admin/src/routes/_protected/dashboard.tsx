@@ -23,6 +23,9 @@ function RouteComponent() {
     queryKey: ["platformAnalytics"],
     queryFn: getPlatformAnalytics,
   });
+
+  console.log(data);
+
   return (
     <section className="space-y-6">
       <div className="flex items-center justify-between space-y-2">
@@ -53,7 +56,7 @@ function RouteComponent() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {data?.data.totalRevenue}
+              {data?.data?.totalRevenue}
             </div>
             <p className="text-xs text-muted-foreground">
               +20.1% from last month
@@ -82,7 +85,7 @@ function RouteComponent() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {data?.data.totalEnrollments}
+              {data?.data?.totalEnrollments}
             </div>
             <p className="text-xs text-muted-foreground">
               +180.1% from last month
@@ -110,7 +113,7 @@ function RouteComponent() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {data?.data.averageCourseRating}
+              {data?.data?.averageCourseRating}
             </div>
             <p className="text-xs text-muted-foreground">
               +19% from last month
@@ -137,7 +140,7 @@ function RouteComponent() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {data?.data.totalCourses}
+              {data?.data?.totalCourses}
             </div>
             <p className="text-xs text-muted-foreground">
               +201 since last hour

@@ -19,32 +19,24 @@ export const menu = {
 
   settings: [
     {
-      name: "General",
-      to: "/dashboard/settings",
+      title: "Profile",
+      href: "/settings",
     },
     {
-      name: "Profile",
-      to: "/dashboard/settings/profile",
+      title: "Account",
+      href: "/settings/account",
     },
     {
-      name: "Bliing",
-      to: "/dashboard/settings/billing",
+      title: "Appearance",
+      href: "/settings/appearance",
     },
     {
-      name: "Activity",
-      to: "/dashboard/settings/activity",
+      title: "Notifications",
+      href: "/settings/notifications",
     },
     {
-      name: "Security",
-      to: "/dashboard/settings/security",
-    },
-    {
-      name: "Notifications",
-      to: "/dashboard/settings/notifications",
-    },
-    {
-      name: "Password",
-      to: "/dashboard/settings/password",
+      title: "Display",
+      href: "/settings/display",
     },
   ],
 } as const;

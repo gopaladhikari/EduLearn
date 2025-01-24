@@ -7,9 +7,14 @@ import {
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
+type Res = {
+  data: unknown;
+  message: string;
+};
+
 @Injectable()
 export class ResponseInterceptor implements NestInterceptor {
-  responseHandler(res: unknown, context: ExecutionContext) {
+  responseHandler(res: Res, context: ExecutionContext) {
     const ctx = context.switchToHttp();
     const response = ctx.getResponse();
     const request = ctx.getRequest();
@@ -20,7 +25,8 @@ export class ResponseInterceptor implements NestInterceptor {
       status: true,
       path: request.url,
       statusCode,
-      data: res,
+      message: res.message,
+      data: res.data,
     };
   }
 
@@ -30,8 +36,6 @@ export class ResponseInterceptor implements NestInterceptor {
   ): Observable<unknown> {
     return next
       .handle()
-      .pipe(
-        map((res: unknown) => this.responseHandler(res, context)),
-      );
+      .pipe(map((res: Res) => this.responseHandler(res, context)));
   }
 }

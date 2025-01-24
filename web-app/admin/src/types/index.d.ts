@@ -2,8 +2,12 @@ export type User = {
   _id: string;
   email: string;
   fullName: string;
+  username: string;
+  phoneNumber: string;
+  avatarUrl: string;
   password: string;
   role: string;
+  bio: string;
   verified: boolean;
   status: string;
   avatarUrl: string;

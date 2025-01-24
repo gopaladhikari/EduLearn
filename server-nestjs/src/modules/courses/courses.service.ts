@@ -90,7 +90,10 @@ export class CoursesService {
       if (!courses) throw new NotFoundException('Course not found');
 
       await this.cache.set('courses', courses);
-      return courses;
+      return {
+        message: 'Courses fetched successfully',
+        data: courses,
+      };
     } catch (error) {
       if (error instanceof NotFoundException) throw error;
 
@@ -117,7 +120,10 @@ export class CoursesService {
 
       await this.cache.set(cacheKey, course);
 
-      return course;
+      return {
+        message: 'Course fetched successfully',
+        data: course,
+      };
     } catch (error) {
       if (error instanceof NotFoundException) throw error;
 
@@ -156,7 +162,10 @@ export class CoursesService {
         throw new NotFoundException('Course not found');
 
       await this.cache.set(cacheKey, courses);
-      return courses;
+      return {
+        message: 'Courses fetched successfully',
+        data: courses,
+      };
     } catch (error) {
       if (error instanceof NotFoundException) throw error;
       throw new BadRequestException(error.message);
@@ -178,7 +187,10 @@ export class CoursesService {
 
       await this.cache.del(cacheKey);
 
-      return course;
+      return {
+        message: 'Course published successfully',
+        data: course,
+      };
     } catch (error) {
       if (error instanceof NotFoundException) throw error;
       throw new BadRequestException(error.message);
@@ -202,7 +214,10 @@ export class CoursesService {
 
       await this.cache.clear();
 
-      return null;
+      return {
+        message: 'Course deleted successfully',
+        data: null,
+      };
     } catch (error) {
       if (error instanceof NotFoundException) throw error;
       throw new BadRequestException(error.message);
@@ -247,7 +262,10 @@ export class CoursesService {
         throw new NotFoundException('Course not found');
 
       await this.cache.clear();
-      return null;
+      return {
+        message: 'Courses deleted successfully',
+        data: null,
+      };
     } catch (error) {
       if (error instanceof NotFoundException) throw error;
       throw new BadRequestException(error.message);

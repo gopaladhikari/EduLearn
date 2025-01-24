@@ -1,5 +1,4 @@
-import { ProfileForm } from "@/components/settings/profile-form";
-import { Separator } from "@/components/ui/separator";
+import ProfileForms from "@/components/settings/profile-form";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_protected/settings/_layout/")(
@@ -17,8 +16,7 @@ function RouteComponent() {
           This is how others will see you on the site.
         </p>
       </div>
-      <Separator />
-      <ProfileForm />
+      <ProfileForms />
     </div>
   );
 }

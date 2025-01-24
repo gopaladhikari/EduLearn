@@ -56,7 +56,12 @@ function MainNav() {
 export function Header() {
   const { isLoggedIn } = useAuth();
   return (
-    <header className="shadow-md dark:border-b dark:shadow-none">
+    <header
+      className={cn(
+        "shadow-md dark:border-b dark:shadow-none",
+        isLoggedIn && "sticky inset-0 z-[10000] bg-background",
+      )}
+    >
       <MaxWithWrapper as="section">
         <nav role="navigation">
           <menu className="flex items-center gap-6" role="menu">

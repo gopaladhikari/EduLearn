@@ -67,7 +67,10 @@ export class AuthService {
       expires: date,
     });
 
-    return user;
+    return {
+      data: user,
+      message: 'User logged in successfully',
+    };
   }
 
   logout(response: Response) {
@@ -77,7 +80,10 @@ export class AuthService {
       sameSite:
         process.env.NODE_ENV === 'production' ? 'none' : 'lax',
     });
-    return null;
+    return {
+      message: 'User logged out successfully',
+      data: null,
+    };
   }
 
   async requestForgotPassword(email: string) {
@@ -94,7 +100,10 @@ export class AuthService {
     );
     user.jwtToken = accessToken;
     await user.save();
-    return data;
+    return {
+      message: 'Password reset link sent successfully',
+      data,
+    };
   }
 
   async confirmForgotPassword(
@@ -123,7 +132,10 @@ export class AuthService {
           ? '.gopal-adhikari.com.np'
           : 'localhost',
     });
-    return user;
+    return {
+      message: 'Password reset successfully',
+      data: user,
+    };
   }
 
   async verifyEmail(email: string, token: string) {
@@ -140,7 +152,10 @@ export class AuthService {
       user.verified = true;
       user.jwtToken = undefined;
       await user.save();
-      return user;
+      return {
+        message: 'Email verified successfully',
+        data: user,
+      };
     } catch (error) {
       if (error instanceof NotFoundException) throw error;
       throw new BadRequestException(error.message);

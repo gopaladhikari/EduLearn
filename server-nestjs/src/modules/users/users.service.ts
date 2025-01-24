@@ -114,19 +114,23 @@ export class UsersService {
   }
 
   async updateUser(user: UserDocument, updateUserDto: UpdateUserDto) {
-    if (updateUserDto.fullName)
-      user.fullName = updateUserDto.fullName;
-
-    if (updateUserDto.phoneNumber)
-      user.phoneNumber = updateUserDto.phoneNumber;
-
-    if (updateUserDto.bio) user.bio = updateUserDto.bio;
-
     try {
-      await user.save();
+      const updatedUser = await this.User.findOneAndUpdate(
+        { _id: user._id },
+        updateUserDto,
+        { new: true },
+      ).select('-password');
+
+      if (!updatedUser) throw new NotFoundException('User not found');
+
       await this.cache.clear();
-      return user;
+
+      return {
+        message: 'User updated successfully',
+        data: updatedUser,
+      };
     } catch (error) {
+      console.log(error);
       throw new BadRequestException(error.message);
     }
   }

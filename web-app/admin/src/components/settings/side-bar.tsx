@@ -1,19 +1,11 @@
 import { cn } from "@/lib/utils";
 import { Link, useLocation } from "@tanstack/react-router";
 import { buttonVariants } from "../ui/button";
+import { menu } from "@/config/site";
 
-interface SidebarNavProps extends React.HTMLAttributes<HTMLElement> {
-  items: {
-    href: string;
-    title: string;
-  }[];
-}
+type SidebarNavProps = React.HTMLAttributes<HTMLElement>;
 
-export function SidebarNav({
-  className,
-  items,
-  ...props
-}: SidebarNavProps) {
+export function SidebarNav({ className, ...props }: SidebarNavProps) {
   const { pathname } = useLocation();
 
   return (
@@ -24,14 +16,14 @@ export function SidebarNav({
       )}
       {...props}
     >
-      {items.map((item) => (
+      {menu.settings.map((item) => (
         <Link
           key={item.href}
           href={item.href}
           className={cn(
             buttonVariants({ variant: "ghost" }),
             pathname === item.href
-              ? "bg-muted hover:bg-muted"
+              ? "bg-secondary/50 hover:bg-secondary/50"
               : "hover:bg-transparent hover:underline",
             "justify-start",
           )}

@@ -10,6 +10,9 @@ class updateUserDto {
 
   @IsString()
   bio: string;
+
+  @IsString()
+  username: string;
 }
 
 export class UpdateUserDto extends PartialType(updateUserDto) {}

@@ -19,7 +19,9 @@ export class AnalyticsController {
   }
 
   @Get('/course/:slug')
-  getCourseAnalytics(@Param('slug') slug: string) {}
+  getCourseAnalytics(@Param('slug') slug: string) {
+    return this.analyticsService.getCourseAnalytics(slug);
+  }
 
   @Post('total-clicks/:slug')
   incrementTotalClicks(@Param('slug') slug: string) {

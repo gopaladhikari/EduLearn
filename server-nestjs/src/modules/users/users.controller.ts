@@ -28,25 +28,30 @@ export class UsersController {
   @Get()
   @UseGuards(JwtGuard)
   getUsers(@CurrentUser() user: UserDocument) {
-    if (user.role === 'admin') return this.usersService.getAllUser();
-    throw new ForbiddenException(
-      'You are not authorized to access this resource',
-    );
+    if (user.role !== 'admin')
+      throw new ForbiddenException(
+        'You are not authorized to access this resource',
+      );
+
+    return this.usersService.getAllUser();
   }
 
   @Get('me')
   @UseGuards(JwtGuard)
   getCurrentUser(@CurrentUser() user: UserDocument) {
-    return user;
+    return {
+      message: 'User fetched successfully',
+      data: user,
+    };
   }
 
   @Patch()
   @UseGuards(JwtGuard)
-  updateUser(
+  async updateUser(
     @CurrentUser() user: UserDocument,
     @Body(ValidationPipe) updateUserDto: UpdateUserDto,
   ) {
-    return this.usersService.updateUser(user, updateUserDto);
+    return await this.usersService.updateUser(user, updateUserDto);
   }
 
   @Patch('update-password')

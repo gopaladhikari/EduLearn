@@ -1,19 +1,29 @@
 import { useAuth } from "@/hooks/useAuth";
-import { FormCard } from "./FormCard";
 import {
   fullNameSchema,
-  bioSchema,
   emailSchema,
-  phoneNumberSchema,
   usernameSchema,
+  bioSchema,
+  phoneNumberSchema,
 } from "@/schemas/user.schema";
+import { FormCard } from "./FormCard";
 
 export default function ProfileForms() {
   const { user } = useAuth();
 
   if (!user) return null;
+
   return (
     <>
+      <FormCard
+        label="Avatar"
+        description="This is your avatar."
+        placeholder={user.fullName || "Enter your full name"}
+        schema={fullNameSchema}
+        defaultValues={user}
+        fieldName="avatarUrl"
+        type="file"
+      />
       <FormCard
         label="Full Name"
         description="Enter your full name."
@@ -39,12 +49,15 @@ export default function ProfileForms() {
         fieldName="username"
       />
       <FormCard
-        label="Phone Number"
+        label="Phone number"
         description="Enter your phone number."
         placeholder={user.phoneNumber || "Enter your phone number"}
         schema={phoneNumberSchema}
-        defaultValues={user}
+        defaultValues={{
+          phoneNumber: user.phoneNumber.toString(),
+        }}
         fieldName="phoneNumber"
+        type="number"
       />
       <FormCard
         label="Bio"
@@ -53,6 +66,7 @@ export default function ProfileForms() {
         schema={bioSchema}
         defaultValues={user}
         fieldName="bio"
+        type="textarea"
       />
     </>
   );

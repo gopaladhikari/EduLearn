@@ -19,9 +19,15 @@ export const usernameSchema = z.object({
 });
 
 export const phoneNumberSchema = z.object({
-  phoneNumber: z.number().min(10, {
-    message: "Phone number must be at least 10 digits.",
-  }),
+  phoneNumber: z
+    .string()
+    .min(10, {
+      message: "Phone number must be 10 digits.",
+    })
+    .max(15, {
+      message: "Phone number must be 10 digits.",
+    })
+    .transform((value) => z.coerce.number().parse(value)),
 });
 
 export const bioSchema = z.object({
@@ -30,8 +36,12 @@ export const bioSchema = z.object({
   }),
 });
 
-export const avatarUrlSchema = z.object({
-  avatarUrl: z.string().url({
-    message: "Please enter a valid URL.",
-  }),
-});
+export const avatarSchema = z
+  .object({
+    avatar: z.instanceof(File, {
+      message: "Please select a file.",
+    }),
+  })
+  .refine(({ avatar }) => avatar.size > 0, {
+    message: "Please select an avatar.",
+  });

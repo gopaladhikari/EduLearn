@@ -6,6 +6,9 @@ const axiosInstance = axios.create({
   withCredentials: true,
   timeout: 4000, // 4 seconds
   timeoutErrorMessage: "Request timed out",
+  headers: {
+    "x-api-key": env.xApiKey,
+  },
 });
 
 axiosInstance.interceptors.response.use(

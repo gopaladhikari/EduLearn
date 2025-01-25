@@ -3,7 +3,6 @@ import { useAuth } from "@/hooks/useAuth";
 import {
   createFileRoute,
   Link,
-  redirect,
   useNavigate,
 } from "@tanstack/react-router";
 import {
@@ -18,12 +17,6 @@ import {
 
 export const Route = createFileRoute("/_unprotected/")({
   component: RouteComponent,
-  beforeLoad({ context }) {
-    if (context.isLoggedIn)
-      throw redirect({
-        to: "/dashboard",
-      });
-  },
 });
 
 function RouteComponent() {

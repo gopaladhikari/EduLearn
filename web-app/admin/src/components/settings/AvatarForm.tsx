@@ -27,7 +27,6 @@ import { queryClient } from "@/main";
 import { useAuth } from "@/hooks/useAuth";
 import { useMutation } from "@tanstack/react-query";
 import { updateAvatarMutation } from "@/lib/mutations/user.mutation";
-import type { User } from "@/types";
 
 export function AvatarForm() {
   const form = useForm<z.infer<typeof avatarSchema>>({
@@ -66,37 +65,7 @@ export function AvatarForm() {
       });
     },
 
-    onMutate: async () => {
-      await queryClient.cancelQueries({
-        queryKey: ["me"],
-      });
-
-      const cachedData = queryClient.getQueriesData({
-        queryKey: ["me"],
-      });
-
-      const user = cachedData[0]?.[1] as User;
-
-      const newUser = {
-        ...user,
-        avatar: {
-          url: imageUrl,
-          publicId: imageUrl,
-        },
-      };
-
-      queryClient.setQueryData(["me"], {
-        data: newUser,
-      });
-
-      return user;
-    },
-
-    onError: async (error, _filedname, user) => {
-      await queryClient.setQueryData(["me"], {
-        data: user,
-      });
-
+    onError: async (error) => {
       toast({
         title: error.message,
         description: "Something went wrong",

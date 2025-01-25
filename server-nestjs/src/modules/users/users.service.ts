@@ -139,7 +139,7 @@ export class UsersService {
           const result = await this.cloudinary.uploader.upload(
             localFilePath,
             {
-              resource_type: 'auto',
+              resource_type: 'image',
               folder: 'EduLearn/avatars',
               transformation: {
                 quality: 'auto',
@@ -162,7 +162,7 @@ export class UsersService {
             },
           ).select('-password');
 
-          if (user.avatar?.url) {
+          if (user.avatar?.publicId) {
             await this.cloudinary.api.delete_resources(
               [user.avatar.publicId.toString()],
               {
@@ -173,10 +173,10 @@ export class UsersService {
           }
 
           return {
-            message: 'User updated successfully',
+            message: 'Avatar updated successfully',
             data: updatedUser,
           };
-        }
+        } else throw new BadRequestException('Avatar not found');
       } catch (error) {
         throw new BadRequestException(error.message);
       } finally {

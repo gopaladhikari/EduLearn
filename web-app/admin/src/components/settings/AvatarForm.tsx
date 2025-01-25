@@ -49,7 +49,21 @@ export function AvatarForm() {
       setImageUrl("");
       form.clearErrors();
       form.resetField("avatar");
-      setUser(data.data);
+      setUser((prev) => {
+        if (!prev) return prev;
+
+        return {
+          ...prev,
+          avatar: {
+            url: data.data.avatar.url,
+            publicId: data.data.avatar.publicId,
+          },
+        };
+      });
+      toast({
+        title: data.message,
+        variant: "success",
+      });
     },
 
     onMutate: async () => {

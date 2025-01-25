@@ -32,6 +32,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
     queryKey: ["me"],
     queryFn: me,
     retry: false,
+    staleTime: 1000 * 60 * 3, // 3 minutes
   });
 
   useEffect(() => {
@@ -46,7 +47,8 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
         sessionStorage.removeItem(SessionStorage.IS_LOGGED_IN);
       }
     }
-  }, [isPending, isSuccess, data?.data]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isPending, isSuccess]);
 
   const value = useMemo(
     () => ({

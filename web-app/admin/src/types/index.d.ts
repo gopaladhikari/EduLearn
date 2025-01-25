@@ -4,13 +4,15 @@ export type User = {
   fullName: string;
   username: string;
   phoneNumber: string;
-  avatarUrl: string;
   password: string;
   role: string;
   bio: string;
   verified: boolean;
   status: string;
-  avatarUrl: string;
+  avatar: {
+    url: string;
+    publicId: string;
+  };
   createdAt: string;
   updatedAt: string;
   __v: number;
@@ -77,7 +79,7 @@ export type PlatformAnalytics = {
   mostPopularCourse: string;
 };
 
-export type CustomResponse<T> = Promise<{
+export type CustomResponse<T = unknown> = Promise<{
   data: T;
   status: boolean;
   message: string;

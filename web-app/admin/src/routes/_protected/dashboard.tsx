@@ -24,8 +24,6 @@ function RouteComponent() {
     queryFn: getPlatformAnalytics,
   });
 
-  console.log(data);
-
   return (
     <section className="space-y-6">
       <div className="flex items-center justify-between space-y-2">

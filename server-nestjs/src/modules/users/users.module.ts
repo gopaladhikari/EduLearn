@@ -6,9 +6,20 @@ import { UserSchema, User } from './entities/user.entity';
 import { hash, genSalt } from 'bcrypt';
 import { MailService } from '../mail/mail.service';
 import { JwtModule } from '@nestjs/jwt';
+import { diskStorage } from 'multer';
+import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
   imports: [
+    MulterModule.register({
+      storage: diskStorage({
+        destination: './uploads/avatars',
+        filename: (req, file, cb) => {
+          const fileName = Date.now() + '-' + file.originalname;
+          cb(null, fileName);
+        },
+      }),
+    }),
     MongooseModule.forFeatureAsync([
       {
         name: User.name,

@@ -20,11 +20,7 @@ import { updateUserMutation } from "@/lib/mutations/user.mutation";
 import { toast } from "@/hooks/use-toast";
 import { queryClient } from "@/main";
 import { Textarea } from "../ui/textarea";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { PhoneInput } from "../ui/phone-input";
-import { FileInput, FileUploader } from "@/components/ui/file-upload";
-import { useEffect, useState } from "react";
-import type { DropzoneOptions } from "react-dropzone";
+import type { PhoneNumber } from "react-phone-number-input";
 
 type Props = {
   label: string;
@@ -37,7 +33,9 @@ type Props = {
 };
 
 type CachedUser = {
-  data: User;
+  data: Omit<User, "phoneNumber"> & {
+    phoneNumber: PhoneNumber;
+  };
 };
 
 export function FormCard({
@@ -49,14 +47,6 @@ export function FormCard({
   defaultValues,
   type = "text",
 }: Props) {
-  const [files, setFiles] = useState<File[] | null>(null);
-  const [fileUrl, setFileUrl] = useState<string | null>(null);
-
-  const dropZoneConfig: DropzoneOptions = {
-    maxFiles: 1,
-    maxSize: 1024 * 1024 * 4,
-  };
-
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues,
@@ -109,12 +99,6 @@ export function FormCard({
     mutate(data);
   }
 
-  useEffect(() => {
-    if (files && files.length > 0) {
-      setFileUrl(URL.createObjectURL(files[0]));
-    }
-  }, [files]);
-
   return (
     <>
       <Separator />
@@ -132,7 +116,7 @@ export function FormCard({
                   <FormLabel className="text-xl">{label}</FormLabel>
                   <FormDescription>{description}</FormDescription>
                   <FormControl>
-                    <>
+                    <div>
                       {type === "textarea" && (
                         <Textarea
                           rows={5}
@@ -143,36 +127,7 @@ export function FormCard({
                       {type === "text" && (
                         <Input placeholder={placeholder} {...field} />
                       )}
-
-                      {type === "number" && (
-                        <PhoneInput
-                          placeholder={placeholder}
-                          defaultCountry="NP"
-                          {...field}
-                        />
-                      )}
-                      {type === "file" && (
-                        <FileUploader
-                          value={files}
-                          onValueChange={setFiles}
-                          dropzoneOptions={dropZoneConfig}
-                        >
-                          <FileInput id="fileInput">
-                            <Avatar className="h-20 w-20 object-cover">
-                              <AvatarImage
-                                className="w-full object-contain"
-                                src={
-                                  fileUrl || defaultValues?.avatarUrl
-                                }
-                              />
-                              <AvatarFallback>
-                                {defaultValues?.fullName?.charAt(0)}
-                              </AvatarFallback>
-                            </Avatar>
-                          </FileInput>
-                        </FileUploader>
-                      )}
-                    </>
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>

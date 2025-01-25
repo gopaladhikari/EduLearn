@@ -7,6 +7,8 @@ import {
   ForbiddenException,
   Patch,
   ValidationPipe,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -15,6 +17,7 @@ import { CurrentUser } from 'src/modules/auth/current-user.decorator';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import type { UserDocument } from './entities/user.entity';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('users')
 export class UsersController {
@@ -47,11 +50,17 @@ export class UsersController {
 
   @Patch()
   @UseGuards(JwtGuard)
+  @UseInterceptors(FileInterceptor('avatar'))
   async updateUser(
     @CurrentUser() user: UserDocument,
     @Body(ValidationPipe) updateUserDto: UpdateUserDto,
+    @UploadedFile() avatar: Express.Multer.File,
   ) {
-    return await this.usersService.updateUser(user, updateUserDto);
+    return await this.usersService.updateUser(
+      user,
+      updateUserDto,
+      avatar,
+    );
   }
 
   @Patch('update-password')

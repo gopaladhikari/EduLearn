@@ -9,6 +9,7 @@ const router = createRouter({
     user: undefined!,
     isPending: undefined!,
     setIsLoggedIn: undefined!,
+    setUser: undefined!,
   },
 });
 

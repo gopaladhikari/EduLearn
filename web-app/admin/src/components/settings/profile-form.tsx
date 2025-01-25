@@ -4,7 +4,6 @@ import {
   emailSchema,
   usernameSchema,
   bioSchema,
-  phoneNumberSchema,
 } from "@/schemas/user.schema";
 import { FormCard } from "./FormCard";
 
@@ -15,15 +14,6 @@ export default function ProfileForms() {
 
   return (
     <>
-      <FormCard
-        label="Avatar"
-        description="This is your avatar."
-        placeholder={user.fullName || "Enter your full name"}
-        schema={fullNameSchema}
-        defaultValues={user}
-        fieldName="avatarUrl"
-        type="file"
-      />
       <FormCard
         label="Full Name"
         description="Enter your full name."
@@ -48,17 +38,7 @@ export default function ProfileForms() {
         defaultValues={user}
         fieldName="username"
       />
-      <FormCard
-        label="Phone number"
-        description="Enter your phone number."
-        placeholder={user.phoneNumber || "Enter your phone number"}
-        schema={phoneNumberSchema}
-        defaultValues={{
-          phoneNumber: user.phoneNumber.toString(),
-        }}
-        fieldName="phoneNumber"
-        type="number"
-      />
+
       <FormCard
         label="Bio"
         description="Enter your bio."

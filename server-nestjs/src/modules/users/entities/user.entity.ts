@@ -40,8 +40,16 @@ export class User {
   })
   status: 'active' | 'restrcited' | 'inactive';
 
-  @Prop()
-  avatarUrl: string;
+  @Prop({
+    type: {
+      url: String,
+      publicId: String,
+    },
+  })
+  avatar: {
+    url: string;
+    publicId: string;
+  };
 
   @Prop()
   bio: string;

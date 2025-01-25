@@ -17,16 +17,30 @@ import { ConfigService } from '@nestjs/config';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import type { Cache } from 'cache-manager';
 import type { Payload } from '../auth/auth.service';
+import * as path from 'path';
+import * as fs from 'fs';
+import { v2 as cloudinary } from 'cloudinary';
 
 @Injectable()
 export class UsersService {
+  private readonly cloudinary = cloudinary;
   constructor(
     @InjectModel(User.name) private readonly User: Model<User>,
     @Inject(CACHE_MANAGER) private readonly cache: Cache,
     private readonly mail: MailService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
-  ) {}
+  ) {
+    this.cloudinary.config({
+      cloud_name: this.configService.getOrThrow(
+        'CLOUDINARY_CLOUD_NAME',
+      ),
+      api_key: this.configService.getOrThrow('CLOUDINARY_API_KEY'),
+      api_secret: this.configService.getOrThrow(
+        'CLOUDINARY_API_SECRET',
+      ),
+    });
+  }
 
   generateJwtToken(user: UserDocument) {
     const payload: Payload = {
@@ -113,7 +127,64 @@ export class UsersService {
     }
   }
 
-  async updateUser(user: UserDocument, updateUserDto: UpdateUserDto) {
+  async updateUser(
+    user: UserDocument,
+    updateUserDto: UpdateUserDto,
+    avatar: Express.Multer.File,
+  ) {
+    if (avatar) {
+      const localFilePath = path.join(process.cwd(), avatar.path);
+      try {
+        if (fs.existsSync(localFilePath)) {
+          const result = await this.cloudinary.uploader.upload(
+            localFilePath,
+            {
+              resource_type: 'auto',
+              folder: 'EduLearn/avatars',
+              transformation: {
+                quality: 'auto',
+                fetch_format: 'auto',
+              },
+              eager_async: true,
+            },
+          );
+
+          const updatedUser = await this.User.findByIdAndUpdate(
+            user._id,
+            {
+              avatar: {
+                url: result.url,
+                publicId: result.public_id,
+              },
+            },
+            {
+              new: true,
+            },
+          ).select('-password');
+
+          if (user.avatar?.url) {
+            await this.cloudinary.api.delete_resources(
+              [user.avatar.publicId.toString()],
+              {
+                resource_type: 'image',
+                type: 'upload',
+              },
+            );
+          }
+
+          return {
+            message: 'User updated successfully',
+            data: updatedUser,
+          };
+        }
+      } catch (error) {
+        throw new BadRequestException(error.message);
+      } finally {
+        if (fs.existsSync(localFilePath))
+          fs.unlinkSync(localFilePath);
+      }
+    }
+
     try {
       const updatedUser = await this.User.findOneAndUpdate(
         { _id: user._id },

@@ -46,15 +46,15 @@ export function UserNav() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Avatar className="cursor-pointer">
-          <AvatarImage src={user?.avatarUrl} />
+        <Avatar className="h-12 w-10 cursor-pointer">
+          <AvatarImage src={user?.avatar.url} />
           <AvatarFallback>{user?.fullName?.charAt(0)}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-72" align="end">
         <DropdownMenuLabel className="flex items-start gap-6">
-          <Avatar className="cursor-pointer">
-            <AvatarImage src={user?.avatarUrl} />
+          <Avatar className="h-12 w-10 cursor-pointer">
+            <AvatarImage src={user?.avatar.url} />
             <AvatarFallback>
               {user?.fullName?.charAt(0)}
             </AvatarFallback>

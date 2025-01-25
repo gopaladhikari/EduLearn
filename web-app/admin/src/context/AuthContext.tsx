@@ -2,13 +2,14 @@ import { SessionStorage } from "@/config/constants";
 import { me } from "@/lib/queries/users.query";
 import type { User } from "@/types";
 import { useQuery } from "@tanstack/react-query";
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useMemo, useState } from "react";
 
 export type AuthContextType = {
   user: User | null;
   isLoggedIn: boolean;
   isPending: boolean;
-  setIsLoggedIn: (value: boolean) => void;
+  setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
 };
 
 const AuthContext = createContext<AuthContextType>({
@@ -16,9 +17,12 @@ const AuthContext = createContext<AuthContextType>({
   isPending: false,
   user: null,
   setIsLoggedIn: () => null,
+  setUser: () => null,
 });
 
 function AuthProvider({ children }: { children: React.ReactNode }) {
+  const [user, setUser] = useState<User | null>(null);
+
   const sessionLoggedIn =
     sessionStorage.getItem(SessionStorage.IS_LOGGED_IN) === "true";
 
@@ -34,26 +38,28 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
     if (!isPending) {
       if (isSuccess) {
         setIsLoggedIn(true);
+        setUser(data?.data);
         sessionStorage.setItem(SessionStorage.IS_LOGGED_IN, "true");
       } else {
         setIsLoggedIn(false);
+        setUser(null);
         sessionStorage.removeItem(SessionStorage.IS_LOGGED_IN);
       }
     }
-  }, [isPending, isSuccess]);
+  }, [isPending, isSuccess, data?.data]);
 
-  return (
-    <AuthContext
-      value={{
-        isLoggedIn,
-        isPending,
-        setIsLoggedIn,
-        user: data?.data || null,
-      }}
-    >
-      {children}
-    </AuthContext>
+  const value = useMemo(
+    () => ({
+      isLoggedIn,
+      isPending,
+      setIsLoggedIn,
+      user,
+      setUser,
+    }),
+    [isLoggedIn, isPending, user, setIsLoggedIn, setUser],
   );
+
+  return <AuthContext value={value}>{children}</AuthContext>;
 }
 
 export { AuthProvider, AuthContext };

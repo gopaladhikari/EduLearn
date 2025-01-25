@@ -14,3 +14,26 @@ export const updateUserMutation = async (
     throw new Error((error as Error).message);
   }
 };
+
+export const updateAvatarMutation = async ({
+  avatar,
+}: {
+  avatar: File;
+}): CustomResponse<User> => {
+  try {
+    const { data } = await axiosInstance.patch(
+      "/api/users",
+      {
+        avatar,
+      },
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      },
+    );
+    return data;
+  } catch (error) {
+    throw new Error((error as Error).message);
+  }
+};

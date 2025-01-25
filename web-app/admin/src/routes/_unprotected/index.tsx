@@ -1,9 +1,9 @@
-import { MaxWithWrapper } from "@/components/partials/MaxWithWrapper";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import {
   createFileRoute,
   Link,
+  redirect,
   useNavigate,
 } from "@tanstack/react-router";
 import {
@@ -18,6 +18,12 @@ import {
 
 export const Route = createFileRoute("/_unprotected/")({
   component: RouteComponent,
+  beforeLoad({ context }) {
+    if (context.isLoggedIn)
+      throw redirect({
+        to: "/dashboard",
+      });
+  },
 });
 
 function RouteComponent() {
@@ -30,12 +36,12 @@ function RouteComponent() {
     });
 
   return (
-    <MaxWithWrapper className="space-y-5">
-      <div className="relative flex flex-col items-center justify-center pb-12 pt-12 md:pt-0">
-        <div className="relative isolate overflow-hidden bg-background">
-          <div className="mx-auto flex w-full max-w-7xl justify-start px-6 pb-24 pt-10 sm:pb-32 lg:flex lg:px-8 lg:py-24">
+    <div className="space-y-5 pb-16">
+      <section className="relative flex flex-col items-center justify-center bg-background pt-12 md:pt-0">
+        <div className="relative isolate overflow-hidden">
+          <div className="mx-auto flex w-full max-w-screen-xl justify-start px-6 py-24 pt-10 sm:pb-32 lg:flex lg:px-8">
             <div className="mx-auto max-w-7xl justify-start lg:max-w-3xl">
-              <h1 className="wrap-balance mt-6 bg-black bg-gradient-to-br bg-clip-text text-center text-4xl font-medium leading-tight tracking-tight text-transparent dark:from-white dark:to-[hsla(0,0%,100%,.5)] sm:text-6xl sm:leading-[1.15]">
+              <h1 className="wrap-balance mt-6 bg-gradient-to-br bg-clip-text text-center text-4xl font-medium leading-tight tracking-tight text-transparent dark:from-white dark:to-[hsla(0,0%,100%,.5)] sm:text-6xl sm:leading-[1.15]">
                 <span>Welcome to EduLearn</span>
               </h1>
               <p className="wrap-balance mt-6 text-center text-lg font-light leading-7 text-gray-700 dark:text-gray-400">
@@ -53,8 +59,8 @@ function RouteComponent() {
             </div>
           </div>
         </div>
-      </div>
-      <div className="mx-auto max-w-7xl px-6 py-24 md:py-32 lg:px-8">
+      </section>
+      <section className="mx-auto max-w-screen-xl px-6 lg:px-8">
         <div className="max-w-3xl">
           <h1 className="wrap-balance mt-16 bg-black bg-gradient-to-br bg-clip-text text-left text-4xl font-medium tracking-tight text-transparent dark:from-white dark:to-[hsla(0,0%,100%,.5)] sm:text-5xl sm:leading-snug">
             All your features in one place
@@ -212,13 +218,7 @@ function RouteComponent() {
             </div>
           </div>
         </div>
-      </div>
-      {/* <FeatureWithImage
-          features={loginFeatures}
-          title="Make your life easier"
-          darkFeatureImage="/login-dark.jpeg"
-          lightFeatureImage="/login-light.jpeg"
-        /> */}
-    </MaxWithWrapper>
+      </section>
+    </div>
   );
 }

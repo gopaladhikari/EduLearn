@@ -80,7 +80,7 @@ type CountrySelectOption = { label: string; value: RPNInput.Country };
 
 type CountrySelectProps = {
   disabled?: boolean;
-  value: RPNInput.Country;
+  value: RPNInput.Value;
   onChange: (value: RPNInput.Country) => void;
   options: CountrySelectOption[];
 };
@@ -107,6 +107,7 @@ const CountrySelect = ({
           className="flex gap-1 rounded-e-none rounded-s-lg border-r-0 px-3 focus:z-10"
           disabled={disabled}
         >
+          {/* @ts-expect-error ts(2339) */}
           <FlagComponent country={value} countryName={value} />
           <ChevronsUpDown
             className={cn(

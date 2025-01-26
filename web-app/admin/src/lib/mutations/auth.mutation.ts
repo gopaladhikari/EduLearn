@@ -1,12 +1,15 @@
 import { axiosInstance } from "@/config/axios";
 import type { ConfirmPasswordSchema } from "@/schemas/confirm-password.schema";
+import type { CustomResponse, User } from "@/types";
 
 type Data = {
   email: string;
   password: string;
 };
 
-export const registerMutation = async (formData: Data) => {
+export const registerMutation = async (
+  formData: Data,
+): CustomResponse => {
   try {
     const { data } = await axiosInstance.post("/api/users", {
       ...formData,
@@ -19,19 +22,24 @@ export const registerMutation = async (formData: Data) => {
   }
 };
 
-export const loginMutation = async (formData: Data) => {
+export const loginMutation = async (
+  formData: Data,
+): CustomResponse<User> => {
   try {
     const { data } = await axiosInstance.post(
       "/api/auth/login",
       formData,
     );
+
     return data;
   } catch (error) {
     throw new Error((error as Error).message);
   }
 };
 
-export const requestForgotPassword = async (email: string) => {
+export const requestForgotPassword = async (
+  email: string,
+): CustomResponse => {
   try {
     const { data } = await axiosInstance.post(
       "/api/auth/forgot-password",
@@ -49,7 +57,7 @@ export const requestForgotPassword = async (email: string) => {
 export const confirmForgotPassword = async (
   formData: ConfirmPasswordSchema,
   token: string,
-) => {
+): CustomResponse => {
   try {
     const { data } = await axiosInstance.post(
       "/api/auth/confirm-forgot-password",
@@ -65,7 +73,9 @@ export const confirmForgotPassword = async (
   }
 };
 
-export const resetPasswordMutation = async (formData: Data) => {
+export const resetPasswordMutation = async (
+  formData: Data,
+): CustomResponse => {
   try {
     const { data } = await axiosInstance.post(
       "/api/auth/reset-password",
@@ -81,7 +91,7 @@ export const resetPasswordMutation = async (formData: Data) => {
 export const verifyEmailMutation = async (
   email: string,
   token: string,
-) => {
+): CustomResponse => {
   try {
     const { data } = await axiosInstance.post(
       "/api/auth/verify-email",
@@ -97,7 +107,7 @@ export const verifyEmailMutation = async (
   }
 };
 
-export const logoutMutation = async () => {
+export const logoutMutation = async (): CustomResponse => {
   try {
     const { data } = await axiosInstance.post("/api/auth/logout");
     console.log(data);

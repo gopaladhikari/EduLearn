@@ -81,13 +81,18 @@ export class CoursesService {
     try {
       const cachedCourses = await this.cache.get('courses');
 
-      if (cachedCourses) return cachedCourses;
+      if (cachedCourses)
+        return {
+          message: 'Courses fetched successfully',
+          data: cachedCourses,
+        };
 
-      const courses = await this.Course.find()
+      const courses = await this.Course.find({})
         .limit(limit)
         .skip(skip);
 
-      if (!courses) throw new NotFoundException('Course not found');
+      if (!courses.length)
+        throw new NotFoundException('Course not found');
 
       await this.cache.set('courses', courses);
       return {
@@ -105,9 +110,13 @@ export class CoursesService {
     try {
       const cacheKey = `course_slug_${slug}`;
 
-      const cachedCourse = this.cache.get(cacheKey);
+      const cachedCourse = await this.cache.get(cacheKey);
 
-      if (cachedCourse) return cachedCourse;
+      if (cachedCourse)
+        return {
+          message: 'Course fetched successfully',
+          data: cachedCourse,
+        };
 
       const course = await this.Course.findOne({
         slug: slug,
@@ -135,9 +144,13 @@ export class CoursesService {
     try {
       const cacheKey = `courses_search_${q}_${limit}_${skip}`;
 
-      const cachedCourses = this.cache.get(cacheKey);
+      const cachedCourses = await this.cache.get(cacheKey);
 
-      if (cachedCourses) return cachedCourses;
+      if (cachedCourses)
+        return {
+          message: 'Courses fetched successfully',
+          data: cachedCourses,
+        };
 
       const courses = await this.Course.find({
         $or: [

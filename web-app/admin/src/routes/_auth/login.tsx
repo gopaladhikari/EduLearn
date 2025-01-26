@@ -20,6 +20,7 @@ import { loginMutation } from "@/lib/mutations/auth.mutation";
 import { useMutation } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/useAuth";
 import { SessionStorage } from "@/config/constants";
+import { queryClient } from "@/main";
 
 export const Route = createFileRoute("/_auth/login")({
   component: RouteComponent,
@@ -28,17 +29,30 @@ export const Route = createFileRoute("/_auth/login")({
 function RouteComponent() {
   const navigate = useNavigate();
 
-  const { setIsLoggedIn } = useAuth();
+  const { setIsLoggedIn, setUser } = useAuth();
 
   const mutation = useMutation({
     mutationFn: loginMutation,
-    onSuccess() {
+    onSuccess(data) {
       setIsLoggedIn(true);
       sessionStorage.setItem(SessionStorage.IS_LOGGED_IN, "true");
+      setUser((prev) => {
+        return {
+          ...prev,
+          ...data.data,
+        };
+      });
       navigate({ to: "/dashboard" });
     },
     onError() {
       setIsLoggedIn(false);
+      sessionStorage.removeItem(SessionStorage.IS_LOGGED_IN);
+      setUser(null);
+    },
+    onSettled: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ["me"],
+      });
     },
   });
 

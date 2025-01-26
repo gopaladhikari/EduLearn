@@ -2,7 +2,7 @@ import { Logo } from "./Logo";
 
 export function Footer() {
   return (
-    <footer>
+    <footer className="bg-background">
       <div className="relative w-full border-t py-24">
         <div className="absolute left-0 right-0 top-[-1px] mx-auto h-px w-48 bg-gradient-to-r from-border via-gray-400 to-border opacity-40 md:w-96"></div>
         <div className="mx-auto max-w-7xl px-6">

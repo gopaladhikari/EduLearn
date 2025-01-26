@@ -27,6 +27,7 @@ import { queryClient } from "@/main";
 import { useAuth } from "@/hooks/useAuth";
 import { useMutation } from "@tanstack/react-query";
 import { updateAvatarMutation } from "@/lib/mutations/user.mutation";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 export function AvatarForm() {
   const form = useForm<z.infer<typeof avatarSchema>>({
@@ -101,14 +102,12 @@ export function AvatarForm() {
                 <FormLabel className="text-xl">
                   <div className="flex items-start justify-between">
                     <strong>Avatar</strong>
-                    <img
-                      src={user?.avatar.url}
-                      alt={user?.fullName}
-                      height={60}
-                      width={60}
-                      title={user?.fullName}
-                      className="rounded-full object-cover"
-                    />
+                    <Avatar className="h-14 w-14 cursor-pointer">
+                      <AvatarImage src={user?.avatar.url} />
+                      <AvatarFallback>
+                        {user?.fullName?.charAt(0)}
+                      </AvatarFallback>
+                    </Avatar>
                   </div>
                 </FormLabel>
                 <FormDescription>

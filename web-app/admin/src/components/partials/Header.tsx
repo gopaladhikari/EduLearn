@@ -58,8 +58,8 @@ export function Header() {
   return (
     <header
       className={cn(
-        "shadow-md dark:border-b dark:shadow-none",
         isLoggedIn && "sticky inset-0 z-[10000] bg-background",
+        "shadow-lg dark:border-b dark:shadow-none",
       )}
     >
       <MaxWithWrapper as="section">

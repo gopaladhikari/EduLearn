@@ -127,10 +127,10 @@ export class AuthService {
     user.jwtToken = undefined;
     await user.save();
     response.clearCookie('access_token', {
-      domain:
-        process.env.NODE_ENV === 'production'
-          ? '.gopal-adhikari.com.np'
-          : 'localhost',
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite:
+        process.env.NODE_ENV === 'production' ? 'none' : 'lax',
     });
     return {
       message: 'Password reset successfully',

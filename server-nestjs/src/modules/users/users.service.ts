@@ -109,7 +109,11 @@ export class UsersService {
 
       const cachedUsers = await this.cache.get(cacheKey);
 
-      if (cachedUsers) return cachedUsers;
+      if (cachedUsers)
+        return {
+          message: 'Users fetched successfully',
+          data: cachedUsers,
+        };
 
       const users = await this.User.find({
         verified: true,
@@ -120,7 +124,10 @@ export class UsersService {
 
       await this.cache.set(cacheKey, cachedUsers);
 
-      return users;
+      return {
+        message: 'Users fetched successfully',
+        data: users,
+      };
     } catch (error) {
       if (error instanceof NotFoundException) throw error;
       throw new BadRequestException(error.message);
@@ -230,7 +237,10 @@ export class UsersService {
     try {
       await user.save();
       await this.cache.clear();
-      return user;
+      return {
+        message: 'Password updated successfully',
+        data: user,
+      };
     } catch (error) {
       throw new BadRequestException(error.message);
     }

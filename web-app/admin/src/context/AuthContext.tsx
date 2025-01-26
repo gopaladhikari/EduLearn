@@ -32,6 +32,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
     queryKey: ["me"],
     queryFn: me,
     staleTime: 1000 * 60 * 3, // 3 minutes
+    retry: false,
   });
 
   useEffect(() => {

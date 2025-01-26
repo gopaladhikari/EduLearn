@@ -19,9 +19,10 @@ import { useMutation } from "@tanstack/react-query";
 import { logoutMutation } from "@/lib/mutations/auth.mutation";
 import { SessionStorage } from "@/config/constants";
 import { toast } from "@/hooks/use-toast";
+import { queryClient } from "@/main";
 
 export function UserNav() {
-  const { user, setIsLoggedIn } = useAuth();
+  const { user, setIsLoggedIn, setUser } = useAuth();
   const navigate = useNavigate();
 
   const { mutate, isPending } = useMutation({
@@ -29,6 +30,7 @@ export function UserNav() {
     onSuccess: () => {
       sessionStorage.removeItem(SessionStorage.IS_LOGGED_IN);
       setIsLoggedIn(false);
+      setUser(null);
 
       navigate({
         to: "/",
@@ -41,19 +43,24 @@ export function UserNav() {
         variant: "destructive",
       });
     },
+    onSettled: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ["me"],
+      });
+    },
   });
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Avatar className="h-12 w-10 cursor-pointer">
+        <Avatar className="cursor-pointer">
           <AvatarImage src={user?.avatar.url} />
           <AvatarFallback>{user?.fullName?.charAt(0)}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-72" align="end">
         <DropdownMenuLabel className="flex items-start gap-6">
-          <Avatar className="h-12 w-10 cursor-pointer">
+          <Avatar className="cursor-pointer">
             <AvatarImage src={user?.avatar.url} />
             <AvatarFallback>
               {user?.fullName?.charAt(0)}

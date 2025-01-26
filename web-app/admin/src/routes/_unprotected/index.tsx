@@ -30,7 +30,7 @@ function RouteComponent() {
 
   return (
     <div className="space-y-5 pb-16">
-      <section className="relative flex flex-col items-center justify-center bg-background pt-12 md:pt-0">
+      <section className="relative flex flex-col items-center justify-center pt-24 dark:bg-background md:pt-0">
         <div className="relative isolate overflow-hidden">
           <div className="mx-auto flex w-full max-w-screen-xl justify-start px-6 py-24 pt-10 sm:pb-32 lg:flex lg:px-8">
             <div className="mx-auto max-w-7xl justify-start lg:max-w-3xl">

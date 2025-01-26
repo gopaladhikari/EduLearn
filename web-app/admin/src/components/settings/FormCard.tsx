@@ -102,7 +102,7 @@ export function FormCard({
   return (
     <>
       <Separator />
-      <Card className="bg-background/50 p-4">
+      <Card className="bg-background p-4">
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}

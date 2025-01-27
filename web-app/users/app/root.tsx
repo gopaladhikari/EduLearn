@@ -73,7 +73,7 @@ export default function App() {
       </head>
       <body className={theme}>
         <AuthProvider>
-          <Header />
+          <Header theme={theme} />
 
           <main>
             <MaxWidthWrapper>

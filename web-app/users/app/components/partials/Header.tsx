@@ -26,7 +26,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 function UserMenu() {
   const { user } = useAuth();
-  console.log(user);
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -109,8 +109,9 @@ function UserMenu() {
   );
 }
 
-export function Header() {
+export function Header({ theme }: { theme: string }) {
   const { isLoggedIn } = useAuth();
+
   return (
     <MaxWidthWrapper
       as="header"
@@ -152,7 +153,7 @@ export function Header() {
           </NavigationMenuList>
         </NavigationMenu>
         <div className="ml-auto flex items-center gap-4">
-          <ModeToggle />
+          <ModeToggle theme={theme} />
           {isLoggedIn ? (
             <UserMenu />
           ) : (
@@ -169,7 +170,7 @@ export function Header() {
               >
                 Register
               </NavLink>
-              <ModeToggle />
+              <ModeToggle theme={theme} />
             </>
           )}
         </div>

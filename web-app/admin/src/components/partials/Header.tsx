@@ -54,11 +54,13 @@ function MainNav() {
 }
 
 export function Header() {
-  const { isLoggedIn } = useAuth();
+  // const { isLoggedIn } = useAuth();
+
   return (
     <header
       className={cn(
-        isLoggedIn && "sticky inset-0 z-[10000] bg-background",
+        Math.random() > 0.5 &&
+          "sticky inset-0 z-[10000] bg-background",
         "shadow-lg dark:border-b dark:shadow-none",
       )}
     >
@@ -68,13 +70,14 @@ export function Header() {
             <li
               className={cn(
                 "text-2xl font-bold text-primary",
-                !isLoggedIn && "mr-auto",
+                !Math.random() > 0.5 && "mr-auto",
               )}
               role="menubar"
             >
               <Logo />
             </li>
-            {isLoggedIn ? <AuthNav /> : <MainNav />}
+            {/* {isLoggedIn ? <AuthNav /> : <MainNav />} */}
+            <AuthNav />
           </menu>
         </nav>
       </MaxWithWrapper>

@@ -123,7 +123,12 @@ export class AnalyticsService {
       const cachedAnalytics = await this.cache.get(
         `course_analytics_${slug}`,
       );
-      if (cachedAnalytics) return cachedAnalytics;
+
+      if (cachedAnalytics)
+        return {
+          message: 'Analytics fetched successfully',
+          data: cachedAnalytics,
+        };
 
       const courseAnalytics = await this.Analytics.findOne({
         courseSlug: slug,

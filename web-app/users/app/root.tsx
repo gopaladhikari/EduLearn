@@ -4,19 +4,10 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-  useLoaderData,
-} from "react-router";
-import type {
-  ActionFunction,
-  LinksFunction,
-  LoaderFunction,
-} from "react-router";
-import { Header } from "./components/partials/Header";
-import { MaxWidthWrapper } from "./components/partials/MaxWidthWrapper";
-import { themeCookie } from "./sessions.server";
+} from "@remix-run/react";
+import type { LinksFunction } from "@remix-run/node";
+
 import "./tailwind.css";
-import Footer from "./components/partials/Footer";
-import { AuthProvider } from "./context/AuthContext";
 
 export const links: LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -31,60 +22,24 @@ export const links: LinksFunction = () => [
   },
 ];
 
-export const loader: LoaderFunction = async ({ request }) => {
-  const theme = request.headers.get("Cookie");
-
-  const parseTheme = await themeCookie.parse(theme);
-
-  return Response.json(
-    { theme: parseTheme },
-    {
-      headers: {
-        "Set-Cookie": await themeCookie.serialize(parseTheme ?? "dark"),
-      },
-    },
-  );
-};
-
-export const action: ActionFunction = async ({ request }) => {
-  const formData = await request.formData();
-  const { theme } = Object.fromEntries(formData);
-
-  return Response.json(
-    { theme },
-    {
-      headers: {
-        "Set-Cookie": await themeCookie.serialize(theme),
-      },
-    },
-  );
-};
-
-export default function App() {
-  const { theme } = useLoaderData<typeof loader>() as { theme: string };
-
+export function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
       </head>
-      <body className={theme} suppressHydrationWarning>
-        <AuthProvider>
-          <Header theme={theme} />
-
-          <main>
-            <MaxWidthWrapper>
-              <Outlet />
-            </MaxWidthWrapper>
-          </main>
-          <Footer />
-        </AuthProvider>
+      <body>
+        {children}
         <ScrollRestoration />
         <Scripts />
       </body>
     </html>
   );
+}
+
+export default function App() {
+  return <Outlet />;
 }

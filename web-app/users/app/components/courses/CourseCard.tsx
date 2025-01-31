@@ -6,7 +6,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import type { Course } from "@/types";
-import { Link } from "@remix-run/react";
+import { Link } from "react-router";
 import { Star } from "lucide-react";
 import { Button } from "../ui/button";
 import { axiosInstance } from "@/config/axios";

@@ -1,5 +1,5 @@
 import { useAuth } from "@/hooks/useAuth";
-import { Outlet, useNavigate } from "@remix-run/react";
+import { Outlet, useNavigate } from "react-router";
 import { useEffect } from "react";
 
 export default function Layout() {

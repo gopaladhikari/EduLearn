@@ -11,8 +11,8 @@ import WhatYouWillLearn from "@/components/courses/WhatYouWillLearn";
 import WhoThisCourseIsFor from "@/components/courses/WhoThisCourseIsFor";
 import { axiosInstance } from "@/config/axios";
 import { Course, type CourseWithInstructors } from "@/types";
-import type { LoaderFunction, MetaFunction } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import type { LoaderFunction, MetaFunction } from "react-router";
+import { useLoaderData } from "react-router";
 
 export const meta: MetaFunction = () => {
   return [

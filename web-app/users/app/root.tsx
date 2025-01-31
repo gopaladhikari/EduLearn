@@ -5,12 +5,12 @@ import {
   Scripts,
   ScrollRestoration,
   useLoaderData,
-} from "@remix-run/react";
+} from "react-router";
 import type {
   ActionFunction,
   LinksFunction,
   LoaderFunction,
-} from "@remix-run/node";
+} from "react-router";
 import { Header } from "./components/partials/Header";
 import { MaxWidthWrapper } from "./components/partials/MaxWidthWrapper";
 import { themeCookie } from "./sessions.server";
@@ -61,17 +61,17 @@ export const action: ActionFunction = async ({ request }) => {
 };
 
 export default function App() {
-  const { theme } = useLoaderData<typeof loader>();
+  const { theme } = useLoaderData<typeof loader>() as { theme: string };
 
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
       </head>
-      <body className={theme}>
+      <body className={theme} suppressHydrationWarning>
         <AuthProvider>
           <Header theme={theme} />
 

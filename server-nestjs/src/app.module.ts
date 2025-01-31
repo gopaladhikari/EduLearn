@@ -17,12 +17,12 @@ import { APP_GUARD } from '@nestjs/core';
     ThrottlerModule.forRoot([
       {
         name: 'short',
-        ttl: 2000, // 1 second
+        ttl: 2000, // 2 second
         limit: 3,
       },
       {
         name: 'long',
-        ttl: 1000 * 60, // 1 minute
+        ttl: 1000 * 30, // 30 minute
         limit: 25,
       },
     ]),

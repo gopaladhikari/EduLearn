@@ -39,7 +39,12 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
     if (!isPending) {
       if (isSuccess) {
         setIsLoggedIn(true);
-        setUser(data?.data);
+        setUser((prev) => {
+          return {
+            ...prev,
+            ...data.data,
+          };
+        });
         sessionStorage.setItem(SessionStorage.IS_LOGGED_IN, "true");
       } else {
         setIsLoggedIn(false);
@@ -47,7 +52,6 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
         sessionStorage.removeItem(SessionStorage.IS_LOGGED_IN);
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isPending, isSuccess]);
 
   const value = useMemo(
@@ -58,7 +62,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
       user,
       setUser,
     }),
-    [isLoggedIn, isPending, user, setIsLoggedIn, setUser],
+    [isLoggedIn, isPending],
   );
 
   return <AuthContext value={value}>{children}</AuthContext>;

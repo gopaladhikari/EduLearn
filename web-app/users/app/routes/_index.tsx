@@ -3,8 +3,8 @@ import { Button } from "@/components/ui/button";
 import { axiosInstance } from "@/config/axios";
 import { site } from "@/config/site";
 import type { Course } from "@/types";
-import type { LoaderFunction, MetaFunction } from "@remix-run/node";
-import { data as res, useLoaderData } from "@remix-run/react";
+import type { LoaderFunction, MetaFunction } from "react-router";
+import { data as res, useLoaderData } from "react-router";
 import { BookOpen, Users, Award, Play } from "lucide-react";
 
 export const meta: MetaFunction = () => {

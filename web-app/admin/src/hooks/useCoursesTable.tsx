@@ -22,10 +22,8 @@ import {
 import { format } from "date-fns";
 import type { Course } from "@/types";
 import { Label } from "@/components/ui/label";
-
 import { SessionStorage } from "@/config/constants";
 import { useQuery } from "@tanstack/react-query";
-
 import { getAllCourses } from "@/lib/queries/courses.query";
 import { CourseEditOption } from "@/components/courses/CourseEditOption";
 

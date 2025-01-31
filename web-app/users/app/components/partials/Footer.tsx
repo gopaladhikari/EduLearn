@@ -1,6 +1,6 @@
 import { BookOpen } from "lucide-react";
 import { MaxWidthWrapper } from "./MaxWidthWrapper";
-import { Link } from "@remix-run/react";
+import { Link } from "react-router";
 
 export default function Footer() {
   return (

@@ -40,7 +40,7 @@ export class AnalyticsService {
         data: analytics,
       };
     } catch (error) {
-      throw error;
+      throw new BadRequestException((error as Error).message);
     }
   }
 
@@ -49,7 +49,11 @@ export class AnalyticsService {
       const cachedAnalytics = await this.cache.get(
         'platform_analytics',
       );
-      if (cachedAnalytics) return cachedAnalytics;
+      if (cachedAnalytics)
+        return {
+          message: 'Platform analytics fetched successfully',
+          data: cachedAnalytics,
+        };
 
       const platformAnalytics = await this.Analytics.aggregate([
         {

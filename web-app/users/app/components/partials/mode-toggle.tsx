@@ -1,4 +1,4 @@
-import { Form } from "@remix-run/react";
+import { Form } from "react-router";
 import { Moon, Sun } from "lucide-react";
 
 export function ModeToggle({ theme }: { theme: string }) {

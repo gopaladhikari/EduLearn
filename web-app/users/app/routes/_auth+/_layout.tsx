@@ -1,5 +1,5 @@
 import { useAuth } from "@/hooks/useAuth";
-import { Link, Outlet, useNavigate } from "@remix-run/react";
+import { Link, Outlet, useNavigate } from "react-router";
 import { useEffect } from "react";
 
 export default function Layout() {
@@ -25,7 +25,7 @@ export default function Layout() {
         <div className="md:order-2">
           <div className="space-y-6 md:max-w-screen-sm">
             <Outlet />
-            <p className="px-8 text-center text-sm text-muted-foreground">
+            <div className="px-8 text-center text-sm text-muted-foreground">
               By clicking continue, you agree to our{" "}
               <Link
                 to="/terms-and-condition"
@@ -40,7 +40,7 @@ export default function Layout() {
               >
                 Privacy Policy
               </Link>
-            </p>
+            </div>
           </div>
         </div>
         <figure className="md:order-1">

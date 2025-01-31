@@ -1,6 +1,6 @@
 import { User } from "@/types";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Link } from "@remix-run/react";
+import { Link } from "react-router";
 
 // Mock function to get other courses from the instructor
 const getOtherCoursesFromInstructor = (instructorId: string) => {

@@ -19,11 +19,14 @@ import { Input } from "@/components/ui/input";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, type LoginSchema } from "@/schemas/auth.schema";
-import { Link, useNavigate } from "@remix-run/react";
-import type { MetaFunction } from "@remix-run/node";
+import { Link, useNavigate, useSubmit } from "react-router";
+import type { MetaFunction } from "react-router";
 import { axiosInstance } from "@/config/axios";
 import type { User } from "@/types";
 import { useAuth } from "@/hooks/useAuth";
+import { useRemixForm } from "remix-hook-form";
+
+const resolver = zodResolver(loginSchema);
 
 export const meta: MetaFunction = () => {
   return [
@@ -46,7 +49,12 @@ export default function Login() {
   const { setUser, setIsLoggedIn } = useAuth();
 
   const form = useForm<LoginSchema>({
-    resolver: zodResolver(loginSchema),
+    resolver,
+  });
+
+  const { handleSubmit } = useRemixForm({
+    resolver,
+    mode: "onSubmit",
   });
 
   const onSubmit: SubmitHandler<LoginSchema> = async (formData) => {
@@ -55,6 +63,7 @@ export default function Login() {
         "/api/auth/login",
         formData,
       );
+
       if (data.data) {
         setUser(data.data);
         setIsLoggedIn(true);
@@ -109,29 +118,29 @@ export default function Login() {
                 Forgot your password?
               </Link>
             </div>
+            <div className="space-y-4">
+              <Button
+                type="button"
+                className="w-full"
+                onClick={form.handleSubmit(onSubmit)}
+              >
+                {form.formState.isSubmitting ? "Signing in..." : "Sign In"}
+              </Button>
+              <Button
+                type="button"
+                className="w-full"
+                variant="secondary"
+                onClick={() => {
+                  form.setValue("email", "user@edulearn.com");
+                  form.setValue("password", "User@123");
+                }}
+              >
+                Guest User
+              </Button>
+            </div>
           </form>
         </Form>
       </CardContent>
-      <CardFooter className="flex-col gap-4">
-        <Button
-          type="button"
-          className="w-full"
-          onClick={form.handleSubmit(onSubmit)}
-        >
-          {form.formState.isSubmitting ? "Signing in..." : "Sign In"}
-        </Button>
-        <Button
-          type="button"
-          className="w-full"
-          variant="secondary"
-          onClick={() => {
-            form.setValue("email", "user@edulearn.com");
-            form.setValue("password", "User@123");
-          }}
-        >
-          Guest User
-        </Button>
-      </CardFooter>
     </Card>
   );
 }

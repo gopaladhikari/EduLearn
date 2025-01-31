@@ -11,7 +11,7 @@ import { Observable } from 'rxjs';
 
 @Injectable()
 export class XApiKeyInterceptor implements NestInterceptor {
-  private config = new ConfigService();
+  private readonly config = new ConfigService();
   intercept(
     context: ExecutionContext,
     next: CallHandler,

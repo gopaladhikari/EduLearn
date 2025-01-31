@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Link } from "@remix-run/react";
+import { Link } from "react-router";
 export enum CourseCategory {
   // Add your course categories here
   PROGRAMMING = "PROGRAMMING",

@@ -113,70 +113,69 @@ function UserMenu() {
 
 export function Header() {
   return (
-    <MaxWithWrapper
-      as="header"
-      className="py-5 shadow-md dark:border-b dark:shadow-none"
-    >
-      <div className="flex items-center gap-4">
-        <Logo />
-        <NavigationMenu>
-          <NavigationMenuList>
-            <NavigationMenuItem>
-              <NavigationMenuTrigger>Explore</NavigationMenuTrigger>
-              <NavigationMenuContent>
-                <ul className="scrollbar-thin grid max-h-72 gap-3 overflow-auto p-4 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
-                  {Object.values(CourseCategory).map((category) => (
-                    <li key={category}>
-                      <NavLink
-                        to={`/courses/${category
-                          .toLocaleLowerCase()
-                          .replaceAll(" ", "-")}`}
-                        className="hover:text-primary"
-                      >
-                        {category}
-                      </NavLink>
-                    </li>
-                  ))}
-                </ul>
-              </NavigationMenuContent>
-            </NavigationMenuItem>
+    <header className="shadow-md dark:border-b dark:shadow-none">
+      <MaxWithWrapper as="search" className="py-5 ">
+        <div className="flex items-center gap-4">
+          <Logo />
+          <NavigationMenu>
+            <NavigationMenuList>
+              <NavigationMenuItem>
+                <NavigationMenuTrigger>Explore</NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <ul className="scrollbar-thin grid max-h-72 gap-3 overflow-auto p-4 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
+                    {Object.values(CourseCategory).map((category) => (
+                      <li key={category}>
+                        <NavLink
+                          to={`/courses/${category
+                            .toLocaleLowerCase()
+                            .replaceAll(" ", "-")}`}
+                          className="hover:text-primary"
+                        >
+                          {category}
+                        </NavLink>
+                      </li>
+                    ))}
+                  </ul>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
 
-            <NavigationMenuItem>
-              <Form action="/search" className="w-full">
-                <input
-                  placeholder="Search"
-                  name="q"
-                  className="w-full rounded-md border border-black bg-transparent px-4 py-2 text-sm placeholder:text-sm focus:outline-none dark:border-white/40"
-                />
-              </Form>
-            </NavigationMenuItem>
-          </NavigationMenuList>
-        </NavigationMenu>
-        <div className="ml-auto flex items-center gap-4">
-          {Math.random() > 0.4 ? (
-            <UserMenu />
-          ) : (
-            <>
-              <NavLink
-                to="/login"
-                className={({ isActive }) =>
-                  cn(isActive && "text-primary")
-                }
-              >
-                Login
-              </NavLink>
-              <NavLink
-                to="/register"
-                className={({ isActive }) =>
-                  cn(isActive && "text-primary")
-                }
-              >
-                Register
-              </NavLink>
-            </>
-          )}
+              <NavigationMenuItem>
+                <Form action="/search" className="w-full">
+                  <input
+                    placeholder="Search"
+                    name="q"
+                    className="w-full rounded-md border border-black bg-transparent px-4 py-2 text-sm placeholder:text-sm focus:outline-none dark:border-white/40"
+                  />
+                </Form>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
+          <div className="ml-auto flex items-center gap-4">
+            {Math.random() > 0.9 ? (
+              <UserMenu />
+            ) : (
+              <>
+                <NavLink
+                  to="/login"
+                  className={({ isActive }) =>
+                    cn(isActive && "text-primary")
+                  }
+                >
+                  Login
+                </NavLink>
+                <NavLink
+                  to="/register"
+                  className={({ isActive }) =>
+                    cn(isActive && "text-primary")
+                  }
+                >
+                  Register
+                </NavLink>
+              </>
+            )}
+          </div>
         </div>
-      </div>
-    </MaxWithWrapper>
+      </MaxWithWrapper>
+    </header>
   );
 }

@@ -11,7 +11,7 @@ import { Footer } from "./components/partials/Footer";
 
 export default function App() {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <meta charSet="utf-8" />
         <meta
@@ -21,7 +21,7 @@ export default function App() {
         <Meta />
         <Links />
       </head>
-      <body>
+      <body suppressHydrationWarning>
         <Header />
         <main>
           <Outlet />

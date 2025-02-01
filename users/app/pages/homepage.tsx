@@ -1,12 +1,21 @@
+import { CourseCard } from "@/components/courses/CourseCard";
+import { MaxWithWrapper } from "@/components/partials/MaxWidthWrapper";
 import { Button } from "@/components/ui/button";
+import { axiosInstance } from "@/config/axios";
+import type { Course } from "@/types";
 import { Award, BookOpen, Play, Users } from "lucide-react";
-import type { MetaFunction } from "react-router";
+import { Suspense } from "react";
+import {
+  Await,
+  LoaderFunction,
+  MetaFunction,
+  useLoaderData,
+} from "react-router";
 
 export const meta: MetaFunction = () => {
   return [
     {
-      title:
-        "EduLearn | Master New Skills with Expert-Led Online Courses",
+      title: "EduLearn | Master New Skills with Expert-Led Online Courses",
       description:
         "Join EduLearn – Your Gateway to Lifelong Learning! Explore thousands of courses taught by industry experts. Learn at your own pace, earn certificates, and transform your career today.",
     },
@@ -22,19 +31,35 @@ export const meta: MetaFunction = () => {
   ];
 };
 
-export default function homepage() {
+export const loader: LoaderFunction = async () => {
+  try {
+    const {
+      data: { data },
+    } = await axiosInstance.get<Course[]>("/api/courses", {
+      params: {
+        limit: 3,
+        skip: 0,
+      },
+    });
+
+    return data;
+  } catch (error) {}
+};
+
+export default function Homepage() {
+  const courses = useLoaderData<Course[]>();
+
   return (
-    <div>
-      {" "}
-      <section className="group pb-20 pt-16">
+    <MaxWithWrapper>
+      <section className="group">
         <div className="flex flex-col items-center lg:flex-row">
           <div className="lg:w-1/2 lg:pr-12">
             <h1 className="mb-6 text-5xl font-bold transition-colors ease-linear group-hover:text-primary">
               Learn Without Limits
             </h1>
             <p className="mb-8 text-xl transition-colors ease-linear group-hover:dark:text-stone-300">
-              Start, switch, or advance your career with thousands of
-              courses from expert instructors.
+              Start, switch, or advance your career with thousands of courses
+              from expert instructors.
             </p>
             <div className="flex space-x-4">
               <Button variant="secondary">
@@ -55,7 +80,7 @@ export default function homepage() {
         </div>
       </section>
       {/* Stats Section */}
-      <section className="bg-secondary py-20">
+      <section className="bg-secondary">
         <div className="container mx-auto px-6">
           <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
             <div className="flex items-center space-x-4 rounded-xl p-6">
@@ -83,32 +108,44 @@ export default function homepage() {
         </div>
       </section>
       {/* Featured Courses */}
-      <section className="py-20">
-        <div className="container mx-auto px-6">
-          <h2 className="mb-12 text-center text-3xl font-bold">
-            Featured Courses
-          </h2>
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {data.data?.map((course) => (
-              <CourseCard key={course._id} {...course} />
-            ))}
-          </div>
+      <section>
+        <h2 className="mb-12 text-center text-3xl font-bold">
+          Featured Courses
+        </h2>
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+          <Suspense
+            fallback={
+              <div className="flex justify-center">
+                <div className="animate-pulse rounded-xl bg-gray-200 p-6">
+                  Loading
+                </div>
+              </div>
+            }
+          >
+            <Await resolve={courses}>
+              {(resolvedCourses) =>
+                resolvedCourses?.map((course) => (
+                  <CourseCard key={course._id} {...course} />
+                ))
+              }
+            </Await>
+          </Suspense>
         </div>
       </section>
-      <section className="bg-blue-600 py-20">
+      <section className="rounded bg-blue-600 py-10">
         <div className="container mx-auto px-6 text-center">
           <h2 className="mb-8 text-3xl font-bold text-white">
             Ready to Start Your Learning Journey?
           </h2>
           <p className="mx-auto mb-8 max-w-2xl text-xl text-blue-100">
-            Join thousands of students who are already learning and
-            growing with us. Get started today with our free courses!
+            Join thousands of students who are already learning and growing with
+            us. Get started today with our free courses!
           </p>
           <button className="hover: rounded-lg bg-white px-8 py-4 font-semibold text-blue-600">
             Browse All Courses
           </button>
         </div>
       </section>
-    </div>
+    </MaxWithWrapper>
   );
 }

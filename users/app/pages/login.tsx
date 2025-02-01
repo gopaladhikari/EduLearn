@@ -2,7 +2,6 @@ import {
   Form,
   redirect,
   useActionData,
-  useRouteError,
   type ActionFunction,
   type MetaFunction,
 } from "react-router";
@@ -21,14 +20,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { axiosInstance } from "@/config/axios";
-import type { CustomResponse, User } from "@/types";
-import {
-  cn,
-  commitSession,
-  destroySession,
-  getSession,
-} from "@/lib/utils";
-import { Suspense } from "react";
+import type { User } from "@/types";
+import { cn, commitSession, destroySession, getSession } from "@/lib/utils";
 
 export const meta: MetaFunction = () => {
   return [
@@ -54,19 +47,15 @@ const resolver = zodResolver(loginSchema);
 export const action: ActionFunction = async ({
   request,
 }): Promise<Response> => {
-  const { data, errors } = await getValidatedFormData(
-    request,
-    resolver
-  );
+  const { data, errors } = await getValidatedFormData(request, resolver);
 
   const session = await getSession(request.headers.get("Cookie"));
 
   try {
     if (errors) throw new Error(errors?.root?.message);
-    const { data: user } = await axiosInstance.post<User>(
-      "/api/auth/login",
-      data
-    );
+    const {
+      data: { data: user },
+    } = await axiosInstance.post<User>("/api/auth/login", data);
 
     session.set("user", user);
 
@@ -81,7 +70,7 @@ export const action: ActionFunction = async ({
       {
         status: 401,
         headers: { "Set-Cookie": await destroySession(session) },
-      }
+      },
     );
   }
 };
@@ -91,14 +80,13 @@ export default function Login() {
     handleSubmit,
     register,
     setValue,
-
     formState: { errors, isSubmitting },
   } = useRemixForm<LoginSchema>({
     resolver,
     mode: "onSubmit",
   });
 
-  const data = useActionData<typeof action>();
+  const error = useActionData<typeof action>() as Error;
 
   return (
     <Card>
@@ -118,10 +106,7 @@ export default function Login() {
           <div className="space-y-3">
             <Label
               htmlFor="email"
-              className={cn(
-                "text-lg",
-                errors.email && "text-destructive"
-              )}
+              className={cn("text-lg", errors.email && "text-destructive")}
             >
               Email
             </Label>
@@ -133,9 +118,7 @@ export default function Login() {
               {...register("email", { required: true })}
             />
             {errors.email && (
-              <p className="text-destructive">
-                {errors.email.message}
-              </p>
+              <p className="text-destructive">{errors.email.message}</p>
             )}
           </div>
           <div className="space-y-3">
@@ -150,21 +133,15 @@ export default function Login() {
               {...register("password", { required: true })}
             />
             {errors.password && (
-              <p className="text-destructive">
-                {errors.password.message}
-              </p>
+              <p className="text-destructive">{errors.password.message}</p>
             )}
           </div>
 
-          {data?.message && (
-            <p className="text-destructive">{data.message}</p>
+          {error?.message && (
+            <p className="text-destructive">{error.message}</p>
           )}
 
-          <Button
-            type="submit"
-            className="w-full"
-            disabled={isSubmitting}
-          >
+          <Button type="submit" className="w-full" disabled={isSubmitting}>
             Sign in
           </Button>
           <Button

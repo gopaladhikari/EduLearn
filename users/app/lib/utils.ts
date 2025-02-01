@@ -20,7 +20,7 @@ export const { getSession, commitSession, destroySession } =
       name: "__session",
       httpOnly: true,
       path: "/",
-      sameSite: "lax",
+      sameSite: "strict",
       secrets: ["s3cret1"],
       secure: true,
     },

@@ -92,7 +92,8 @@ export class UsersService {
       if (cachedUser) return cachedUser as UserDocument;
 
       const user = await this.User.findOne(query);
-      if (!user) throw new NotFoundException('User not found');
+      if (!user)
+        throw new NotFoundException('Invalid email or password');
 
       await this.cache.set(cacheKey, user);
 

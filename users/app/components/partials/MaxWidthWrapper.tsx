@@ -12,7 +12,10 @@ export function MaxWithWrapper({
 }: Props) {
   return (
     <Component
-      className={cn("mx-auto container p-4", className)}
+      className={cn(
+        "mx-auto container p-4 space-y-12 md:space-y-16",
+        className
+      )}
       {...prop}
     >
       {children}

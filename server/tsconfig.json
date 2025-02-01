@@ -1,25 +1,22 @@
 {
   "compilerOptions": {
-    "rootDir": "src",
-    "types": ["node", "express"],
-    "resolveJsonModule": true,
+    "module": "commonjs",
+    "declaration": true,
     "removeComments": true,
-    "esModuleInterop": true,
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-    "target": "ES2022",
-    "outDir": "dist",
-    "strict": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "ES2021",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": true,
     "skipLibCheck": true,
-    "noUncheckedIndexedAccess": true,
-    "noImplicitAny": true,
-    "noImplicitOverride": true
+    "strictNullChecks": false,
+    "noImplicitAny": false,
+    "strictBindCallApply": false,
+    "forceConsistentCasingInFileNames": false,
+    "noFallthroughCasesInSwitch": false
   },
-
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist"],
-
-  "ts-node": {
-    "files": true
-  }
+  "include": ["src/**/*", "src/templates/**/*", "src/public/**/*"]
 }

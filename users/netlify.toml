@@ -1,5 +1,5 @@
 [build]
-command = "react-router build && cp build/server/index.js build/server/server.js"publish = "build/client"
+command = "react-router build && cp build/server/index.js
 
 [dev]
 command = "react-router dev"

@@ -38,7 +38,7 @@ function RouteComponent() {
     trendScore: 92,
   };
 
-  const { data, isPending } = useQuery({
+  const { data } = useQuery({
     queryKey: ["analytics", slug],
     queryFn: () => getCourseAnalyticsBySlug(slug),
   });
@@ -47,7 +47,6 @@ function RouteComponent() {
 
   return (
     <div>
-      {" "}
       <h1 className="mb-8 text-3xl font-bold">
         Course Analytics: {courseAnalytics.courseSlug}
       </h1>

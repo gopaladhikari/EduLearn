@@ -14,7 +14,7 @@ export function SidebarNav({ ...props }: SidebarNavProps) {
         {menu.settings.map((item) => (
           <Link
             key={item.href}
-            href={item.href}
+            to={item.href}
             className={cn(
               buttonVariants({ variant: "ghost" }),
               pathname === item.href

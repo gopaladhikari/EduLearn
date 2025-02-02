@@ -2,6 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: "Inter";
+  src: url("fonts/Inter_18pt-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url("fonts/Inter_18pt-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+}
+
 html,
 body {
   @apply bg-white dark:bg-gray-950;
@@ -74,7 +88,11 @@ body {
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply font-inter bg-background text-foreground antialiased;
+  }
+
+  h1 {
+    @apply text-xl font-bold md:text-2xl lg:text-5xl;
   }
 
   main {

@@ -1,5 +1,10 @@
 import { MaxWithWrapper } from "@/components/partials/MaxWidthWrapper";
-import { Link, Outlet, redirect, type LoaderFunction } from "react-router";
+import {
+  Link,
+  Outlet,
+  redirect,
+  type LoaderFunction,
+} from "react-router";
 import { getSession } from "@/lib/utils";
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -43,7 +48,9 @@ export default function AuthLayout() {
             width={544}
             className="rounded-md"
           />
-          <figcaption className="sr-only">Autentication Banner</figcaption>
+          <figcaption className="sr-only">
+            Autentication Banner
+          </figcaption>
         </figure>
       </div>
     </MaxWithWrapper>

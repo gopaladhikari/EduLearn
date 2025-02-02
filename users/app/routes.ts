@@ -12,6 +12,8 @@ const config: RouteConfig = [
     route("/forgot-password", "./pages/forgot-password.tsx"),
     route("/reset-password", "./pages/reset-password.tsx"),
   ]),
+  route("/courses/:slug", "./pages/course-detail.tsx"),
+  route("/cart", "./pages/cart.tsx"),
 ];
 
 export default config;

@@ -43,7 +43,7 @@ export function CourseCard({
           </div>
         </div>
         <CardTitle className="transition-colors group-hover:text-primary">
-          {title}
+          <Link to={`/courses/${slug}`}>{title}</Link>
         </CardTitle>
         <CardDescription className="line-clamp-3">
           {description}
@@ -54,7 +54,7 @@ export function CourseCard({
           ${price}
         </span>
         <Button className="bg-blue-600 hover:bg-blue-700">
-          Enroll Now
+          Add to cart
         </Button>
       </CardFooter>
     </Card>

@@ -17,7 +17,8 @@ import {
 } from "./lib/utils";
 import type { User } from "./types";
 import { axiosInstance } from "./config/axios";
-import { data as res } from "react-router";
+import { useNavigation, data as res } from "react-router";
+import { GlobalPendingUI } from "./components/skeletons/GlobalPendingUI";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const session = await getSession(request.headers.get("Cookie"));
@@ -49,6 +50,9 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 export default function App() {
   const user = useLoaderData<User | null>();
+  const navigation = useNavigation();
+
+  const isNavigating = Boolean(navigation.location);
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -63,6 +67,7 @@ export default function App() {
       </head>
       <body suppressHydrationWarning>
         <Header user={user} />
+        {isNavigating && <GlobalPendingUI />}
         <main>
           <Outlet />
         </main>

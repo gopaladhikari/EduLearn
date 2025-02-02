@@ -26,20 +26,21 @@ import { Form, Link, NavLink } from "react-router";
 import { MaxWithWrapper } from "./MaxWidthWrapper";
 import { CourseCategory } from "@/constant/data";
 import type { User } from "@/types";
+import { ShoppingCart } from "lucide-react";
 
 function UserMenu({ user }: { user: User }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Avatar className="cursor-pointer">
-          <AvatarImage src="https://github.com/shadcn.png" />
+          <AvatarImage src={user.avatar?.url} />
           <AvatarFallback>{user.fullName?.charAt(0)}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-72" align="end">
         <DropdownMenuLabel className="flex items-start gap-6">
           <Avatar>
-            <AvatarImage src="https://github.com/shadcn.png" />
+            <AvatarImage src={user.avatar?.url} />
             <AvatarFallback>
               {user.fullName?.charAt(0)}
             </AvatarFallback>
@@ -155,7 +156,12 @@ export function Header({ user }: { user: User | null }) {
           </NavigationMenu>
           <div className="ml-auto flex items-center gap-4">
             {user ? (
-              <UserMenu user={user} />
+              <>
+                <Link to="/cart">
+                  <ShoppingCart size={16} />
+                </Link>
+                <UserMenu user={user} />
+              </>
             ) : (
               <>
                 <NavLink

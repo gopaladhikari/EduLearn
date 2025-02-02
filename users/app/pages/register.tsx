@@ -12,7 +12,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { registerSchema, type RegisterSchema } from "@/schemas/auth.schema";
+import {
+  registerSchema,
+  type RegisterSchema,
+} from "@/schemas/auth.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { getValidatedFormData, useRemixForm } from "remix-hook-form";
 import { Label } from "@/components/ui/label";
@@ -41,7 +44,10 @@ export const meta: MetaFunction = () => {
 const resolver = zodResolver(registerSchema);
 
 export const action: ActionFunction = async ({ request }) => {
-  const { data, errors } = await getValidatedFormData(request, resolver);
+  const { data, errors } = await getValidatedFormData(
+    request,
+    resolver,
+  );
 
   if (errors) throw new Error(errors?.root?.message);
 
@@ -77,7 +83,10 @@ export default function Register() {
           <div className="space-y-3">
             <Label
               htmlFor="fullName"
-              className={cn("text-lg", errors.fullName && "text-destructive")}
+              className={cn(
+                "text-lg",
+                errors.fullName && "text-destructive",
+              )}
             >
               Full Name
             </Label>
@@ -88,13 +97,18 @@ export default function Register() {
               {...register("fullName", { required: true })}
             />
             {errors.email && (
-              <p className="text-destructive">{errors.email.message}</p>
+              <p className="text-destructive">
+                {errors.email.message}
+              </p>
             )}
           </div>
           <div className="space-y-3">
             <Label
               htmlFor="email"
-              className={cn("text-lg", errors.email && "text-destructive")}
+              className={cn(
+                "text-lg",
+                errors.email && "text-destructive",
+              )}
             >
               Email
             </Label>
@@ -106,13 +120,18 @@ export default function Register() {
               {...register("email", { required: true })}
             />
             {errors.email && (
-              <p className="text-destructive">{errors.email.message}</p>
+              <p className="text-destructive">
+                {errors.email.message}
+              </p>
             )}
           </div>
           <div className="space-y-3">
             <Label
               htmlFor="password"
-              className={cn("text-lg", errors.email && "text-destructive")}
+              className={cn(
+                "text-lg",
+                errors.email && "text-destructive",
+              )}
             >
               Password
             </Label>
@@ -124,7 +143,9 @@ export default function Register() {
               {...register("password", { required: true })}
             />
             {errors.password && (
-              <p className="text-destructive">{errors.password.message}</p>
+              <p className="text-destructive">
+                {errors.password.message}
+              </p>
             )}
           </div>
 
@@ -132,8 +153,12 @@ export default function Register() {
             <p className="text-destructive">{error.message}</p>
           )}
 
-          <Button type="submit" className="w-full" disabled={isSubmitting}>
-            Sign in
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "Registering..." : "Register"}
           </Button>
         </Form>
       </CardContent>

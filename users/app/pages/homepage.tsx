@@ -2,14 +2,26 @@ import { CourseCard } from "@/components/courses/CourseCard";
 import { MaxWithWrapper } from "@/components/partials/MaxWidthWrapper";
 import { Button } from "@/components/ui/button";
 import { axiosInstance } from "@/config/axios";
-import type { Course } from "@/types";
+import type { Course, User } from "@/types";
+import {
+  data as response,
+  LoaderFunction,
+  MetaFunction,
+  useLoaderData,
+} from "react-router";
 import { Award, BookOpen, Play, Users } from "lucide-react";
-import { LoaderFunction, MetaFunction, useLoaderData } from "react-router";
+import { getSession } from "@/lib/utils";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/components/ui/avatar";
 
 export const meta: MetaFunction = () => {
   return [
     {
-      title: "EduLearn | Master New Skills with Expert-Led Online Courses",
+      title:
+        "EduLearn | Master New Skills with Expert-Led Online Courses",
       description:
         "Join EduLearn – Your Gateway to Lifelong Learning! Explore thousands of courses taught by industry experts. Learn at your own pace, earn certificates, and transform your career today.",
     },
@@ -25,7 +37,9 @@ export const meta: MetaFunction = () => {
   ];
 };
 
-export const loader: LoaderFunction = async () => {
+export const loader: LoaderFunction = async ({ request }) => {
+  const session = await getSession(request.headers.get("Cookie"));
+  const user = session.get("user");
   try {
     const {
       data: { data },
@@ -36,26 +50,63 @@ export const loader: LoaderFunction = async () => {
       },
     });
 
-    return data;
+    return response(
+      {
+        courses: data,
+        user,
+      },
+      {
+        headers: {
+          "Cache-control":
+            "public, max-age=900, must-revalidate, immutable",
+        },
+      },
+    );
   } catch (error) {
-    return [];
+    return {
+      courses: [],
+      user,
+    };
   }
 };
 
 export default function Homepage() {
-  const courses = useLoaderData<Course[]>();
+  const { courses, user } = useLoaderData() as {
+    courses: Course[];
+    user: User | null;
+  };
 
   return (
     <MaxWithWrapper>
+      {user && (
+        <section>
+          <div className="flex flex-col items-center gap-4 lg:flex-row">
+            <Avatar className="h-16 w-16">
+              <AvatarImage src={user.avatar?.url} />
+              <AvatarFallback>
+                {user.fullName?.charAt(0)}
+              </AvatarFallback>
+            </Avatar>
+            <div>
+              <h2 className="text-2xl font-bold md:text-3xl">
+                Welcome back, {user.fullName}!
+              </h2>
+              <p className="text-sm text-muted-foreground">
+                Start learning now or check out your courses.
+              </p>
+            </div>
+          </div>
+        </section>
+      )}
       <section className="group">
         <div className="flex flex-col items-center lg:flex-row">
           <div className="lg:w-1/2 lg:pr-12">
-            <h1 className="mb-6 text-5xl font-bold transition-colors ease-linear group-hover:text-primary">
+            <h1 className="mb-6 transition-colors ease-linear group-hover:text-primary">
               Learn Without Limits
             </h1>
             <p className="mb-8 text-xl transition-colors ease-linear group-hover:dark:text-stone-300">
-              Start, switch, or advance your career with thousands of courses
-              from expert instructors.
+              Start, switch, or advance your career with thousands of
+              courses from expert instructors.
             </p>
             <div className="flex space-x-4">
               <Button variant="secondary">
@@ -104,24 +155,26 @@ export default function Homepage() {
         </div>
       </section>
       {/* Featured Courses */}
-      <section>
-        <h2 className="mb-12 text-center text-3xl font-bold">
-          Featured Courses
-        </h2>
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {courses?.map((course) => (
-            <CourseCard key={course._id} {...course} />
-          ))}
-        </div>
-      </section>
+      {courses?.length > 0 && (
+        <section>
+          <h2 className="mb-12 text-center text-3xl font-bold">
+            Featured Courses
+          </h2>
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+            {courses?.map((course) => (
+              <CourseCard key={course._id} {...course} />
+            ))}
+          </div>
+        </section>
+      )}
       <section className="rounded bg-blue-600 py-10">
         <div className="container mx-auto px-6 text-center">
           <h2 className="mb-8 text-3xl font-bold text-white">
             Ready to Start Your Learning Journey?
           </h2>
           <p className="mx-auto mb-8 max-w-2xl text-xl text-blue-100">
-            Join thousands of students who are already learning and growing with
-            us. Get started today with our free courses!
+            Join thousands of students who are already learning and
+            growing with us. Get started today with our free courses!
           </p>
           <button className="hover: rounded-lg bg-white px-8 py-4 font-semibold text-blue-600">
             Browse All Courses

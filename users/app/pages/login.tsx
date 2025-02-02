@@ -67,10 +67,13 @@ export const action: ActionFunction = async ({ request }) => {
 
     const { user, accessToken } = res.data;
 
+    axiosInstance.defaults.headers.common["Authorization"] =
+      `Bearer ${accessToken}`;
+
     session.set("user", user);
     session.set("acessToken", accessToken);
 
-    return redirect("/dashboard", {
+    return redirect("/", {
       headers: {
         "Set-Cookie": await commitSession(session),
       },

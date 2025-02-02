@@ -1,6 +1,6 @@
+import { createCookieSessionStorage } from "react-router";
 import type { User } from "@/types";
 import { clsx, type ClassValue } from "clsx";
-import { createCookieSessionStorage } from "react-router";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
@@ -8,6 +8,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 type SessionData = {
   user: User;
+  acessToken: string;
 };
 
 type SessionFlashData = {

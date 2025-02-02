@@ -8,6 +8,9 @@ declare module "axios" {
     ): Promise<
       AxiosResponse<{
         data: T;
+        message: string;
+        status: boolean;
+        statusCode: number;
       }>
     >;
     post<T = unknown>(
@@ -16,6 +19,9 @@ declare module "axios" {
     ): Promise<
       AxiosResponse<{
         data: T;
+        message: string;
+        status: boolean;
+        statusCode: number;
       }>
     >;
   }

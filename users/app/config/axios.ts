@@ -3,11 +3,12 @@ import { env } from "./env";
 
 const axiosInstance = axios.create({
   baseURL: env.backendApi,
-  withCredentials: true,
   timeout: 4000, // 4 seconds
   timeoutErrorMessage: "Request timed out",
+
   headers: {
     "x-api-key": env.xApiKey,
+    "Content-Type": "application/json",
   },
 });
 
@@ -20,7 +21,7 @@ axiosInstance.interceptors.response.use(
         throw new Error(error.response.data.message);
       }
     throw new Error(error.message);
-  }
+  },
 );
 
 export { axiosInstance };

@@ -4,13 +4,7 @@ import { Button } from "@/components/ui/button";
 import { axiosInstance } from "@/config/axios";
 import type { Course } from "@/types";
 import { Award, BookOpen, Play, Users } from "lucide-react";
-import { Suspense } from "react";
-import {
-  Await,
-  LoaderFunction,
-  MetaFunction,
-  useLoaderData,
-} from "react-router";
+import { LoaderFunction, MetaFunction, useLoaderData } from "react-router";
 
 export const meta: MetaFunction = () => {
   return [
@@ -43,7 +37,9 @@ export const loader: LoaderFunction = async () => {
     });
 
     return data;
-  } catch (error) {}
+  } catch (error) {
+    return [];
+  }
 };
 
 export default function Homepage() {
@@ -113,23 +109,9 @@ export default function Homepage() {
           Featured Courses
         </h2>
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-          <Suspense
-            fallback={
-              <div className="flex justify-center">
-                <div className="animate-pulse rounded-xl bg-gray-200 p-6">
-                  Loading
-                </div>
-              </div>
-            }
-          >
-            <Await resolve={courses}>
-              {(resolvedCourses) =>
-                resolvedCourses?.map((course) => (
-                  <CourseCard key={course._id} {...course} />
-                ))
-              }
-            </Await>
-          </Suspense>
+          {courses?.map((course) => (
+            <CourseCard key={course._id} {...course} />
+          ))}
         </div>
       </section>
       <section className="rounded bg-blue-600 py-10">

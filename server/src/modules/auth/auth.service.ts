@@ -68,7 +68,10 @@ export class AuthService {
     });
 
     return {
-      data: user,
+      data: {
+        user,
+        accessToken,
+      },
       message: 'User logged in successfully',
     };
   }

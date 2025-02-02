@@ -79,13 +79,6 @@ export type PlatformAnalytics = {
   mostPopularCourse: string;
 };
 
-export type CustomResponse<T = unknown> = {
-  data: T;
-  status: boolean;
-  message: string;
-  path: string;
-};
-
 export type CourseWithInstructors = Omit<Course, "instructor"> & {
   instructor: User[];
 };

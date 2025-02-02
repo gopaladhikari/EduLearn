@@ -21,7 +21,13 @@ import {
 } from "@/components/ui/card";
 import { axiosInstance } from "@/config/axios";
 import type { User } from "@/types";
-import { cn, commitSession, destroySession, getSession } from "@/lib/utils";
+
+import {
+  cn,
+  commitSession,
+  destroySession,
+  getSession,
+} from "@/lib/utils";
 
 export const meta: MetaFunction = () => {
   return [
@@ -44,20 +50,25 @@ export const meta: MetaFunction = () => {
 
 const resolver = zodResolver(loginSchema);
 
-export const action: ActionFunction = async ({
-  request,
-}): Promise<Response> => {
-  const { data, errors } = await getValidatedFormData(request, resolver);
+export const action: ActionFunction = async ({ request }) => {
+  const { data, errors } = await getValidatedFormData(
+    request,
+    resolver,
+  );
 
   const session = await getSession(request.headers.get("Cookie"));
 
   try {
     if (errors) throw new Error(errors?.root?.message);
-    const {
-      data: { data: user },
-    } = await axiosInstance.post<User>("/api/auth/login", data);
+    const { data: res } = await axiosInstance.post<{
+      user: User;
+      accessToken: string;
+    }>("/api/auth/login", data);
+
+    const { user, accessToken } = res.data;
 
     session.set("user", user);
+    session.set("acessToken", accessToken);
 
     return redirect("/dashboard", {
       headers: {
@@ -106,7 +117,10 @@ export default function Login() {
           <div className="space-y-3">
             <Label
               htmlFor="email"
-              className={cn("text-lg", errors.email && "text-destructive")}
+              className={cn(
+                "text-lg",
+                errors.email && "text-destructive",
+              )}
             >
               Email
             </Label>
@@ -118,7 +132,9 @@ export default function Login() {
               {...register("email", { required: true })}
             />
             {errors.email && (
-              <p className="text-destructive">{errors.email.message}</p>
+              <p className="text-destructive">
+                {errors.email.message}
+              </p>
             )}
           </div>
           <div className="space-y-3">
@@ -133,7 +149,9 @@ export default function Login() {
               {...register("password", { required: true })}
             />
             {errors.password && (
-              <p className="text-destructive">{errors.password.message}</p>
+              <p className="text-destructive">
+                {errors.password.message}
+              </p>
             )}
           </div>
 
@@ -141,7 +159,11 @@ export default function Login() {
             <p className="text-destructive">{error.message}</p>
           )}
 
-          <Button type="submit" className="w-full" disabled={isSubmitting}>
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={isSubmitting}
+          >
             Sign in
           </Button>
           <Button

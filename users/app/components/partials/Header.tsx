@@ -25,24 +25,27 @@ import {
 import { Form, Link, NavLink } from "react-router";
 import { MaxWithWrapper } from "./MaxWidthWrapper";
 import { CourseCategory } from "@/constant/data";
+import type { User } from "@/types";
 
-function UserMenu() {
+function UserMenu({ user }: { user: User }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Avatar className="cursor-pointer">
           <AvatarImage src="https://github.com/shadcn.png" />
-          <AvatarFallback>CN</AvatarFallback>
+          <AvatarFallback>{user.fullName?.charAt(0)}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-72" align="end">
         <DropdownMenuLabel className="flex items-start gap-6">
           <Avatar>
             <AvatarImage src="https://github.com/shadcn.png" />
-            <AvatarFallback>CN</AvatarFallback>
+            <AvatarFallback>
+              {user.fullName?.charAt(0)}
+            </AvatarFallback>
           </Avatar>
           <div>
-            <strong>Test User</strong>
+            <strong>{user.fullName}</strong>
             <p className="text-sm text-muted-foreground">
               test@edulearn.com
             </p>
@@ -111,10 +114,10 @@ function UserMenu() {
   );
 }
 
-export function Header() {
+export function Header({ user }: { user: User | null }) {
   return (
     <header className="shadow-md dark:border-b dark:shadow-none">
-      <MaxWithWrapper as="search" className="py-5 ">
+      <MaxWithWrapper as="search" className="py-5">
         <div className="flex items-center gap-4">
           <Logo />
           <NavigationMenu>
@@ -151,8 +154,8 @@ export function Header() {
             </NavigationMenuList>
           </NavigationMenu>
           <div className="ml-auto flex items-center gap-4">
-            {Math.random() > 0.9 ? (
-              <UserMenu />
+            {user ? (
+              <UserMenu user={user} />
             ) : (
               <>
                 <NavLink

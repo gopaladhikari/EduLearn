@@ -1,5 +1,0 @@
-[build]
-command = "react-router build && cp build/server/index.js"
-
-[dev]
-command = "react-router dev"

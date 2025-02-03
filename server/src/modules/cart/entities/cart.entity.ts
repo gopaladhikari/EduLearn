@@ -1,8 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, {
-  type HydratedDocument,
-  type Types,
-} from 'mongoose';
+import mongoose, { type HydratedDocument } from 'mongoose';
 
 export type CourseAnalyticsDocument = HydratedDocument<Cart>;
 
@@ -14,12 +11,12 @@ export class Cart {
     required: true,
     unique: true,
   })
-  userId: Types.ObjectId;
+  userId: string;
 
   @Prop({
     type: [
       {
-        course: {
+        courseId: {
           type: mongoose.Schema.Types.ObjectId,
           ref: 'Course',
           required: true,
@@ -41,10 +38,20 @@ export class Cart {
     },
   })
   items: Array<{
-    courseId: Types.ObjectId;
-    priceAtAddition: number;
+    courseId: string;
     addedAt: Date;
+    priceAtAddition: number;
   }>;
+
+  getTotalPrice() {
+    return this.items.reduce(
+      (acc, item) => acc + item.priceAtAddition,
+      0,
+    );
+  }
+  get itemCount(): number {
+    return this.items.length;
+  }
 }
 
 export const CartSchema = SchemaFactory.createForClass(Cart);

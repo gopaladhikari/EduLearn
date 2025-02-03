@@ -8,6 +8,7 @@ import {
   LoaderFunction,
   MetaFunction,
   useLoaderData,
+  type ActionFunction,
 } from "react-router";
 import { Award, BookOpen, Play, Users } from "lucide-react";
 import { getSession } from "@/lib/utils";
@@ -68,6 +69,25 @@ export const loader: LoaderFunction = async ({ request }) => {
       user,
     };
   }
+};
+
+export const action: ActionFunction = async ({ request }) => {
+  const formdata = await request.formData();
+  const values = Object.fromEntries(formdata);
+
+  if ("addToCart" in values) {
+    const { _id, price } = JSON.parse(values.addToCart as string);
+
+    try {
+      await axiosInstance.post(`/api/cart/${_id}`, {
+        price,
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  return values;
 };
 
 export default function Homepage() {

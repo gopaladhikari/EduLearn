@@ -11,7 +11,7 @@ import { AnalyticsModule } from './modules/analytics/analytics.module';
 import { CacheModule } from '@nestjs/cache-manager';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
-import { CartModule } from './cart/cart.module';
+import { CartModule } from './modules/cart/cart.module';
 
 @Module({
   imports: [
@@ -24,7 +24,7 @@ import { CartModule } from './cart/cart.module';
       {
         name: 'long',
         ttl: 1000 * 30, // 30 minute
-        limit: 25,
+        limit: 100,
       },
     ]),
     ConfigModule.forRoot({

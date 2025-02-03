@@ -86,3 +86,17 @@ export type CourseWithInstructors = Omit<Course, "instructor"> & {
 export type CourseWithAnalytics = Course & {
   analytics: Analytics;
 };
+
+export type CartItem = {
+  courseId: Partial<Course>;
+  priceAtAddition: number;
+  addedAt: Date;
+};
+
+export type Cart = {
+  _id: string;
+  userId: string;
+  totalPrice: number;
+  totalItems: number;
+  items: ReadonlyArray<CartItem>;
+};

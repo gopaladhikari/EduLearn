@@ -8,10 +8,10 @@ import {
 import type { Course } from "@/types";
 import { Star } from "lucide-react";
 import { Button } from "../ui/button";
-import { axiosInstance } from "@/config/axios";
-import { Link } from "react-router";
+import { Form, Link } from "react-router";
 
 export function CourseCard({
+  _id,
   category,
   description,
   price,
@@ -19,12 +19,8 @@ export function CourseCard({
   title,
   thumbnail,
 }: Course) {
-  const incrementTotalClicks = () => {
-    axiosInstance.post(`/api/analytics/total-clicks/${slug}`);
-  };
-
   return (
-    <Card className="group" onClick={incrementTotalClicks}>
+    <Card className="group">
       <CardHeader>
         <Link to={`/courses/${slug}`}>
           <img
@@ -53,9 +49,16 @@ export function CourseCard({
         <span className="text-2xl font-bold text-blue-600">
           ${price}
         </span>
-        <Button className="bg-blue-600 hover:bg-blue-700">
-          Add to cart
-        </Button>
+
+        <Form method="post" navigate={false}>
+          <Button
+            className="bg-blue-600 hover:bg-blue-700"
+            name="addToCart"
+            value={JSON.stringify({ _id, price })}
+          >
+            Add to cart
+          </Button>
+        </Form>
       </CardFooter>
     </Card>
   );

@@ -1,17 +1,16 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import type { Cart } from "@/types";
 
-export default function CartSummary() {
+export default function CartSummary({ totalPrice }: Partial<Cart>) {
   const [promoCode, setPromoCode] = useState("");
 
-  // This would typically come from a global state or API
-  const subtotal = 269.97;
+  const subtotal = Number(totalPrice);
   const discount = 0;
   const total = subtotal - discount;
 
   const handleApplyPromo = () => {
-    // Here you would typically validate the promo code and apply the discount
     console.log("Applying promo code:", promoCode);
   };
 

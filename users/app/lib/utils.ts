@@ -3,9 +3,6 @@ import type { User } from "@/types";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
 type SessionData = {
   user: User;
   acessToken: string;
@@ -14,6 +11,10 @@ type SessionData = {
 type SessionFlashData = {
   error: string;
 };
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
 
 export const { getSession, commitSession, destroySession } =
   createCookieSessionStorage<SessionData, SessionFlashData>({

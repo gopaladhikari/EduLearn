@@ -52,7 +52,7 @@ export default function App() {
   const user = useLoaderData<User | null>();
   const navigation = useNavigation();
 
-  const isNavigating = Boolean(navigation.location);
+  const isNavigating = navigation.state === "loading";
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -67,10 +67,13 @@ export default function App() {
       </head>
       <body suppressHydrationWarning>
         <Header user={user} />
-        {isNavigating && <GlobalPendingUI />}
-        <main>
-          <Outlet />
-        </main>
+        {isNavigating ? (
+          <GlobalPendingUI />
+        ) : (
+          <main>
+            <Outlet />
+          </main>
+        )}
         <Footer />
         <ScrollRestoration />
         <Scripts />

@@ -9,7 +9,6 @@ import {
   MetaFunction,
   useLoaderData,
   type ActionFunction,
-  useFetcher,
 } from "react-router";
 import { Award, BookOpen, Play, Users } from "lucide-react";
 import { getSession } from "@/lib/utils";
@@ -18,8 +17,6 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/components/ui/avatar";
-import { useCallback } from "react";
-import { useCart } from "@/hooks/useCart";
 
 export const meta: MetaFunction = () => {
   return [
@@ -78,11 +75,13 @@ export const action: ActionFunction = async ({ request }) => {
   const formdata = await request.formData();
   const values = Object.fromEntries(formdata);
 
-  if ("addToCart" in values) {
-    const { _id, price } = JSON.parse(values.addToCart as string);
+  console.log(values);
+
+  if (values.name === "addToCart") {
+    const { price, courseId } = values;
 
     try {
-      await axiosInstance.post(`/api/cart/${_id}`, {
+      await axiosInstance.post(`/api/cart/${courseId}`, {
         price,
       });
     } catch (error) {
@@ -98,47 +97,6 @@ export default function Homepage() {
     courses: Course[];
     user: User | null;
   };
-
-  const { setCart } = useCart();
-
-  const fetcher = useFetcher();
-
-  const optimisticAddToCart = useCallback(
-    (course: Course) => {
-      setCart((prev) => {
-        if (!prev) {
-          return {
-            userId: "",
-            _id: "",
-            items: [
-              {
-                addedAt: new Date(),
-                courseId: course,
-                priceAtAddition: course.price,
-              },
-            ],
-            totalItems: 1,
-            totalPrice: course.price,
-          };
-        }
-
-        return {
-          ...prev,
-          items: [
-            ...prev.items,
-            {
-              addedAt: new Date(),
-              courseId: course,
-              priceAtAddition: course.price,
-            },
-          ],
-          totalItems: prev.totalItems + 1,
-          totalPrice: prev.totalPrice + course.price,
-        };
-      });
-    },
-    [setCart],
-  );
 
   return (
     <MaxWithWrapper>
@@ -226,11 +184,7 @@ export default function Homepage() {
           </h2>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
             {courses?.map((course) => (
-              <CourseCard
-                key={course._id}
-                course={course}
-                optimisticAddToCart={optimisticAddToCart}
-              />
+              <CourseCard key={course._id} course={course} />
             ))}
           </div>
         </section>

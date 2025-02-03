@@ -15,11 +15,12 @@ import {
   destroySession,
   getSession,
 } from "./lib/utils";
-import type { User } from "./types";
+import type { Cart, User } from "./types";
 import { axiosInstance } from "./config/axios";
 import { useNavigation, data as res } from "react-router";
 import { GlobalPendingUI } from "./components/skeletons/GlobalPendingUI";
 import { CartProvider } from "./context/cartContext";
+import { getCartItems, getMe } from "./lib/user";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const session = await getSession(request.headers.get("Cookie"));
@@ -28,15 +29,21 @@ export const loader: LoaderFunction = async ({ request }) => {
   axiosInstance.defaults.headers.common["Authorization"] =
     `Bearer ${token}`;
   try {
-    const { data } = await axiosInstance.get<User>("/api/users/me");
+    const [user, cart] = await Promise.all([getMe(), getCartItems()]);
 
-    session.set("user", data.data);
+    if (user) session.set("user", user.data);
 
-    return res(data.data, {
-      headers: {
-        "Set-Cookie": await commitSession(session),
+    return res(
+      {
+        user: user?.data,
+        cart: cart?.data,
       },
-    });
+      {
+        headers: {
+          "Set-Cookie": await commitSession(session),
+        },
+      },
+    );
   } catch (error) {
     const message = (error as Error).message;
     session.flash("error", message);
@@ -50,7 +57,11 @@ export const loader: LoaderFunction = async ({ request }) => {
 };
 
 export default function App() {
-  const user = useLoaderData<User | null>();
+  const data = useLoaderData() as {
+    user: User | null;
+    cart: Cart | null;
+  };
+
   const navigation = useNavigation();
 
   const isNavigating = navigation.state === "loading";
@@ -67,8 +78,8 @@ export default function App() {
         <Links />
       </head>
       <body suppressHydrationWarning>
-        <CartProvider>
-          <Header user={user} />
+        <CartProvider initalCart={data?.cart}>
+          <Header user={data?.user} />
           {isNavigating ? (
             <GlobalPendingUI />
           ) : (

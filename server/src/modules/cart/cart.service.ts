@@ -114,7 +114,6 @@ export class CartService {
         { new: true },
       );
 
-      console.log(deletedItem);
       return {
         message: 'Item deleted successfully',
         data: deletedItem,

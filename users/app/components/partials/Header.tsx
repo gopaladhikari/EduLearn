@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import { Logo } from "./Logo";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,6 +27,7 @@ import { MaxWithWrapper } from "./MaxWidthWrapper";
 import { CourseCategory } from "@/constant/data";
 import type { User } from "@/types";
 import { ShoppingCart } from "lucide-react";
+import { useCart } from "@/hooks/useCart";
 
 function UserMenu({ user }: { user: User }) {
   return (
@@ -116,6 +117,8 @@ function UserMenu({ user }: { user: User }) {
 }
 
 export function Header({ user }: { user: User | null }) {
+  const { cart } = useCart();
+
   return (
     <header className="shadow-md dark:border-b dark:shadow-none">
       <MaxWithWrapper as="search" className="py-5">
@@ -157,7 +160,19 @@ export function Header({ user }: { user: User | null }) {
           <div className="ml-auto flex items-center gap-4">
             {user ? (
               <>
-                <Link to="/cart">
+                <Link
+                  to="/cart"
+                  className={cn(
+                    buttonVariants({
+                      variant: "secondary",
+                      size: "icon",
+                    }),
+                    "relative",
+                  )}
+                >
+                  <span className="absolute -right-2 -top-2 grid h-6 w-6 place-content-center rounded-full bg-primary text-white">
+                    {cart?.totalItems ?? 0}
+                  </span>
                   <ShoppingCart size={16} />
                 </Link>
                 <UserMenu user={user} />

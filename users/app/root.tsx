@@ -19,6 +19,7 @@ import type { User } from "./types";
 import { axiosInstance } from "./config/axios";
 import { useNavigation, data as res } from "react-router";
 import { GlobalPendingUI } from "./components/skeletons/GlobalPendingUI";
+import { CartProvider } from "./context/cartContext";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const session = await getSession(request.headers.get("Cookie"));
@@ -66,15 +67,17 @@ export default function App() {
         <Links />
       </head>
       <body suppressHydrationWarning>
-        <Header user={user} />
-        {isNavigating ? (
-          <GlobalPendingUI />
-        ) : (
-          <main>
-            <Outlet />
-          </main>
-        )}
-        <Footer />
+        <CartProvider>
+          <Header user={user} />
+          {isNavigating ? (
+            <GlobalPendingUI />
+          ) : (
+            <main>
+              <Outlet />
+            </main>
+          )}
+          <Footer />
+        </CartProvider>
         <ScrollRestoration />
         <Scripts />
       </body>

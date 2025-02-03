@@ -9,6 +9,7 @@ import {
   MetaFunction,
   useLoaderData,
   type ActionFunction,
+  useFetcher,
 } from "react-router";
 import { Award, BookOpen, Play, Users } from "lucide-react";
 import { getSession } from "@/lib/utils";
@@ -17,6 +18,8 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/components/ui/avatar";
+import { useCallback } from "react";
+import { useCart } from "@/hooks/useCart";
 
 export const meta: MetaFunction = () => {
   return [
@@ -95,6 +98,47 @@ export default function Homepage() {
     courses: Course[];
     user: User | null;
   };
+
+  const { setCart } = useCart();
+
+  const fetcher = useFetcher();
+
+  const optimisticAddToCart = useCallback(
+    (course: Course) => {
+      setCart((prev) => {
+        if (!prev) {
+          return {
+            userId: "",
+            _id: "",
+            items: [
+              {
+                addedAt: new Date(),
+                courseId: course,
+                priceAtAddition: course.price,
+              },
+            ],
+            totalItems: 1,
+            totalPrice: course.price,
+          };
+        }
+
+        return {
+          ...prev,
+          items: [
+            ...prev.items,
+            {
+              addedAt: new Date(),
+              courseId: course,
+              priceAtAddition: course.price,
+            },
+          ],
+          totalItems: prev.totalItems + 1,
+          totalPrice: prev.totalPrice + course.price,
+        };
+      });
+    },
+    [setCart],
+  );
 
   return (
     <MaxWithWrapper>
@@ -182,7 +226,11 @@ export default function Homepage() {
           </h2>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
             {courses?.map((course) => (
-              <CourseCard key={course._id} {...course} />
+              <CourseCard
+                key={course._id}
+                course={course}
+                optimisticAddToCart={optimisticAddToCart}
+              />
             ))}
           </div>
         </section>

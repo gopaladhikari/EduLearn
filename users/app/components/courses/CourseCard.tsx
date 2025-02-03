@@ -8,30 +8,27 @@ import {
 import type { Course } from "@/types";
 import { Star } from "lucide-react";
 import { Button } from "../ui/button";
-import { Form, Link } from "react-router";
+import { Link } from "react-router";
 
-export function CourseCard({
-  _id,
-  category,
-  description,
-  price,
-  slug,
-  title,
-  thumbnail,
-}: Course) {
+type Props = {
+  optimisticAddToCart: (course: Course) => void;
+  course: Course;
+};
+
+export function CourseCard({ course, optimisticAddToCart }: Props) {
   return (
     <Card className="group">
       <CardHeader>
-        <Link to={`/courses/${slug}`}>
+        <Link to={`/courses/${course.slug}`}>
           <img
-            src={thumbnail}
-            alt={title}
+            src={course.thumbnail}
+            alt={course.title}
             className="h-48 w-full object-cover"
           />
         </Link>
         <div className="mb-2 flex items-center gap-2">
           <span className="rounded-full py-1 text-sm text-blue-600">
-            {category}
+            {course.category}
           </span>
           <div className="flex items-center text-yellow-400">
             <Star className="h-4 w-4 fill-current" />
@@ -39,26 +36,28 @@ export function CourseCard({
           </div>
         </div>
         <CardTitle className="transition-colors group-hover:text-primary">
-          <Link to={`/courses/${slug}`}>{title}</Link>
+          <Link to={`/courses/${course.slug}`}>{course.title}</Link>
         </CardTitle>
         <CardDescription className="line-clamp-3">
-          {description}
+          {course.description}
         </CardDescription>
       </CardHeader>
       <CardFooter className="flex items-center justify-between">
         <span className="text-2xl font-bold text-blue-600">
-          ${price}
+          ${course.price}
         </span>
 
-        <Form method="post" navigate={false}>
-          <Button
-            className="bg-blue-600 hover:bg-blue-700"
-            name="addToCart"
-            value={JSON.stringify({ _id, price })}
-          >
-            Add to cart
-          </Button>
-        </Form>
+        <Button
+          className="bg-blue-600 hover:bg-blue-700"
+          name="addToCart"
+          onClick={() => optimisticAddToCart(course)}
+          value={JSON.stringify({
+            _id: course._id,
+            price: course.price,
+          })}
+        >
+          Add to cart
+        </Button>
       </CardFooter>
     </Card>
   );

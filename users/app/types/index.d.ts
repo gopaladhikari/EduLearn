@@ -98,5 +98,5 @@ export type Cart = {
   userId: string;
   totalPrice: number;
   totalItems: number;
-  items: ReadonlyArray<CartItem>;
+  items: Array<CartItem>;
 };

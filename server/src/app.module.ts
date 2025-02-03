@@ -18,8 +18,8 @@ import { CartModule } from './modules/cart/cart.module';
     ThrottlerModule.forRoot([
       {
         name: 'short',
-        ttl: 2000, // 2 second
-        limit: 3,
+        ttl: 3000, // 3 second
+        limit: 10,
       },
       {
         name: 'long',

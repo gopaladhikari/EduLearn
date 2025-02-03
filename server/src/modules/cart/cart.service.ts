@@ -39,7 +39,6 @@ export class CartService {
         totalItems += 1;
       });
 
-      console.log('cart', cart);
       return {
         message: 'Cart fetched successfully',
         data: {

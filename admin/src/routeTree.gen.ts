@@ -19,6 +19,8 @@ import { Route as AuthImport } from './routes/_auth'
 import { Route as UnprotectedIndexImport } from './routes/_unprotected/index'
 import { Route as UnprotectedTermsAndConditionImport } from './routes/_unprotected/terms-and-condition'
 import { Route as UnprotectedPrivacyPolicyImport } from './routes/_unprotected/privacy-policy'
+import { Route as ProtectedNotificationsImport } from './routes/_protected/notifications'
+import { Route as ProtectedMessagesImport } from './routes/_protected/messages'
 import { Route as ProtectedDashboardImport } from './routes/_protected/dashboard'
 import { Route as ProtectedCustomersImport } from './routes/_protected/customers'
 import { Route as AuthVerifyEmailImport } from './routes/_auth/verify-email'
@@ -82,6 +84,18 @@ const UnprotectedPrivacyPolicyRoute = UnprotectedPrivacyPolicyImport.update({
   id: '/privacy-policy',
   path: '/privacy-policy',
   getParentRoute: () => UnprotectedRoute,
+} as any)
+
+const ProtectedNotificationsRoute = ProtectedNotificationsImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+
+const ProtectedMessagesRoute = ProtectedMessagesImport.update({
+  id: '/messages',
+  path: '/messages',
+  getParentRoute: () => ProtectedRoute,
 } as any)
 
 const ProtectedDashboardRoute = ProtectedDashboardImport.update({
@@ -270,6 +284,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedDashboardImport
       parentRoute: typeof ProtectedImport
     }
+    '/_protected/messages': {
+      id: '/_protected/messages'
+      path: '/messages'
+      fullPath: '/messages'
+      preLoaderRoute: typeof ProtectedMessagesImport
+      parentRoute: typeof ProtectedImport
+    }
+    '/_protected/notifications': {
+      id: '/_protected/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof ProtectedNotificationsImport
+      parentRoute: typeof ProtectedImport
+    }
     '/_unprotected/privacy-policy': {
       id: '/_unprotected/privacy-policy'
       path: '/privacy-policy'
@@ -436,6 +464,8 @@ const ProtectedSettingsRouteWithChildren =
 interface ProtectedRouteChildren {
   ProtectedCustomersRoute: typeof ProtectedCustomersRoute
   ProtectedDashboardRoute: typeof ProtectedDashboardRoute
+  ProtectedMessagesRoute: typeof ProtectedMessagesRoute
+  ProtectedNotificationsRoute: typeof ProtectedNotificationsRoute
   ProtectedAnalyticsSlugRoute: typeof ProtectedAnalyticsSlugRoute
   ProtectedCoursesSlugRoute: typeof ProtectedCoursesSlugRoute
   ProtectedCoursesAddRoute: typeof ProtectedCoursesAddRoute
@@ -447,6 +477,8 @@ interface ProtectedRouteChildren {
 const ProtectedRouteChildren: ProtectedRouteChildren = {
   ProtectedCustomersRoute: ProtectedCustomersRoute,
   ProtectedDashboardRoute: ProtectedDashboardRoute,
+  ProtectedMessagesRoute: ProtectedMessagesRoute,
+  ProtectedNotificationsRoute: ProtectedNotificationsRoute,
   ProtectedAnalyticsSlugRoute: ProtectedAnalyticsSlugRoute,
   ProtectedCoursesSlugRoute: ProtectedCoursesSlugRoute,
   ProtectedCoursesAddRoute: ProtectedCoursesAddRoute,
@@ -484,6 +516,8 @@ export interface FileRoutesByFullPath {
   '/verify-email': typeof AuthVerifyEmailRoute
   '/customers': typeof ProtectedCustomersRoute
   '/dashboard': typeof ProtectedDashboardRoute
+  '/messages': typeof ProtectedMessagesRoute
+  '/notifications': typeof ProtectedNotificationsRoute
   '/privacy-policy': typeof UnprotectedPrivacyPolicyRoute
   '/terms-and-condition': typeof UnprotectedTermsAndConditionRoute
   '/': typeof UnprotectedIndexRoute
@@ -509,6 +543,8 @@ export interface FileRoutesByTo {
   '/verify-email': typeof AuthVerifyEmailRoute
   '/customers': typeof ProtectedCustomersRoute
   '/dashboard': typeof ProtectedDashboardRoute
+  '/messages': typeof ProtectedMessagesRoute
+  '/notifications': typeof ProtectedNotificationsRoute
   '/privacy-policy': typeof UnprotectedPrivacyPolicyRoute
   '/terms-and-condition': typeof UnprotectedTermsAndConditionRoute
   '/': typeof UnprotectedIndexRoute
@@ -536,6 +572,8 @@ export interface FileRoutesById {
   '/_auth/verify-email': typeof AuthVerifyEmailRoute
   '/_protected/customers': typeof ProtectedCustomersRoute
   '/_protected/dashboard': typeof ProtectedDashboardRoute
+  '/_protected/messages': typeof ProtectedMessagesRoute
+  '/_protected/notifications': typeof ProtectedNotificationsRoute
   '/_unprotected/privacy-policy': typeof UnprotectedPrivacyPolicyRoute
   '/_unprotected/terms-and-condition': typeof UnprotectedTermsAndConditionRoute
   '/_unprotected/': typeof UnprotectedIndexRoute
@@ -564,6 +602,8 @@ export interface FileRouteTypes {
     | '/verify-email'
     | '/customers'
     | '/dashboard'
+    | '/messages'
+    | '/notifications'
     | '/privacy-policy'
     | '/terms-and-condition'
     | '/'
@@ -588,6 +628,8 @@ export interface FileRouteTypes {
     | '/verify-email'
     | '/customers'
     | '/dashboard'
+    | '/messages'
+    | '/notifications'
     | '/privacy-policy'
     | '/terms-and-condition'
     | '/'
@@ -613,6 +655,8 @@ export interface FileRouteTypes {
     | '/_auth/verify-email'
     | '/_protected/customers'
     | '/_protected/dashboard'
+    | '/_protected/messages'
+    | '/_protected/notifications'
     | '/_unprotected/privacy-policy'
     | '/_unprotected/terms-and-condition'
     | '/_unprotected/'
@@ -673,6 +717,8 @@ export const routeTree = rootRoute
       "children": [
         "/_protected/customers",
         "/_protected/dashboard",
+        "/_protected/messages",
+        "/_protected/notifications",
         "/_protected/analytics/$slug",
         "/_protected/courses/$slug",
         "/_protected/courses/add",
@@ -715,6 +761,14 @@ export const routeTree = rootRoute
     },
     "/_protected/dashboard": {
       "filePath": "_protected/dashboard.tsx",
+      "parent": "/_protected"
+    },
+    "/_protected/messages": {
+      "filePath": "_protected/messages.tsx",
+      "parent": "/_protected"
+    },
+    "/_protected/notifications": {
+      "filePath": "_protected/notifications.tsx",
       "parent": "/_protected"
     },
     "/_unprotected/privacy-policy": {

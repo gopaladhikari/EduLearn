@@ -9,15 +9,15 @@ import {
   UseGuards,
   UseInterceptors,
   ForbiddenException,
-  UploadedFile,
   ValidationPipe,
   BadRequestException,
   Query,
+  UploadedFiles,
 } from '@nestjs/common';
 import { CoursesService } from './courses.service';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { JwtGuard } from '../auth/guards/jwt-auth.guard';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { CurrentUser } from '../auth/current-user.decorator';
 import { isValidObjectId } from 'mongoose';
 import type { UserDocument } from '../users/entities/user.entity';
@@ -50,22 +50,40 @@ export class CoursesController {
 
   @Post()
   @UseGuards(JwtGuard)
-  @UseInterceptors(FileInterceptor('video'))
+  @UseInterceptors(
+    FileFieldsInterceptor([
+      {
+        name: 'video',
+        maxCount: 1,
+      },
+      {
+        name: 'thumbnail',
+        maxCount: 1,
+      },
+    ]),
+  )
   createCourse(
     @Body(ValidationPipe) createCourseDto: CreateCourseDto,
     @CurrentUser() user: UserDocument,
-    @UploadedFile() video: Express.Multer.File,
+    @UploadedFiles()
+    files: {
+      video?: Express.Multer.File[];
+      thumbnail?: Express.Multer.File[];
+    },
   ) {
     if (user.role !== 'admin')
       throw new ForbiddenException(
         'You are not authorized to create a course',
       );
 
-    if (!video) throw new BadRequestException('Video is required');
+    if (!files.video || !files.thumbnail)
+      throw new BadRequestException(
+        'Both video and thumbnail are required',
+      );
 
     return this.coursesService.createCourse(
       user,
-      video,
+      files,
       createCourseDto,
     );
   }

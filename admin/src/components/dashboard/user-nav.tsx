@@ -20,16 +20,17 @@ import { logoutMutation } from "@/lib/mutations/auth.mutation";
 import { SessionStorage } from "@/config/constants";
 import { toast } from "@/hooks/use-toast";
 import { queryClient } from "@/main";
+import { User } from "lucide-react";
 
 export function UserNav() {
-  const { user, setIsLoggedIn, setUser } = useAuth();
+  const { user, setUser } = useAuth();
   const navigate = useNavigate();
 
   const { mutate, isPending } = useMutation({
     mutationFn: logoutMutation,
     onSuccess: () => {
       sessionStorage.removeItem(SessionStorage.IS_LOGGED_IN);
-      setIsLoggedIn(false);
+
       setUser(null);
 
       navigate({
@@ -54,16 +55,18 @@ export function UserNav() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Avatar className="cursor-pointer">
-          <AvatarImage src={user?.avatar.url} />
-          <AvatarFallback>{user?.fullName?.charAt(0)}</AvatarFallback>
+          <AvatarImage src={user?.avatar?.url} />
+          <AvatarFallback>
+            {user?.fullName ? user?.fullName?.charAt(0) : <User />}
+          </AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-72" align="end">
+      <DropdownMenuContent className="z-[10000] w-72" align="end">
         <DropdownMenuLabel className="flex items-start gap-6">
           <Avatar className="cursor-pointer">
-            <AvatarImage src={user?.avatar.url} />
+            <AvatarImage src={user?.avatar?.url} />
             <AvatarFallback>
-              {user?.fullName?.charAt(0)}
+              {user?.fullName ? user?.fullName?.charAt(0) : <User />}
             </AvatarFallback>
           </Avatar>
           <div>
@@ -76,30 +79,20 @@ export function UserNav() {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem>
-            <Link href="/my-courses" className="w-full">
+            <Link to="/courses" className="w-full">
               My learning
-            </Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <Link href="/cart" className="w-full">
-              My cart
-            </Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <Link href="/wishlist" className="w-full">
-              Wishlist
             </Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem>
-            <Link href="/notifications" className="w-full">
+            <Link to="/notifications" className="w-full">
               Notifications
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <Link href="/messages" className="w-full">
+            <Link to="/messages" className="w-full">
               Messages
             </Link>
           </DropdownMenuItem>
@@ -107,20 +100,7 @@ export function UserNav() {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem>
-            <Link href="/edit-account" className="w-full">
-              Account Settings
-            </Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <Link href="/purchase-history" className="w-full">
-              Purchase history
-            </Link>
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
-        <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <DropdownMenuItem>
-            <Link href="/support" target="_blank" className="w-full">
+            <Link to="/" target="_blank" className="w-full">
               Help and support
             </Link>
           </DropdownMenuItem>

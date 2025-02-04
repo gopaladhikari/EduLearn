@@ -4,8 +4,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import type { CourseAnalytics } from "@/routes/_protected/analytics/$slug";
 
-export const FeedbackSection = ({ analytics }) => {
+export const FeedbackSection = ({
+  analytics,
+}: {
+  analytics: CourseAnalytics;
+}) => {
   return (
     <Card className="mt-8">
       <CardHeader>

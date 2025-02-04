@@ -20,7 +20,7 @@ import {
   FileUploaderItem,
 } from "@/components/ui/file-upload";
 import { useState } from "react";
-import { CloudUpload, Paperclip } from "lucide-react";
+import { CloudUpload, Paperclip, User } from "lucide-react";
 import type { DropzoneOptions } from "react-dropzone";
 import { toast } from "@/hooks/use-toast";
 import { queryClient } from "@/main";
@@ -55,7 +55,7 @@ export function AvatarForm() {
         return {
           ...prev,
           avatar: {
-            url: data.data.avatar.url,
+            url: data.data.avatar?.url,
             publicId: data.data.avatar.publicId,
           },
         };
@@ -103,9 +103,13 @@ export function AvatarForm() {
                   <div className="flex items-start justify-between">
                     <strong>Avatar</strong>
                     <Avatar className="h-14 w-14 cursor-pointer">
-                      <AvatarImage src={user?.avatar.url} />
+                      <AvatarImage src={user?.avatar?.url} />
                       <AvatarFallback>
-                        {user?.fullName?.charAt(0)}
+                        {user?.fullName ? (
+                          user?.fullName?.charAt(0)
+                        ) : (
+                          <User />
+                        )}
                       </AvatarFallback>
                     </Avatar>
                   </div>

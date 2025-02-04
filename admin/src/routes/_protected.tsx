@@ -10,11 +10,15 @@ import {
 export const Route = createFileRoute("/_protected")({
   component: RouteComponent,
   notFoundComponent: NotFound,
-  beforeLoad({ context }) {
-    if (!context.isLoggedIn)
+  beforeLoad({ context, location }) {
+    if (!context.isLoggedIn) {
       throw redirect({
         to: "/login",
+        search: {
+          redirect: location.pathname,
+        },
       });
+    }
   },
   pendingComponent: Loading,
 });

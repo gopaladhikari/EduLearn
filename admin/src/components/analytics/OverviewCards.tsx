@@ -4,9 +4,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import type { CourseAnalytics } from "@/routes/_protected/analytics/$slug";
 import { Users, DollarSign, BarChart2, Star } from "lucide-react";
 
-export const OverviewCards = ({ analytics }) => {
+export const OverviewCards = ({
+  analytics,
+}: {
+  analytics: CourseAnalytics;
+}) => {
   return (
     <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
       <Card>

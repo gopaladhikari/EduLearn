@@ -29,12 +29,11 @@ export const Route = createFileRoute("/_auth/login")({
 function RouteComponent() {
   const navigate = useNavigate();
 
-  const { setIsLoggedIn, setUser } = useAuth();
+  const { setUser } = useAuth();
 
   const mutation = useMutation({
     mutationFn: loginMutation,
     onSuccess(data) {
-      setIsLoggedIn(true);
       sessionStorage.setItem(SessionStorage.IS_LOGGED_IN, "true");
       setUser((prev) => {
         return {
@@ -45,7 +44,6 @@ function RouteComponent() {
       navigate({ to: "/dashboard" });
     },
     onError() {
-      setIsLoggedIn(false);
       sessionStorage.removeItem(SessionStorage.IS_LOGGED_IN);
       setUser(null);
     },

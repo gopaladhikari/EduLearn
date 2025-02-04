@@ -54,13 +54,12 @@ function MainNav() {
 }
 
 export function Header() {
-  // const { isLoggedIn } = useAuth();
+  const { isLoggedIn } = useAuth();
 
   return (
     <header
       className={cn(
-        Math.random() > 0.5 &&
-          "sticky inset-0 z-[10000] bg-background",
+        isLoggedIn && "sticky inset-0 z-[10000] bg-background",
         "shadow-lg dark:border-b dark:shadow-none",
       )}
     >
@@ -68,16 +67,12 @@ export function Header() {
         <nav role="navigation">
           <menu className="flex items-center gap-6" role="menu">
             <li
-              className={cn(
-                "text-2xl font-bold text-primary",
-                !Math.random() > 0.5 && "mr-auto",
-              )}
+              className={cn("text-2xl font-bold text-primary")}
               role="menubar"
             >
               <Logo />
             </li>
-            {/* {isLoggedIn ? <AuthNav /> : <MainNav />} */}
-            <AuthNav />
+            {isLoggedIn ? <AuthNav /> : <MainNav />}
           </menu>
         </nav>
       </MaxWithWrapper>

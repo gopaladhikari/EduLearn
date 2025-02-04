@@ -5,8 +5,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Progress } from "../ui/progress";
+import type { CourseAnalytics } from "@/routes/_protected/analytics/$slug";
 
-export const EngagementMetrics = ({ analytics }) => {
+export const EngagementMetrics = ({
+  analytics,
+}: {
+  analytics: CourseAnalytics;
+}) => {
   return (
     <Card className="mt-8">
       <CardHeader>

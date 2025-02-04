@@ -35,46 +35,29 @@ export class CoursesService {
 
   async createCourse(
     user: UserDocument,
-    video: Express.Multer.File,
+    files: {
+      video?: Express.Multer.File[];
+      thumbnail?: Express.Multer.File[];
+    },
     createCourseDto: CreateCourseDto,
   ) {
-    const localFilePath = path.join(process.cwd(), video.path);
+    console.log(createCourseDto);
+    const localVideoPath = path.join(
+      process.cwd(),
+      files.video[0].path,
+    );
+    const localThumbnailPath = path.join(
+      process.cwd(),
+      files.thumbnail[0].path,
+    );
 
-    try {
-      const course = new this.Course({
-        ...createCourseDto,
-        uploadedBy: user._id,
-        slug: createCourseDto.title,
-      });
-
-      if (video && fs.existsSync(localFilePath)) {
-        const result = await this.cloudinary.uploader.upload(
-          localFilePath,
-          {
-            resource_type: 'video',
-            folder: 'EduLearn/courses',
-            transformation: {
-              quality: 'auto',
-              fetch_format: 'auto',
-            },
-            eager_async: true,
-          },
-        );
-        course.video = {
-          url: result.url,
-          publicId: result.public_id,
-        };
-      }
-
-      await course.save();
-      await this.cache.clear();
-
-      return course;
-    } catch (error) {
-      throw new BadRequestException(error.message);
-    } finally {
-      fs.unlinkSync(localFilePath);
-    }
+    return {
+      message: 'Course created successfully',
+      data: {
+        localThumbnailPath,
+        localVideoPath,
+      },
+    };
   }
 
   async getAllCourses(limit: number, skip: number) {

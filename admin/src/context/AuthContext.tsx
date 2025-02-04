@@ -1,68 +1,36 @@
 import { SessionStorage } from "@/config/constants";
-import { me } from "@/lib/queries/users.query";
 import type { User } from "@/types";
-import { useQuery } from "@tanstack/react-query";
-import { createContext, useEffect, useMemo, useState } from "react";
+import {
+  createContext,
+  useMemo,
+  useState,
+  type PropsWithChildren,
+} from "react";
 
 export type AuthContextType = {
   user: User | null;
-  isLoggedIn: boolean;
-  isPending: boolean;
-  setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
+  isLoggedIn: boolean;
 };
 
 const AuthContext = createContext<AuthContextType>({
   isLoggedIn: false,
-  isPending: false,
   user: null,
-  setIsLoggedIn: () => null,
   setUser: () => null,
 });
 
-function AuthProvider({ children }: { children: React.ReactNode }) {
+function AuthProvider({ children }: PropsWithChildren) {
   const [user, setUser] = useState<User | null>(null);
-
-  const sessionLoggedIn =
+  const isLoggedIn =
     sessionStorage.getItem(SessionStorage.IS_LOGGED_IN) === "true";
-
-  const [isLoggedIn, setIsLoggedIn] = useState(sessionLoggedIn);
-
-  const { isSuccess, isPending, data } = useQuery({
-    queryKey: ["me"],
-    queryFn: me,
-    staleTime: 1000 * 60 * 3, // 3 minutes
-    retry: false,
-  });
-
-  useEffect(() => {
-    if (!isPending) {
-      if (isSuccess) {
-        setIsLoggedIn(true);
-        setUser((prev) => {
-          return {
-            ...prev,
-            ...data.data,
-          };
-        });
-        sessionStorage.setItem(SessionStorage.IS_LOGGED_IN, "true");
-      } else {
-        setIsLoggedIn(false);
-        setUser(null);
-        sessionStorage.removeItem(SessionStorage.IS_LOGGED_IN);
-      }
-    }
-  }, [isPending, isSuccess]);
 
   const value = useMemo(
     () => ({
-      isLoggedIn,
-      isPending,
-      setIsLoggedIn,
       user,
       setUser,
+      isLoggedIn,
     }),
-    [isLoggedIn, isPending],
+    [user, isLoggedIn],
   );
 
   return <AuthContext value={value}>{children}</AuthContext>;

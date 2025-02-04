@@ -11,32 +11,34 @@ export const Route = createFileRoute("/_protected/analytics/$slug")({
   component: RouteComponent,
 });
 
+const courseAnalytics = {
+  courseSlug: "water-fall",
+  totalEnrollments: 1000,
+  totalClicks: 8,
+  totalCompletions: 750,
+  averageProgress: 75,
+  activeUsers: 500,
+  totalRevenue: 50000,
+  discountedSales: 200,
+  refunds: 10,
+  averageRating: 4.5,
+  totalReviews: 300,
+  commonFeedback: [
+    "Great course!",
+    "Very informative",
+    "Excellent instructor",
+  ],
+  mostViewedLesson: "Introduction to Waterfalls",
+  dropOffPoint: "Advanced Techniques",
+  totalWatchTime: 10000,
+  popularityScore: 85,
+  trendScore: 92,
+};
+
+export type CourseAnalytics = typeof courseAnalytics;
+
 function RouteComponent() {
   const { slug } = Route.useParams();
-
-  const courseAnalytics = {
-    courseSlug: "water-fall",
-    totalEnrollments: 1000,
-    totalClicks: 8,
-    totalCompletions: 750,
-    averageProgress: 75,
-    activeUsers: 500,
-    totalRevenue: 50000,
-    discountedSales: 200,
-    refunds: 10,
-    averageRating: 4.5,
-    totalReviews: 300,
-    commonFeedback: [
-      "Great course!",
-      "Very informative",
-      "Excellent instructor",
-    ],
-    mostViewedLesson: "Introduction to Waterfalls",
-    dropOffPoint: "Advanced Techniques",
-    totalWatchTime: 10000,
-    popularityScore: 85,
-    trendScore: 92,
-  };
 
   const { data } = useQuery({
     queryKey: ["analytics", slug],

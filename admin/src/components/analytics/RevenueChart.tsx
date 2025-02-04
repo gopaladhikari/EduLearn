@@ -4,6 +4,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import type { CourseAnalytics } from "@/routes/_protected/analytics/$slug";
 import {
   BarChart,
   Bar,
@@ -14,7 +15,11 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-export const RevenueChart = ({ analytics }) => {
+export const RevenueChart = ({
+  analytics,
+}: {
+  analytics: CourseAnalytics;
+}) => {
   const data = [
     { name: "Jan", revenue: 10000 },
     { name: "Feb", revenue: 15000 },

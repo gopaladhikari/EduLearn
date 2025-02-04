@@ -7,10 +7,9 @@ const router = createRouter({
   context: {
     isLoggedIn: undefined!,
     user: undefined!,
-    isPending: undefined!,
-    setIsLoggedIn: undefined!,
     setUser: undefined!,
   },
+  scrollRestoration: true,
 });
 
 declare module "@tanstack/react-router" {
@@ -19,7 +18,7 @@ declare module "@tanstack/react-router" {
   }
 }
 
-export default function TanstackRouterProvider() {
+export function TanstackRouterProvider() {
   const auth = useAuth();
 
   return <RouterProvider router={router} context={auth} />;

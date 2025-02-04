@@ -10,10 +10,13 @@ import {
 export const Route = createFileRoute("/_auth")({
   component: RouteComponent,
   notFoundComponent: NotFound,
-  beforeLoad({ context }) {
+  beforeLoad({ context, location }) {
     if (context.isLoggedIn)
       throw redirect({
         to: "/dashboard",
+        search: {
+          redirect: location.href,
+        },
       });
   },
 });

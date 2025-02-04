@@ -1,6 +1,5 @@
 import { MaxWithWrapper } from "@/components/partials/MaxWithWrapper";
 import { NotFound } from "@/components/partials/NotFound";
-import { Loading } from "@/components/skeletons/Spinner";
 import {
   createFileRoute,
   Outlet,
@@ -20,7 +19,6 @@ export const Route = createFileRoute("/_protected")({
       });
     }
   },
-  pendingComponent: Loading,
 });
 
 function RouteComponent() {

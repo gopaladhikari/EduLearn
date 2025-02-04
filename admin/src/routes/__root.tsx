@@ -10,14 +10,12 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 import { Toaster } from "@/components/ui/toaster";
 import { Header } from "@/components/partials/Header";
-import { Loading } from "@/components/skeletons/Spinner";
 import { me } from "@/lib/queries/users.query";
 import { useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 
 export const Route = createRootRouteWithContext<AuthContextType>()({
   component: Root,
-  pendingComponent: Loading,
   loader: async () => {
     try {
       const { data } = await me();

@@ -36,7 +36,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "@tanstack/react-router";
 import { queryClient } from "@/main";
-import { TinyMCE } from "@/components/courses/TinyMCE";
+import { TipTap } from "@/components/courses/TipTap";
 
 export const Route = createFileRoute("/_protected/courses/add")({
   component: RouteComponent,
@@ -188,7 +188,7 @@ function RouteComponent() {
                         <div {...getRootProps()}>
                           <input {...getInputProps()} />
                           <div className="grid cursor-pointer gap-2">
-                            <div className="flex items-center justify-center rounded-md border-2 border-dashed border-gray-300 p-12 transition-colors focus-within:outline-dashed focus-within:outline-2 focus-within:outline-gray-500 hover:border-gray-400 dark:border-gray-700 dark:focus-within:outline-gray-400 dark:hover:border-gray-600">
+                            <div className="flex items-center justify-center rounded-md border-2 border-dashed border-gray-300 p-12 transition-colors focus-within:outline-2 focus-within:outline-gray-500 focus-within:outline-dashed hover:border-gray-400 dark:border-gray-700 dark:focus-within:outline-gray-400 dark:hover:border-gray-600">
                               {preview ? (
                                 <div className="text-center">
                                   {/* Video Preview */}
@@ -239,7 +239,7 @@ function RouteComponent() {
                         <div {...getRootProps()}>
                           <input {...getInputProps()} />
                           <div className="grid cursor-pointer gap-2">
-                            <div className="flex items-center justify-center rounded-md border-2 border-dashed border-gray-300 p-12 transition-colors focus-within:outline-dashed focus-within:outline-2 focus-within:outline-gray-500 hover:border-gray-400 dark:border-gray-700 dark:focus-within:outline-gray-400 dark:hover:border-gray-600">
+                            <div className="flex items-center justify-center rounded-md border-2 border-dashed border-gray-300 p-12 transition-colors focus-within:outline-2 focus-within:outline-gray-500 focus-within:outline-dashed hover:border-gray-400 dark:border-gray-700 dark:focus-within:outline-gray-400 dark:hover:border-gray-600">
                               {thumbnailPreview ? (
                                 <div className="text-center">
                                   {/*  Preview */}
@@ -302,7 +302,7 @@ function RouteComponent() {
               <FormItem>
                 <FormLabel>Course Description</FormLabel>
                 <FormControl>
-                  <TinyMCE />
+                  <TipTap />
                 </FormControl>
                 <FormDescription>
                   Detailed description about your course.
@@ -412,7 +412,7 @@ function RouteComponent() {
                       {tags.map((tag) => (
                         <div
                           key={tag}
-                          className="flex items-center gap-2 rounded-full bg-primary px-3 py-1 text-sm font-medium"
+                          className="bg-primary flex items-center gap-2 rounded-full px-3 py-1 text-sm font-medium"
                         >
                           {tag}
                           <Button

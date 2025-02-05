@@ -38,7 +38,7 @@ export function PaginationControls({
                     aria-current={
                       i === table?.getState().pagination.pageIndex
                     }
-                    className="cursor-pointer aria-[current='true']:bg-secondary"
+                    className="cursor-pointer aria-current:bg-secondary"
                   >
                     {i + 1}
                   </PaginationLink>
@@ -65,7 +65,7 @@ export function PaginationControls({
                   aria-current={
                     i === table?.getState().pagination.pageIndex
                   }
-                  className="cursor-pointer aria-[current='true']:bg-secondary"
+                  className="cursor-pointer aria-current:bg-secondary"
                 >
                   {i + 1}
                 </PaginationLink>

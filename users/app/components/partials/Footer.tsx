@@ -5,7 +5,7 @@ import { Input } from "../ui/input";
 
 export function Footer() {
   return (
-    <footer className="mt-8 bg-secondary py-12">
+    <footer className="bg-secondary mt-8 py-12">
       <MaxWithWrapper>
         <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
           <div>
@@ -15,7 +15,9 @@ export function Footer() {
             </p>
           </div>
           <div>
-            <h3 className="mb-4 text-lg font-semibold">Quick Links</h3>
+            <h3 className="mb-4 text-lg font-semibold">
+              Quick Links
+            </h3>
             <ul className="space-y-2">
               <li>
                 <Link to="#" className="hover:text-blue-400">

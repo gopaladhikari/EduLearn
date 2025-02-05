@@ -49,7 +49,7 @@ export default function CartItems({ item }: Props) {
   return (
     <Card
       key={item.courseId._id}
-      className="flex items-center space-x-4 rounded-lg bg-white p-4 shadow"
+      className="flex items-center space-x-4 rounded-lg bg-white p-4 shadow-sm"
     >
       <img
         src={item.courseId?.thumbnail}
@@ -58,7 +58,7 @@ export default function CartItems({ item }: Props) {
         height={100}
         className="rounded-md"
       />
-      <div className="flex-grow">
+      <div className="grow">
         <h3 className="font-semibold">{item.courseId.title}</h3>
 
         <p className="mt-1 font-bold">${item.courseId.price}</p>

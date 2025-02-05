@@ -7,7 +7,7 @@ export function NotFound() {
     <>
       <main className="flex">
         <MaxWithWrapper as="section" className="mt-16 lg:mt-24">
-          <div className="max-w-screen-sm text-center">
+          <div className="max-w-(--breakpoint-sm) text-center">
             <h1 className="mb-4 text-7xl font-extrabold tracking-tight lg:text-9xl">
               404
             </h1>

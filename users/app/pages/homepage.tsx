@@ -126,7 +126,7 @@ export default function Homepage() {
             <h1 className="mb-6 transition-colors ease-linear group-hover:text-primary">
               Learn Without Limits
             </h1>
-            <p className="mb-8 text-xl transition-colors ease-linear group-hover:dark:text-stone-300">
+            <p className="mb-8 text-xl transition-colors ease-linear dark:group-hover:text-stone-300">
               Start, switch, or advance your career with thousands of
               courses from expert instructors.
             </p>

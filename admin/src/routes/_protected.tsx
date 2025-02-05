@@ -8,6 +8,18 @@ import {
 
 export const Route = createFileRoute("/_protected")({
   component: RouteComponent,
+  pendingComponent: () => {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <div className="flex flex-col items-center justify-center gap-4 text-center">
+          <h1 className="text-3xl font-bold">Loading...</h1>
+          <p className="text-lg">
+            Please wait while we load the page.
+          </p>
+        </div>
+      </div>
+    );
+  },
   notFoundComponent: NotFound,
   beforeLoad({ context, location }) {
     if (!context.isLoggedIn) {

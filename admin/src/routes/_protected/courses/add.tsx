@@ -3,7 +3,6 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import Dropzone from "react-dropzone";
-
 import {
   Form,
   FormControl,
@@ -13,9 +12,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import {
   CourseCategory,
   courseSchema,
@@ -39,6 +36,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "@tanstack/react-router";
 import { queryClient } from "@/main";
+import { TinyMCE } from "@/components/courses/TinyMCE";
 
 export const Route = createFileRoute("/_protected/courses/add")({
   component: RouteComponent,
@@ -46,6 +44,7 @@ export const Route = createFileRoute("/_protected/courses/add")({
 
 function RouteComponent() {
   const [preview, setPreview] = useState("");
+  const [thumbnailPreview, setThumbnailPreview] = useState("");
   const [tags, setTags] = useState<string[]>([]);
 
   const navigate = useNavigate();
@@ -92,6 +91,7 @@ function RouteComponent() {
   });
 
   const onSubmit: SubmitHandler<CourseSchema> = async (FormData) => {
+    console.log(FormData);
     try {
       const { data } = await axiosInstance.post(
         "/api/courses",
@@ -140,11 +140,28 @@ function RouteComponent() {
     [form],
   );
 
+  const onDropThumbnail = useCallback(
+    (files: File[]) => {
+      const file = files[0];
+      form.setValue("thumbnail", file);
+      form.clearErrors("thumbnail");
+      const thumbnailUrl = URL.createObjectURL(file);
+      setThumbnailPreview(thumbnailUrl);
+    },
+    [form],
+  );
+
   useEffect(() => {
     return () => {
       if (preview) URL.revokeObjectURL(preview);
     };
   }, [preview]);
+
+  useEffect(() => {
+    return () => {
+      if (thumbnailPreview) URL.revokeObjectURL(thumbnailPreview);
+    };
+  }, [thumbnailPreview]);
 
   const selectables = useMemo(() => {
     return data?.data || [];
@@ -153,7 +170,6 @@ function RouteComponent() {
   return (
     <section>
       <h1 className="mb-4">Add New Course</h1>
-
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -212,6 +228,56 @@ function RouteComponent() {
           />
           <FormField
             control={form.control}
+            name="thumbnail"
+            render={() => (
+              <FormItem>
+                <FormLabel>Video Thumbnail</FormLabel>
+                <FormControl>
+                  <Dropzone onDrop={onDropThumbnail}>
+                    {({ getRootProps, getInputProps }) => (
+                      <section>
+                        <div {...getRootProps()}>
+                          <input {...getInputProps()} />
+                          <div className="grid cursor-pointer gap-2">
+                            <div className="flex items-center justify-center rounded-md border-2 border-dashed border-gray-300 p-12 transition-colors focus-within:outline-dashed focus-within:outline-2 focus-within:outline-gray-500 hover:border-gray-400 dark:border-gray-700 dark:focus-within:outline-gray-400 dark:hover:border-gray-600">
+                              {thumbnailPreview ? (
+                                <div className="text-center">
+                                  {/*  Preview */}
+                                  <img
+                                    src={thumbnailPreview}
+                                    className="max-h-64 w-full rounded-md"
+                                  />
+                                  <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                                    Avatar Preview
+                                  </p>
+                                </div>
+                              ) : (
+                                <div className="text-center">
+                                  <UploadIcon className="mx-auto h-8 w-8 text-gray-400" />
+                                  <div className="mt-4 font-medium text-gray-900 dark:text-gray-50">
+                                    Drop files to upload
+                                  </div>
+                                  <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                                    or click to select files
+                                  </p>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </section>
+                    )}
+                  </Dropzone>
+                </FormControl>
+                <FormDescription>
+                  The video of your course
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
             name="title"
             render={({ field }) => (
               <FormItem>
@@ -232,19 +298,14 @@ function RouteComponent() {
           <FormField
             control={form.control}
             name="description"
-            render={({ field }) => (
+            render={() => (
               <FormItem>
                 <FormLabel>Course Description</FormLabel>
                 <FormControl>
-                  <Textarea
-                    rows={5}
-                    placeholder="Enter course description"
-                    {...field}
-                  />
+                  <TinyMCE />
                 </FormControl>
                 <FormDescription>
-                  A brief description of your course (max 500
-                  characters)
+                  Detailed description about your course.
                 </FormDescription>
                 <FormMessage />
               </FormItem>

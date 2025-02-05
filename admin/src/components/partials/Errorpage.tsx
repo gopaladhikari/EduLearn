@@ -7,7 +7,7 @@ export function ErrorPage() {
       <Header />
       <main>
         <MaxWithWrapper as="section">
-          <div className="mx-auto mt-32 max-w-screen-sm text-center">
+          <div className="mx-auto mt-32 max-w-(--breakpoint-sm) text-center">
             <h1 className="mb-4 text-7xl font-extrabold tracking-tight lg:text-8xl">
               500
             </h1>

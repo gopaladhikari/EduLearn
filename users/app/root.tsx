@@ -17,8 +17,7 @@ import {
 } from "./lib/utils";
 import type { Cart, User } from "./types";
 import { axiosInstance } from "./config/axios";
-import { useNavigation, data as res } from "react-router";
-import { GlobalPendingUI } from "./components/skeletons/GlobalPendingUI";
+import { data as res } from "react-router";
 import { CartProvider } from "./context/cartContext";
 import { getCartItems, getMe } from "./lib/user";
 
@@ -56,15 +55,15 @@ export const loader: LoaderFunction = async ({ request }) => {
   }
 };
 
+export function HydrationFallback() {
+  return <div>Loading...</div>;
+}
+
 export default function App() {
   const data = useLoaderData() as {
     user: User | null;
     cart: Cart | null;
   };
-
-  const navigation = useNavigation();
-
-  const isNavigating = navigation.state === "loading";
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -80,13 +79,10 @@ export default function App() {
       <body suppressHydrationWarning>
         <CartProvider initalCart={data?.cart}>
           <Header user={data?.user} />
-          {isNavigating ? (
-            <GlobalPendingUI />
-          ) : (
-            <main>
-              <Outlet />
-            </main>
-          )}
+
+          <main>
+            <Outlet />
+          </main>
           <Footer />
         </CartProvider>
         <ScrollRestoration />

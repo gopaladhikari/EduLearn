@@ -151,7 +151,7 @@ export function Header({ user }: { user: User | null }) {
                   <input
                     placeholder="Search"
                     name="q"
-                    className="w-full rounded-md border border-black bg-transparent px-4 py-2 text-sm placeholder:text-sm focus:outline-none dark:border-white/40"
+                    className="w-full rounded-md border border-black bg-transparent px-4 py-2 text-sm placeholder:text-sm focus:outline-hidden dark:border-white/40"
                   />
                 </Form>
               </NavigationMenuItem>

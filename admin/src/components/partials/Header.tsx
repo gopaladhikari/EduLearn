@@ -59,15 +59,15 @@ export function Header() {
   return (
     <header
       className={cn(
-        isLoggedIn && "sticky inset-0 z-[10000] bg-background",
-        "shadow-lg dark:border-b dark:shadow-none",
+        isLoggedIn && "bg-background sticky inset-0 z-10000",
+        "border-secondary shadow-lg dark:border-b dark:shadow-none",
       )}
     >
       <MaxWithWrapper as="section">
         <nav role="navigation">
           <menu className="flex items-center gap-6" role="menu">
             <li
-              className={cn("text-2xl font-bold text-primary")}
+              className={cn("text-primary text-2xl font-bold")}
               role="menubar"
             >
               <Logo />

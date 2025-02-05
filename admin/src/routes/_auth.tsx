@@ -26,7 +26,7 @@ function RouteComponent() {
     <MaxWithWrapper as="section">
       <div className="grid gap-8 md:grid-cols-2">
         <div className="md:order-2">
-          <div className="space-y-6 md:max-w-screen-sm">
+          <div className="space-y-6 md:max-w-(--breakpoint-sm)">
             <Outlet />
             <p className="px-8 text-center text-sm text-muted-foreground">
               By clicking continue, you agree to our{" "}

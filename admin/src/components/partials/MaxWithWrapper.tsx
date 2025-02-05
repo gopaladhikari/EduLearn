@@ -12,7 +12,7 @@ export function MaxWithWrapper({
 }: Props) {
   return (
     <Component
-      className={cn("mx-auto max-w-screen-xl p-4", className)}
+      className={cn("mx-auto max-w-(--breakpoint-xl) p-4", className)}
       {...prop}
     >
       {children}

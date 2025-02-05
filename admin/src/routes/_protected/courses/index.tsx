@@ -119,7 +119,7 @@ function RouteComponent() {
     <>
       <h1>All Courses</h1>
       <section className="flex items-center gap-6">
-        <div className="flex w-1/3 items-center gap-4 rounded-md border-2 px-4 py-2 focus-within:border-primary">
+        <div className="focus-within:border-primary flex w-1/3 items-center gap-4 rounded-md border-2 px-4 py-2">
           <Search size={18} />
           <input
             id="filter-courses"
@@ -134,7 +134,7 @@ function RouteComponent() {
                 .getColumn("title")
                 ?.setFilterValue(event.target.value)
             }
-            className="bg-transparent placeholder:text-sm focus:outline-none group-active:border-primary"
+            className="group-active:border-primary bg-transparent placeholder:text-sm focus:outline-hidden"
           />
         </div>
 
@@ -191,7 +191,7 @@ function RouteComponent() {
       {isPending ? (
         <TableSkeleton
           page={tableRowCount}
-          className="mt-72 min-h-[407px]"
+          className="min-h-[407px]"
         />
       ) : (
         <section className="min-h-[407px]">

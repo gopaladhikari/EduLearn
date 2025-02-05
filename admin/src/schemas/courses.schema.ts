@@ -86,6 +86,9 @@ export const courseSchema = z.object({
   video: z.instanceof(File).refine((file) => file.size > 0, {
     message: "The uploaded file must be a valid video format",
   }),
+  thumbnail: z.instanceof(File).refine((file) => file.size > 0, {
+    message: "The uploaded file must be a valid image format",
+  }),
   category: z.nativeEnum(CourseCategory),
   tags: z.string().array().optional(),
 });

@@ -105,11 +105,7 @@ export function AvatarForm() {
                     <Avatar className="h-14 w-14 cursor-pointer">
                       <AvatarImage src={user?.avatar?.url} />
                       <AvatarFallback>
-                        {user?.fullName ? (
-                          user?.fullName?.charAt(0)
-                        ) : (
-                          <User />
-                        )}
+                        <User />
                       </AvatarFallback>
                     </Avatar>
                   </div>

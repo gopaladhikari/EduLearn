@@ -3,9 +3,15 @@ import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 import * as path from "path";
 import netlifyPlugin from "@netlify/vite-plugin-react-router";
+import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
-  plugins: [reactRouter(), tsconfigPaths(), netlifyPlugin()],
+  plugins: [
+    reactRouter(),
+    tsconfigPaths(),
+    netlifyPlugin(),
+    tailwindcss(),
+  ],
   server: {
     port: 3002,
   },

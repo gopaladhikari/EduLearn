@@ -56,22 +56,18 @@ export function UserNav() {
       <DropdownMenuTrigger asChild>
         <Avatar className="cursor-pointer">
           <AvatarImage src={user?.avatar?.url} />
-          <AvatarFallback>
-            {user?.fullName ? user?.fullName?.charAt(0) : <User />}
-          </AvatarFallback>
+          <AvatarFallback>{<User />}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="z-[10000] w-72" align="end">
+      <DropdownMenuContent className="z-10000 w-72" align="end">
         <DropdownMenuLabel className="flex items-start gap-6">
           <Avatar className="cursor-pointer">
             <AvatarImage src={user?.avatar?.url} />
-            <AvatarFallback>
-              {user?.fullName ? user?.fullName?.charAt(0) : <User />}
-            </AvatarFallback>
+            <AvatarFallback>{<User />}</AvatarFallback>
           </Avatar>
           <div>
             <strong>{user?.fullName}</strong>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-muted-foreground text-sm">
               {user?.email}
             </p>
           </div>

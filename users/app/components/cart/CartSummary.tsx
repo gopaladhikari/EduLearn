@@ -15,7 +15,7 @@ export default function CartSummary({ totalPrice }: Partial<Cart>) {
   };
 
   return (
-    <div className="rounded-lg bg-white p-6 shadow">
+    <div className="rounded-lg bg-white p-6 shadow-sm">
       <h2 className="mb-4 text-xl font-semibold">Order Summary</h2>
       <div className="mb-4 space-y-2">
         <div className="flex justify-between">

@@ -37,13 +37,13 @@ function Input({
   };
 
   return (
-    <div className="relative flex h-9 w-full rounded-md border border-input px-3 py-1 shadow-sm transition-colors focus-within:border-primary">
+    <div className="relative flex h-9 w-full rounded-md border border-input px-3 py-1 shadow-xs transition-colors focus-within:border-primary">
       <input
         type={inputType}
         value={value}
         onChange={handleChange}
         className={cn(
-          "w-full bg-transparent text-base outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+          "w-full bg-transparent text-base outline-hidden placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
           className,
         )}
         {...props}

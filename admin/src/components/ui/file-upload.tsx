@@ -242,7 +242,7 @@ export const FileUploader = forwardRef<
           tabIndex={0}
           onKeyDownCapture={handleKeyDown}
           className={cn(
-            "grid w-full overflow-hidden focus:outline-none",
+            "grid w-full overflow-hidden focus:outline-hidden",
             className,
             {
               "gap-2": value && value.length > 0,
@@ -361,7 +361,7 @@ export const FileInput = forwardRef<
         ref={dropzoneState.inputRef}
         disabled={isLOF}
         {...dropzoneState.getInputProps()}
-        className={cn("!hidden", isLOF && "cursor-not-allowed")}
+        className={cn("hidden!", isLOF && "cursor-not-allowed")}
       />
     </div>
   );

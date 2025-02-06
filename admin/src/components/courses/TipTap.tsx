@@ -1,7 +1,11 @@
 import { Color } from "@tiptap/extension-color";
 import ListItem from "@tiptap/extension-list-item";
 import TextStyle from "@tiptap/extension-text-style";
-import { EditorProvider, useCurrentEditor } from "@tiptap/react";
+import {
+  EditorProvider,
+  useCurrentEditor,
+  type Extension,
+} from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { Button } from "../ui/button";
 import { useFormContext } from "react-hook-form";
@@ -211,14 +215,14 @@ function MenuBar() {
   );
 }
 
-const extensions = [
+const extensions: Extension[] = [
   Color.configure({ types: [TextStyle.name, ListItem.name] }),
-  TextStyle.configure({ HTMLAttributes: { class: "text-sm" } }),
   StarterKit.configure({
     bulletList: {
       keepMarks: true,
       keepAttributes: false,
     },
+
     orderedList: {
       keepMarks: true,
       keepAttributes: false,
@@ -240,7 +244,7 @@ export function TipTap() {
         }}
         editorProps={{
           attributes: {
-            class: "min-h-[300px] p-4 border-none focus:outline-none",
+            class: "min-h-[300px] p-4",
           },
         }}
       />

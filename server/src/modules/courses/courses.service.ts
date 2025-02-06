@@ -41,7 +41,6 @@ export class CoursesService {
     },
     createCourseDto: CreateCourseDto,
   ) {
-    console.log(createCourseDto);
     const localVideoPath = path.join(
       process.cwd(),
       files.video[0].path,
@@ -51,13 +50,74 @@ export class CoursesService {
       files.thumbnail[0].path,
     );
 
-    return {
-      message: 'Course created successfully',
-      data: {
-        localThumbnailPath,
-        localVideoPath,
-      },
-    };
+    try {
+      if (
+        fs.existsSync(localVideoPath) &&
+        fs.existsSync(localThumbnailPath)
+      ) {
+        const videoResult = await this.cloudinary.uploader.upload(
+          localVideoPath,
+          {
+            resource_type: 'auto',
+            type: 'upload',
+            folder: 'EduLearn/videos',
+            transformation: {
+              quality: 'auto',
+              fetch_format: 'auto',
+            },
+            eager_async: true,
+          },
+        );
+
+        const thumbnailResult = await this.cloudinary.uploader.upload(
+          localThumbnailPath,
+          {
+            resource_type: 'auto',
+            type: 'upload',
+            folder: 'EduLearn/thumbnails',
+            transformation: {
+              quality: 'auto',
+              fetch_format: 'auto',
+            },
+            eager_async: true,
+          },
+        );
+
+        const createdCourse = await this.Course.create({
+          title: createCourseDto.title,
+          description: createCourseDto.description,
+          category: createCourseDto.category,
+          price: createCourseDto.price,
+          instructor: user._id,
+          video: {
+            url: videoResult.url,
+            publicId: videoResult.public_id,
+          },
+          thumbnail: {
+            url: thumbnailResult.url,
+            publicId: thumbnailResult.public_id,
+          },
+          tags: createCourseDto.tags,
+          isPublished: false,
+          uploadedBy: user._id,
+        });
+
+        return {
+          message: 'Course created successfully',
+          data: createdCourse,
+        };
+      } else
+        throw new BadRequestException('Video or thumbnail not found');
+    } catch (error) {
+      console.log(error);
+      throw new BadRequestException(error.message);
+    } finally {
+      if (fs.existsSync(localVideoPath))
+        fs.unlinkSync(localVideoPath);
+
+      if (fs.existsSync(localThumbnailPath))
+        fs.unlinkSync(localThumbnailPath);
+    }
   }
 
   async getAllCourses(limit: number, skip: number) {

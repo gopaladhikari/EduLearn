@@ -34,15 +34,19 @@ import slugify from 'slugify';
 
               let uniqueSlug = baseSlug;
               let count = 1;
+              let existingCourse: string;
 
-              while (
-                await this.model(Course.name).findOne({
+              do {
+                existingCourse = await this.model(
+                  Course.name,
+                ).findOne({
                   slug: uniqueSlug,
-                })
-              ) {
-                uniqueSlug = `${baseSlug}-${count}`;
-                count++;
-              }
+                });
+                if (existingCourse) {
+                  uniqueSlug = `${baseSlug}-${count}`;
+                  count++;
+                }
+              } while (existingCourse);
 
               this.slug = uniqueSlug;
             }
@@ -56,7 +60,8 @@ import slugify from 'slugify';
               error.code === 11000
             ) {
               if (error.keyPattern?.slug) {
-                const baseSlug = slugify(this.title, {
+                // Regenerate slug and retry save
+                const baseSlug = slugify(doc.title, {
                   lower: true,
                   strict: true,
                   replacement: '-',
@@ -64,20 +69,23 @@ import slugify from 'slugify';
 
                 let uniqueSlug = baseSlug;
                 let count = 1;
+                let existingCourse;
 
-                while (
-                  await this.model(Course.name).findOne({
+                do {
+                  existingCourse = await doc.constructor.findOne({
                     slug: uniqueSlug,
-                  })
-                ) {
-                  uniqueSlug = `${baseSlug}-${count}`;
-                  count++;
-                }
+                  });
+                  if (existingCourse) {
+                    uniqueSlug = `${baseSlug}-${count}`;
+                    count++;
+                  }
+                } while (existingCourse);
 
-                this.slug = uniqueSlug;
-                await this.save();
+                doc.slug = uniqueSlug;
+                return doc.save();
               }
-            } else next(error);
+            }
+            next(error);
           });
 
           return schema;

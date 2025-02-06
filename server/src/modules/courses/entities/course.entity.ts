@@ -14,7 +14,7 @@ export class Course {
   @Prop({ required: true })
   description: string;
 
-  @Prop({ required: true, unique: true })
+  @Prop({ unique: true, sparse: true })
   slug: string;
 
   @Prop({
@@ -41,8 +41,16 @@ export class Course {
   @Prop({ default: false })
   isPublished: boolean;
 
-  @Prop({ type: String })
-  thumbnail: string;
+  @Prop({
+    type: {
+      url: String,
+      publicId: String,
+    },
+  })
+  thumbnail: {
+    url: string;
+    publicId: string;
+  };
 
   @Prop({
     required: true,

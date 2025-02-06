@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { CourseDetailPageSkeleton } from "@/components/skeletons/CourseDetailPageSkeleton";
 import { useSeo } from "@/hooks/useSeo";
+import { ReactParser } from "@/components/courses/ReactParser";
 
 export const Route = createFileRoute("/_protected/courses/$slug")({
   component: RouteComponent,
@@ -69,9 +70,6 @@ function RouteComponent() {
             )}
           </div>
         </div>
-        <CardDescription className="mt-2 text-primary-foreground/80">
-          {data?.data.category}
-        </CardDescription>
       </CardHeader>
       <CardContent className="mt-6">
         <div className="grid gap-6 md:grid-cols-3">
@@ -79,9 +77,9 @@ function RouteComponent() {
             <h2 className="mb-4 text-2xl font-semibold">
               About This Course
             </h2>
-            <p className="text-muted-foreground">
-              {data?.data.description}
-            </p>
+            <CardDescription className="prose dark:prose-invert max-w-full text-black dark:text-white">
+              <ReactParser html={data?.data.description as string} />
+            </CardDescription>
             <Separator className="my-6" />
             <h3 className="mb-4 text-xl font-semibold">
               What You'll Learn
@@ -101,15 +99,15 @@ function RouteComponent() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-center gap-2">
-                  <User className="h-5 w-5 text-muted-foreground" />
+                  <User className="text-muted-foreground h-5 w-5" />
                   {/* <span>Instructor: {course.instructor[0].name}</span> */}
                 </div>
                 <div className="flex items-center gap-2">
-                  <DollarSign className="h-5 w-5 text-muted-foreground" />
+                  <DollarSign className="text-muted-foreground h-5 w-5" />
                   <span>Price: ${data?.data.price.toFixed(2)}</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <BookOpen className="h-5 w-5 text-muted-foreground" />
+                  <BookOpen className="text-muted-foreground h-5 w-5" />
                   {/* <span>{course.lessons.length} lessons</span> */}
                 </div>
                 <div className="mt-4 flex flex-wrap gap-2">

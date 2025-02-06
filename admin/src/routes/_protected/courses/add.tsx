@@ -2,7 +2,6 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
-import Dropzone from "react-dropzone";
 import {
   Form,
   FormControl,
@@ -21,8 +20,8 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { getAllUsers } from "@/lib/queries/users.query";
 import { useSeo } from "@/hooks/useSeo";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { UploadIcon, XIcon } from "lucide-react";
+import { useMemo, useState } from "react";
+import { XIcon } from "lucide-react";
 import { MultiSelect } from "@/components/ui/multi-select";
 import { axiosInstance } from "@/config/axios";
 import {
@@ -37,14 +36,14 @@ import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "@tanstack/react-router";
 import { queryClient } from "@/main";
 import { TipTap } from "@/components/courses/TipTap";
+import { FileUploadField } from "@/components/ui/FileUploadField";
+import { FormInputField } from "@/components/ui/FormInputField";
 
 export const Route = createFileRoute("/_protected/courses/add")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  const [preview, setPreview] = useState("");
-  const [thumbnailPreview, setThumbnailPreview] = useState("");
   const [tags, setTags] = useState<string[]>([]);
 
   const navigate = useNavigate();
@@ -91,7 +90,6 @@ function RouteComponent() {
   });
 
   const onSubmit: SubmitHandler<CourseSchema> = async (FormData) => {
-    console.log(FormData);
     try {
       const { data } = await axiosInstance.post(
         "/api/courses",
@@ -129,40 +127,6 @@ function RouteComponent() {
     }
   };
 
-  const onDrop = useCallback(
-    (files: File[]) => {
-      const file = files[0];
-      form.setValue("video", file);
-      form.clearErrors("video");
-      const previewUrl = URL.createObjectURL(file);
-      setPreview(previewUrl);
-    },
-    [form],
-  );
-
-  const onDropThumbnail = useCallback(
-    (files: File[]) => {
-      const file = files[0];
-      form.setValue("thumbnail", file);
-      form.clearErrors("thumbnail");
-      const thumbnailUrl = URL.createObjectURL(file);
-      setThumbnailPreview(thumbnailUrl);
-    },
-    [form],
-  );
-
-  useEffect(() => {
-    return () => {
-      if (preview) URL.revokeObjectURL(preview);
-    };
-  }, [preview]);
-
-  useEffect(() => {
-    return () => {
-      if (thumbnailPreview) URL.revokeObjectURL(thumbnailPreview);
-    };
-  }, [thumbnailPreview]);
-
   const selectables = useMemo(() => {
     return data?.data || [];
   }, [data?.data]);
@@ -175,126 +139,37 @@ function RouteComponent() {
           onSubmit={form.handleSubmit(onSubmit)}
           className="space-y-8"
         >
-          <FormField
-            control={form.control}
+          <FileUploadField
             name="video"
-            render={() => (
-              <FormItem>
-                <FormLabel>Course Video</FormLabel>
-                <FormControl>
-                  <Dropzone onDrop={onDrop}>
-                    {({ getRootProps, getInputProps }) => (
-                      <section>
-                        <div {...getRootProps()}>
-                          <input {...getInputProps()} />
-                          <div className="grid cursor-pointer gap-2">
-                            <div className="flex items-center justify-center rounded-md border-2 border-dashed border-gray-300 p-12 transition-colors focus-within:outline-2 focus-within:outline-gray-500 focus-within:outline-dashed hover:border-gray-400 dark:border-gray-700 dark:focus-within:outline-gray-400 dark:hover:border-gray-600">
-                              {preview ? (
-                                <div className="text-center">
-                                  {/* Video Preview */}
-                                  <video
-                                    src={preview}
-                                    controls
-                                    className="max-h-64 w-full rounded-md"
-                                  />
-                                  <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-                                    Video Preview
-                                  </p>
-                                </div>
-                              ) : (
-                                <div className="text-center">
-                                  <UploadIcon className="mx-auto h-8 w-8 text-gray-400" />
-                                  <div className="mt-4 font-medium text-gray-900 dark:text-gray-50">
-                                    Drop files to upload
-                                  </div>
-                                  <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-                                    or click to select files
-                                  </p>
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      </section>
-                    )}
-                  </Dropzone>
-                </FormControl>
-                <FormDescription>
-                  The video of your course
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
+            label="Course Video"
+            description="Upload the course video (MP4, Max 10MB)"
+            accept={{
+              "video/*": [".mp4"],
+            }}
+            maxSize={1024 * 1024 * 10}
+            previewType="video"
+            form={form}
           />
-          <FormField
-            control={form.control}
+
+          <FileUploadField
             name="thumbnail"
-            render={() => (
-              <FormItem>
-                <FormLabel>Video Thumbnail</FormLabel>
-                <FormControl>
-                  <Dropzone onDrop={onDropThumbnail}>
-                    {({ getRootProps, getInputProps }) => (
-                      <section>
-                        <div {...getRootProps()}>
-                          <input {...getInputProps()} />
-                          <div className="grid cursor-pointer gap-2">
-                            <div className="flex items-center justify-center rounded-md border-2 border-dashed border-gray-300 p-12 transition-colors focus-within:outline-2 focus-within:outline-gray-500 focus-within:outline-dashed hover:border-gray-400 dark:border-gray-700 dark:focus-within:outline-gray-400 dark:hover:border-gray-600">
-                              {thumbnailPreview ? (
-                                <div className="text-center">
-                                  {/*  Preview */}
-                                  <img
-                                    src={thumbnailPreview}
-                                    className="max-h-64 w-full rounded-md"
-                                  />
-                                  <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-                                    Avatar Preview
-                                  </p>
-                                </div>
-                              ) : (
-                                <div className="text-center">
-                                  <UploadIcon className="mx-auto h-8 w-8 text-gray-400" />
-                                  <div className="mt-4 font-medium text-gray-900 dark:text-gray-50">
-                                    Drop files to upload
-                                  </div>
-                                  <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-                                    or click to select files
-                                  </p>
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      </section>
-                    )}
-                  </Dropzone>
-                </FormControl>
-                <FormDescription>
-                  The video of your course
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
+            label="Video Thumbnail"
+            description="Upload a thumbnail image (JPEG, PNG, Max 5MB)"
+            accept={{
+              "image/*": [".jpg", ".jpeg", ".png"],
+            }}
+            maxSize={1024 * 1024 * 5} // 5MB
+            previewType="image"
+            form={form}
           />
-          <FormField
-            control={form.control}
+
+          <FormInputField
             name="title"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Course Title</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Enter course title"
-                    {...field}
-                  />
-                </FormControl>
-                <FormDescription>
-                  The title of your course (max 100 characters)
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
+            control={form.control}
+            label="Course Title"
+            placeholder="Enter course title"
           />
+
           <FormField
             control={form.control}
             name="description"
@@ -311,6 +186,7 @@ function RouteComponent() {
               </FormItem>
             )}
           />
+
           <FormField
             control={form.control}
             name="category"
@@ -350,6 +226,7 @@ function RouteComponent() {
               </FormItem>
             )}
           />
+
           <FormField
             control={form.control}
             name="instructor"
@@ -368,30 +245,24 @@ function RouteComponent() {
                   />
                 </FormControl>
                 <FormDescription>
-                  Choose the frameworks you are interested in.
+                  Select the instructor featured in this course.
                 </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <FormField
+
+          <FormInputField
             control={form.control}
+            label="Price"
             name="price"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Price</FormLabel>
-                <FormControl>
-                  <Input
-                    type="number"
-                    inputMode="numeric"
-                    placeholder="Enter course price"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+            description="This is your course price"
+            inputProps={{
+              type: "number",
+              inputMode: "numeric",
+            }}
           />
+
           <FormField
             control={form.control}
             name="tags"

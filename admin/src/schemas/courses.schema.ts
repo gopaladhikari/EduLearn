@@ -83,12 +83,29 @@ export const courseSchema = z.object({
     .string()
     .min(1, "Price is required")
     .transform((val) => z.coerce.number().parse(val)),
-  video: z.instanceof(File).refine((file) => file.size > 0, {
-    message: "The uploaded file must be a valid video format",
-  }),
-  thumbnail: z.instanceof(File).refine((file) => file.size > 0, {
-    message: "The uploaded file must be a valid image format",
-  }),
+  video: z
+    .instanceof(File, {
+      message: "Video file is required",
+    })
+    .refine((file) => file.size > 1024 * 10, {
+      message: "Max file size is 10MB",
+    })
+    .refine((file) => file.type === "video/mp4", {
+      message: "Only MP4 files are allowed",
+    }),
+  thumbnail: z
+    .instanceof(File, {
+      message: "Thumbnail file is required",
+    })
+    .refine((file) => file.size > 1024 * 5, {
+      message: "Max file size is 5MB",
+    })
+    .refine(
+      (file) => ["image/jpeg", "image/png"].includes(file.type),
+      {
+        message: "Only JPEG and PNG files are allowed",
+      },
+    ),
   category: z.nativeEnum(CourseCategory),
   tags: z.string().array().optional(),
 });

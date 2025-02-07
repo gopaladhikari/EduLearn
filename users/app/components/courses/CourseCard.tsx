@@ -6,7 +6,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import type { Course } from "@/types";
-import { Star } from "lucide-react";
+import { Heart, Star } from "lucide-react";
 import { Button, buttonVariants } from "../ui/button";
 import { Link, useFetcher } from "react-router";
 import { useCallback } from "react";
@@ -101,29 +101,37 @@ export function CourseCard({ course }: Props) {
           {parsed}
         </CardDescription>
       </CardHeader>
-      <CardFooter className="flex items-center justify-between">
+      <CardFooter className="flex items-center gap-4">
         <span className="text-2xl font-bold text-blue-600">
           ${course.price}
         </span>
 
+        <Button
+          className="mr-4 ml-auto cursor-pointer"
+          title="Add to Wishlist"
+          variant="outline"
+        >
+          <Heart />
+          <span className="sr-only">Add to wishlist</span>
+        </Button>
+
         {isInCart ? (
           <Link
             to="/cart"
-            className={cn(
-              buttonVariants(),
-              "bg-blue-600 hover:bg-blue-700",
-            )}
+            className={cn(buttonVariants({ variant: "bluish" }))}
           >
             Go to Cart
           </Link>
         ) : (
-          <Button
-            className="bg-blue-600 hover:bg-blue-700"
-            name="addToCart"
-            onClick={() => optimisticAddToCart(course)}
-          >
-            Add to cart
-          </Button>
+          <>
+            <Button
+              variant="bluish"
+              name="addToCart"
+              onClick={() => optimisticAddToCart(course)}
+            >
+              Add to cart
+            </Button>
+          </>
         )}
       </CardFooter>
     </Card>

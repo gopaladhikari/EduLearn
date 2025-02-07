@@ -1,11 +1,11 @@
 import { CourseCard } from "@/components/courses/CourseCard";
 import { MaxWithWrapper } from "@/components/partials/MaxWidthWrapper";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { axiosInstance } from "@/config/axios";
 import type { Course } from "@/types";
-import { data as response } from "react-router";
+import { Link, data as response } from "react-router";
 import { Award, BookOpen, Play, Users } from "lucide-react";
-import { getSession } from "@/lib/utils";
+import { cn, getSession } from "@/lib/utils";
 import {
   Avatar,
   AvatarFallback,
@@ -121,7 +121,7 @@ export default function Homepage({
             <h1 className="group-hover:text-primary mb-6 transition-colors ease-linear">
               Learn Without Limits
             </h1>
-            <p className="mb-8 text-xl transition-colors ease-linear dark:group-hover:text-stone-300">
+            <p className="mb-8 text-xl transition-colors ease-linear">
               Start, switch, or advance your career with thousands of
               courses from expert instructors.
             </p>
@@ -193,9 +193,12 @@ export default function Homepage({
             Join thousands of students who are already learning and
             growing with us. Get started today with our free courses!
           </p>
-          <button className="hover: rounded-lg bg-white px-8 py-4 font-semibold text-blue-600">
+          <Link
+            to="/courses"
+            className={cn(buttonVariants({ variant: "secondary" }))}
+          >
             Browse All Courses
-          </button>
+          </Link>
         </div>
       </section>
     </MaxWithWrapper>

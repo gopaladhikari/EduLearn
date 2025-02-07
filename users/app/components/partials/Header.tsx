@@ -128,7 +128,7 @@ export function Header({ user }: { user: User | null }) {
         <div className="flex items-center gap-4">
           <Logo />
           <NavigationMenu>
-            <NavigationMenuList>
+            <NavigationMenuList className="gap-2 text-sm">
               <NavigationMenuItem>
                 <NavigationMenuTrigger>Explore</NavigationMenuTrigger>
                 <NavigationMenuContent>
@@ -155,36 +155,49 @@ export function Header({ user }: { user: User | null }) {
                 </Form>
               </NavigationMenuItem>
               <NavigationMenuItem>
-                <Link to="/wishlist" className="w-full">
-                  <Heart />
-                </Link>
+                <NavLink
+                  to="/courses"
+                  className={({ isActive }) =>
+                    cn(isActive && "text-primary")
+                  }
+                >
+                  Courses
+                </NavLink>
               </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
-          <div className="ml-auto flex items-center gap-4">
+          <div className="ml-auto flex items-center gap-6 divide-x-2">
             {user ? (
               <>
-                <Link
-                  to="/cart"
-                  className={cn(
-                    buttonVariants({
-                      variant: "secondary",
-                      size: "icon",
-                    }),
-                    "relative",
-                  )}
-                >
-                  <span className="bg-primary absolute -top-2 -right-2 grid h-6 w-6 place-content-center rounded-full text-white">
-                    {cart?.totalItems ?? 0}
-                  </span>
-                  <ShoppingCart size={16} />
-                </Link>
-                <NavigationMenuItem>
-                  <Link to="/wishlist" className="w-full">
+                <div className="flex items-center gap-6">
+                  <Link
+                    to="/cart"
+                    className={cn(
+                      buttonVariants({
+                        variant: "link",
+                        size: "icon",
+                      }),
+                      "relative",
+                    )}
+                  >
+                    <span className="bg-primary absolute -top-2 -right-2 grid h-6 w-6 place-content-center rounded-full text-white">
+                      {cart?.totalItems ?? 0}
+                    </span>
+                    <ShoppingCart size={16} />
+                  </Link>
+                  <Link
+                    to="/wishlist"
+                    className={cn(
+                      buttonVariants({
+                        size: "icon",
+                        variant: "link",
+                      }),
+                    )}
+                  >
                     <Heart />
                     <span className="sr-only">My Wishlist</span>
                   </Link>
-                </NavigationMenuItem>
+                </div>
                 <UserMenu user={user} />
               </>
             ) : (

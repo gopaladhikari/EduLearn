@@ -17,6 +17,8 @@ const config: RouteConfig = [
   route("/cart", "./pages/cart.tsx"),
   route("/privacy-policy", "./pages/privacy-policy.tsx"),
   route("/terms-and-conditions", "./pages/terms-and-conditions.tsx"),
+  route("/wishlist", "./pages/wishlists.tsx"),
+  route("/courses", "./pages/courses.tsx"),
   route("/*", "./pages/not-found.tsx"),
 ];
 

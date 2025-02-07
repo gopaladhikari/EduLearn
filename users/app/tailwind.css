@@ -1,6 +1,7 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
 @plugin 'tailwindcss-animate';
+@plugin "@tailwindcss/typography";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -66,15 +67,15 @@
 
 @layer utilities {
   @font-face {
-    font-family: 'Inter';
-    src: url('fonts/Inter_18pt-Medium.ttf') format('truetype');
+    font-family: "Inter";
+    src: url("fonts/Inter_18pt-Medium.ttf") format("truetype");
     font-weight: 500;
     font-style: normal;
   }
 
   @font-face {
-    font-family: 'Inter';
-    src: url('fonts/Inter_18pt-Bold.ttf') format('truetype');
+    font-family: "Inter";
+    src: url("fonts/Inter_18pt-Bold.ttf") format("truetype");
     font-weight: 700;
     font-style: normal;
   }

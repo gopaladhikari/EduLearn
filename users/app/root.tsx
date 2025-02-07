@@ -28,7 +28,9 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
   try {
     const [user, cart] = await Promise.all([getMe(), getCartItems()]);
 
-    if (user) session.set("user", user.data);
+    if (!user) throw new Error("User not found");
+
+    session.set("user", user.data);
 
     return res(
       {
@@ -42,13 +44,11 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
       },
     );
   } catch (error) {
-    const message = (error as Error).message;
-    session.flash("error", message);
-
     return res(null, {
       headers: {
         "Set-Cookie": await destroySession(session),
       },
+      status: 404,
     });
   }
 };

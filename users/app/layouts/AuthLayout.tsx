@@ -1,13 +1,9 @@
 import { MaxWithWrapper } from "@/components/partials/MaxWidthWrapper";
-import {
-  Link,
-  Outlet,
-  redirect,
-  type LoaderFunction,
-} from "react-router";
+import { Link, Outlet, redirect } from "react-router";
 import { getSession } from "@/lib/utils";
+import type { Route } from "./+types/AuthLayout";
 
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader = async ({ request }: Route.LoaderArgs) => {
   const session = await getSession(request.headers.get("Cookie"));
 
   if (session.has("user")) return redirect("/");
@@ -22,18 +18,18 @@ export default function AuthLayout() {
         <div className="md:order-2">
           <div className="space-y-6 md:max-w-(--breakpoint-sm)">
             <Outlet />
-            <p className="px-8 text-center text-sm text-muted-foreground">
+            <p className="text-muted-foreground px-8 text-center text-sm">
               By clicking continue, you agree to our{" "}
               <Link
                 to="/terms-and-condition"
-                className="underline underline-offset-4 hover:text-primary"
+                className="hover:text-primary underline underline-offset-4"
               >
                 Terms of Service&nbsp;
               </Link>
               and&nbsp;
               <Link
                 to="/privacy-policy"
-                className="underline underline-offset-4 hover:text-primary"
+                className="hover:text-primary underline underline-offset-4"
               >
                 Privacy Policy
               </Link>

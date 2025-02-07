@@ -79,6 +79,25 @@ export type PlatformAnalytics = {
   mostPopularCourse: string;
 };
 
+export type CourseAnalytics = {
+  totalEnrollments: number;
+  totalClicks: number;
+  totalCompletions: number;
+  averageProgress: number;
+  activeUsers: number;
+  totalRevenue: number;
+  discountedSales: number;
+  refunds: number;
+  averageRating: number;
+  totalReviews: number;
+  commonFeedback: string[];
+  mostViewedLesson: string;
+  dropOffPoint: string;
+  totalWatchTime: number;
+  popularityScore: number;
+  trendScore: number;
+};
+
 export type CustomResponse<T = unknown> = Promise<{
   data: T;
   status: boolean;

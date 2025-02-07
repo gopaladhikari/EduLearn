@@ -45,8 +45,6 @@ function RouteComponent() {
     queryFn: () => getCourseAnalyticsBySlug(slug),
   });
 
-  console.log(data);
-
   return (
     <div>
       <h1 className="mb-8 text-3xl font-bold">

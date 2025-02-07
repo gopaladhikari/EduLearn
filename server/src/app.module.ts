@@ -35,8 +35,10 @@ import { CartModule } from './modules/cart/cart.module';
       dbName: process.env.DB_NAME,
     }),
     CacheModule.register({
-      ttl: 1000 * 60 * 3, // 3 minutes
+      ttl: 1000 * 60 * 3,
+      max: 100,
       isGlobal: true,
+      store: 'memory',
     }),
     UsersModule,
     AuthModule,

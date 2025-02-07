@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import type { Model } from 'mongoose';
-import { CourseAnalytics } from './entities/analytics.entity';
+import { Analytics } from './entities/analytics.entity';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import type { Cache } from 'cache-manager';
 
@@ -14,15 +14,15 @@ import type { Cache } from 'cache-manager';
 export class AnalyticsService {
   constructor(
     @Inject(CACHE_MANAGER) private readonly cache: Cache,
-    @InjectModel(CourseAnalytics.name)
-    private readonly Analytics: Model<CourseAnalytics>,
+    @InjectModel(Analytics.name)
+    private readonly Analytics: Model<Analytics>,
   ) {}
 
   async incrementTotalClicks(slug: string) {
     try {
       const analytics = await this.Analytics.findOneAndUpdate(
         {
-          courseSlug: slug,
+          course: slug,
         },
         {
           $inc: {
@@ -46,9 +46,10 @@ export class AnalyticsService {
 
   async getPlatformAnalytics() {
     try {
-      const cachedAnalytics = await this.cache.get(
-        'platform_analytics',
-      );
+      const cacheKey = `platform_analytics`;
+
+      const cachedAnalytics = await this.cache.get(cacheKey);
+
       if (cachedAnalytics)
         return {
           message: 'Platform analytics fetched successfully',
@@ -101,7 +102,7 @@ export class AnalyticsService {
 
       if (!result) throw new NotFoundException('Analytics not found');
 
-      await this.cache.set('platform_analytics', result);
+      await this.cache.set(cacheKey, result);
 
       return {
         message: 'Platform analytics fetched successfully',
@@ -124,9 +125,9 @@ export class AnalyticsService {
 
   async getCourseAnalytics(slug: string) {
     try {
-      const cachedAnalytics = await this.cache.get(
-        `course_analytics_${slug}`,
-      );
+      const cacheKey = `course_analytics_${slug}`;
+
+      const cachedAnalytics = await this.cache.get(cacheKey);
 
       if (cachedAnalytics)
         return {
@@ -134,17 +135,22 @@ export class AnalyticsService {
           data: cachedAnalytics,
         };
 
-      const courseAnalytics = await this.Analytics.findOne({
-        courseSlug: slug,
-      });
+      const courseAnalytics = await this.Analytics.findOneAndUpdate(
+        {
+          course: slug,
+        },
+        {},
+        {
+          upsert: true,
+          new: true,
+          setDefaultsOnInsert: true,
+        },
+      ).populate('courseData', '-description');
 
       if (!courseAnalytics)
         throw new NotFoundException('Analytics not found');
 
-      await this.cache.set(
-        `course_analytics_${slug}`,
-        courseAnalytics,
-      );
+      await this.cache.set(cacheKey, courseAnalytics);
 
       return {
         message: 'Course analytics fetched successfully',

@@ -1,5 +1,9 @@
 import { axiosInstance } from "@/config/axios";
-import type { CustomResponse, PlatformAnalytics } from "@/types";
+import type {
+  CourseAnalytics,
+  CustomResponse,
+  PlatformAnalytics,
+} from "@/types";
 
 export const getPlatformAnalytics =
   async (): CustomResponse<PlatformAnalytics> => {
@@ -15,7 +19,7 @@ export const getPlatformAnalytics =
 
 export const getCourseAnalyticsBySlug = async (
   slug: string,
-): Promise<CustomResponse> => {
+): CustomResponse<CourseAnalytics> => {
   try {
     const { data } = await axiosInstance.get(
       `/api/analytics/course/${slug}`,

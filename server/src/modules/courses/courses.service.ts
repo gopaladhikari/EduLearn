@@ -124,6 +124,8 @@ export class CoursesService {
     try {
       const cachedCourses = await this.cache.get('courses');
 
+      console.log('cachedCourses', cachedCourses);
+
       if (cachedCourses)
         return {
           message: 'Courses fetched successfully',

@@ -105,9 +105,9 @@ export class UsersService {
     }
   }
 
-  async getAllUser() {
+  async getAllUser(query?: FilterQuery<User>) {
     try {
-      const cacheKey = 'allUsers';
+      const cacheKey = `allUsers`;
 
       const cachedUsers = await this.cache.get(cacheKey);
 
@@ -117,14 +117,13 @@ export class UsersService {
           data: cachedUsers,
         };
 
-      const users = await this.User.find({
-        verified: true,
-        status: 'active',
-      });
+      const users = await this.User.find(query);
+
+      console.log('users', users);
 
       if (!users.length) throw new NotFoundException('No user found');
 
-      await this.cache.set(cacheKey, cachedUsers);
+      await this.cache.set(cacheKey, users);
 
       return {
         message: 'Users fetched successfully',

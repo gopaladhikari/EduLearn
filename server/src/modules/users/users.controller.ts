@@ -9,6 +9,7 @@ import {
   ValidationPipe,
   UseInterceptors,
   UploadedFile,
+  Query,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -16,8 +17,9 @@ import { JwtGuard } from 'src/modules/auth/guards/jwt-auth.guard';
 import { CurrentUser } from 'src/modules/auth/current-user.decorator';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
-import type { UserDocument } from './entities/user.entity';
+import type { User, UserDocument } from './entities/user.entity';
 import { FileInterceptor } from '@nestjs/platform-express';
+import type { FilterQuery } from 'mongoose';
 
 @Controller('users')
 export class UsersController {
@@ -30,13 +32,16 @@ export class UsersController {
 
   @Get()
   @UseGuards(JwtGuard)
-  getUsers(@CurrentUser() user: UserDocument) {
+  getUsers(
+    @CurrentUser() user: UserDocument,
+    @Query() query: FilterQuery<User>,
+  ) {
     if (user.role !== 'admin')
       throw new ForbiddenException(
         'You are not authorized to access this resource',
       );
 
-    return this.usersService.getAllUser();
+    return this.usersService.getAllUser(query);
   }
 
   @Get('me')

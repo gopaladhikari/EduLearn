@@ -1,17 +1,18 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 
-export type CourseAnalyticsDocument =
-  HydratedDocument<CourseAnalytics>;
+export type CourseAnalyticsDocument = HydratedDocument<Analytics>;
 
-@Schema({ timestamps: true })
-export class CourseAnalytics {
+@Schema({
+  timestamps: true,
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true },
+})
+export class Analytics {
   @Prop({
     required: true,
-    type: String,
-    ref: 'Course',
   })
-  courseSlug: string;
+  course: string;
 
   @Prop({ type: Number, default: 0 })
   totalEnrollments: number;
@@ -62,5 +63,12 @@ export class CourseAnalytics {
   trendScore: number;
 }
 
-export const CourseAnalyticsSchema =
-  SchemaFactory.createForClass(CourseAnalytics);
+export const AnalyticsSchema =
+  SchemaFactory.createForClass(Analytics);
+
+AnalyticsSchema.virtual('courseData', {
+  ref: 'Course',
+  localField: 'course',
+  foreignField: 'slug',
+  justOne: true,
+});

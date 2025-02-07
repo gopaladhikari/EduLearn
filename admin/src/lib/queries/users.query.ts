@@ -12,7 +12,13 @@ export const me = async (): CustomResponse<User> => {
 
 export const getAllUsers = async (): CustomResponse<User[]> => {
   try {
-    const { data } = await axiosInstance.get("/api/users");
+    const { data } = await axiosInstance.get("/api/users", {
+      params: {
+        status: "active",
+        verified: true,
+        role: "admin",
+      },
+    });
     return data;
   } catch (error) {
     throw new Error((error as Error).message);

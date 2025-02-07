@@ -26,8 +26,9 @@ import { Form, Link, NavLink } from "react-router";
 import { MaxWithWrapper } from "./MaxWidthWrapper";
 import { CourseCategory } from "@/constant/data";
 import type { User } from "@/types";
-import { ShoppingCart } from "lucide-react";
+import { Heart, ShoppingCart, User2 } from "lucide-react";
 import { useCart } from "@/hooks/useCart";
+import { Input } from "../ui/input";
 
 function UserMenu({ user }: { user: User }) {
   return (
@@ -35,7 +36,9 @@ function UserMenu({ user }: { user: User }) {
       <DropdownMenuTrigger asChild>
         <Avatar className="cursor-pointer">
           <AvatarImage src={user.avatar?.url} />
-          <AvatarFallback>{user.fullName?.charAt(0)}</AvatarFallback>
+          <AvatarFallback>
+            <User2 />
+          </AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-72" align="end">
@@ -43,12 +46,12 @@ function UserMenu({ user }: { user: User }) {
           <Avatar>
             <AvatarImage src={user.avatar?.url} />
             <AvatarFallback>
-              {user.fullName?.charAt(0)}
+              <User2 />
             </AvatarFallback>
           </Avatar>
           <div>
             <strong>{user.fullName}</strong>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-muted-foreground text-sm">
               test@edulearn.com
             </p>
           </div>
@@ -148,12 +151,13 @@ export function Header({ user }: { user: User | null }) {
 
               <NavigationMenuItem>
                 <Form action="/search" className="w-full">
-                  <input
-                    placeholder="Search"
-                    name="q"
-                    className="w-full rounded-md border border-black bg-transparent px-4 py-2 text-sm placeholder:text-sm focus:outline-hidden dark:border-white/40"
-                  />
+                  <Input placeholder="Search" name="q" />
                 </Form>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <Link to="/wishlist" className="w-full">
+                  <Heart />
+                </Link>
               </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
@@ -170,11 +174,17 @@ export function Header({ user }: { user: User | null }) {
                     "relative",
                   )}
                 >
-                  <span className="absolute -right-2 -top-2 grid h-6 w-6 place-content-center rounded-full bg-primary text-white">
+                  <span className="bg-primary absolute -top-2 -right-2 grid h-6 w-6 place-content-center rounded-full text-white">
                     {cart?.totalItems ?? 0}
                   </span>
                   <ShoppingCart size={16} />
                 </Link>
+                <NavigationMenuItem>
+                  <Link to="/wishlist" className="w-full">
+                    <Heart />
+                    <span className="sr-only">My Wishlist</span>
+                  </Link>
+                </NavigationMenuItem>
                 <UserMenu user={user} />
               </>
             ) : (

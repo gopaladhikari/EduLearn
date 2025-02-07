@@ -75,6 +75,7 @@ export class MailService {
     fullName: string,
     email: string,
     token: string,
+    role: 'user' | 'admin',
   ) {
     try {
       const html = await this.loadTemplate('verifyEmail.html', {

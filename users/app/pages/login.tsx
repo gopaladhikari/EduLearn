@@ -1,10 +1,4 @@
-import {
-  Form,
-  redirect,
-  useActionData,
-  type ActionFunction,
-  type MetaFunction,
-} from "react-router";
+import { Form, redirect, data as response } from "react-router";
 import { getValidatedFormData, useRemixForm } from "remix-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, type LoginSchema } from "@/schemas/auth.schema";
@@ -28,8 +22,9 @@ import {
   destroySession,
   getSession,
 } from "@/lib/utils";
+import type { Route } from "./+types/login";
 
-export const meta: MetaFunction = () => {
+export const meta: Route.MetaFunction = () => {
   return [
     {
       title: "Sign In to EduLearn | Access Your Learning Dashboard",
@@ -50,7 +45,7 @@ export const meta: MetaFunction = () => {
 
 const resolver = zodResolver(loginSchema);
 
-export const action: ActionFunction = async ({ request }) => {
+export const action = async ({ request }: Route.ActionArgs) => {
   const { data, errors } = await getValidatedFormData(
     request,
     resolver,
@@ -79,17 +74,16 @@ export const action: ActionFunction = async ({ request }) => {
       },
     });
   } catch (error) {
-    return Response.json(
-      { message: (error as Error).message },
-      {
-        status: 401,
-        headers: { "Set-Cookie": await destroySession(session) },
+    session.flash("error", (error as Error).message);
+    return response(error as Error, {
+      headers: {
+        "Set-Cookie": await destroySession(session),
       },
-    );
+    });
   }
 };
 
-export default function Login() {
+export default function Login({ actionData }: Route.ComponentProps) {
   const {
     handleSubmit,
     register,
@@ -99,8 +93,6 @@ export default function Login() {
     resolver,
     mode: "onSubmit",
   });
-
-  const error = useActionData<typeof action>() as Error;
 
   return (
     <Card>
@@ -158,8 +150,8 @@ export default function Login() {
             )}
           </div>
 
-          {error?.message && (
-            <p className="text-destructive">{error.message}</p>
+          {actionData?.message && (
+            <p className="text-destructive">{actionData.message}</p>
           )}
 
           <Button

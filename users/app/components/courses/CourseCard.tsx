@@ -12,6 +12,7 @@ import { Link, useFetcher } from "react-router";
 import { useCallback } from "react";
 import { useCart } from "@/hooks/useCart";
 import { cn } from "@/lib/utils";
+import parser from "html-react-parser";
 
 type Props = {
   course: Course;
@@ -20,6 +21,8 @@ type Props = {
 export function CourseCard({ course }: Props) {
   const { cart, setCart } = useCart();
   const fetcher = useFetcher();
+
+  const parsed = parser(course.description);
 
   const isInCart = cart?.items.some(
     (item) => item.courseId._id === course._id,
@@ -71,12 +74,13 @@ export function CourseCard({ course }: Props) {
     },
     [setCart, fetcher],
   );
+
   return (
     <Card className="group">
       <CardHeader>
         <Link to={`/courses/${course.slug}`}>
           <img
-            src={course.thumbnail}
+            src={course.thumbnail.url}
             alt={course.title}
             className="h-48 w-full object-cover"
           />
@@ -90,11 +94,11 @@ export function CourseCard({ course }: Props) {
             <span className="ml-1 text-sm">4.8</span>
           </div>
         </div>
-        <CardTitle className="transition-colors group-hover:text-primary">
+        <CardTitle className="group-hover:text-primary transition-colors">
           <Link to={`/courses/${course.slug}`}>{course.title}</Link>
         </CardTitle>
         <CardDescription className="line-clamp-3">
-          {course.description}
+          {parsed}
         </CardDescription>
       </CardHeader>
       <CardFooter className="flex items-center justify-between">

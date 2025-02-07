@@ -1,41 +1,36 @@
 import { axiosInstance } from "@/config/axios";
 import type { Course } from "@/types";
-import {
-  type MetaFunction,
-  type LoaderFunction,
-  useNavigation,
-} from "react-router";
+import { useNavigation } from "react-router";
+import type { Route } from "./+types/course-detail";
 
-export const loader: LoaderFunction = async ({ params }) => {
+export const loader = async ({ params }: Route.LoaderArgs) => {
   try {
     const { data } = await axiosInstance.get<Course>(
       `/api/courses/${params.slug}`,
     );
 
-    return data;
+    return data.data;
   } catch (error) {
     return null;
   }
 };
 
-export const meta: MetaFunction = ({ data }) => {
-  const course = data as Course | null;
-
+export const meta: Route.MetaFunction = ({ data }) => {
   return [
     {
-      title: course?.title ?? "Course Detail | EduLearn",
+      title: data?.title,
       description:
-        course?.description ??
+        data?.description ??
         "Learn about the course detail page and its features. Explore the page to see how it works.",
     },
     {
       name: "og:title",
-      content: course?.title ?? "Course Detail | EduLearn",
+      content: data?.title ?? "Course Detail | EduLearn",
     },
     {
       name: "og:description",
       content:
-        course?.description ??
+        data?.description ??
         "Learn about the course detail page and its features. Explore the page to see how it works.",
     },
   ];

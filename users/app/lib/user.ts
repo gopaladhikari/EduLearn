@@ -1,5 +1,5 @@
 import { axiosInstance } from "@/config/axios";
-import type { User } from "@/types";
+import type { Cart, User } from "@/types";
 
 export const getMe = async () => {
   try {
@@ -12,7 +12,7 @@ export const getMe = async () => {
 
 export const getCartItems = async () => {
   try {
-    const { data } = await axiosInstance.get<User>("/api/cart");
+    const { data } = await axiosInstance.get<Cart>("/api/cart");
     return data;
   } catch (error) {
     return null;

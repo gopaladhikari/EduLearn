@@ -4,14 +4,9 @@ import { MaxWithWrapper } from "@/components/partials/MaxWidthWrapper";
 import { axiosInstance } from "@/config/axios";
 import { useCart } from "@/hooks/useCart";
 import type { Cart } from "@/types";
-import {
-  useLoaderData,
-  type ActionFunction,
-  type LoaderFunction,
-  type MetaFunction,
-} from "react-router";
+import type { Route } from "./+types/cart";
 
-export const meta: MetaFunction = () => {
+export const meta: Route.MetaFunction = () => {
   return [
     {
       title: "Your Cart | EduLearn",
@@ -30,7 +25,7 @@ export const meta: MetaFunction = () => {
   ];
 };
 
-export const loader: LoaderFunction = async () => {
+export const loader = async () => {
   try {
     const {
       data: { data },
@@ -42,11 +37,10 @@ export const loader: LoaderFunction = async () => {
   }
 };
 
-export const action: ActionFunction = async ({ request }) => {
+export const action = async ({ request }: Route.ActionArgs) => {
   const formData = await request.formData();
 
   const values = Object.fromEntries(formData);
-  console.log(values);
 
   if (values.name === "deleteItem") {
     try {
@@ -62,15 +56,13 @@ export const action: ActionFunction = async ({ request }) => {
   return values;
 };
 
-export default function Cart() {
-  const data = useLoaderData() as Cart | null;
-
+export default function Cart({ loaderData }: Route.ComponentProps) {
   const { cart } = useCart();
 
   return (
     <MaxWithWrapper as="section">
       <h1>Your Cart</h1>
-      {data?.items.length === 0 && (
+      {loaderData?.items.length === 0 && (
         <p className="text-muted-foreground"> No items in cart</p>
       )}
       <div className="grid grid-cols-1 gap-8 md:grid-cols-3">

@@ -4,8 +4,7 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-  useLoaderData,
-  type LoaderFunction,
+  data as res,
 } from "react-router";
 import "./tailwind.css";
 import { Header } from "./components/partials/Header";
@@ -15,13 +14,12 @@ import {
   destroySession,
   getSession,
 } from "./lib/utils";
-import type { Cart, User } from "./types";
 import { axiosInstance } from "./config/axios";
-import { data as res } from "react-router";
 import { CartProvider } from "./context/cartContext";
 import { getCartItems, getMe } from "./lib/user";
+import type { Route } from "./+types/root";
 
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader = async ({ request }: Route.LoaderArgs) => {
   const session = await getSession(request.headers.get("Cookie"));
   const token = session.get("acessToken");
 
@@ -55,16 +53,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   }
 };
 
-export function HydrationFallback() {
-  return <div>Loading...</div>;
-}
-
-export default function App() {
-  const data = useLoaderData() as {
-    user: User | null;
-    cart: Cart | null;
-  };
-
+export default function App({ loaderData }: Route.ComponentProps) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -77,8 +66,8 @@ export default function App() {
         <Links />
       </head>
       <body suppressHydrationWarning>
-        <CartProvider initalCart={data?.cart}>
-          <Header user={data?.user} />
+        <CartProvider initalCart={loaderData?.cart || null}>
+          <Header user={loaderData?.user || null} />
 
           <main>
             <Outlet />

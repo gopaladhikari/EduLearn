@@ -139,3 +139,6 @@ src/config/firebase.json
 build/
 dist/
 .netlify/
+
+# react router
+.react-router/

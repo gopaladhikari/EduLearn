@@ -1,9 +1,4 @@
-import {
-  Form,
-  useActionData,
-  type ActionFunction,
-  type MetaFunction,
-} from "react-router";
+import { Form } from "react-router";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -21,8 +16,11 @@ import { getValidatedFormData, useRemixForm } from "remix-hook-form";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import { axiosInstance } from "@/config/axios";
+import type { User } from "@/types";
+import type { Route } from "./+types/register";
 
-export const meta: MetaFunction = () => {
+export const meta: Route.MetaFunction = () => {
   return [
     {
       title: "Join EduLearn | Create Your Free Learning Account",
@@ -43,7 +41,7 @@ export const meta: MetaFunction = () => {
 
 const resolver = zodResolver(registerSchema);
 
-export const action: ActionFunction = async ({ request }) => {
+export const action = async ({ request }: Route.ActionArgs) => {
   const { data, errors } = await getValidatedFormData(
     request,
     resolver,
@@ -51,10 +49,24 @@ export const action: ActionFunction = async ({ request }) => {
 
   if (errors) throw new Error(errors?.root?.message);
 
-  return data;
+  try {
+    const { data: result } = await axiosInstance.post<User>(
+      "/api/users",
+      {
+        ...data,
+        role: "user",
+      },
+    );
+
+    return result;
+  } catch (error) {
+    return error as Error;
+  }
 };
 
-export default function Register() {
+export default function Register({
+  actionData,
+}: Route.ComponentProps) {
   const {
     handleSubmit,
     register,
@@ -64,7 +76,8 @@ export default function Register() {
     mode: "onSubmit",
   });
 
-  const error = useActionData<typeof action>() as Error;
+  const isError = actionData instanceof Error;
+
   return (
     <Card>
       <CardHeader>
@@ -149,8 +162,14 @@ export default function Register() {
             )}
           </div>
 
-          {error?.message && (
-            <p className="text-destructive">{error.message}</p>
+          {actionData?.message && (
+            <p
+              className={cn(
+                isError ? "text-destructive" : "text-green-500",
+              )}
+            >
+              {actionData?.message}
+            </p>
           )}
 
           <Button

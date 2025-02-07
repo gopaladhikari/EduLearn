@@ -52,6 +52,7 @@ export class CartService {
       throw new BadRequestException(error.message);
     }
   }
+
   async addToCart(
     id: string,
     user: UserDocument,

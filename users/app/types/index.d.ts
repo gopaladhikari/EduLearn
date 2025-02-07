@@ -24,7 +24,10 @@ export type Course = {
   description: string;
   slug: string;
   instructor: string[];
-  thumbnail: string;
+  thumbnail: {
+    url: string;
+    publicId: string;
+  };
   uploadedBy: {
     _id: string;
     fullName: string;

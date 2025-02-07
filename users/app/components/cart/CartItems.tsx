@@ -4,7 +4,7 @@ import type { CartItem } from "@/types";
 import { Card } from "../ui/card";
 import { useCallback } from "react";
 import { useCart } from "@/hooks/useCart";
-import { useFetcher } from "react-router";
+import { Link, useFetcher } from "react-router";
 
 type Props = {
   item: CartItem;
@@ -49,26 +49,33 @@ export default function CartItems({ item }: Props) {
   return (
     <Card
       key={item.courseId._id}
-      className="flex items-center space-x-4 rounded-lg bg-white p-4 shadow-sm"
+      className="group flex items-center space-x-4 rounded-lg bg-white p-4 shadow-sm"
     >
       <img
-        src={item.courseId?.thumbnail}
+        src={item.courseId?.thumbnail?.url}
         alt={item.courseId.title}
         width={100}
         height={100}
-        className="rounded-md"
+        className="aspect-[3/2] object-contain"
       />
-      <div className="grow">
-        <h3 className="font-semibold">{item.courseId.title}</h3>
 
-        <p className="mt-1 font-bold">${item.courseId.price}</p>
+      <div className="grow">
+        <Link to={`/courses/${item.courseId.slug}`}>
+          <h3 className="group-hover:text-primary font-semibold transition-colors">
+            {item.courseId.title}
+          </h3>
+        </Link>
+
+        <p className="text-muted-foreground text-sm font-bold">
+          ${item.courseId.price}
+        </p>
       </div>
       <Button
         variant="ghost"
         size="icon"
         onClick={() => handleDeleteItem(item.courseId._id as string)}
       >
-        <Trash2 className="h-5 w-5 text-destructive" />
+        <Trash2 className="text-destructive h-5 w-5" />
         <span className="sr-only">Remove item</span>
       </Button>
     </Card>

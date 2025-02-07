@@ -2,14 +2,8 @@ import { CourseCard } from "@/components/courses/CourseCard";
 import { MaxWithWrapper } from "@/components/partials/MaxWidthWrapper";
 import { Button } from "@/components/ui/button";
 import { axiosInstance } from "@/config/axios";
-import type { Course, User } from "@/types";
-import {
-  data as response,
-  LoaderFunction,
-  MetaFunction,
-  useLoaderData,
-  type ActionFunction,
-} from "react-router";
+import type { Course } from "@/types";
+import { data as response } from "react-router";
 import { Award, BookOpen, Play, Users } from "lucide-react";
 import { getSession } from "@/lib/utils";
 import {
@@ -17,8 +11,9 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/components/ui/avatar";
+import type { Route } from "./+types/homepage";
 
-export const meta: MetaFunction = () => {
+export const meta: Route.MetaFunction = () => {
   return [
     {
       title:
@@ -38,7 +33,7 @@ export const meta: MetaFunction = () => {
   ];
 };
 
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader = async ({ request }: Route.LoaderArgs) => {
   const session = await getSession(request.headers.get("Cookie"));
   const user = session.get("user");
   try {
@@ -71,7 +66,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   }
 };
 
-export const action: ActionFunction = async ({ request }) => {
+export const action = async ({ request }: Route.ActionArgs) => {
   const formdata = await request.formData();
   const values = Object.fromEntries(formdata);
 
@@ -92,12 +87,10 @@ export const action: ActionFunction = async ({ request }) => {
   return values;
 };
 
-export default function Homepage() {
-  const { courses, user } = useLoaderData() as {
-    courses: Course[];
-    user: User | null;
-  };
-
+export default function Homepage({
+  loaderData,
+}: Route.ComponentProps) {
+  const { courses, user } = loaderData;
   return (
     <MaxWithWrapper>
       {user && (
@@ -113,7 +106,7 @@ export default function Homepage() {
               <h2 className="text-2xl font-bold md:text-3xl">
                 Welcome back, {user.fullName}!
               </h2>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-muted-foreground text-sm">
                 Start learning now or check out your courses.
               </p>
             </div>
@@ -123,7 +116,7 @@ export default function Homepage() {
       <section className="group">
         <div className="flex flex-col items-center lg:flex-row">
           <div className="lg:w-1/2 lg:pr-12">
-            <h1 className="mb-6 transition-colors ease-linear group-hover:text-primary">
+            <h1 className="group-hover:text-primary mb-6 transition-colors ease-linear">
               Learn Without Limits
             </h1>
             <p className="mb-8 text-xl transition-colors ease-linear dark:group-hover:text-stone-300">

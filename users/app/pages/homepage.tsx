@@ -46,6 +46,8 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
       },
     });
 
+    if (!data.length) throw new Error("No courses found");
+
     return response(
       {
         courses: data,
@@ -59,10 +61,10 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
       },
     );
   } catch (error) {
-    return {
+    return response({
       courses: [],
       user,
-    };
+    });
   }
 };
 

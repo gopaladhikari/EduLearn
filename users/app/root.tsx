@@ -23,9 +23,11 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
   const session = await getSession(request.headers.get("Cookie"));
   const token = session.get("acessToken");
 
-  axiosInstance.defaults.headers.common["Authorization"] =
-    `Bearer ${token}`;
   try {
+    if (!token) throw new Error("Session expired");
+
+    axiosInstance.defaults.headers.common["Authorization"] =
+      `Bearer ${token}`;
     const [user, cart] = await Promise.all([getMe(), getCartItems()]);
 
     if (!user) throw new Error("User not found");

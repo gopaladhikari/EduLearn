@@ -6,12 +6,7 @@ import tailwindcss from "@tailwindcss/vite";
 import netlifyPlugin from "@netlify/vite-plugin-react-router";
 
 export default defineConfig({
-  plugins: [
-    reactRouter(),
-    tsconfigPaths(),
-    netlifyPlugin(),
-    tailwindcss(),
-  ],
+  plugins: [reactRouter(), tsconfigPaths(), tailwindcss()],
   server: {
     port: 3002,
   },

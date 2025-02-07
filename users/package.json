@@ -35,7 +35,6 @@
     "zod": "^3.24.1"
   },
   "devDependencies": {
-    "@netlify/vite-plugin-react-router": "^1.0.0",
     "@react-router/dev": "^7.1.5",
     "@tailwindcss/postcss": "^4.0.0",
     "@tailwindcss/vite": "^4.0.3",

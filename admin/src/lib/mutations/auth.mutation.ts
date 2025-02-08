@@ -110,7 +110,6 @@ export const verifyEmailMutation = async (
 export const logoutMutation = async (): CustomResponse => {
   try {
     const { data } = await axiosInstance.post("/api/auth/logout");
-    console.log(data);
     return data;
   } catch (error) {
     throw new Error((error as Error).message);

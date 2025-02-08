@@ -17,7 +17,7 @@ export default function CartItems({ item }: Props) {
   const handleDeleteItem = useCallback(
     (itemId: string) => {
       const newCart =
-        cart?.items?.filter((item) => item.courseId._id !== itemId) ||
+        cart?.items?.filter((item) => item.course._id !== itemId) ||
         [];
 
       const newTotalItems = newCart?.length;
@@ -48,32 +48,32 @@ export default function CartItems({ item }: Props) {
   );
   return (
     <Card
-      key={item.courseId._id}
+      key={item.course._id}
       className="group flex items-center space-x-4 rounded-lg bg-white p-4 shadow-sm"
     >
       <img
-        src={item.courseId?.thumbnail?.url}
-        alt={item.courseId.title}
+        src={item.course?.thumbnail?.url}
+        alt={item.course.title}
         width={100}
         height={100}
         className="aspect-[3/2] object-contain"
       />
 
       <div className="grow">
-        <Link to={`/courses/${item.courseId.slug}`}>
+        <Link to={`/courses/${item.course.slug}`}>
           <h3 className="group-hover:text-primary font-semibold transition-colors">
-            {item.courseId.title}
+            {item.course.title}
           </h3>
         </Link>
 
         <p className="text-muted-foreground text-sm font-bold">
-          ${item.courseId.price}
+          ${item.course.price}
         </p>
       </div>
       <Button
         variant="ghost"
         size="icon"
-        onClick={() => handleDeleteItem(item.courseId._id as string)}
+        onClick={() => handleDeleteItem(item.course._id as string)}
       >
         <Trash2 className="text-destructive h-5 w-5" />
         <span className="sr-only">Remove item</span>

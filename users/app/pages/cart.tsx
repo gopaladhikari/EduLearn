@@ -47,9 +47,9 @@ export const action = async ({ request }: Route.ActionArgs) => {
       const { data } = await axiosInstance.delete(
         `/api/cart/${values.itemId}`,
       );
-      console.log(data);
+      return data;
     } catch (error) {
-      console.log(error);
+      return null;
     }
   }
 
@@ -68,7 +68,7 @@ export default function Cart({ loaderData }: Route.ComponentProps) {
       <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
         <div className="space-y-6 md:col-span-2">
           {cart?.items?.map((item) => (
-            <CartItems key={item.courseId._id} item={item} />
+            <CartItems key={item.course._id} item={item} />
           ))}
         </div>
         <div>

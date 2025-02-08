@@ -72,13 +72,11 @@ export const action = async ({ request }: Route.ActionArgs) => {
   const formdata = await request.formData();
   const values = Object.fromEntries(formdata);
 
-  console.log(values);
-
   if (values.name === "addToCart") {
-    const { price, courseId } = values;
+    const { price, course } = values;
 
     try {
-      await axiosInstance.post(`/api/cart/${courseId}`, {
+      await axiosInstance.post(`/api/cart/${course}`, {
         price,
       });
     } catch (error) {
@@ -93,6 +91,7 @@ export default function Homepage({
   loaderData,
 }: Route.ComponentProps) {
   const { courses, user } = loaderData;
+
   return (
     <MaxWithWrapper>
       {user && (
@@ -172,14 +171,15 @@ export default function Homepage({
         </div>
       </section>
       {/* Featured Courses */}
-      {courses?.length > 0 && (
+
+      {courses && courses?.length > 0 && (
         <section>
           <h2 className="mb-12 text-center text-3xl font-bold">
             Featured Courses
           </h2>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
             {courses?.map((course) => (
-              <CourseCard key={course._id} course={course} />
+              <CourseCard key={course?._id} course={course} />
             ))}
           </div>
         </section>

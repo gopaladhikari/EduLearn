@@ -1,5 +1,9 @@
 import { axiosInstance } from "@/config/axios";
-import type { Course, CustomResponse } from "@/types";
+import type {
+  Course,
+  CourseWithInstructors,
+  CustomResponse,
+} from "@/types";
 
 export const getAllCourses = async (): CustomResponse<Course[]> => {
   try {
@@ -12,7 +16,7 @@ export const getAllCourses = async (): CustomResponse<Course[]> => {
 
 export const getCourseBySlug = async (
   slug: string,
-): CustomResponse<Course> => {
+): CustomResponse<CourseWithInstructors> => {
   try {
     const { data } = await axiosInstance.get(`/api/courses/${slug}`);
     return data;

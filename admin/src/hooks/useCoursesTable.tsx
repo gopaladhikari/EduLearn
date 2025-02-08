@@ -23,9 +23,8 @@ import { format } from "date-fns";
 import type { Course } from "@/types";
 import { Label } from "@/components/ui/label";
 import { SessionStorage } from "@/config/constants";
-import { useQuery } from "@tanstack/react-query";
-import { getAllCourses } from "@/lib/queries/courses.query";
 import { CourseEditOption } from "@/components/courses/CourseEditOption";
+import { useGetAllCourses } from "./coursesHooks";
 
 function IndeterminateCheckbox({
   indeterminate,
@@ -44,7 +43,7 @@ function IndeterminateCheckbox({
     <input
       type="checkbox"
       ref={ref}
-      className={className + " cursor-pointer accent-primary"}
+      className={className + " accent-primary cursor-pointer"}
       {...rest}
     />
   );
@@ -67,12 +66,7 @@ export function useCoursesTable(itemsPerPage: number) {
     pageSize: itemsPerPage,
   });
 
-  const { data, isPending } = useQuery({
-    queryKey: ["courses"],
-    queryFn: getAllCourses,
-    staleTime: 1000 * 60 * 15,
-  });
-
+  const { data, isPending } = useGetAllCourses();
   const columns = useMemo(
     () => [
       {
@@ -145,7 +139,7 @@ export function useCoursesTable(itemsPerPage: number) {
   );
 
   const table = useReactTable({
-    data: data?.data || [],
+    data: data || [],
     columns,
     state: {
       sorting,

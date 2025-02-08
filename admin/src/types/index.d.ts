@@ -48,7 +48,7 @@ export type Course = {
 
 export type Analytics = {
   _id: string;
-  courseSlug: string;
+  course: string;
   __v: number;
   activeUsers: number;
   averageProgress: number;

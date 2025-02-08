@@ -48,7 +48,6 @@ export class CartService {
         },
       };
     } catch (error) {
-      console.log('error', error);
       throw new BadRequestException(error.message);
     }
   }
@@ -59,38 +58,44 @@ export class CartService {
     priceAtAddition: number,
   ) {
     try {
-      const cart = await this.Cart.findOne({
+      const existingCart = await this.Cart.findOne({
         userId: user._id,
       });
 
-      if (cart) {
-        const existingItem = cart.items.find(
-          (item) => item.courseId.toString() === id,
+      if (existingCart) {
+        const existingItem = existingCart.items.find(
+          (item) => item.course.toString() === id,
         );
 
         if (existingItem)
           throw new BadRequestException('Item already added');
 
-        cart.items.push({
-          courseId: id,
-          priceAtAddition,
+        existingCart.items.push({
+          course: id,
           addedAt: new Date(),
+          priceAtAddition,
         });
+        await existingCart.save();
 
-        await cart.save();
-        return cart;
+        return {
+          message: 'Item added successfully',
+          data: existingCart,
+        };
       }
 
-      const createdCart = await this.Cart.create({
-        userId: user._id,
-        items: [
-          {
-            courseId: id,
-            priceAtAddition,
-            addedAt: new Date(),
-          },
-        ],
-      });
+      const createdCart = await this.Cart.create(
+        {
+          userId: user._id,
+          items: [
+            {
+              course: id,
+              addedAt: new Date(),
+              priceAtAddition,
+            },
+          ],
+        },
+        { new: true },
+      );
 
       return {
         message: 'Item added successfully',

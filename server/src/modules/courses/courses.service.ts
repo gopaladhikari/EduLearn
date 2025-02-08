@@ -109,7 +109,6 @@ export class CoursesService {
       } else
         throw new BadRequestException('Video or thumbnail not found');
     } catch (error) {
-      console.log(error);
       throw new BadRequestException(error.message);
     } finally {
       if (fs.existsSync(localVideoPath))
@@ -123,8 +122,6 @@ export class CoursesService {
   async getAllCourses(limit: number, skip: number) {
     try {
       const cachedCourses = await this.cache.get('courses');
-
-      console.log('cachedCourses', cachedCourses);
 
       if (cachedCourses)
         return {

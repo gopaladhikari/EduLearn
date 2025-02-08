@@ -3,7 +3,6 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
@@ -33,6 +32,7 @@ import {
 import { queryClient } from "@/main";
 import { Checkbox } from "../ui/checkbox";
 import { memo } from "react";
+import { Link } from "@tanstack/react-router";
 
 type Props = {
   info: CellContext<Course, string>;
@@ -98,7 +98,15 @@ function Options({ info }: Props) {
         className="w-56"
         onCloseAutoFocus={(e) => e.preventDefault()}
       >
-        <DropdownMenuLabel>Edit</DropdownMenuLabel>
+        <DropdownMenuItem>
+          <Link
+            to="/courses/edit/$slug"
+            params={{ slug: info.row.original.slug }}
+            className="w-full"
+          >
+            Edit
+          </Link>
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem

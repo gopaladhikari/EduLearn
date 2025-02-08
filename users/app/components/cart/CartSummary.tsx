@@ -10,9 +10,7 @@ export default function CartSummary({ totalPrice }: Partial<Cart>) {
   const discount = 0;
   const total = subtotal - discount;
 
-  const handleApplyPromo = () => {
-    console.log("Applying promo code:", promoCode);
-  };
+  const handleApplyPromo = () => {};
 
   return (
     <div className="rounded-lg bg-white p-6 shadow-sm">

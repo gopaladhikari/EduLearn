@@ -35,10 +35,12 @@ import { Route as ProtectedCoursesAddImport } from './routes/_protected/courses/
 import { Route as ProtectedCoursesSlugImport } from './routes/_protected/courses/$slug'
 import { Route as ProtectedAnalyticsSlugImport } from './routes/_protected/analytics/$slug'
 import { Route as ProtectedSettingsLayoutIndexImport } from './routes/_protected/settings/_layout/index'
+import { Route as ProtectedCoursesEditIndexImport } from './routes/_protected/courses/edit/index'
 import { Route as ProtectedSettingsLayoutNotificationsImport } from './routes/_protected/settings/_layout/notifications'
 import { Route as ProtectedSettingsLayoutDisplayImport } from './routes/_protected/settings/_layout/display'
 import { Route as ProtectedSettingsLayoutAppearanceImport } from './routes/_protected/settings/_layout/appearance'
 import { Route as ProtectedSettingsLayoutAccountImport } from './routes/_protected/settings/_layout/account'
+import { Route as ProtectedCoursesEditSlugImport } from './routes/_protected/courses/edit/$slug'
 
 // Create Virtual Routes
 
@@ -182,6 +184,12 @@ const ProtectedSettingsLayoutIndexRoute =
     getParentRoute: () => ProtectedSettingsLayoutRoute,
   } as any)
 
+const ProtectedCoursesEditIndexRoute = ProtectedCoursesEditIndexImport.update({
+  id: '/courses/edit/',
+  path: '/courses/edit/',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+
 const ProtectedSettingsLayoutNotificationsRoute =
   ProtectedSettingsLayoutNotificationsImport.update({
     id: '/notifications',
@@ -209,6 +217,12 @@ const ProtectedSettingsLayoutAccountRoute =
     path: '/account',
     getParentRoute: () => ProtectedSettingsLayoutRoute,
   } as any)
+
+const ProtectedCoursesEditSlugRoute = ProtectedCoursesEditSlugImport.update({
+  id: '/courses/edit/$slug',
+  path: '/courses/edit/$slug',
+  getParentRoute: () => ProtectedRoute,
+} as any)
 
 // Populate the FileRoutesByPath interface
 
@@ -368,6 +382,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedCoursesIndexImport
       parentRoute: typeof ProtectedImport
     }
+    '/_protected/courses/edit/$slug': {
+      id: '/_protected/courses/edit/$slug'
+      path: '/courses/edit/$slug'
+      fullPath: '/courses/edit/$slug'
+      preLoaderRoute: typeof ProtectedCoursesEditSlugImport
+      parentRoute: typeof ProtectedImport
+    }
     '/_protected/settings/_layout/account': {
       id: '/_protected/settings/_layout/account'
       path: '/account'
@@ -395,6 +416,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/settings/notifications'
       preLoaderRoute: typeof ProtectedSettingsLayoutNotificationsImport
       parentRoute: typeof ProtectedSettingsLayoutImport
+    }
+    '/_protected/courses/edit/': {
+      id: '/_protected/courses/edit/'
+      path: '/courses/edit'
+      fullPath: '/courses/edit'
+      preLoaderRoute: typeof ProtectedCoursesEditIndexImport
+      parentRoute: typeof ProtectedImport
     }
     '/_protected/settings/_layout/': {
       id: '/_protected/settings/_layout/'
@@ -472,6 +500,8 @@ interface ProtectedRouteChildren {
   ProtectedSettingsRoute: typeof ProtectedSettingsRouteWithChildren
   ProtectedAnalyticsIndexRoute: typeof ProtectedAnalyticsIndexRoute
   ProtectedCoursesIndexRoute: typeof ProtectedCoursesIndexRoute
+  ProtectedCoursesEditSlugRoute: typeof ProtectedCoursesEditSlugRoute
+  ProtectedCoursesEditIndexRoute: typeof ProtectedCoursesEditIndexRoute
 }
 
 const ProtectedRouteChildren: ProtectedRouteChildren = {
@@ -485,6 +515,8 @@ const ProtectedRouteChildren: ProtectedRouteChildren = {
   ProtectedSettingsRoute: ProtectedSettingsRouteWithChildren,
   ProtectedAnalyticsIndexRoute: ProtectedAnalyticsIndexRoute,
   ProtectedCoursesIndexRoute: ProtectedCoursesIndexRoute,
+  ProtectedCoursesEditSlugRoute: ProtectedCoursesEditSlugRoute,
+  ProtectedCoursesEditIndexRoute: ProtectedCoursesEditIndexRoute,
 }
 
 const ProtectedRouteWithChildren = ProtectedRoute._addFileChildren(
@@ -527,10 +559,12 @@ export interface FileRoutesByFullPath {
   '/settings': typeof ProtectedSettingsLayoutRouteWithChildren
   '/analytics': typeof ProtectedAnalyticsIndexRoute
   '/courses': typeof ProtectedCoursesIndexRoute
+  '/courses/edit/$slug': typeof ProtectedCoursesEditSlugRoute
   '/settings/account': typeof ProtectedSettingsLayoutAccountRoute
   '/settings/appearance': typeof ProtectedSettingsLayoutAppearanceRoute
   '/settings/display': typeof ProtectedSettingsLayoutDisplayRoute
   '/settings/notifications': typeof ProtectedSettingsLayoutNotificationsRoute
+  '/courses/edit': typeof ProtectedCoursesEditIndexRoute
   '/settings/': typeof ProtectedSettingsLayoutIndexRoute
 }
 
@@ -554,10 +588,12 @@ export interface FileRoutesByTo {
   '/settings': typeof ProtectedSettingsLayoutIndexRoute
   '/analytics': typeof ProtectedAnalyticsIndexRoute
   '/courses': typeof ProtectedCoursesIndexRoute
+  '/courses/edit/$slug': typeof ProtectedCoursesEditSlugRoute
   '/settings/account': typeof ProtectedSettingsLayoutAccountRoute
   '/settings/appearance': typeof ProtectedSettingsLayoutAppearanceRoute
   '/settings/display': typeof ProtectedSettingsLayoutDisplayRoute
   '/settings/notifications': typeof ProtectedSettingsLayoutNotificationsRoute
+  '/courses/edit': typeof ProtectedCoursesEditIndexRoute
 }
 
 export interface FileRoutesById {
@@ -584,10 +620,12 @@ export interface FileRoutesById {
   '/_protected/settings/_layout': typeof ProtectedSettingsLayoutRouteWithChildren
   '/_protected/analytics/': typeof ProtectedAnalyticsIndexRoute
   '/_protected/courses/': typeof ProtectedCoursesIndexRoute
+  '/_protected/courses/edit/$slug': typeof ProtectedCoursesEditSlugRoute
   '/_protected/settings/_layout/account': typeof ProtectedSettingsLayoutAccountRoute
   '/_protected/settings/_layout/appearance': typeof ProtectedSettingsLayoutAppearanceRoute
   '/_protected/settings/_layout/display': typeof ProtectedSettingsLayoutDisplayRoute
   '/_protected/settings/_layout/notifications': typeof ProtectedSettingsLayoutNotificationsRoute
+  '/_protected/courses/edit/': typeof ProtectedCoursesEditIndexRoute
   '/_protected/settings/_layout/': typeof ProtectedSettingsLayoutIndexRoute
 }
 
@@ -613,10 +651,12 @@ export interface FileRouteTypes {
     | '/settings'
     | '/analytics'
     | '/courses'
+    | '/courses/edit/$slug'
     | '/settings/account'
     | '/settings/appearance'
     | '/settings/display'
     | '/settings/notifications'
+    | '/courses/edit'
     | '/settings/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -639,10 +679,12 @@ export interface FileRouteTypes {
     | '/settings'
     | '/analytics'
     | '/courses'
+    | '/courses/edit/$slug'
     | '/settings/account'
     | '/settings/appearance'
     | '/settings/display'
     | '/settings/notifications'
+    | '/courses/edit'
   id:
     | '__root__'
     | '/_auth'
@@ -667,10 +709,12 @@ export interface FileRouteTypes {
     | '/_protected/settings/_layout'
     | '/_protected/analytics/'
     | '/_protected/courses/'
+    | '/_protected/courses/edit/$slug'
     | '/_protected/settings/_layout/account'
     | '/_protected/settings/_layout/appearance'
     | '/_protected/settings/_layout/display'
     | '/_protected/settings/_layout/notifications'
+    | '/_protected/courses/edit/'
     | '/_protected/settings/_layout/'
   fileRoutesById: FileRoutesById
 }
@@ -724,7 +768,9 @@ export const routeTree = rootRoute
         "/_protected/courses/add",
         "/_protected/settings",
         "/_protected/analytics/",
-        "/_protected/courses/"
+        "/_protected/courses/",
+        "/_protected/courses/edit/$slug",
+        "/_protected/courses/edit/"
       ]
     },
     "/_unprotected": {
@@ -821,6 +867,10 @@ export const routeTree = rootRoute
       "filePath": "_protected/courses/index.tsx",
       "parent": "/_protected"
     },
+    "/_protected/courses/edit/$slug": {
+      "filePath": "_protected/courses/edit/$slug.tsx",
+      "parent": "/_protected"
+    },
     "/_protected/settings/_layout/account": {
       "filePath": "_protected/settings/_layout/account.tsx",
       "parent": "/_protected/settings/_layout"
@@ -836,6 +886,10 @@ export const routeTree = rootRoute
     "/_protected/settings/_layout/notifications": {
       "filePath": "_protected/settings/_layout/notifications.tsx",
       "parent": "/_protected/settings/_layout"
+    },
+    "/_protected/courses/edit/": {
+      "filePath": "_protected/courses/edit/index.tsx",
+      "parent": "/_protected"
     },
     "/_protected/settings/_layout/": {
       "filePath": "_protected/settings/_layout/index.tsx",

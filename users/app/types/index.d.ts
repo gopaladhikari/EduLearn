@@ -91,7 +91,7 @@ export type CourseWithAnalytics = Course & {
 };
 
 export type CartItem = {
-  courseId: Partial<Course>;
+  course: Partial<Course>;
   priceAtAddition: number;
   addedAt: Date;
 };
@@ -101,5 +101,5 @@ export type Cart = {
   userId: string;
   totalPrice: number;
   totalItems: number;
-  items: Array<CartItem>;
+  items: ReadonlyArray<CartItem>;
 };

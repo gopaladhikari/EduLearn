@@ -119,8 +119,6 @@ export class UsersService {
 
       const users = await this.User.find(query);
 
-      console.log('users', users);
-
       if (!users.length) throw new NotFoundException('No user found');
 
       await this.cache.set(cacheKey, users);
@@ -209,7 +207,6 @@ export class UsersService {
         data: updatedUser,
       };
     } catch (error) {
-      console.log(error);
       throw new BadRequestException(error.message);
     }
   }

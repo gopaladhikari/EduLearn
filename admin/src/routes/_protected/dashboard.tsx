@@ -9,9 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { getPlatformAnalytics } from "@/lib/queries/analytics.query";
-import { useQuery } from "@tanstack/react-query";
-
+import { useGetPlatformAnalytics } from "@/hooks/analyticsHooks";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_protected/dashboard")({
@@ -19,10 +17,7 @@ export const Route = createFileRoute("/_protected/dashboard")({
 });
 
 function RouteComponent() {
-  const { data } = useQuery({
-    queryKey: ["platformAnalytics"],
-    queryFn: getPlatformAnalytics,
-  });
+  const { data } = useGetPlatformAnalytics();
 
   return (
     <section className="space-y-6">
@@ -54,7 +49,7 @@ function RouteComponent() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {data?.data?.totalRevenue || 0}
+              {data?.totalRevenue ?? "0"}
             </div>
             <p className="text-muted-foreground text-xs">
               +20.1% from last month
@@ -83,7 +78,7 @@ function RouteComponent() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {data?.data?.totalEnrollments || 0}
+              {data?.totalEnrollments ?? "0"}
             </div>
             <p className="text-muted-foreground text-xs">
               +180.1% from last month
@@ -111,7 +106,7 @@ function RouteComponent() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {data?.data?.averageCourseRating || 0}
+              {data?.averageCourseRating ?? "0"}
             </div>
             <p className="text-muted-foreground text-xs">
               +19% from last month
@@ -138,7 +133,7 @@ function RouteComponent() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {data?.data?.totalCourses || 0}
+              {data?.totalCourses ?? "0"}
             </div>
             <p className="text-muted-foreground text-xs">
               +201 since last hour

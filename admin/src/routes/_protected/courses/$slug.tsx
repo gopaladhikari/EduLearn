@@ -1,8 +1,6 @@
-import { getCourseBySlug } from "@/lib/queries/courses.query";
-import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -19,10 +17,13 @@ import {
   Tag,
   Trophy,
   TrendingUp,
+  Edit2,
 } from "lucide-react";
 import { CourseDetailPageSkeleton } from "@/components/skeletons/CourseDetailPageSkeleton";
 import { useSeo } from "@/hooks/useSeo";
 import { ReactParser } from "@/components/courses/ReactParser";
+import { cn } from "@/lib/utils";
+import { useGetCourseBySlug } from "@/hooks/coursesHooks";
 
 export const Route = createFileRoute("/_protected/courses/$slug")({
   component: RouteComponent,
@@ -31,15 +32,13 @@ export const Route = createFileRoute("/_protected/courses/$slug")({
 function RouteComponent() {
   const { slug } = Route.useParams();
 
-  const { data, isPending } = useQuery({
-    queryKey: ["course", slug],
-    queryFn: () => getCourseBySlug(slug),
-    staleTime: 1000 * 60 * 15, // 15 minutes
+  const { data, isPending } = useGetCourseBySlug({
+    slug,
   });
 
   useSeo({
-    title: data?.data.title || "",
-    description: data?.data.description,
+    title: data?.title || "",
+    description: data?.description,
   });
 
   if (isPending) return <CourseDetailPageSkeleton />;
@@ -49,10 +48,10 @@ function RouteComponent() {
       <CardHeader className="bg-primary text-primary-foreground">
         <div className="flex items-center justify-between">
           <CardTitle className="text-3xl font-bold">
-            {data?.data.title}
+            {data?.title}
           </CardTitle>
           <div className="flex gap-2">
-            {data?.data.isPopular && (
+            {data?.isPopular && (
               <Badge
                 variant="secondary"
                 className="flex items-center gap-1"
@@ -60,7 +59,7 @@ function RouteComponent() {
                 <TrendingUp className="h-4 w-4" /> Popular
               </Badge>
             )}
-            {data?.data.isBestSeller && (
+            {data?.isBestSeller && (
               <Badge
                 variant="secondary"
                 className="flex items-center gap-1"
@@ -78,7 +77,7 @@ function RouteComponent() {
               About This Course
             </h2>
             <CardDescription className="prose dark:prose-invert max-w-full text-black dark:text-white">
-              <ReactParser html={data?.data.description as string} />
+              <ReactParser html={data?.description as string} />
             </CardDescription>
             <Separator className="my-6" />
             <h3 className="mb-4 text-xl font-semibold">
@@ -100,18 +99,23 @@ function RouteComponent() {
               <CardContent className="space-y-4">
                 <div className="flex items-center gap-2">
                   <User className="text-muted-foreground h-5 w-5" />
-                  {/* <span>Instructor: {course.instructor[0].name}</span> */}
+                  <span>
+                    Instructor:{" "}
+                    {data?.instructor
+                      .map(({ fullName }) => fullName)
+                      .join(", ")}
+                  </span>
                 </div>
                 <div className="flex items-center gap-2">
                   <DollarSign className="text-muted-foreground h-5 w-5" />
-                  <span>Price: ${data?.data.price.toFixed(2)}</span>
+                  <span>Price: ${data?.price.toFixed(2)}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <BookOpen className="text-muted-foreground h-5 w-5" />
-                  {/* <span>{course.lessons.length} lessons</span> */}
+                  <span>{data?.lessons.length} lessons</span>
                 </div>
                 <div className="mt-4 flex flex-wrap gap-2">
-                  {data?.data.tags.map((tag) => (
+                  {data?.tags.map((tag) => (
                     <Badge
                       key={tag}
                       variant="outline"
@@ -123,17 +127,28 @@ function RouteComponent() {
                   ))}
                 </div>
               </CardContent>
-              <CardFooter>
-                <Button className="w-full">
-                  <Link
-                    to="/analytics/$slug"
-                    params={{
-                      slug: data?.data.slug as string,
-                    }}
-                  >
-                    View Analytics
-                  </Link>
-                </Button>
+              <CardFooter className="flex-col gap-4">
+                <Link
+                  to="/courses/edit/$slug"
+                  className={cn(
+                    buttonVariants({ variant: "outline" }),
+                    "w-full",
+                  )}
+                  params={{
+                    slug: data?.slug as string,
+                  }}
+                >
+                  Edit <Edit2 />
+                </Link>
+                <Link
+                  to="/analytics/$slug"
+                  className={cn(buttonVariants(), "w-full")}
+                  params={{
+                    slug: data?.slug as string,
+                  }}
+                >
+                  View Analytics
+                </Link>
               </CardFooter>
             </Card>
           </div>
@@ -143,7 +158,7 @@ function RouteComponent() {
         <h3 className="mb-4 text-xl font-semibold">Course Preview</h3>
         <div className="aspect-video">
           <video
-            src={data?.data.video?.url}
+            src={data?.video?.url}
             controls
             className="h-full w-full rounded-lg object-cover"
           >

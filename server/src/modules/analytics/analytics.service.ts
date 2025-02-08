@@ -102,20 +102,22 @@ export class AnalyticsService {
 
       if (!result) throw new NotFoundException('Analytics not found');
 
-      await this.cache.set(cacheKey, result);
+      const data = {
+        totalCourses: result.totalCourses[0]?.total || 0,
+        totalEnrollments: result.totalEnrollments[0]?.total || 0,
+        totalRevenue: result.totalRevenue[0]?.total || 0,
+        totalRefunds: result.totalRefunds[0]?.total || 0,
+        averageCourseRating:
+          result.averageCourseRating[0]?.average || 0,
+        mostPopularCourse:
+          result.mostPopularCourse[0]?.courseSlug || null,
+      };
+
+      await this.cache.set(cacheKey, data);
 
       return {
         message: 'Platform analytics fetched successfully',
-        data: {
-          totalCourses: result.totalCourses[0]?.total || 0,
-          totalEnrollments: result.totalEnrollments[0]?.total || 0,
-          totalRevenue: result.totalRevenue[0]?.total || 0,
-          totalRefunds: result.totalRefunds[0]?.total || 0,
-          averageCourseRating:
-            result.averageCourseRating[0]?.average || 0,
-          mostPopularCourse:
-            result.mostPopularCourse[0]?.courseSlug || null,
-        },
+        data,
       };
     } catch (error) {
       if (error instanceof NotFoundException) throw error;

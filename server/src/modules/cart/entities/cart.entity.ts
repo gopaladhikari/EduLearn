@@ -9,14 +9,13 @@ export class Cart {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true,
-    unique: true,
   })
-  userId: string;
+  user: string;
 
   @Prop({
     type: [
       {
-        courseId: {
+        course: {
           type: mongoose.Schema.Types.ObjectId,
           ref: 'Course',
           required: true,
@@ -38,7 +37,7 @@ export class Cart {
     },
   })
   items: Array<{
-    courseId: string;
+    course: string;
     addedAt: Date;
     priceAtAddition: number;
   }>;

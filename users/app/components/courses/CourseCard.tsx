@@ -25,7 +25,7 @@ export function CourseCard({ course }: Props) {
   const parsed = parser(course.description);
 
   const isInCart = cart?.items.some(
-    (item) => item.courseId._id === course._id,
+    (item) => item.course._id === course._id,
   );
 
   const optimisticAddToCart = useCallback(
@@ -38,7 +38,7 @@ export function CourseCard({ course }: Props) {
             items: [
               {
                 addedAt: new Date(),
-                courseId: course,
+                course,
                 priceAtAddition: course.price,
               },
             ],
@@ -53,7 +53,7 @@ export function CourseCard({ course }: Props) {
             ...prev.items,
             {
               addedAt: new Date(),
-              courseId: course,
+              course,
               priceAtAddition: course.price,
             },
           ],
@@ -65,7 +65,7 @@ export function CourseCard({ course }: Props) {
         {
           name: "addToCart",
           price: course.price,
-          courseId: course._id,
+          course: course._id,
         },
         {
           method: "POST",

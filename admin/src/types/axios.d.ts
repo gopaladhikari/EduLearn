@@ -14,12 +14,26 @@ declare module "axios" {
   export interface AxiosInstance {
     get<T = unknown>(
       url: string,
+      data?: unknown | undefined,
       config?: AxiosRequestConfig,
     ): CustomResponse<T>;
 
     post<T = unknown>(
       url: string,
-      data?: AxiosRequestConfig,
+      data?: unknown | undefined,
+      config?: AxiosRequestConfig,
+    ): CustomResponse<T>;
+
+    patch<T = unknown>(
+      url: string,
+      data?: unknown | undefined,
+      config?: AxiosRequestConfig,
+    ): CustomResponse<T>;
+
+    delete<T = unknown>(
+      url: string,
+      data?: unknown | undefined,
+      config?: AxiosRequestConfig,
     ): CustomResponse<T>;
   }
 }

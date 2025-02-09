@@ -23,7 +23,7 @@ import { CourseDetailPageSkeleton } from "@/components/skeletons/CourseDetailPag
 import { useSeo } from "@/hooks/useSeo";
 import { ReactParser } from "@/components/courses/ReactParser";
 import { cn } from "@/lib/utils";
-import { useGetCourseBySlug } from "@/hooks/coursesHooks";
+import { useCourseBySlug } from "@/lib/queries/courses.query";
 
 export const Route = createFileRoute("/_protected/courses/$slug")({
   component: RouteComponent,
@@ -32,7 +32,7 @@ export const Route = createFileRoute("/_protected/courses/$slug")({
 function RouteComponent() {
   const { slug } = Route.useParams();
 
-  const { data, isPending } = useGetCourseBySlug({
+  const { data, isPending } = useCourseBySlug({
     slug,
   });
 

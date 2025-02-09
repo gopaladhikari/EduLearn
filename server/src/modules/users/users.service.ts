@@ -90,7 +90,7 @@ export class UsersService {
 
       const cachedUser = await this.cache.get(cacheKey);
 
-      if (cachedUser) return cachedUser as UserDocument;
+      if (cachedUser) return this.User.hydrate(cachedUser);
 
       const user = await this.User.findOne(query);
       if (!user)

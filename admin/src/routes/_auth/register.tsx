@@ -7,26 +7,16 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { useMutation } from "@tanstack/react-query";
-import { registerMutation } from "@/lib/mutations/auth.mutation";
 import { useSeo } from "@/hooks/useSeo";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import {
   registerSchema,
   type RegisterSchema,
 } from "@/schemas/auth.schema";
-
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { axiosInstance } from "@/config/axios";
+import { FormInputField } from "@/components/ui/FormInputField";
 
 export const Route = createFileRoute("/_auth/register")({
   component: RouteComponent,
@@ -37,24 +27,27 @@ function RouteComponent() {
     title: "Register",
     description: "Register to your account",
   });
+
   const form = useForm<RegisterSchema>({
     resolver: zodResolver(registerSchema),
   });
 
-  const { mutate, isPending, isError, isSuccess, data, error } =
-    useMutation({
-      mutationFn: registerMutation,
-      onSuccess() {
-        form.reset({
-          fullName: "",
-          email: "",
-          password: "",
-        });
-      },
-    });
-
   const onSubmit: SubmitHandler<RegisterSchema> = async (values) => {
-    mutate(values);
+    try {
+      const { data } = await axiosInstance.post("/api/users", {
+        ...values,
+        role: "admin",
+      });
+
+      return data;
+    } catch (error) {
+      const err = (error as Error).message;
+
+      form.setError("email", {
+        type: "manual",
+        message: err,
+      });
+    }
   };
 
   return (
@@ -67,80 +60,58 @@ function RouteComponent() {
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-8"
-          >
-            <FormField
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <FormInputField
               control={form.control}
               name="fullName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Full name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Gopal Adhikari" {...field} />
-                  </FormControl>
-                  <FormDescription>
-                    This is your display name.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
+              label="Your full name"
+              placeholder="Gopal Adhikari"
+              inputProps={{
+                type: "email",
+              }}
             />
-            <FormField
+
+            <FormInputField
               control={form.control}
               name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="gopal@gmail.com"
-                      {...field}
-                      type="email"
-                    />
-                  </FormControl>
-                  <FormDescription>
-                    This is your email
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
+              label="Email"
+              placeholder="gopal@gmail.com"
+              inputProps={{
+                type: "email",
+              }}
             />
-            <FormField
+
+            <FormInputField
               control={form.control}
               name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="********"
-                      {...field}
-                      type="password"
-                      eye
-                    />
-                  </FormControl>
-                  <FormDescription>
-                    This is your password
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
+              label="Password"
+              placeholder="********"
+              inputProps={{
+                type: "password",
+                eye: true,
+              }}
             />
-            {isError && (
-              <div className="text-destructive">{error.message}</div>
+
+            {form.formState.errors.root && (
+              <div className="text-destructive">
+                {form.formState.errors.root.message}
+              </div>
             )}
-            {isSuccess && (
-              <div className="text-green-600">{data.message}</div>
+
+            {form.formState.isSubmitSuccessful && (
+              <div className="text-green-600">
+                Verfication email sent to {form.getValues("email")}
+              </div>
             )}
 
             <Button
               type="submit"
-              disabled={isPending}
+              disabled={form.formState.isSubmitting}
               className="w-full"
             >
-              {isPending ? "Submitting..." : "Register"}
+              {form.formState.isSubmitting
+                ? "Submitting..."
+                : "Register"}
             </Button>
           </form>
         </Form>

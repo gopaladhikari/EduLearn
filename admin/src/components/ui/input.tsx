@@ -63,6 +63,7 @@ function Input({
         <button
           type="button"
           onClick={togglePasswordVisibility}
+          className="cursor-pointer"
           aria-label={
             inputType === "password"
               ? "Show password"

@@ -9,7 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useGetPlatformAnalytics } from "@/hooks/analyticsHooks";
+import { usePlatformAnalytics } from "@/lib/queries/analytics.query";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_protected/dashboard")({
@@ -17,7 +17,7 @@ export const Route = createFileRoute("/_protected/dashboard")({
 });
 
 function RouteComponent() {
-  const { data } = useGetPlatformAnalytics();
+  const { data } = usePlatformAnalytics();
 
   return (
     <section className="space-y-6">

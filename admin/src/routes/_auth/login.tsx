@@ -1,9 +1,4 @@
-import {
-  createFileRoute,
-  Link,
-  useNavigate,
-} from "@tanstack/react-router";
-import { useForm } from "@tanstack/react-form";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -13,14 +8,17 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
 import { useSeo } from "@/hooks/useSeo";
-import { loginMutation } from "@/lib/mutations/auth.mutation";
-import { useMutation } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/useAuth";
+import { Form } from "@/components/ui/form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { loginSchema, type LoginSchema } from "@/schemas/auth.schema";
+import { useForm, type SubmitHandler } from "react-hook-form";
 import { SessionStorage } from "@/config/constants";
-import { queryClient } from "@/main";
+import { axiosInstance } from "@/config/axios";
+import type { User } from "@/types";
+import { FormInputField } from "@/components/ui/FormInputField";
+import { Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_auth/login")({
   component: RouteComponent,
@@ -31,43 +29,48 @@ function RouteComponent() {
 
   const { setUser } = useAuth();
 
-  const mutation = useMutation({
-    mutationFn: loginMutation,
-    onSuccess(data) {
-      sessionStorage.setItem(SessionStorage.IS_LOGGED_IN, "true");
-      setUser((prev) => {
-        return {
-          ...prev,
-          ...data.data,
-        };
-      });
-      navigate({ to: "/dashboard" });
-    },
-    onError() {
-      sessionStorage.removeItem(SessionStorage.IS_LOGGED_IN);
-      setUser(null);
-    },
-    onSettled: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: ["me"],
-      });
-    },
-  });
-
-  const form = useForm({
-    defaultValues: {
-      email: "",
-      password: "",
-    },
-    onSubmit: ({ value }) => {
-      mutation.mutate(value);
-    },
-  });
-
   useSeo({
     title: "Login",
     description: "Login to your account",
   });
+
+  const form = useForm<LoginSchema>({
+    resolver: zodResolver(loginSchema),
+  });
+
+  const onSubmit: SubmitHandler<LoginSchema> = async (values) => {
+    try {
+      const { data } = await axiosInstance.post<{
+        user: User;
+        accessToken: string;
+      }>("/api/auth/login", values);
+
+      if (data?.status) {
+        sessionStorage.setItem(SessionStorage.IS_LOGGED_IN, "true");
+        setUser((prev) => {
+          return {
+            ...prev,
+            ...data.data.user,
+          };
+        });
+
+        navigate({ to: "/dashboard" });
+      } else {
+        form.setError("root", {
+          type: "manual",
+          message: "Something went wrong",
+        });
+      }
+    } catch (error) {
+      const err = (error as Error).message;
+      form.setError("root", {
+        type: "manual",
+        message: err,
+      });
+      sessionStorage.removeItem(SessionStorage.IS_LOGGED_IN);
+      setUser(null);
+    }
+  };
 
   return (
     <Card>
@@ -78,126 +81,66 @@ function RouteComponent() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form className="space-y-3">
-          <div className="space-y-3">
-            <form.Field
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <FormInputField
+              control={form.control}
               name="email"
-              validators={{
-                onChange: ({ value }) =>
-                  !value
-                    ? "A first name is required"
-                    : value.length < 3
-                      ? "First name must be at least 3 characters"
-                      : undefined,
-                onChangeAsyncDebounceMs: 500,
-                onChangeAsync: async ({ value }) => {
-                  await new Promise((resolve) =>
-                    setTimeout(resolve, 1000),
-                  );
-                  return (
-                    value.includes("error") &&
-                    'No "error" allowed in first name'
-                  );
-                },
-              }}
-              children={(field) => {
-                return (
-                  <>
-                    <Label htmlFor={field.name}>Email</Label>
-                    <Input
-                      id={field.name}
-                      name={field.name}
-                      value={field.state.value}
-                      type="email"
-                      onBlur={field.handleBlur}
-                      placeholder="Enter your email"
-                      onChange={(e) =>
-                        field.handleChange(e.target.value)
-                      }
-                    />
-                  </>
-                );
+              label="Email"
+              placeholder="gopal@gmail.com"
+              inputProps={{
+                type: "email",
               }}
             />
-          </div>
-          <div className="space-y-3">
-            <form.Field
-              name="password"
-              validators={{
-                onChange: ({ value }) =>
-                  !value
-                    ? "Full name is required"
-                    : value.length < 3
-                      ? "First name must be at least 3 characters"
-                      : undefined,
-                onChangeAsyncDebounceMs: 500,
-                onChangeAsync: async ({ value }) => {
-                  await new Promise((resolve) =>
-                    setTimeout(resolve, 1000),
-                  );
-                  return (
-                    value.includes("error") &&
-                    'No "error" allowed in first name'
-                  );
-                },
-              }}
-              children={(field) => {
-                return (
-                  <>
-                    <Label htmlFor={field.name}>Password</Label>
-                    <Input
-                      id={field.name}
-                      eye
-                      name={field.name}
-                      type="password"
-                      value={field.state.value}
-                      placeholder="Enter your password"
-                      onBlur={field.handleBlur}
-                      onChange={(e) =>
-                        field.handleChange(e.target.value)
-                      }
-                    />
-                  </>
-                );
-              }}
-            />
-          </div>
-          <div className="text-end">
-            <Link
-              to="/forgot-password"
-              className="text-sm hover:underline"
-            >
-              Forgot your password?
-            </Link>
-          </div>
-          {mutation.error && (
-            <p className="text-destructive">
-              {mutation.error.message}
-            </p>
-          )}
-        </form>
-      </CardContent>
 
-      <CardFooter className="flex-col gap-4">
-        <Button
-          type="button"
-          className="w-full"
-          onClick={form.handleSubmit}
-        >
-          {form.state.isSubmitting ? "Signing in..." : "Sign In"}
-        </Button>
-        <Button
-          type="button"
-          className="w-full"
-          variant="secondary"
-          onClick={() => {
-            form.setFieldValue("email", "admin@edulearn.com");
-            form.setFieldValue("password", "Admin@123");
-          }}
-        >
-          Guest User
-        </Button>
-      </CardFooter>
+            <FormInputField
+              control={form.control}
+              name="password"
+              label="Password"
+              placeholder="********"
+              inputProps={{
+                type: "password",
+                eye: true,
+              }}
+            />
+
+            <p className="text-end text-sm">
+              Forgot password?{" "}
+              <Link
+                to="/forgot-password"
+                className="text-blue-500 underline underline-offset-4"
+              >
+                Click here
+              </Link>
+            </p>
+
+            {form.formState.errors.root && (
+              <div className="text-destructive">
+                {form.formState.errors.root.message}
+              </div>
+            )}
+
+            <CardFooter className="flex-col gap-4 px-0">
+              <Button type="submit" className="w-full">
+                {form.formState.isSubmitting
+                  ? "Signing in..."
+                  : "Sign In"}
+              </Button>
+              <Button
+                type="button"
+                className="w-full"
+                variant="secondary"
+                onClick={() => {
+                  form.setValue("email", "admin@edulearn.com");
+                  form.setValue("password", "Admin@123");
+                }}
+              >
+                Guest User
+              </Button>
+            </CardFooter>
+          </form>
+        </Form>
+      </CardContent>
     </Card>
   );
 }

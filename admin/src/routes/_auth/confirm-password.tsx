@@ -1,5 +1,15 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  Link,
+  useNavigate,
+} from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
+import { useForm, type SubmitHandler } from "react-hook-form";
+import {
+  confirmPasswordSchema,
+  ConfirmPasswordSchema,
+} from "@/schemas/confirm-password.schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Card,
   CardContent,
@@ -7,16 +17,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { confirmForgotPassword } from "@/lib/mutations/auth.mutation";
-import { useMutation } from "@tanstack/react-query";
-import { useForm, type SubmitHandler } from "react-hook-form";
-import {
-  confirmPasswordSchema,
-  ConfirmPasswordSchema,
-} from "@/schemas/confirm-password.schema";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { FormInputField } from "@/components/ui/FormInputField";
+import { Form } from "@/components/ui/form";
+import { axiosInstance } from "@/config/axios";
 
 export const Route = createFileRoute("/_auth/confirm-password")({
   component: RouteComponent,
@@ -33,25 +36,31 @@ function RouteComponent() {
   const { token } = Route.useSearch();
   const navigate = useNavigate();
 
-  const mutation = useMutation({
-    mutationFn: (formData: ConfirmPasswordSchema) =>
-      confirmForgotPassword(formData, token),
-    onSuccess() {
-      navigate({
-        to: "/login",
-      });
-    },
+  const form = useForm<ConfirmPasswordSchema>({
+    resolver: zodResolver(confirmPasswordSchema),
   });
 
-  const { register, handleSubmit, formState } =
-    useForm<ConfirmPasswordSchema>({
-      resolver: zodResolver(confirmPasswordSchema),
-    });
-
   const onSubmit: SubmitHandler<ConfirmPasswordSchema> = async (
-    data,
+    formdata,
   ) => {
-    mutation.mutate(data);
+    try {
+      const { data } = await axiosInstance.post(
+        "/api/auth/confirm-forgot-password",
+        {
+          ...formdata,
+          token,
+        },
+      );
+
+      if (data?.status) navigate({ to: "/login" });
+    } catch (error) {
+      const err = (error as Error).message;
+
+      form.setError("root", {
+        type: "manual",
+        message: err,
+      });
+    }
   };
 
   return (
@@ -64,60 +73,63 @@ function RouteComponent() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form className="space-y-3" onSubmit={handleSubmit(onSubmit)}>
-          <div className="space-y-3">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              {...register("email")}
-              placeholder="Enter your email"
-            />
-            {formState.errors.email && (
-              <p className="text-destructive">
-                {formState.errors.email.message}
-              </p>
-            )}
-          </div>
-          <div className="space-y-3">
-            <Label htmlFor="password">Password</Label>
-            <Input
-              type="password"
-              {...register("password")}
-              placeholder="Enter your password"
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <FormInputField
+              control={form.control}
+              name="email"
+              label="Email"
+              placeholder="user@edulearn.com"
+              inputProps={{
+                type: "email",
+              }}
             />
 
-            {formState.errors.password && (
-              <p className="text-destructive">
-                {formState.errors.password.message}
-              </p>
-            )}
-          </div>
-          <div className="space-y-3">
-            <Label htmlFor="confirmPassword">Confirm Password</Label>
-            <Input
-              type="password"
-              {...register("confirmPassword")}
-              placeholder="Enter your confirm password"
+            <FormInputField
+              control={form.control}
+              name="password"
+              label="Password"
+              placeholder="********"
+              inputProps={{
+                type: "password",
+                eye: true,
+              }}
             />
-            {formState.errors.confirmPassword && (
-              <p className="text-destructive">
-                {formState.errors.confirmPassword.message}
-              </p>
-            )}
-          </div>
 
-          {mutation.isError && (
-            <p className="text-destructive">
-              {mutation.error.message}
+            <FormInputField
+              control={form.control}
+              name="confirmPassword"
+              label="Confirm Password"
+              placeholder="********"
+              inputProps={{
+                type: "password",
+                eye: true,
+              }}
+            />
+
+            <p className="text-end text-sm">
+              Forgot password?{" "}
+              <Link
+                to="/forgot-password"
+                className="text-blue-500 underline underline-offset-4"
+              >
+                Click here
+              </Link>
             </p>
-          )}
-          {mutation.isSuccess && (
-            <p className="text-green-600">{mutation.data.message}</p>
-          )}
 
-          <Button type="submit" className="w-full">
-            {formState.isSubmitting ? "Confirming..." : "Confirm"}
-          </Button>
-        </form>
+            {form.formState.errors.root && (
+              <div className="text-destructive">
+                {form.formState.errors.root.message}
+              </div>
+            )}
+
+            <Button type="submit" className="w-full">
+              {form.formState.isSubmitting
+                ? "Confirming..."
+                : "Confirm"}
+            </Button>
+          </form>
+        </Form>
       </CardContent>
     </Card>
   );

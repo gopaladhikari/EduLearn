@@ -24,7 +24,7 @@ import type { Course } from "@/types";
 import { Label } from "@/components/ui/label";
 import { SessionStorage } from "@/config/constants";
 import { CourseEditOption } from "@/components/courses/CourseEditOption";
-import { useGetAllCourses } from "./coursesHooks";
+import { useAllCourses } from "@/lib/queries/courses.query";
 
 function IndeterminateCheckbox({
   indeterminate,
@@ -66,7 +66,7 @@ export function useCoursesTable(itemsPerPage: number) {
     pageSize: itemsPerPage,
   });
 
-  const { data, isPending } = useGetAllCourses();
+  const { data, isPending } = useAllCourses();
   const columns = useMemo(
     () => [
       {

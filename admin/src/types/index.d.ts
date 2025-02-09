@@ -5,10 +5,11 @@ export type User = {
   username: string;
   phoneNumber: string;
   password: string;
-  role: string;
+  role: "admin" | "user";
+  verified: boolean;
   bio: string;
   verified: boolean;
-  status: string;
+  status: "active" | "restrcited" | "inactive";
   avatar: {
     url: string;
     publicId: string;
@@ -97,13 +98,6 @@ export type CourseAnalytics = {
   popularityScore: number;
   trendScore: number;
 };
-
-export type CustomResponse<T = unknown> = Promise<{
-  data: T;
-  status: boolean;
-  message: string;
-  path: string;
-}>;
 
 export type CourseWithInstructors = Omit<Course, "instructor"> & {
   instructor: User[];

@@ -1,7 +1,6 @@
 import { SessionStorage } from "@/config/constants";
-import { me } from "@/lib/queries/users.query";
+import { useMe } from "@/lib/queries/users.query";
 import type { User } from "@/types";
-import { useQuery } from "@tanstack/react-query";
 import {
   createContext,
   useEffect,
@@ -27,10 +26,7 @@ function AuthProvider({ children }: PropsWithChildren) {
   const isLoggedIn =
     sessionStorage.getItem(SessionStorage.IS_LOGGED_IN) === "true";
 
-  const { data, isPending, isSuccess } = useQuery({
-    queryKey: ["me"],
-    queryFn: me,
-  });
+  const { data, isPending, isSuccess } = useMe();
 
   useEffect(() => {
     if (isPending) return;

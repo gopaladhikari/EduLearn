@@ -15,7 +15,7 @@ interface FormInputFieldProps<TFieldValues extends FieldValues> {
   label: string;
   placeholder?: string;
   description?: string;
-  inputProps?: React.ComponentProps<"input">;
+  inputProps?: React.ComponentProps<"input"> & { eye?: boolean };
 }
 
 export function FormInputField<TFieldValues extends FieldValues>({
@@ -31,7 +31,7 @@ export function FormInputField<TFieldValues extends FieldValues>({
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem>
+        <FormItem className="flex flex-col gap-1">
           <FormLabel>{label}</FormLabel>
           <FormControl>
             <Input

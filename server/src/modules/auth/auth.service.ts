@@ -101,10 +101,19 @@ export class AuthService {
       email,
       accessToken,
     );
-    user.jwtToken = accessToken;
+
+    user.forgotPasswordToken = accessToken;
+
+    const expires = new Date();
+
+    expires.setDate(expires.getDate() + 7);
+
+    user.forgotPasswordTokenExpires = expires;
+
     await user.save();
+
     return {
-      message: 'Password reset link sent successfully',
+      message: `Password reset link sent successfully to ${user.email} email`,
       data,
     };
   }
@@ -114,31 +123,35 @@ export class AuthService {
     { email, password, confirmPassword }: ConfirmForgotPasswordDto,
     response: Response,
   ) {
-    const user = await this.users.getUser({ email });
+    try {
+      const user = await this.users.getUser({ email });
 
-    if (!user) throw new NotFoundException('User not found');
+      if (!user) throw new NotFoundException('User not found');
 
-    if (user.jwtToken !== token)
-      throw new BadRequestException('Invalid token');
+      if (user.jwtToken !== token)
+        throw new BadRequestException('Invalid token');
 
-    if (password !== confirmPassword)
-      throw new BadRequestException(
-        'Passsowrd and confirm password do not match',
-      );
+      if (password !== confirmPassword)
+        throw new BadRequestException(
+          'Passsowrd and confirm password do not match',
+        );
 
-    user.password = password;
-    user.jwtToken = undefined;
-    await user.save();
-    response.clearCookie('access_token', {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite:
-        process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-    });
-    return {
-      message: 'Password reset successfully',
-      data: user,
-    };
+      user.password = password;
+      user.jwtToken = undefined;
+      await user.save();
+      response.clearCookie('access_token', {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite:
+          process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      });
+      return {
+        message: 'Password reset successfully',
+        data: user,
+      };
+    } catch (error) {
+      throw error;
+    }
   }
 
   async verifyEmail(email: string, token: string) {

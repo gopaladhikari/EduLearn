@@ -3,8 +3,7 @@ import { EnrollmentChart } from "@/components/analytics/EnrollmentChart";
 import { FeedbackSection } from "@/components/analytics/FeedbackSection";
 import { OverviewCards } from "@/components/analytics/OverviewCards";
 import { RevenueChart } from "@/components/analytics/RevenueChart";
-import { getCourseAnalyticsBySlug } from "@/lib/queries/analytics.query";
-import { useQuery } from "@tanstack/react-query";
+import { useCourseAnalyticsBySlug } from "@/lib/queries/analytics.query";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_protected/analytics/$slug")({
@@ -40,10 +39,11 @@ export type CourseAnalytics = typeof courseAnalytics;
 function RouteComponent() {
   const { slug } = Route.useParams();
 
-  const { data } = useQuery({
-    queryKey: ["analytics", slug],
-    queryFn: () => getCourseAnalyticsBySlug(slug),
+  const { data } = useCourseAnalyticsBySlug({
+    slug,
   });
+
+  console.log(data);
 
   return (
     <div>

@@ -1,5 +1,5 @@
-import { useGetCourseBySlug } from "@/hooks/coursesHooks";
 import { useSeo } from "@/hooks/useSeo";
+import { useCourseBySlug } from "@/lib/queries/courses.query";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute(
@@ -11,7 +11,7 @@ export const Route = createFileRoute(
 function RouteComponent() {
   const { slug } = Route.useParams();
 
-  const { data } = useGetCourseBySlug({
+  const { data } = useCourseBySlug({
     slug,
   });
 

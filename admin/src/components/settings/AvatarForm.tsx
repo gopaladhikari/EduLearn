@@ -22,11 +22,7 @@ import {
 import { useState } from "react";
 import { CloudUpload, Paperclip, User } from "lucide-react";
 import type { DropzoneOptions } from "react-dropzone";
-import { toast } from "@/hooks/use-toast";
-import { queryClient } from "@/main";
 import { useAuth } from "@/hooks/useAuth";
-import { useMutation } from "@tanstack/react-query";
-import { updateAvatarMutation } from "@/lib/mutations/user.mutation";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 export function AvatarForm() {
@@ -42,49 +38,11 @@ export function AvatarForm() {
     multiple: false,
   };
 
-  const { mutate, isPending } = useMutation({
-    mutationFn: updateAvatarMutation,
-    onSuccess: (data) => {
-      setFiles(null);
-      setImageUrl("");
-      form.clearErrors();
-      form.resetField("avatar");
-      setUser((prev) => {
-        if (!prev) return prev;
-
-        return {
-          ...prev,
-          avatar: {
-            url: data.data.avatar?.url,
-            publicId: data.data.avatar.publicId,
-          },
-        };
-      });
-      toast({
-        title: data.message,
-        variant: "success",
-      });
-    },
-
-    onError: async (error) => {
-      toast({
-        title: error.message,
-        description: "Something went wrong",
-        variant: "destructive",
-      });
-    },
-
-    onSettled: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: ["me"],
-      });
-    },
-  });
-
   const onSubmit: SubmitHandler<
     z.infer<typeof avatarSchema>
   > = async (formData) => {
-    mutate(formData);
+    console.log(setUser);
+    console.log(formData);
   };
 
   return (
@@ -132,7 +90,7 @@ export function AvatarForm() {
                       setFiles(e);
                     }}
                     dropzoneOptions={dropZoneConfig}
-                    className="relative w-full rounded-lg bg-background p-2"
+                    className="bg-background relative w-full rounded-lg p-2"
                   >
                     <FileInput id="fileInput">
                       {files && files?.length > 0 ? (
@@ -143,7 +101,7 @@ export function AvatarForm() {
                           height={120}
                         />
                       ) : (
-                        <div className="flex w-full flex-col items-center justify-center p-8 outline-dashed outline-1 outline-slate-500">
+                        <div className="flex w-full flex-col items-center justify-center p-8 outline-1 outline-slate-500 outline-dashed">
                           <CloudUpload className="h-10 w-10 text-gray-500" />
                           <p className="mb-1 text-sm text-gray-500 dark:text-gray-400">
                             <span className="font-semibold">
@@ -175,8 +133,11 @@ export function AvatarForm() {
           />
 
           <div className="text-end">
-            <Button type="submit" disabled={isPending}>
-              {isPending ? "Saving..." : "Save"}
+            <Button
+              type="submit"
+              disabled={form.formState.isSubmitting}
+            >
+              {form.formState.isSubmitting ? "Saving..." : "Save"}
             </Button>
           </div>
         </form>

@@ -148,6 +148,10 @@
     @apply text-2xl font-bold tracking-tight;
   }
 
+  form {
+    @apply space-y-6;
+  }
+
   .tiptap {
     :first-child {
       margin-top: 0;

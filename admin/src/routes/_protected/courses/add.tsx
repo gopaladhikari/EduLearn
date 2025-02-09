@@ -17,8 +17,6 @@ import {
   courseSchema,
   type CourseSchema,
 } from "@/schemas/courses.schema";
-import { useQuery } from "@tanstack/react-query";
-import { getAllUsers } from "@/lib/queries/users.query";
 import { useSeo } from "@/hooks/useSeo";
 import { useMemo, useState } from "react";
 import { XIcon } from "lucide-react";
@@ -38,6 +36,8 @@ import { queryClient } from "@/main";
 import { TipTap } from "@/components/courses/TipTap";
 import { FileUploadField } from "@/components/ui/FileUploadField";
 import { FormInputField } from "@/components/ui/FormInputField";
+import { useAllUsers } from "@/lib/queries/users.query";
+import type { Course } from "@/types";
 
 export const Route = createFileRoute("/_protected/courses/add")({
   component: RouteComponent,
@@ -84,17 +84,18 @@ function RouteComponent() {
     description: "Add new course",
   });
 
-  const { data } = useQuery({
-    queryFn: getAllUsers,
-    queryKey: ["users"],
+  const { data } = useAllUsers({
+    status: "active",
+    verified: true,
+    role: "admin",
   });
 
   const onSubmit: SubmitHandler<CourseSchema> = async (FormData) => {
     try {
-      const { data } = await axiosInstance.post(
+      const { data } = await axiosInstance.post<Course>(
         "/api/courses",
-        FormData,
         {
+          data: FormData,
           headers: {
             "Content-Type": "multipart/form-data",
           },

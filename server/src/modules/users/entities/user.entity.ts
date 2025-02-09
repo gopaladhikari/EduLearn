@@ -56,6 +56,18 @@ export class User {
 
   @Prop()
   jwtToken: string;
+
+  @Prop()
+  forgotPasswordToken: string;
+
+  @Prop()
+  forgotPasswordTokenExpires: Date;
+
+  @Prop()
+  resetPasswordToken: string;
+
+  @Prop()
+  resetPasswordTokenExpires: Date;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

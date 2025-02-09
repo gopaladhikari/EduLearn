@@ -141,4 +141,4 @@ dist/
 .netlify/
 
 # react router
-.react-router/
+.react-router

@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { UsersModule } from './modules/users/users.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
@@ -48,7 +47,6 @@ import { CartModule } from './modules/cart/cart.module';
   ],
   controllers: [AppController],
   providers: [
-    AppService,
     MailService,
     {
       provide: APP_GUARD,

@@ -90,7 +90,7 @@ function RouteComponent() {
               control={form.control}
               name="email"
               label="Email"
-              placeholder="user@edulearn.com"
+              placeholder="admin@edulearn.com"
               inputProps={{
                 type: "email",
               }}

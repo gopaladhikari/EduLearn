@@ -123,34 +123,45 @@ export class AuthService {
     { email, password, confirmPassword }: ConfirmForgotPasswordDto,
     response: Response,
   ) {
+    if (password !== confirmPassword)
+      throw new BadRequestException('Passwords do not match');
+
     try {
-      const user = await this.users.getUser({ email });
+      const user = await this.users.getUser({
+        email,
+        forgotPasswordTokenExpires: { $gt: new Date() },
+        forgotPasswordToken: token,
+      });
 
-      if (!user) throw new NotFoundException('User not found');
+      console.log({ user });
 
-      if (user.jwtToken !== token)
-        throw new BadRequestException('Invalid token');
-
-      if (password !== confirmPassword)
-        throw new BadRequestException(
-          'Passsowrd and confirm password do not match',
-        );
+      if (!user)
+        throw new NotFoundException('Invalid email or expired token');
 
       user.password = password;
-      user.jwtToken = undefined;
+
+      user.forgotPasswordToken = undefined;
+      user.forgotPasswordTokenExpires = undefined;
+
       await user.save();
+
       response.clearCookie('access_token', {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite:
           process.env.NODE_ENV === 'production' ? 'none' : 'lax',
       });
+
       return {
         message: 'Password reset successfully',
-        data: user,
+        data: {
+          id: user._id,
+          email: user.email,
+        },
       };
     } catch (error) {
-      throw error;
+      if (error instanceof NotFoundException) throw error;
+      throw new BadRequestException(error.message);
     }
   }
 
@@ -173,8 +184,7 @@ export class AuthService {
         data: user,
       };
     } catch (error) {
-      if (error instanceof NotFoundException) throw error;
-      throw new BadRequestException(error.message);
+      throw error;
     }
   }
 }

@@ -44,12 +44,10 @@ function RouteComponent() {
     formdata,
   ) => {
     try {
-      const { data } = await axiosInstance.post(
-        "/api/auth/confirm-forgot-password",
-        {
-          ...formdata,
-          token,
-        },
+      console.log(formdata);
+      const { data } = await axiosInstance.patch(
+        `/api/auth/forgot-password/${token}`,
+        formdata,
       );
 
       if (data?.status) navigate({ to: "/login" });
@@ -79,7 +77,7 @@ function RouteComponent() {
               control={form.control}
               name="email"
               label="Email"
-              placeholder="user@edulearn.com"
+              placeholder="admin@edulearn.com"
               inputProps={{
                 type: "email",
               }}

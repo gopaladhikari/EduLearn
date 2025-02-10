@@ -86,17 +86,10 @@ export class UsersService {
 
   async getUser(query?: FilterQuery<User>) {
     try {
-      const cacheKey = `user-${Object.values(query)[0]}`;
-
-      const cachedUser = await this.cache.get(cacheKey);
-
-      if (cachedUser) return this.User.hydrate(cachedUser);
-
       const user = await this.User.findOne(query);
+
       if (!user)
         throw new NotFoundException('Invalid email or password');
-
-      await this.cache.set(cacheKey, user);
 
       return user;
     } catch (error) {

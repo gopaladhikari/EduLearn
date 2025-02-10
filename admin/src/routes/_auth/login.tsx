@@ -135,7 +135,7 @@ function RouteComponent() {
                   form.setValue("password", "Admin@123");
                 }}
               >
-                Guest User
+                Guest Admin
               </Button>
             </CardFooter>
           </form>

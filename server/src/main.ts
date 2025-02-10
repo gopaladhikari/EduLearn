@@ -6,6 +6,7 @@ import type { NestExpressApplication } from '@nestjs/platform-express';
 import { ResponseInterceptor } from './interceptors/response.interceptor';
 import { site } from './config/constant';
 import { XApiKeyInterceptor } from './interceptors/x-api-key.interceptor';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app =
@@ -19,7 +20,9 @@ async function bootstrap() {
     credentials: true,
     optionsSuccessStatus: 204,
   });
+
   app.use(cookieParser());
+
   app.setGlobalPrefix('api', {
     exclude: [
       {
@@ -28,6 +31,21 @@ async function bootstrap() {
       },
     ],
   });
+
+  const config = new DocumentBuilder()
+    .setTitle('📚 EduLearn API')
+    .setDescription(
+      '📚 EduLearn Platform, an online teaching and learning hub where educators can share their knowledge with students from around the globe. This platform empowers teachers to create, manage, and sell their courses while offering students a seamless experience to learn and grow at their own pace.',
+    )
+    .setVersion('1.0')
+    .addBearerAuth()
+    .build();
+
+  const documentFactory = () =>
+    SwaggerModule.createDocument(app, config);
+
+  SwaggerModule.setup('api', app, documentFactory);
+
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();

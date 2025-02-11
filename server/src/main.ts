@@ -39,6 +39,15 @@ async function bootstrap() {
     )
     .setVersion('1.0')
     .addBearerAuth()
+    .addApiKey(
+      {
+        type: 'apiKey',
+        name: 'x-api-key',
+        in: 'header',
+        description: 'API Key required to access the endpoints',
+      },
+      'x-api-key',
+    )
     .build();
 
   const documentFactory = () =>

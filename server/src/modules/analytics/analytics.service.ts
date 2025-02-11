@@ -9,6 +9,7 @@ import type { Model } from 'mongoose';
 import { Analytics } from './entities/analytics.entity';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import type { Cache } from 'cache-manager';
+import type { ServiceReturnType } from 'src/interceptors/response.interceptor';
 
 @Injectable()
 export class AnalyticsService {
@@ -18,7 +19,9 @@ export class AnalyticsService {
     private readonly Analytics: Model<Analytics>,
   ) {}
 
-  async incrementTotalClicks(slug: string) {
+  async incrementTotalClicks(
+    slug: string,
+  ): Promise<ServiceReturnType> {
     try {
       const analytics = await this.Analytics.findOneAndUpdate(
         {
@@ -44,7 +47,7 @@ export class AnalyticsService {
     }
   }
 
-  async getPlatformAnalytics() {
+  async getPlatformAnalytics(): Promise<ServiceReturnType> {
     try {
       const cacheKey = `platform_analytics`;
 
@@ -125,7 +128,7 @@ export class AnalyticsService {
     }
   }
 
-  async getCourseAnalytics(slug: string) {
+  async getCourseAnalytics(slug: string): Promise<ServiceReturnType> {
     try {
       const cacheKey = `course_analytics_${slug}`;
 

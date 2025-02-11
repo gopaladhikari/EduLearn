@@ -15,9 +15,15 @@ import { JwtGuard } from './guards/jwt-auth.guard';
 import type { UserDocument } from 'src/modules/users/entities/user.entity';
 import type { Response } from 'express';
 import { ConfirmForgotPasswordDto } from './dto/confirm-forgot-password.dto';
-import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiBody,
+  ApiOperation,
+  ApiResponse,
+  ApiSecurity,
+} from '@nestjs/swagger';
 import { LoginDto } from './dto/login.dto';
 
+@ApiSecurity('x-api-key')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}

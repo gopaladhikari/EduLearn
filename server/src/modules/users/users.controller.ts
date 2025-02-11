@@ -27,9 +27,11 @@ import {
   ApiOkResponse,
   ApiBody,
   ApiConsumes,
+  ApiSecurity,
 } from '@nestjs/swagger';
 
 @ApiTags('Users')
+@ApiSecurity('x-api-key')
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}

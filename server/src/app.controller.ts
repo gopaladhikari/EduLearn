@@ -1,6 +1,9 @@
 import { Controller, Get } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
+import { ApiSecurity, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Hello world')
+@ApiSecurity('x-api-key')
 @Controller()
 export class AppController {
   @Get()

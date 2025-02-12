@@ -13,6 +13,7 @@ import { MailService } from '../mail/mail.service';
 import type { Types } from 'mongoose';
 import type { ConfirmForgotPasswordDto } from './dto/confirm-forgot-password.dto';
 import type { JwtPayload } from 'jsonwebtoken';
+import type { ServiceReturnType } from 'src/interceptors/response.interceptor';
 
 export interface Payload extends JwtPayload {
   _id: Types.ObjectId;
@@ -53,7 +54,7 @@ export class AuthService {
     return user;
   }
 
-  login(user: UserDocument, response: Response) {
+  login(user: UserDocument, response: Response): ServiceReturnType {
     const date = new Date();
     date.setMilliseconds(date.getTime() + 60 * 60 * 24 * 7 * 1000);
 
@@ -76,7 +77,7 @@ export class AuthService {
     };
   }
 
-  logout(response: Response) {
+  logout(response: Response): ServiceReturnType {
     response.clearCookie('access_token', {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
@@ -89,7 +90,9 @@ export class AuthService {
     };
   }
 
-  async requestForgotPassword(email: string) {
+  async requestForgotPassword(
+    email: string,
+  ): Promise<ServiceReturnType> {
     const user = await this.users.getUser({ email });
 
     if (!user) throw new NotFoundException('User not found');
@@ -122,7 +125,7 @@ export class AuthService {
     token: string,
     { email, password, confirmPassword }: ConfirmForgotPasswordDto,
     response: Response,
-  ) {
+  ): Promise<ServiceReturnType> {
     if (password !== confirmPassword)
       throw new BadRequestException('Passwords do not match');
 
@@ -165,7 +168,10 @@ export class AuthService {
     }
   }
 
-  async verifyEmail(email: string, token: string) {
+  async verifyEmail(
+    email: string,
+    token: string,
+  ): Promise<ServiceReturnType> {
     try {
       if (!email) throw new BadRequestException('Email is required');
 

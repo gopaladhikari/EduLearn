@@ -7,14 +7,14 @@ import {
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-type Res = {
-  data: unknown;
+export interface ServiceReturnType {
   message: string;
-};
+  data: unknown;
+}
 
 @Injectable()
 export class ResponseInterceptor implements NestInterceptor {
-  responseHandler(res: Res, context: ExecutionContext) {
+  responseHandler(res: ServiceReturnType, context: ExecutionContext) {
     const ctx = context.switchToHttp();
     const response = ctx.getResponse();
     const request = ctx.getRequest();
@@ -36,6 +36,6 @@ export class ResponseInterceptor implements NestInterceptor {
   ): Observable<unknown> {
     return next
       .handle()
-      .pipe(map((res: Res) => this.responseHandler(res, context)));
+      .pipe(map((res) => this.responseHandler(res, context)));
   }
 }

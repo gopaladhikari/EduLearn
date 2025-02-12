@@ -72,7 +72,10 @@ export class UsersService {
       await user.save();
 
       await this.cache.clear();
-      return data;
+      return {
+        message: 'User created successfully',
+        data,
+      };
     } catch (error) {
       if (error instanceof mongoose.mongo.MongoServerError) {
         const duplicateField = Object.keys(error.keyPattern)[0];

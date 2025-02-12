@@ -21,12 +21,48 @@ import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { CurrentUser } from '../auth/current-user.decorator';
 import { isValidObjectId } from 'mongoose';
 import type { UserDocument } from '../users/entities/user.entity';
+import {
+  ApiTags,
+  ApiBearerAuth,
+  ApiOperation,
+  ApiQuery,
+  ApiParam,
+  ApiBody,
+  ApiConsumes,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiBadRequestResponse,
+  ApiForbiddenResponse,
+  ApiNotFoundResponse,
+  ApiSecurity,
+} from '@nestjs/swagger';
+import { Course } from './entities/course.entity';
 
+@ApiTags('Courses')
+@ApiSecurity('x-api-key')
+@ApiBearerAuth('JWT-auth')
 @Controller('courses')
 export class CoursesController {
   constructor(private readonly coursesService: CoursesService) {}
 
   @Get()
+  @ApiOperation({ summary: 'Get paginated list of all courses' })
+  @ApiQuery({
+    name: 'limit',
+    type: Number,
+    example: 10,
+    required: false,
+  })
+  @ApiQuery({
+    name: 'skip',
+    type: Number,
+    example: 0,
+    required: false,
+  })
+  @ApiOkResponse({
+    description: 'List of courses retrieved successfully',
+    type: [Course],
+  })
   getAllCourses(
     @Query('limit') limit: number,
     @Query('skip') skip: number,
@@ -35,6 +71,18 @@ export class CoursesController {
   }
 
   @Get('/search')
+  @ApiOperation({ summary: 'Search courses by title or description' })
+  @ApiQuery({
+    name: 'q',
+    description: 'Search query',
+    example: 'web development',
+  })
+  @ApiQuery({ name: 'limit', type: Number, example: 10 })
+  @ApiQuery({ name: 'skip', type: Number, example: 0 })
+  @ApiOkResponse({
+    description: 'Search results matching query',
+    type: [Course],
+  })
   searchCourses(
     @Query('q') q: string,
     @Query('limit') limit: number,
@@ -44,12 +92,35 @@ export class CoursesController {
   }
 
   @Get(':slug')
+  @ApiOperation({ summary: 'Get course details by slug' })
+  @ApiParam({
+    name: 'slug',
+    example: 'introduction-to-web-development',
+  })
+  @ApiOkResponse({
+    description: 'Course details retrieved successfully',
+    type: Course,
+  })
+  @ApiNotFoundResponse({ description: 'Course not found' })
   getCourseBySlug(@Param('slug') slug: string) {
     return this.coursesService.getCourseBySlug(slug);
   }
 
   @Post()
   @UseGuards(JwtGuard)
+  @ApiOperation({ summary: 'Create a new course (Admin only)' })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    description: 'Course data with video and thumbnail files',
+  })
+  @ApiCreatedResponse({
+    description: 'Course created successfully',
+    type: Course,
+  })
+  @ApiBadRequestResponse({
+    description: 'Invalid file format or missing fields',
+  })
+  @ApiForbiddenResponse({ description: 'Admin access required' })
   @UseInterceptors(
     FileFieldsInterceptor([
       {
@@ -90,6 +161,15 @@ export class CoursesController {
 
   @Patch('publish/:id')
   @UseGuards(JwtGuard)
+  @UseGuards(JwtGuard)
+  @ApiOperation({
+    summary: 'Toggle course publish status (Admin only)',
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'MongoDB ObjectID',
+    example: '65f8d7e4c4b5d12a5c3e4f5a',
+  })
   toggleCoursePublish(
     @Param('id') id: string,
     @CurrentUser() user: UserDocument,
@@ -107,6 +187,17 @@ export class CoursesController {
 
   @Delete('bulk')
   @UseGuards(JwtGuard)
+  @ApiOperation({ summary: 'Delete multiple courses (Admin only)' })
+  @ApiBody({
+    description: 'Array of course IDs to delete',
+    schema: {
+      example: {
+        ids: ['65f8d7e4c4b5d12a5c3e4f5a', '65f8d7e4c4b5d12a5c3e4f5b'],
+      },
+    },
+  })
+  @ApiOkResponse({ description: 'Courses deleted successfully' })
+  @ApiBadRequestResponse({ description: 'Invalid IDs provided' })
   removeAll(
     @CurrentUser() user: UserDocument,
     @Body('ids') ids: string[],
@@ -124,6 +215,10 @@ export class CoursesController {
 
   @Delete(':id')
   @UseGuards(JwtGuard)
+  @ApiOperation({ summary: 'Delete a course (Admin only)' })
+  @ApiParam({ name: 'id', description: 'MongoDB ObjectID' })
+  @ApiOkResponse({ description: 'Course deleted successfully' })
+  @ApiNotFoundResponse({ description: 'Course not found' })
   remove(@Param('id') id: string, @CurrentUser() user: UserDocument) {
     if (user.role !== 'admin')
       throw new ForbiddenException(

@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { Resend } from 'resend';
 import * as path from 'path';
 import * as fs from 'fs';
-import { site } from 'src/config/constant';
+import { site } from 'src/config/site';
 
 type Templates = 'forgotPassword.html' | 'verifyEmail.html';
 type Placeholders = { [key: string]: string };
@@ -75,7 +75,7 @@ export class MailService {
     fullName: string,
     email: string,
     token: string,
-    role: 'user' | 'admin',
+    // role: 'user' | 'admin',
   ) {
     try {
       const html = await this.loadTemplate('verifyEmail.html', {

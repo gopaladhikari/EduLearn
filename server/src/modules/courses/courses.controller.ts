@@ -22,7 +22,6 @@ import { CurrentUser } from '../auth/current-user.decorator';
 import { isValidObjectId } from 'mongoose';
 import type { UserDocument } from '../users/entities/user.entity';
 import {
-  ApiTags,
   ApiBearerAuth,
   ApiOperation,
   ApiQuery,
@@ -36,9 +35,13 @@ import {
   ApiNotFoundResponse,
   ApiSecurity,
 } from '@nestjs/swagger';
-import { Course } from './entities/course.entity';
+import { CoursesSwagger } from 'src/config/constants/courses.swagger';
+import {
+  COURSES_MESSAGES,
+  invalidMongodbId,
+  USERS_MESSAGES,
+} from 'src/config/messages';
 
-@ApiTags('Courses')
 @ApiSecurity('x-api-key')
 @ApiBearerAuth('JWT-auth')
 @Controller('courses')
@@ -46,23 +49,11 @@ export class CoursesController {
   constructor(private readonly coursesService: CoursesService) {}
 
   @Get()
-  @ApiOperation({ summary: 'Get paginated list of all courses' })
-  @ApiQuery({
-    name: 'limit',
-    type: Number,
-    example: 10,
-    required: false,
-  })
-  @ApiQuery({
-    name: 'skip',
-    type: Number,
-    example: 0,
-    required: false,
-  })
-  @ApiOkResponse({
-    description: 'List of courses retrieved successfully',
-    type: [Course],
-  })
+  @ApiOperation(CoursesSwagger.getAllCourses.operation)
+  @ApiOperation(CoursesSwagger.getAllCourses.operation)
+  @ApiQuery(CoursesSwagger.getAllCourses.queryLimit)
+  @ApiQuery(CoursesSwagger.getAllCourses.querySkip)
+  @ApiOkResponse(CoursesSwagger.getAllCourses.okResponse)
   getAllCourses(
     @Query('limit') limit: number,
     @Query('skip') skip: number,
@@ -71,18 +62,11 @@ export class CoursesController {
   }
 
   @Get('/search')
-  @ApiOperation({ summary: 'Search courses by title or description' })
-  @ApiQuery({
-    name: 'q',
-    description: 'Search query',
-    example: 'web development',
-  })
-  @ApiQuery({ name: 'limit', type: Number, example: 10 })
-  @ApiQuery({ name: 'skip', type: Number, example: 0 })
-  @ApiOkResponse({
-    description: 'Search results matching query',
-    type: [Course],
-  })
+  @ApiOperation(CoursesSwagger.searchCourses.operation)
+  @ApiQuery(CoursesSwagger.searchCourses.queryQ)
+  @ApiQuery(CoursesSwagger.searchCourses.queryLimit)
+  @ApiQuery(CoursesSwagger.searchCourses.querySkip)
+  @ApiOkResponse(CoursesSwagger.searchCourses.okResponse)
   searchCourses(
     @Query('q') q: string,
     @Query('limit') limit: number,
@@ -92,35 +76,25 @@ export class CoursesController {
   }
 
   @Get(':slug')
-  @ApiOperation({ summary: 'Get course details by slug' })
-  @ApiParam({
-    name: 'slug',
-    example: 'introduction-to-web-development',
-  })
-  @ApiOkResponse({
-    description: 'Course details retrieved successfully',
-    type: Course,
-  })
-  @ApiNotFoundResponse({ description: 'Course not found' })
+  @ApiOperation(CoursesSwagger.getCourseBySlug.operation)
+  @ApiParam(CoursesSwagger.getCourseBySlug.paramSlug)
+  @ApiOkResponse(CoursesSwagger.getCourseBySlug.okResponse)
+  @ApiNotFoundResponse(
+    CoursesSwagger.getCourseBySlug.notFoundResponse,
+  )
   getCourseBySlug(@Param('slug') slug: string) {
     return this.coursesService.getCourseBySlug(slug);
   }
 
   @Post()
-  @UseGuards(JwtGuard)
-  @ApiOperation({ summary: 'Create a new course (Admin only)' })
-  @ApiConsumes('multipart/form-data')
-  @ApiBody({
-    description: 'Course data with video and thumbnail files',
-  })
-  @ApiCreatedResponse({
-    description: 'Course created successfully',
-    type: Course,
-  })
-  @ApiBadRequestResponse({
-    description: 'Invalid file format or missing fields',
-  })
-  @ApiForbiddenResponse({ description: 'Admin access required' })
+  @ApiOperation(CoursesSwagger.createCourse.operation)
+  @ApiConsumes(CoursesSwagger.createCourse.consumes)
+  @ApiBody(CoursesSwagger.createCourse.body)
+  @ApiCreatedResponse(CoursesSwagger.createCourse.createdResponse)
+  @ApiBadRequestResponse(
+    CoursesSwagger.createCourse.badRequestResponse,
+  )
+  @ApiForbiddenResponse(CoursesSwagger.createCourse.forbiddenResponse)
   @UseInterceptors(
     FileFieldsInterceptor([
       {
@@ -143,9 +117,7 @@ export class CoursesController {
     },
   ) {
     if (user.role !== 'admin')
-      throw new ForbiddenException(
-        'You are not authorized to create a course',
-      );
+      throw new ForbiddenException(USERS_MESSAGES.FORBIDDEN);
 
     if (!files.video || !files.thumbnail)
       throw new BadRequestException(
@@ -162,71 +134,55 @@ export class CoursesController {
   @Patch('publish/:id')
   @UseGuards(JwtGuard)
   @UseGuards(JwtGuard)
-  @ApiOperation({
-    summary: 'Toggle course publish status (Admin only)',
-  })
-  @ApiParam({
-    name: 'id',
-    description: 'MongoDB ObjectID',
-    example: '65f8d7e4c4b5d12a5c3e4f5a',
-  })
+  @ApiOperation(CoursesSwagger.toggleCoursePublish.operation)
+  @ApiParam(CoursesSwagger.toggleCoursePublish.paramId)
+  @ApiOkResponse(CoursesSwagger.toggleCoursePublish.okResponse)
   toggleCoursePublish(
     @Param('id') id: string,
     @CurrentUser() user: UserDocument,
   ) {
     if (user.role !== 'admin')
-      throw new ForbiddenException(
-        'You are not authorized to publish a course',
-      );
+      throw new ForbiddenException(USERS_MESSAGES.FORBIDDEN);
 
     if (!isValidObjectId(id))
-      throw new BadRequestException('Invalid id');
+      throw new BadRequestException(invalidMongodbId);
 
     return this.coursesService.toggleCoursePublish(id);
   }
 
   @Delete('bulk')
   @UseGuards(JwtGuard)
-  @ApiOperation({ summary: 'Delete multiple courses (Admin only)' })
-  @ApiBody({
-    description: 'Array of course IDs to delete',
-    schema: {
-      example: {
-        ids: ['65f8d7e4c4b5d12a5c3e4f5a', '65f8d7e4c4b5d12a5c3e4f5b'],
-      },
-    },
-  })
-  @ApiOkResponse({ description: 'Courses deleted successfully' })
-  @ApiBadRequestResponse({ description: 'Invalid IDs provided' })
+  @ApiOperation(CoursesSwagger.removeAll.operation)
+  @ApiBody(CoursesSwagger.removeAll.body)
+  @ApiOkResponse(CoursesSwagger.removeAll.okResponse)
+  @ApiBadRequestResponse(CoursesSwagger.removeAll.badRequestResponse)
   removeAll(
     @CurrentUser() user: UserDocument,
     @Body('ids') ids: string[],
   ) {
     if (user.role !== 'admin')
-      throw new ForbiddenException(
-        'You are not authorized to delete a course',
-      );
+      throw new ForbiddenException(USERS_MESSAGES.FORBIDDEN);
 
     if (!ids.length)
-      throw new BadRequestException('No course ids provided');
+      throw new BadRequestException(
+        COURSES_MESSAGES.COURSE_ID_NOT_FOUND,
+      );
 
     return this.coursesService.deleteManyById(ids);
   }
 
   @Delete(':id')
   @UseGuards(JwtGuard)
-  @ApiOperation({ summary: 'Delete a course (Admin only)' })
-  @ApiParam({ name: 'id', description: 'MongoDB ObjectID' })
-  @ApiOkResponse({ description: 'Course deleted successfully' })
-  @ApiNotFoundResponse({ description: 'Course not found' })
+  @ApiOperation(CoursesSwagger.remove.operation)
+  @ApiParam(CoursesSwagger.remove.paramId)
+  @ApiOkResponse(CoursesSwagger.remove.okResponse)
+  @ApiNotFoundResponse(CoursesSwagger.remove.notFoundResponse)
   remove(@Param('id') id: string, @CurrentUser() user: UserDocument) {
     if (user.role !== 'admin')
-      throw new ForbiddenException(
-        'You are not authorized to delete a course',
-      );
+      throw new ForbiddenException(USERS_MESSAGES.FORBIDDEN);
 
     if (!isValidObjectId(id))
-      throw new BadRequestException('Invalid id');
+      throw new BadRequestException(invalidMongodbId);
 
     return this.coursesService.deleteById(id);
   }

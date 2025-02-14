@@ -14,6 +14,7 @@ import type { Types } from 'mongoose';
 import type { ConfirmForgotPasswordDto } from './dto/confirm-forgot-password.dto';
 import type { JwtPayload } from 'jsonwebtoken';
 import type { ServiceReturnType } from 'src/interceptors/response.interceptor';
+import { AUTH_MESSAGES, USERS_MESSAGES } from 'src/config/messages';
 
 export interface Payload extends JwtPayload {
   _id: Types.ObjectId;
@@ -50,7 +51,9 @@ export class AuthService {
     const isPasswordValid = await compare(password, user.password);
 
     if (!isPasswordValid)
-      throw new BadRequestException('Invalid email or password');
+      throw new BadRequestException(
+        USERS_MESSAGES.INVALID_CREDENTIALS,
+      );
     return user;
   }
 
@@ -73,7 +76,7 @@ export class AuthService {
         user,
         accessToken,
       },
-      message: 'User logged in successfully',
+      message: AUTH_MESSAGES.LOGIN_SUCCESS,
     };
   }
 
@@ -85,7 +88,7 @@ export class AuthService {
         process.env.NODE_ENV === 'production' ? 'none' : 'lax',
     });
     return {
-      message: 'User logged out successfully',
+      message: AUTH_MESSAGES.LOGOUT_SUCCESS,
       data: null,
     };
   }
@@ -95,7 +98,8 @@ export class AuthService {
   ): Promise<ServiceReturnType> {
     const user = await this.users.getUser({ email });
 
-    if (!user) throw new NotFoundException('User not found');
+    if (!user)
+      throw new NotFoundException(USERS_MESSAGES.INVALID_CREDENTIALS);
 
     const accessToken = this.generateJwtToken(user);
 
@@ -136,10 +140,10 @@ export class AuthService {
         forgotPasswordToken: token,
       });
 
-      console.log({ user });
-
       if (!user)
-        throw new NotFoundException('Invalid email or expired token');
+        throw new NotFoundException(
+          USERS_MESSAGES.INVALID_CREDENTIALS,
+        );
 
       user.password = password;
 
@@ -177,10 +181,15 @@ export class AuthService {
 
       const user = await this.users.getUser({ email });
 
-      if (!user) throw new NotFoundException('User not found');
+      if (!user)
+        throw new NotFoundException(
+          USERS_MESSAGES.INVALID_CREDENTIALS,
+        );
 
       if (user.jwtToken !== token)
-        throw new BadRequestException('Invalid token');
+        throw new BadRequestException(
+          AUTH_MESSAGES.INVALID_JWT_TOKEN,
+        );
 
       user.verified = true;
       user.jwtToken = undefined;

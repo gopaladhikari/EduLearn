@@ -10,6 +10,7 @@ import { Analytics } from './entities/analytics.entity';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import type { Cache } from 'cache-manager';
 import type { ServiceReturnType } from 'src/interceptors/response.interceptor';
+import { ANALYTICS_MESSAGES } from 'src/config/messages';
 
 @Injectable()
 export class AnalyticsService {
@@ -39,7 +40,7 @@ export class AnalyticsService {
 
       await this.cache.clear();
       return {
-        message: 'Analytics updated successfully',
+        message: ANALYTICS_MESSAGES.UPDATE_SUCCESS,
         data: analytics,
       };
     } catch (error) {
@@ -55,7 +56,7 @@ export class AnalyticsService {
 
       if (cachedAnalytics)
         return {
-          message: 'Platform analytics fetched successfully',
+          message: ANALYTICS_MESSAGES.COURSE_FETCH_SUCCESS,
           data: cachedAnalytics,
         };
 
@@ -103,7 +104,8 @@ export class AnalyticsService {
 
       const result = platformAnalytics[0];
 
-      if (!result) throw new NotFoundException('Analytics not found');
+      if (!result)
+        throw new NotFoundException(ANALYTICS_MESSAGES.NOT_FOUND);
 
       const data = {
         totalCourses: result.totalCourses[0]?.total || 0,
@@ -119,7 +121,7 @@ export class AnalyticsService {
       await this.cache.set(cacheKey, data);
 
       return {
-        message: 'Platform analytics fetched successfully',
+        message: ANALYTICS_MESSAGES.PLATFORM_FETCH_SUCCESS,
         data,
       };
     } catch (error) {
@@ -153,12 +155,12 @@ export class AnalyticsService {
       ).populate('courseData', '-description');
 
       if (!courseAnalytics)
-        throw new NotFoundException('Analytics not found');
+        throw new NotFoundException(ANALYTICS_MESSAGES.NOT_FOUND);
 
       await this.cache.set(cacheKey, courseAnalytics);
 
       return {
-        message: 'Course analytics fetched successfully',
+        message: ANALYTICS_MESSAGES.COURSE_FETCH_SUCCESS,
         data: courseAnalytics,
       };
     } catch (error) {

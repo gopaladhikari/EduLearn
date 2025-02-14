@@ -65,7 +65,7 @@ export class UsersService {
         user.fullName,
         user.email,
         accessToken,
-        user.role,
+        // user.role,
       );
 
       user.jwtToken = accessToken;

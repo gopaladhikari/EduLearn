@@ -15,6 +15,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import type { Cache } from 'cache-manager';
+import { COURSES_MESSAGES } from 'src/config/messages';
 
 @Injectable()
 export class CoursesService {
@@ -103,7 +104,7 @@ export class CoursesService {
         });
 
         return {
-          message: 'Course created successfully',
+          message: COURSES_MESSAGES.CREATED_SUCCESS,
           data: createdCourse,
         };
       } else
@@ -125,7 +126,7 @@ export class CoursesService {
 
       if (cachedCourses)
         return {
-          message: 'Courses fetched successfully',
+          message: COURSES_MESSAGES.FETCH_SUCCESS,
           data: cachedCourses,
         };
 
@@ -134,11 +135,11 @@ export class CoursesService {
         .skip(skip);
 
       if (!courses.length)
-        throw new NotFoundException('Course not found');
+        throw new NotFoundException(COURSES_MESSAGES.NOT_FOUND);
 
       await this.cache.set('courses', courses);
       return {
-        message: 'Courses fetched successfully',
+        message: COURSES_MESSAGES.FETCH_SUCCESS,
         data: courses,
       };
     } catch (error) {
@@ -156,7 +157,7 @@ export class CoursesService {
 
       if (cachedCourse)
         return {
-          message: 'Course fetched successfully',
+          message: COURSES_MESSAGES.FETCH_SUCCESS,
           data: cachedCourse,
         };
 
@@ -167,12 +168,13 @@ export class CoursesService {
         select: ['-password'],
       });
 
-      if (!course) throw new NotFoundException('Course not found');
+      if (!course)
+        throw new NotFoundException(COURSES_MESSAGES.NOT_FOUND);
 
       await this.cache.set(cacheKey, course);
 
       return {
-        message: 'Course fetched successfully',
+        message: COURSES_MESSAGES.FETCH_SUCCESS,
         data: course,
       };
     } catch (error) {
@@ -190,7 +192,7 @@ export class CoursesService {
 
       if (cachedCourses)
         return {
-          message: 'Courses fetched successfully',
+          message: COURSES_MESSAGES.FETCH_SUCCESS,
           data: cachedCourses,
         };
 
@@ -214,11 +216,11 @@ export class CoursesService {
         .skip(skip);
 
       if (!courses.length)
-        throw new NotFoundException('Course not found');
+        throw new NotFoundException(COURSES_MESSAGES.NOT_FOUND);
 
       await this.cache.set(cacheKey, courses);
       return {
-        message: 'Courses fetched successfully',
+        message: COURSES_MESSAGES.FETCH_SUCCESS,
         data: courses,
       };
     } catch (error) {
@@ -243,7 +245,7 @@ export class CoursesService {
       await this.cache.del(cacheKey);
 
       return {
-        message: 'Course published successfully',
+        message: COURSES_MESSAGES.PUBLISH_SUCCESS,
         data: course,
       };
     } catch (error) {
@@ -257,7 +259,7 @@ export class CoursesService {
       const deletedCourse = await this.Course.findByIdAndDelete(id);
 
       if (!deletedCourse)
-        throw new NotFoundException('Course not found');
+        throw new NotFoundException(COURSES_MESSAGES.NOT_FOUND);
 
       await this.cloudinary.api.delete_resources(
         [deletedCourse.video.publicId.toString()],
@@ -270,7 +272,7 @@ export class CoursesService {
       await this.cache.clear();
 
       return {
-        message: 'Course deleted successfully',
+        message: COURSES_MESSAGES.DELETE_SUCCESS,
         data: null,
       };
     } catch (error) {
@@ -286,7 +288,7 @@ export class CoursesService {
       });
 
       if (!courses.length)
-        throw new NotFoundException('Course not found');
+        throw new NotFoundException(COURSES_MESSAGES.NOT_FOUND);
 
       const videoIds = courses.map((course) => course.video.publicId);
 
@@ -318,7 +320,7 @@ export class CoursesService {
 
       await this.cache.clear();
       return {
-        message: 'Courses deleted successfully',
+        message: COURSES_MESSAGES.DELETE_SUCCESS,
         data: null,
       };
     } catch (error) {

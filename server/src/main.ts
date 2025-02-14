@@ -4,7 +4,7 @@ import { RequestMethod, ValidationPipe } from '@nestjs/common';
 import * as cookieParser from 'cookie-parser';
 import type { NestExpressApplication } from '@nestjs/platform-express';
 import { ResponseInterceptor } from './interceptors/response.interceptor';
-import { site } from './config/constant';
+import { site } from './config/site';
 import { XApiKeyInterceptor } from './interceptors/x-api-key.interceptor';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
@@ -53,7 +53,7 @@ async function bootstrap() {
   const documentFactory = () =>
     SwaggerModule.createDocument(app, config);
 
-  SwaggerModule.setup('api', app, documentFactory);
+  SwaggerModule.setup('docs', app, documentFactory);
 
   await app.listen(process.env.PORT ?? 3000);
 }

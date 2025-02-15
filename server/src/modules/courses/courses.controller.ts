@@ -19,14 +19,16 @@ import { CreateCourseDto } from './dto/create-course.dto';
 import { JwtGuard } from '../auth/guards/jwt-auth.guard';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { CurrentUser } from '../auth/current-user.decorator';
-import { isValidObjectId } from 'mongoose';
-import type { UserDocument } from '../users/entities/user.entity';
+import { isValidObjectId, type FilterQuery } from 'mongoose';
+import {
+  Role,
+  type UserDocument,
+} from '../users/entities/user.entity';
 import {
   ApiBearerAuth,
   ApiOperation,
   ApiQuery,
   ApiParam,
-  ApiBody,
   ApiConsumes,
   ApiCreatedResponse,
   ApiOkResponse,
@@ -37,10 +39,11 @@ import {
 } from '@nestjs/swagger';
 import { CoursesSwagger } from 'src/config/constants/courses.swagger';
 import {
-  COURSES_MESSAGES,
   invalidMongodbId,
   USERS_MESSAGES,
 } from 'src/config/messages';
+import { DeleteCourseInBulkDto } from './dto/delete-course-in-bult.dto';
+import type { Course } from './entities/course.entity';
 
 @ApiSecurity('x-api-key')
 @ApiBearerAuth('JWT-auth')
@@ -50,15 +53,10 @@ export class CoursesController {
 
   @Get()
   @ApiOperation(CoursesSwagger.getAllCourses.operation)
-  @ApiOperation(CoursesSwagger.getAllCourses.operation)
-  @ApiQuery(CoursesSwagger.getAllCourses.queryLimit)
-  @ApiQuery(CoursesSwagger.getAllCourses.querySkip)
   @ApiOkResponse(CoursesSwagger.getAllCourses.okResponse)
-  getAllCourses(
-    @Query('limit') limit: number,
-    @Query('skip') skip: number,
-  ) {
-    return this.coursesService.getAllCourses(limit, skip);
+  @ApiQuery(CoursesSwagger.getAllCourses.query)
+  getAllCourses(@Query() query: FilterQuery<Course>) {
+    return this.coursesService.getAllCourses(query);
   }
 
   @Get('/search')
@@ -68,9 +66,9 @@ export class CoursesController {
   @ApiQuery(CoursesSwagger.searchCourses.querySkip)
   @ApiOkResponse(CoursesSwagger.searchCourses.okResponse)
   searchCourses(
-    @Query('q') q: string,
-    @Query('limit') limit: number,
-    @Query('skip') skip: number,
+    @Query('q') q?: string,
+    @Query('limit') limit?: number,
+    @Query('skip') skip?: number,
   ) {
     return this.coursesService.searchCourses(q, limit, skip);
   }
@@ -89,7 +87,6 @@ export class CoursesController {
   @Post()
   @ApiOperation(CoursesSwagger.createCourse.operation)
   @ApiConsumes(CoursesSwagger.createCourse.consumes)
-  @ApiBody(CoursesSwagger.createCourse.body)
   @ApiCreatedResponse(CoursesSwagger.createCourse.createdResponse)
   @ApiBadRequestResponse(
     CoursesSwagger.createCourse.badRequestResponse,
@@ -141,7 +138,7 @@ export class CoursesController {
     @Param('id') id: string,
     @CurrentUser() user: UserDocument,
   ) {
-    if (user.role !== 'admin')
+    if (user.role !== Role.Admin)
       throw new ForbiddenException(USERS_MESSAGES.FORBIDDEN);
 
     if (!isValidObjectId(id))
@@ -153,20 +150,15 @@ export class CoursesController {
   @Delete('bulk')
   @UseGuards(JwtGuard)
   @ApiOperation(CoursesSwagger.removeAll.operation)
-  @ApiBody(CoursesSwagger.removeAll.body)
   @ApiOkResponse(CoursesSwagger.removeAll.okResponse)
   @ApiBadRequestResponse(CoursesSwagger.removeAll.badRequestResponse)
   removeAll(
     @CurrentUser() user: UserDocument,
-    @Body('ids') ids: string[],
+    @Body(ValidationPipe)
+    { ids }: DeleteCourseInBulkDto,
   ) {
     if (user.role !== 'admin')
       throw new ForbiddenException(USERS_MESSAGES.FORBIDDEN);
-
-    if (!ids.length)
-      throw new BadRequestException(
-        COURSES_MESSAGES.COURSE_ID_NOT_FOUND,
-      );
 
     return this.coursesService.deleteManyById(ids);
   }
@@ -174,7 +166,6 @@ export class CoursesController {
   @Delete(':id')
   @UseGuards(JwtGuard)
   @ApiOperation(CoursesSwagger.remove.operation)
-  @ApiParam(CoursesSwagger.remove.paramId)
   @ApiOkResponse(CoursesSwagger.remove.okResponse)
   @ApiNotFoundResponse(CoursesSwagger.remove.notFoundResponse)
   remove(@Param('id') id: string, @CurrentUser() user: UserDocument) {

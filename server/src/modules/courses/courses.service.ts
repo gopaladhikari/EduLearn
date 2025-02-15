@@ -7,7 +7,7 @@ import {
 import { CreateCourseDto } from './dto/create-course.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Course } from './entities/course.entity';
-import type { Model } from 'mongoose';
+import type { FilterQuery, Model } from 'mongoose';
 import { v2 as cloudinary } from 'cloudinary';
 import { ConfigService } from '@nestjs/config';
 import type { UserDocument } from '../users/entities/user.entity';
@@ -120,7 +120,7 @@ export class CoursesService {
     }
   }
 
-  async getAllCourses(limit: number, skip: number) {
+  async getAllCourses(query: FilterQuery<Course>) {
     try {
       const cachedCourses = await this.cache.get('courses');
 
@@ -130,9 +130,7 @@ export class CoursesService {
           data: cachedCourses,
         };
 
-      const courses = await this.Course.find({})
-        .limit(limit)
-        .skip(skip);
+      const courses = await this.Course.find(query);
 
       if (!courses.length)
         throw new NotFoundException(COURSES_MESSAGES.NOT_FOUND);

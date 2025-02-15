@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, PartialType } from '@nestjs/swagger';
 
 export class CourseResponseDto {
   @ApiProperty({ example: '65f8d7e4c4b5d12a5c3e4f5a' })
@@ -59,3 +59,7 @@ export class CourseResponseDto {
   @ApiProperty({ example: false })
   isBestSeller: boolean;
 }
+
+export class CourseQueryExampleDto extends PartialType(
+  CourseResponseDto,
+) {}

@@ -2,11 +2,13 @@ import type {
   ApiOperationOptions,
   ApiQueryOptions,
   ApiParamOptions,
-  ApiBodyOptions,
   ApiResponseOptions,
+  ApiBodyOptions,
 } from '@nestjs/swagger';
-import { CreateCourseDto } from 'src/modules/courses/dto/create-course.dto';
-import { CourseResponseDto } from 'src/modules/courses/dto/example-courses.dto';
+import {
+  CourseQueryExampleDto,
+  CourseResponseDto,
+} from 'src/modules/courses/dto/example-courses.dto';
 import { COURSES_MESSAGES } from '../messages';
 
 export const CoursesSwagger = {
@@ -14,23 +16,18 @@ export const CoursesSwagger = {
     operation: {
       summary: 'Get paginated list of all courses',
     } as ApiOperationOptions,
-    queryLimit: {
-      name: 'limit',
-      type: Number,
-      example: 10,
-      required: false,
-    } as ApiQueryOptions,
-    querySkip: {
-      name: 'skip',
-      type: Number,
-      example: 0,
-      required: false,
-    } as ApiQueryOptions,
     okResponse: {
       description: 'List of courses retrieved successfully',
       type: CourseResponseDto,
       isArray: true,
     } as ApiResponseOptions,
+
+    query: {
+      name: 'query',
+      description: 'Filter courses by query',
+      required: false,
+      type: CourseQueryExampleDto,
+    },
   },
 
   searchCourses: {
@@ -68,7 +65,7 @@ export const CoursesSwagger = {
       example: 'introduction-to-web-development',
     } as ApiParamOptions,
     okResponse: {
-      description: 'Course details retrieved successfully',
+      description: COURSES_MESSAGES.FETCH_BY_SLUG_SUCCESS,
       type: CourseResponseDto,
     } as ApiResponseOptions,
     notFoundResponse: {
@@ -81,12 +78,8 @@ export const CoursesSwagger = {
       summary: 'Create a new course (Admin only)',
     } as ApiOperationOptions,
     consumes: 'multipart/form-data',
-    body: {
-      description: 'Course data with video and thumbnail files',
-      type: CreateCourseDto,
-    } as ApiBodyOptions,
     createdResponse: {
-      description: 'Course created successfully',
+      description: COURSES_MESSAGES.CREATED_SUCCESS,
       type: CourseResponseDto,
     } as ApiResponseOptions,
     badRequestResponse: {
@@ -145,8 +138,8 @@ export const CoursesSwagger = {
       summary: 'Delete a course (Admin only)',
     } as ApiOperationOptions,
     paramId: {
-      name: '_id',
-      description: 'Course _id',
+      name: 'id',
+      description: 'Course id',
     } as ApiParamOptions,
     okResponse: {
       description: COURSES_MESSAGES.DELETE_SUCCESS,

@@ -2,7 +2,10 @@ import { ThemeProvider } from "@/context/ThemeContext";
 import {
   createRootRouteWithContext,
   Outlet,
+  HeadContent,
+  Scripts,
 } from "@tanstack/react-router";
+
 import { type AuthContextType } from "@/context/AuthContext";
 import { Footer } from "@/components/partials/Footer";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
@@ -17,6 +20,7 @@ export const Route = createRootRouteWithContext<AuthContextType>()({
 function Root() {
   return (
     <>
+      <HeadContent />
       <ThemeProvider>
         <Header />
         <main>
@@ -25,6 +29,7 @@ function Root() {
         <Toaster />
         <Footer />
       </ThemeProvider>
+      <Scripts />
       {import.meta.env.DEV && (
         <ReactQueryDevtools initialIsOpen={false} />
       )}

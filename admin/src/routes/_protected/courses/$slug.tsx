@@ -20,28 +20,36 @@ import {
   Edit2,
 } from "lucide-react";
 import { CourseDetailPageSkeleton } from "@/components/skeletons/CourseDetailPageSkeleton";
-import { useSeo } from "@/hooks/useSeo";
 import { ReactParser } from "@/components/courses/ReactParser";
 import { cn } from "@/lib/utils";
-import { useCourseBySlug } from "@/lib/queries/courses.query";
+import type { CourseWithInstructors } from "@/types";
+import { axiosInstance } from "@/config/axios";
 
 export const Route = createFileRoute("/_protected/courses/$slug")({
   component: RouteComponent,
+  head: ({ loaderData }) => {
+    return {
+      meta: [
+        {
+          title: (loaderData as unknown as CourseWithInstructors)
+            ?.title,
+        },
+      ],
+    };
+  },
+  loader: async ({ params }) => {
+    const { data } = await axiosInstance.get<CourseWithInstructors>(
+      `/api/courses/${params.slug}`,
+    );
+
+    return data.data;
+  },
+  pendingComponent: CourseDetailPageSkeleton,
+  staleTime: 10_000, // 10 seconds
 });
 
 function RouteComponent() {
-  const { slug } = Route.useParams();
-
-  const { data, isPending } = useCourseBySlug({
-    slug,
-  });
-
-  useSeo({
-    title: data?.title || "",
-    description: data?.description,
-  });
-
-  if (isPending) return <CourseDetailPageSkeleton />;
+  const data = Route.useLoaderData() as CourseWithInstructors;
 
   return (
     <Card className="overflow-hidden">

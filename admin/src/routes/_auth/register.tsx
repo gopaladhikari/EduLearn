@@ -7,7 +7,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useSeo } from "@/hooks/useSeo";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import {
   registerSchema,
@@ -20,14 +19,22 @@ import { FormInputField } from "@/components/ui/FormInputField";
 
 export const Route = createFileRoute("/_auth/register")({
   component: RouteComponent,
+  head: () => {
+    return {
+      meta: [
+        {
+          title: "Register",
+        },
+        {
+          name: "description",
+          content: "Create a new account",
+        },
+      ],
+    };
+  },
 });
 
 function RouteComponent() {
-  useSeo({
-    title: "Register",
-    description: "Register to your account",
-  });
-
   const form = useForm<RegisterSchema>({
     resolver: zodResolver(registerSchema),
   });

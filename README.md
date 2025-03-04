@@ -32,7 +32,7 @@ Students can:
 - Database: MongoDB
 - Caching: `node-cache` for in-memory caching
 - Authentication: JSON Web Tokens (JWT) for secure access and authorization.
-- Frontend Framework: Remix.run (User side) and React.js (Admin side)
+- Frontend Framework: React Router v7 (User side) and Tanstack Router (Admin side)
 
 ## 🔒 Security Features
 

@@ -28,18 +28,18 @@ function RouteComponent() {
         <div className="md:order-2">
           <div className="space-y-6 md:max-w-(--breakpoint-sm)">
             <Outlet />
-            <p className="px-8 text-center text-sm text-muted-foreground">
+            <p className="text-muted-foreground px-8 text-center text-sm">
               By clicking continue, you agree to our{" "}
               <Link
                 to="/terms-and-condition"
-                className="underline underline-offset-4 hover:text-primary"
+                className="hover:text-primary underline underline-offset-4"
               >
                 Terms of Service&nbsp;
               </Link>
               and&nbsp;
               <Link
                 to="/privacy-policy"
-                className="underline underline-offset-4 hover:text-primary"
+                className="hover:text-primary underline underline-offset-4"
               >
                 Privacy Policy
               </Link>

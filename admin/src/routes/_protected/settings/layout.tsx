@@ -2,7 +2,7 @@ import { SidebarNav } from "@/components/settings/side-bar";
 import { Separator } from "@/components/ui/separator";
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/_protected/settings/_layout")({
+export const Route = createFileRoute("/_protected/settings")({
   component: RouteComponent,
 });
 
@@ -18,7 +18,7 @@ function RouteComponent() {
         </p>
       </div>
       <Separator className="my-6" />
-      <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">
+      <div className="flex flex-col space-y-8 lg:flex-row lg:space-y-0 lg:space-x-12">
         <div className="lg:w-1/5">
           <aside className="sticky top-24">
             <SidebarNav />

@@ -8,14 +8,11 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { createFileRoute } from '@tanstack/react-router'
-
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as UnprotectedImport } from './routes/_unprotected'
-import { Route as ProtectedImport } from './routes/_protected'
-import { Route as AuthImport } from './routes/_auth'
+import { Route as ProtectedLayoutImport } from './routes/_protected/layout'
+import { Route as AuthLayoutImport } from './routes/_auth/layout'
 import { Route as UnprotectedIndexImport } from './routes/_unprotected/index'
 import { Route as UnprotectedTermsAndConditionImport } from './routes/_unprotected/terms-and-condition'
 import { Route as UnprotectedPrivacyPolicyImport } from './routes/_unprotected/privacy-policy'
@@ -28,200 +25,183 @@ import { Route as AuthRegisterImport } from './routes/_auth/register'
 import { Route as AuthLoginImport } from './routes/_auth/login'
 import { Route as AuthForgotPasswordImport } from './routes/_auth/forgot-password'
 import { Route as AuthConfirmPasswordImport } from './routes/_auth/confirm-password'
+import { Route as ProtectedSettingsLayoutImport } from './routes/_protected/settings/layout'
+import { Route as ProtectedSettingsIndexImport } from './routes/_protected/settings/index'
 import { Route as ProtectedCoursesIndexImport } from './routes/_protected/courses/index'
 import { Route as ProtectedAnalyticsIndexImport } from './routes/_protected/analytics/index'
-import { Route as ProtectedSettingsLayoutImport } from './routes/_protected/settings/_layout'
+import { Route as ProtectedSettingsNotificationsImport } from './routes/_protected/settings/notifications'
+import { Route as ProtectedSettingsDisplayImport } from './routes/_protected/settings/display'
+import { Route as ProtectedSettingsAppearanceImport } from './routes/_protected/settings/appearance'
+import { Route as ProtectedSettingsAccountImport } from './routes/_protected/settings/account'
 import { Route as ProtectedCoursesAddImport } from './routes/_protected/courses/add'
 import { Route as ProtectedCoursesSlugImport } from './routes/_protected/courses/$slug'
 import { Route as ProtectedAnalyticsSlugImport } from './routes/_protected/analytics/$slug'
-import { Route as ProtectedSettingsLayoutIndexImport } from './routes/_protected/settings/_layout/index'
 import { Route as ProtectedCoursesEditIndexImport } from './routes/_protected/courses/edit/index'
-import { Route as ProtectedSettingsLayoutNotificationsImport } from './routes/_protected/settings/_layout/notifications'
-import { Route as ProtectedSettingsLayoutDisplayImport } from './routes/_protected/settings/_layout/display'
-import { Route as ProtectedSettingsLayoutAppearanceImport } from './routes/_protected/settings/_layout/appearance'
-import { Route as ProtectedSettingsLayoutAccountImport } from './routes/_protected/settings/_layout/account'
 import { Route as ProtectedCoursesEditSlugImport } from './routes/_protected/courses/edit/$slug'
-
-// Create Virtual Routes
-
-const ProtectedSettingsImport = createFileRoute('/_protected/settings')()
 
 // Create/Update Routes
 
-const UnprotectedRoute = UnprotectedImport.update({
-  id: '/_unprotected',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const ProtectedRoute = ProtectedImport.update({
+const ProtectedLayoutRoute = ProtectedLayoutImport.update({
   id: '/_protected',
   getParentRoute: () => rootRoute,
 } as any)
 
-const AuthRoute = AuthImport.update({
+const AuthLayoutRoute = AuthLayoutImport.update({
   id: '/_auth',
   getParentRoute: () => rootRoute,
 } as any)
 
-const ProtectedSettingsRoute = ProtectedSettingsImport.update({
-  id: '/settings',
-  path: '/settings',
-  getParentRoute: () => ProtectedRoute,
-} as any)
-
 const UnprotectedIndexRoute = UnprotectedIndexImport.update({
-  id: '/',
+  id: '/_unprotected/',
   path: '/',
-  getParentRoute: () => UnprotectedRoute,
+  getParentRoute: () => rootRoute,
 } as any)
 
 const UnprotectedTermsAndConditionRoute =
   UnprotectedTermsAndConditionImport.update({
-    id: '/terms-and-condition',
+    id: '/_unprotected/terms-and-condition',
     path: '/terms-and-condition',
-    getParentRoute: () => UnprotectedRoute,
+    getParentRoute: () => rootRoute,
   } as any)
 
 const UnprotectedPrivacyPolicyRoute = UnprotectedPrivacyPolicyImport.update({
-  id: '/privacy-policy',
+  id: '/_unprotected/privacy-policy',
   path: '/privacy-policy',
-  getParentRoute: () => UnprotectedRoute,
+  getParentRoute: () => rootRoute,
 } as any)
 
 const ProtectedNotificationsRoute = ProtectedNotificationsImport.update({
   id: '/notifications',
   path: '/notifications',
-  getParentRoute: () => ProtectedRoute,
+  getParentRoute: () => ProtectedLayoutRoute,
 } as any)
 
 const ProtectedMessagesRoute = ProtectedMessagesImport.update({
   id: '/messages',
   path: '/messages',
-  getParentRoute: () => ProtectedRoute,
+  getParentRoute: () => ProtectedLayoutRoute,
 } as any)
 
 const ProtectedDashboardRoute = ProtectedDashboardImport.update({
   id: '/dashboard',
   path: '/dashboard',
-  getParentRoute: () => ProtectedRoute,
+  getParentRoute: () => ProtectedLayoutRoute,
 } as any)
 
 const ProtectedCustomersRoute = ProtectedCustomersImport.update({
   id: '/customers',
   path: '/customers',
-  getParentRoute: () => ProtectedRoute,
+  getParentRoute: () => ProtectedLayoutRoute,
 } as any)
 
 const AuthVerifyEmailRoute = AuthVerifyEmailImport.update({
   id: '/verify-email',
   path: '/verify-email',
-  getParentRoute: () => AuthRoute,
+  getParentRoute: () => AuthLayoutRoute,
 } as any)
 
 const AuthRegisterRoute = AuthRegisterImport.update({
   id: '/register',
   path: '/register',
-  getParentRoute: () => AuthRoute,
+  getParentRoute: () => AuthLayoutRoute,
 } as any)
 
 const AuthLoginRoute = AuthLoginImport.update({
   id: '/login',
   path: '/login',
-  getParentRoute: () => AuthRoute,
+  getParentRoute: () => AuthLayoutRoute,
 } as any)
 
 const AuthForgotPasswordRoute = AuthForgotPasswordImport.update({
   id: '/forgot-password',
   path: '/forgot-password',
-  getParentRoute: () => AuthRoute,
+  getParentRoute: () => AuthLayoutRoute,
 } as any)
 
 const AuthConfirmPasswordRoute = AuthConfirmPasswordImport.update({
   id: '/confirm-password',
   path: '/confirm-password',
-  getParentRoute: () => AuthRoute,
+  getParentRoute: () => AuthLayoutRoute,
+} as any)
+
+const ProtectedSettingsLayoutRoute = ProtectedSettingsLayoutImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => ProtectedLayoutRoute,
+} as any)
+
+const ProtectedSettingsIndexRoute = ProtectedSettingsIndexImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ProtectedSettingsLayoutRoute,
 } as any)
 
 const ProtectedCoursesIndexRoute = ProtectedCoursesIndexImport.update({
   id: '/courses/',
   path: '/courses/',
-  getParentRoute: () => ProtectedRoute,
+  getParentRoute: () => ProtectedLayoutRoute,
 } as any)
 
 const ProtectedAnalyticsIndexRoute = ProtectedAnalyticsIndexImport.update({
   id: '/analytics/',
   path: '/analytics/',
-  getParentRoute: () => ProtectedRoute,
+  getParentRoute: () => ProtectedLayoutRoute,
 } as any)
 
-const ProtectedSettingsLayoutRoute = ProtectedSettingsLayoutImport.update({
-  id: '/_layout',
-  getParentRoute: () => ProtectedSettingsRoute,
-} as any)
-
-const ProtectedCoursesAddRoute = ProtectedCoursesAddImport.update({
-  id: '/courses/add',
-  path: '/courses/add',
-  getParentRoute: () => ProtectedRoute,
-} as any)
-
-const ProtectedCoursesSlugRoute = ProtectedCoursesSlugImport.update({
-  id: '/courses/$slug',
-  path: '/courses/$slug',
-  getParentRoute: () => ProtectedRoute,
-} as any)
-
-const ProtectedAnalyticsSlugRoute = ProtectedAnalyticsSlugImport.update({
-  id: '/analytics/$slug',
-  path: '/analytics/$slug',
-  getParentRoute: () => ProtectedRoute,
-} as any)
-
-const ProtectedSettingsLayoutIndexRoute =
-  ProtectedSettingsLayoutIndexImport.update({
-    id: '/',
-    path: '/',
-    getParentRoute: () => ProtectedSettingsLayoutRoute,
-  } as any)
-
-const ProtectedCoursesEditIndexRoute = ProtectedCoursesEditIndexImport.update({
-  id: '/courses/edit/',
-  path: '/courses/edit/',
-  getParentRoute: () => ProtectedRoute,
-} as any)
-
-const ProtectedSettingsLayoutNotificationsRoute =
-  ProtectedSettingsLayoutNotificationsImport.update({
+const ProtectedSettingsNotificationsRoute =
+  ProtectedSettingsNotificationsImport.update({
     id: '/notifications',
     path: '/notifications',
     getParentRoute: () => ProtectedSettingsLayoutRoute,
   } as any)
 
-const ProtectedSettingsLayoutDisplayRoute =
-  ProtectedSettingsLayoutDisplayImport.update({
-    id: '/display',
-    path: '/display',
-    getParentRoute: () => ProtectedSettingsLayoutRoute,
-  } as any)
+const ProtectedSettingsDisplayRoute = ProtectedSettingsDisplayImport.update({
+  id: '/display',
+  path: '/display',
+  getParentRoute: () => ProtectedSettingsLayoutRoute,
+} as any)
 
-const ProtectedSettingsLayoutAppearanceRoute =
-  ProtectedSettingsLayoutAppearanceImport.update({
+const ProtectedSettingsAppearanceRoute =
+  ProtectedSettingsAppearanceImport.update({
     id: '/appearance',
     path: '/appearance',
     getParentRoute: () => ProtectedSettingsLayoutRoute,
   } as any)
 
-const ProtectedSettingsLayoutAccountRoute =
-  ProtectedSettingsLayoutAccountImport.update({
-    id: '/account',
-    path: '/account',
-    getParentRoute: () => ProtectedSettingsLayoutRoute,
-  } as any)
+const ProtectedSettingsAccountRoute = ProtectedSettingsAccountImport.update({
+  id: '/account',
+  path: '/account',
+  getParentRoute: () => ProtectedSettingsLayoutRoute,
+} as any)
+
+const ProtectedCoursesAddRoute = ProtectedCoursesAddImport.update({
+  id: '/courses/add',
+  path: '/courses/add',
+  getParentRoute: () => ProtectedLayoutRoute,
+} as any)
+
+const ProtectedCoursesSlugRoute = ProtectedCoursesSlugImport.update({
+  id: '/courses/$slug',
+  path: '/courses/$slug',
+  getParentRoute: () => ProtectedLayoutRoute,
+} as any)
+
+const ProtectedAnalyticsSlugRoute = ProtectedAnalyticsSlugImport.update({
+  id: '/analytics/$slug',
+  path: '/analytics/$slug',
+  getParentRoute: () => ProtectedLayoutRoute,
+} as any)
+
+const ProtectedCoursesEditIndexRoute = ProtectedCoursesEditIndexImport.update({
+  id: '/courses/edit/',
+  path: '/courses/edit/',
+  getParentRoute: () => ProtectedLayoutRoute,
+} as any)
 
 const ProtectedCoursesEditSlugRoute = ProtectedCoursesEditSlugImport.update({
   id: '/courses/edit/$slug',
   path: '/courses/edit/$slug',
-  getParentRoute: () => ProtectedRoute,
+  getParentRoute: () => ProtectedLayoutRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -232,211 +212,197 @@ declare module '@tanstack/react-router' {
       id: '/_auth'
       path: ''
       fullPath: ''
-      preLoaderRoute: typeof AuthImport
+      preLoaderRoute: typeof AuthLayoutImport
       parentRoute: typeof rootRoute
     }
     '/_protected': {
       id: '/_protected'
       path: ''
       fullPath: ''
-      preLoaderRoute: typeof ProtectedImport
+      preLoaderRoute: typeof ProtectedLayoutImport
       parentRoute: typeof rootRoute
     }
-    '/_unprotected': {
-      id: '/_unprotected'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof UnprotectedImport
-      parentRoute: typeof rootRoute
+    '/_protected/settings': {
+      id: '/_protected/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof ProtectedSettingsLayoutImport
+      parentRoute: typeof ProtectedLayoutImport
     }
     '/_auth/confirm-password': {
       id: '/_auth/confirm-password'
       path: '/confirm-password'
       fullPath: '/confirm-password'
       preLoaderRoute: typeof AuthConfirmPasswordImport
-      parentRoute: typeof AuthImport
+      parentRoute: typeof AuthLayoutImport
     }
     '/_auth/forgot-password': {
       id: '/_auth/forgot-password'
       path: '/forgot-password'
       fullPath: '/forgot-password'
       preLoaderRoute: typeof AuthForgotPasswordImport
-      parentRoute: typeof AuthImport
+      parentRoute: typeof AuthLayoutImport
     }
     '/_auth/login': {
       id: '/_auth/login'
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof AuthLoginImport
-      parentRoute: typeof AuthImport
+      parentRoute: typeof AuthLayoutImport
     }
     '/_auth/register': {
       id: '/_auth/register'
       path: '/register'
       fullPath: '/register'
       preLoaderRoute: typeof AuthRegisterImport
-      parentRoute: typeof AuthImport
+      parentRoute: typeof AuthLayoutImport
     }
     '/_auth/verify-email': {
       id: '/_auth/verify-email'
       path: '/verify-email'
       fullPath: '/verify-email'
       preLoaderRoute: typeof AuthVerifyEmailImport
-      parentRoute: typeof AuthImport
+      parentRoute: typeof AuthLayoutImport
     }
     '/_protected/customers': {
       id: '/_protected/customers'
       path: '/customers'
       fullPath: '/customers'
       preLoaderRoute: typeof ProtectedCustomersImport
-      parentRoute: typeof ProtectedImport
+      parentRoute: typeof ProtectedLayoutImport
     }
     '/_protected/dashboard': {
       id: '/_protected/dashboard'
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof ProtectedDashboardImport
-      parentRoute: typeof ProtectedImport
+      parentRoute: typeof ProtectedLayoutImport
     }
     '/_protected/messages': {
       id: '/_protected/messages'
       path: '/messages'
       fullPath: '/messages'
       preLoaderRoute: typeof ProtectedMessagesImport
-      parentRoute: typeof ProtectedImport
+      parentRoute: typeof ProtectedLayoutImport
     }
     '/_protected/notifications': {
       id: '/_protected/notifications'
       path: '/notifications'
       fullPath: '/notifications'
       preLoaderRoute: typeof ProtectedNotificationsImport
-      parentRoute: typeof ProtectedImport
+      parentRoute: typeof ProtectedLayoutImport
     }
     '/_unprotected/privacy-policy': {
       id: '/_unprotected/privacy-policy'
       path: '/privacy-policy'
       fullPath: '/privacy-policy'
       preLoaderRoute: typeof UnprotectedPrivacyPolicyImport
-      parentRoute: typeof UnprotectedImport
+      parentRoute: typeof rootRoute
     }
     '/_unprotected/terms-and-condition': {
       id: '/_unprotected/terms-and-condition'
       path: '/terms-and-condition'
       fullPath: '/terms-and-condition'
       preLoaderRoute: typeof UnprotectedTermsAndConditionImport
-      parentRoute: typeof UnprotectedImport
+      parentRoute: typeof rootRoute
     }
     '/_unprotected/': {
       id: '/_unprotected/'
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof UnprotectedIndexImport
-      parentRoute: typeof UnprotectedImport
+      parentRoute: typeof rootRoute
     }
     '/_protected/analytics/$slug': {
       id: '/_protected/analytics/$slug'
       path: '/analytics/$slug'
       fullPath: '/analytics/$slug'
       preLoaderRoute: typeof ProtectedAnalyticsSlugImport
-      parentRoute: typeof ProtectedImport
+      parentRoute: typeof ProtectedLayoutImport
     }
     '/_protected/courses/$slug': {
       id: '/_protected/courses/$slug'
       path: '/courses/$slug'
       fullPath: '/courses/$slug'
       preLoaderRoute: typeof ProtectedCoursesSlugImport
-      parentRoute: typeof ProtectedImport
+      parentRoute: typeof ProtectedLayoutImport
     }
     '/_protected/courses/add': {
       id: '/_protected/courses/add'
       path: '/courses/add'
       fullPath: '/courses/add'
       preLoaderRoute: typeof ProtectedCoursesAddImport
-      parentRoute: typeof ProtectedImport
+      parentRoute: typeof ProtectedLayoutImport
     }
-    '/_protected/settings': {
-      id: '/_protected/settings'
-      path: '/settings'
-      fullPath: '/settings'
-      preLoaderRoute: typeof ProtectedSettingsImport
-      parentRoute: typeof ProtectedImport
+    '/_protected/settings/account': {
+      id: '/_protected/settings/account'
+      path: '/account'
+      fullPath: '/settings/account'
+      preLoaderRoute: typeof ProtectedSettingsAccountImport
+      parentRoute: typeof ProtectedSettingsLayoutImport
     }
-    '/_protected/settings/_layout': {
-      id: '/_protected/settings/_layout'
-      path: '/settings'
-      fullPath: '/settings'
-      preLoaderRoute: typeof ProtectedSettingsLayoutImport
-      parentRoute: typeof ProtectedSettingsRoute
+    '/_protected/settings/appearance': {
+      id: '/_protected/settings/appearance'
+      path: '/appearance'
+      fullPath: '/settings/appearance'
+      preLoaderRoute: typeof ProtectedSettingsAppearanceImport
+      parentRoute: typeof ProtectedSettingsLayoutImport
+    }
+    '/_protected/settings/display': {
+      id: '/_protected/settings/display'
+      path: '/display'
+      fullPath: '/settings/display'
+      preLoaderRoute: typeof ProtectedSettingsDisplayImport
+      parentRoute: typeof ProtectedSettingsLayoutImport
+    }
+    '/_protected/settings/notifications': {
+      id: '/_protected/settings/notifications'
+      path: '/notifications'
+      fullPath: '/settings/notifications'
+      preLoaderRoute: typeof ProtectedSettingsNotificationsImport
+      parentRoute: typeof ProtectedSettingsLayoutImport
     }
     '/_protected/analytics/': {
       id: '/_protected/analytics/'
       path: '/analytics'
       fullPath: '/analytics'
       preLoaderRoute: typeof ProtectedAnalyticsIndexImport
-      parentRoute: typeof ProtectedImport
+      parentRoute: typeof ProtectedLayoutImport
     }
     '/_protected/courses/': {
       id: '/_protected/courses/'
       path: '/courses'
       fullPath: '/courses'
       preLoaderRoute: typeof ProtectedCoursesIndexImport
-      parentRoute: typeof ProtectedImport
+      parentRoute: typeof ProtectedLayoutImport
+    }
+    '/_protected/settings/': {
+      id: '/_protected/settings/'
+      path: '/'
+      fullPath: '/settings/'
+      preLoaderRoute: typeof ProtectedSettingsIndexImport
+      parentRoute: typeof ProtectedSettingsLayoutImport
     }
     '/_protected/courses/edit/$slug': {
       id: '/_protected/courses/edit/$slug'
       path: '/courses/edit/$slug'
       fullPath: '/courses/edit/$slug'
       preLoaderRoute: typeof ProtectedCoursesEditSlugImport
-      parentRoute: typeof ProtectedImport
-    }
-    '/_protected/settings/_layout/account': {
-      id: '/_protected/settings/_layout/account'
-      path: '/account'
-      fullPath: '/settings/account'
-      preLoaderRoute: typeof ProtectedSettingsLayoutAccountImport
-      parentRoute: typeof ProtectedSettingsLayoutImport
-    }
-    '/_protected/settings/_layout/appearance': {
-      id: '/_protected/settings/_layout/appearance'
-      path: '/appearance'
-      fullPath: '/settings/appearance'
-      preLoaderRoute: typeof ProtectedSettingsLayoutAppearanceImport
-      parentRoute: typeof ProtectedSettingsLayoutImport
-    }
-    '/_protected/settings/_layout/display': {
-      id: '/_protected/settings/_layout/display'
-      path: '/display'
-      fullPath: '/settings/display'
-      preLoaderRoute: typeof ProtectedSettingsLayoutDisplayImport
-      parentRoute: typeof ProtectedSettingsLayoutImport
-    }
-    '/_protected/settings/_layout/notifications': {
-      id: '/_protected/settings/_layout/notifications'
-      path: '/notifications'
-      fullPath: '/settings/notifications'
-      preLoaderRoute: typeof ProtectedSettingsLayoutNotificationsImport
-      parentRoute: typeof ProtectedSettingsLayoutImport
+      parentRoute: typeof ProtectedLayoutImport
     }
     '/_protected/courses/edit/': {
       id: '/_protected/courses/edit/'
       path: '/courses/edit'
       fullPath: '/courses/edit'
       preLoaderRoute: typeof ProtectedCoursesEditIndexImport
-      parentRoute: typeof ProtectedImport
-    }
-    '/_protected/settings/_layout/': {
-      id: '/_protected/settings/_layout/'
-      path: '/'
-      fullPath: '/settings/'
-      preLoaderRoute: typeof ProtectedSettingsLayoutIndexImport
-      parentRoute: typeof ProtectedSettingsLayoutImport
+      parentRoute: typeof ProtectedLayoutImport
     }
   }
 }
 
 // Create and export the route tree
 
-interface AuthRouteChildren {
+interface AuthLayoutRouteChildren {
   AuthConfirmPasswordRoute: typeof AuthConfirmPasswordRoute
   AuthForgotPasswordRoute: typeof AuthForgotPasswordRoute
   AuthLoginRoute: typeof AuthLoginRoute
@@ -444,7 +410,7 @@ interface AuthRouteChildren {
   AuthVerifyEmailRoute: typeof AuthVerifyEmailRoute
 }
 
-const AuthRouteChildren: AuthRouteChildren = {
+const AuthLayoutRouteChildren: AuthLayoutRouteChildren = {
   AuthConfirmPasswordRoute: AuthConfirmPasswordRoute,
   AuthForgotPasswordRoute: AuthForgotPasswordRoute,
   AuthLoginRoute: AuthLoginRoute,
@@ -452,25 +418,25 @@ const AuthRouteChildren: AuthRouteChildren = {
   AuthVerifyEmailRoute: AuthVerifyEmailRoute,
 }
 
-const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
+const AuthLayoutRouteWithChildren = AuthLayoutRoute._addFileChildren(
+  AuthLayoutRouteChildren,
+)
 
 interface ProtectedSettingsLayoutRouteChildren {
-  ProtectedSettingsLayoutAccountRoute: typeof ProtectedSettingsLayoutAccountRoute
-  ProtectedSettingsLayoutAppearanceRoute: typeof ProtectedSettingsLayoutAppearanceRoute
-  ProtectedSettingsLayoutDisplayRoute: typeof ProtectedSettingsLayoutDisplayRoute
-  ProtectedSettingsLayoutNotificationsRoute: typeof ProtectedSettingsLayoutNotificationsRoute
-  ProtectedSettingsLayoutIndexRoute: typeof ProtectedSettingsLayoutIndexRoute
+  ProtectedSettingsAccountRoute: typeof ProtectedSettingsAccountRoute
+  ProtectedSettingsAppearanceRoute: typeof ProtectedSettingsAppearanceRoute
+  ProtectedSettingsDisplayRoute: typeof ProtectedSettingsDisplayRoute
+  ProtectedSettingsNotificationsRoute: typeof ProtectedSettingsNotificationsRoute
+  ProtectedSettingsIndexRoute: typeof ProtectedSettingsIndexRoute
 }
 
 const ProtectedSettingsLayoutRouteChildren: ProtectedSettingsLayoutRouteChildren =
   {
-    ProtectedSettingsLayoutAccountRoute: ProtectedSettingsLayoutAccountRoute,
-    ProtectedSettingsLayoutAppearanceRoute:
-      ProtectedSettingsLayoutAppearanceRoute,
-    ProtectedSettingsLayoutDisplayRoute: ProtectedSettingsLayoutDisplayRoute,
-    ProtectedSettingsLayoutNotificationsRoute:
-      ProtectedSettingsLayoutNotificationsRoute,
-    ProtectedSettingsLayoutIndexRoute: ProtectedSettingsLayoutIndexRoute,
+    ProtectedSettingsAccountRoute: ProtectedSettingsAccountRoute,
+    ProtectedSettingsAppearanceRoute: ProtectedSettingsAppearanceRoute,
+    ProtectedSettingsDisplayRoute: ProtectedSettingsDisplayRoute,
+    ProtectedSettingsNotificationsRoute: ProtectedSettingsNotificationsRoute,
+    ProtectedSettingsIndexRoute: ProtectedSettingsIndexRoute,
   }
 
 const ProtectedSettingsLayoutRouteWithChildren =
@@ -478,18 +444,8 @@ const ProtectedSettingsLayoutRouteWithChildren =
     ProtectedSettingsLayoutRouteChildren,
   )
 
-interface ProtectedSettingsRouteChildren {
+interface ProtectedLayoutRouteChildren {
   ProtectedSettingsLayoutRoute: typeof ProtectedSettingsLayoutRouteWithChildren
-}
-
-const ProtectedSettingsRouteChildren: ProtectedSettingsRouteChildren = {
-  ProtectedSettingsLayoutRoute: ProtectedSettingsLayoutRouteWithChildren,
-}
-
-const ProtectedSettingsRouteWithChildren =
-  ProtectedSettingsRoute._addFileChildren(ProtectedSettingsRouteChildren)
-
-interface ProtectedRouteChildren {
   ProtectedCustomersRoute: typeof ProtectedCustomersRoute
   ProtectedDashboardRoute: typeof ProtectedDashboardRoute
   ProtectedMessagesRoute: typeof ProtectedMessagesRoute
@@ -497,14 +453,14 @@ interface ProtectedRouteChildren {
   ProtectedAnalyticsSlugRoute: typeof ProtectedAnalyticsSlugRoute
   ProtectedCoursesSlugRoute: typeof ProtectedCoursesSlugRoute
   ProtectedCoursesAddRoute: typeof ProtectedCoursesAddRoute
-  ProtectedSettingsRoute: typeof ProtectedSettingsRouteWithChildren
   ProtectedAnalyticsIndexRoute: typeof ProtectedAnalyticsIndexRoute
   ProtectedCoursesIndexRoute: typeof ProtectedCoursesIndexRoute
   ProtectedCoursesEditSlugRoute: typeof ProtectedCoursesEditSlugRoute
   ProtectedCoursesEditIndexRoute: typeof ProtectedCoursesEditIndexRoute
 }
 
-const ProtectedRouteChildren: ProtectedRouteChildren = {
+const ProtectedLayoutRouteChildren: ProtectedLayoutRouteChildren = {
+  ProtectedSettingsLayoutRoute: ProtectedSettingsLayoutRouteWithChildren,
   ProtectedCustomersRoute: ProtectedCustomersRoute,
   ProtectedDashboardRoute: ProtectedDashboardRoute,
   ProtectedMessagesRoute: ProtectedMessagesRoute,
@@ -512,35 +468,19 @@ const ProtectedRouteChildren: ProtectedRouteChildren = {
   ProtectedAnalyticsSlugRoute: ProtectedAnalyticsSlugRoute,
   ProtectedCoursesSlugRoute: ProtectedCoursesSlugRoute,
   ProtectedCoursesAddRoute: ProtectedCoursesAddRoute,
-  ProtectedSettingsRoute: ProtectedSettingsRouteWithChildren,
   ProtectedAnalyticsIndexRoute: ProtectedAnalyticsIndexRoute,
   ProtectedCoursesIndexRoute: ProtectedCoursesIndexRoute,
   ProtectedCoursesEditSlugRoute: ProtectedCoursesEditSlugRoute,
   ProtectedCoursesEditIndexRoute: ProtectedCoursesEditIndexRoute,
 }
 
-const ProtectedRouteWithChildren = ProtectedRoute._addFileChildren(
-  ProtectedRouteChildren,
-)
-
-interface UnprotectedRouteChildren {
-  UnprotectedPrivacyPolicyRoute: typeof UnprotectedPrivacyPolicyRoute
-  UnprotectedTermsAndConditionRoute: typeof UnprotectedTermsAndConditionRoute
-  UnprotectedIndexRoute: typeof UnprotectedIndexRoute
-}
-
-const UnprotectedRouteChildren: UnprotectedRouteChildren = {
-  UnprotectedPrivacyPolicyRoute: UnprotectedPrivacyPolicyRoute,
-  UnprotectedTermsAndConditionRoute: UnprotectedTermsAndConditionRoute,
-  UnprotectedIndexRoute: UnprotectedIndexRoute,
-}
-
-const UnprotectedRouteWithChildren = UnprotectedRoute._addFileChildren(
-  UnprotectedRouteChildren,
+const ProtectedLayoutRouteWithChildren = ProtectedLayoutRoute._addFileChildren(
+  ProtectedLayoutRouteChildren,
 )
 
 export interface FileRoutesByFullPath {
-  '': typeof UnprotectedRouteWithChildren
+  '': typeof ProtectedLayoutRouteWithChildren
+  '/settings': typeof ProtectedSettingsLayoutRouteWithChildren
   '/confirm-password': typeof AuthConfirmPasswordRoute
   '/forgot-password': typeof AuthForgotPasswordRoute
   '/login': typeof AuthLoginRoute
@@ -556,20 +496,19 @@ export interface FileRoutesByFullPath {
   '/analytics/$slug': typeof ProtectedAnalyticsSlugRoute
   '/courses/$slug': typeof ProtectedCoursesSlugRoute
   '/courses/add': typeof ProtectedCoursesAddRoute
-  '/settings': typeof ProtectedSettingsLayoutRouteWithChildren
+  '/settings/account': typeof ProtectedSettingsAccountRoute
+  '/settings/appearance': typeof ProtectedSettingsAppearanceRoute
+  '/settings/display': typeof ProtectedSettingsDisplayRoute
+  '/settings/notifications': typeof ProtectedSettingsNotificationsRoute
   '/analytics': typeof ProtectedAnalyticsIndexRoute
   '/courses': typeof ProtectedCoursesIndexRoute
+  '/settings/': typeof ProtectedSettingsIndexRoute
   '/courses/edit/$slug': typeof ProtectedCoursesEditSlugRoute
-  '/settings/account': typeof ProtectedSettingsLayoutAccountRoute
-  '/settings/appearance': typeof ProtectedSettingsLayoutAppearanceRoute
-  '/settings/display': typeof ProtectedSettingsLayoutDisplayRoute
-  '/settings/notifications': typeof ProtectedSettingsLayoutNotificationsRoute
   '/courses/edit': typeof ProtectedCoursesEditIndexRoute
-  '/settings/': typeof ProtectedSettingsLayoutIndexRoute
 }
 
 export interface FileRoutesByTo {
-  '': typeof ProtectedRouteWithChildren
+  '': typeof ProtectedLayoutRouteWithChildren
   '/confirm-password': typeof AuthConfirmPasswordRoute
   '/forgot-password': typeof AuthForgotPasswordRoute
   '/login': typeof AuthLoginRoute
@@ -585,22 +524,22 @@ export interface FileRoutesByTo {
   '/analytics/$slug': typeof ProtectedAnalyticsSlugRoute
   '/courses/$slug': typeof ProtectedCoursesSlugRoute
   '/courses/add': typeof ProtectedCoursesAddRoute
-  '/settings': typeof ProtectedSettingsLayoutIndexRoute
+  '/settings/account': typeof ProtectedSettingsAccountRoute
+  '/settings/appearance': typeof ProtectedSettingsAppearanceRoute
+  '/settings/display': typeof ProtectedSettingsDisplayRoute
+  '/settings/notifications': typeof ProtectedSettingsNotificationsRoute
   '/analytics': typeof ProtectedAnalyticsIndexRoute
   '/courses': typeof ProtectedCoursesIndexRoute
+  '/settings': typeof ProtectedSettingsIndexRoute
   '/courses/edit/$slug': typeof ProtectedCoursesEditSlugRoute
-  '/settings/account': typeof ProtectedSettingsLayoutAccountRoute
-  '/settings/appearance': typeof ProtectedSettingsLayoutAppearanceRoute
-  '/settings/display': typeof ProtectedSettingsLayoutDisplayRoute
-  '/settings/notifications': typeof ProtectedSettingsLayoutNotificationsRoute
   '/courses/edit': typeof ProtectedCoursesEditIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
-  '/_auth': typeof AuthRouteWithChildren
-  '/_protected': typeof ProtectedRouteWithChildren
-  '/_unprotected': typeof UnprotectedRouteWithChildren
+  '/_auth': typeof AuthLayoutRouteWithChildren
+  '/_protected': typeof ProtectedLayoutRouteWithChildren
+  '/_protected/settings': typeof ProtectedSettingsLayoutRouteWithChildren
   '/_auth/confirm-password': typeof AuthConfirmPasswordRoute
   '/_auth/forgot-password': typeof AuthForgotPasswordRoute
   '/_auth/login': typeof AuthLoginRoute
@@ -616,23 +555,22 @@ export interface FileRoutesById {
   '/_protected/analytics/$slug': typeof ProtectedAnalyticsSlugRoute
   '/_protected/courses/$slug': typeof ProtectedCoursesSlugRoute
   '/_protected/courses/add': typeof ProtectedCoursesAddRoute
-  '/_protected/settings': typeof ProtectedSettingsRouteWithChildren
-  '/_protected/settings/_layout': typeof ProtectedSettingsLayoutRouteWithChildren
+  '/_protected/settings/account': typeof ProtectedSettingsAccountRoute
+  '/_protected/settings/appearance': typeof ProtectedSettingsAppearanceRoute
+  '/_protected/settings/display': typeof ProtectedSettingsDisplayRoute
+  '/_protected/settings/notifications': typeof ProtectedSettingsNotificationsRoute
   '/_protected/analytics/': typeof ProtectedAnalyticsIndexRoute
   '/_protected/courses/': typeof ProtectedCoursesIndexRoute
+  '/_protected/settings/': typeof ProtectedSettingsIndexRoute
   '/_protected/courses/edit/$slug': typeof ProtectedCoursesEditSlugRoute
-  '/_protected/settings/_layout/account': typeof ProtectedSettingsLayoutAccountRoute
-  '/_protected/settings/_layout/appearance': typeof ProtectedSettingsLayoutAppearanceRoute
-  '/_protected/settings/_layout/display': typeof ProtectedSettingsLayoutDisplayRoute
-  '/_protected/settings/_layout/notifications': typeof ProtectedSettingsLayoutNotificationsRoute
   '/_protected/courses/edit/': typeof ProtectedCoursesEditIndexRoute
-  '/_protected/settings/_layout/': typeof ProtectedSettingsLayoutIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | ''
+    | '/settings'
     | '/confirm-password'
     | '/forgot-password'
     | '/login'
@@ -648,16 +586,15 @@ export interface FileRouteTypes {
     | '/analytics/$slug'
     | '/courses/$slug'
     | '/courses/add'
-    | '/settings'
-    | '/analytics'
-    | '/courses'
-    | '/courses/edit/$slug'
     | '/settings/account'
     | '/settings/appearance'
     | '/settings/display'
     | '/settings/notifications'
-    | '/courses/edit'
+    | '/analytics'
+    | '/courses'
     | '/settings/'
+    | '/courses/edit/$slug'
+    | '/courses/edit'
   fileRoutesByTo: FileRoutesByTo
   to:
     | ''
@@ -676,20 +613,20 @@ export interface FileRouteTypes {
     | '/analytics/$slug'
     | '/courses/$slug'
     | '/courses/add'
-    | '/settings'
-    | '/analytics'
-    | '/courses'
-    | '/courses/edit/$slug'
     | '/settings/account'
     | '/settings/appearance'
     | '/settings/display'
     | '/settings/notifications'
+    | '/analytics'
+    | '/courses'
+    | '/settings'
+    | '/courses/edit/$slug'
     | '/courses/edit'
   id:
     | '__root__'
     | '/_auth'
     | '/_protected'
-    | '/_unprotected'
+    | '/_protected/settings'
     | '/_auth/confirm-password'
     | '/_auth/forgot-password'
     | '/_auth/login'
@@ -705,30 +642,32 @@ export interface FileRouteTypes {
     | '/_protected/analytics/$slug'
     | '/_protected/courses/$slug'
     | '/_protected/courses/add'
-    | '/_protected/settings'
-    | '/_protected/settings/_layout'
+    | '/_protected/settings/account'
+    | '/_protected/settings/appearance'
+    | '/_protected/settings/display'
+    | '/_protected/settings/notifications'
     | '/_protected/analytics/'
     | '/_protected/courses/'
+    | '/_protected/settings/'
     | '/_protected/courses/edit/$slug'
-    | '/_protected/settings/_layout/account'
-    | '/_protected/settings/_layout/appearance'
-    | '/_protected/settings/_layout/display'
-    | '/_protected/settings/_layout/notifications'
     | '/_protected/courses/edit/'
-    | '/_protected/settings/_layout/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
-  AuthRoute: typeof AuthRouteWithChildren
-  ProtectedRoute: typeof ProtectedRouteWithChildren
-  UnprotectedRoute: typeof UnprotectedRouteWithChildren
+  AuthLayoutRoute: typeof AuthLayoutRouteWithChildren
+  ProtectedLayoutRoute: typeof ProtectedLayoutRouteWithChildren
+  UnprotectedPrivacyPolicyRoute: typeof UnprotectedPrivacyPolicyRoute
+  UnprotectedTermsAndConditionRoute: typeof UnprotectedTermsAndConditionRoute
+  UnprotectedIndexRoute: typeof UnprotectedIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  AuthRoute: AuthRouteWithChildren,
-  ProtectedRoute: ProtectedRouteWithChildren,
-  UnprotectedRoute: UnprotectedRouteWithChildren,
+  AuthLayoutRoute: AuthLayoutRouteWithChildren,
+  ProtectedLayoutRoute: ProtectedLayoutRouteWithChildren,
+  UnprotectedPrivacyPolicyRoute: UnprotectedPrivacyPolicyRoute,
+  UnprotectedTermsAndConditionRoute: UnprotectedTermsAndConditionRoute,
+  UnprotectedIndexRoute: UnprotectedIndexRoute,
 }
 
 export const routeTree = rootRoute
@@ -743,11 +682,13 @@ export const routeTree = rootRoute
       "children": [
         "/_auth",
         "/_protected",
-        "/_unprotected"
+        "/_unprotected/privacy-policy",
+        "/_unprotected/terms-and-condition",
+        "/_unprotected/"
       ]
     },
     "/_auth": {
-      "filePath": "_auth.tsx",
+      "filePath": "_auth/layout.tsx",
       "children": [
         "/_auth/confirm-password",
         "/_auth/forgot-password",
@@ -757,8 +698,9 @@ export const routeTree = rootRoute
       ]
     },
     "/_protected": {
-      "filePath": "_protected.tsx",
+      "filePath": "_protected/layout.tsx",
       "children": [
+        "/_protected/settings",
         "/_protected/customers",
         "/_protected/dashboard",
         "/_protected/messages",
@@ -766,19 +708,21 @@ export const routeTree = rootRoute
         "/_protected/analytics/$slug",
         "/_protected/courses/$slug",
         "/_protected/courses/add",
-        "/_protected/settings",
         "/_protected/analytics/",
         "/_protected/courses/",
         "/_protected/courses/edit/$slug",
         "/_protected/courses/edit/"
       ]
     },
-    "/_unprotected": {
-      "filePath": "_unprotected.tsx",
+    "/_protected/settings": {
+      "filePath": "_protected/settings/layout.tsx",
+      "parent": "/_protected",
       "children": [
-        "/_unprotected/privacy-policy",
-        "/_unprotected/terms-and-condition",
-        "/_unprotected/"
+        "/_protected/settings/account",
+        "/_protected/settings/appearance",
+        "/_protected/settings/display",
+        "/_protected/settings/notifications",
+        "/_protected/settings/"
       ]
     },
     "/_auth/confirm-password": {
@@ -818,16 +762,13 @@ export const routeTree = rootRoute
       "parent": "/_protected"
     },
     "/_unprotected/privacy-policy": {
-      "filePath": "_unprotected/privacy-policy.tsx",
-      "parent": "/_unprotected"
+      "filePath": "_unprotected/privacy-policy.tsx"
     },
     "/_unprotected/terms-and-condition": {
-      "filePath": "_unprotected/terms-and-condition.tsx",
-      "parent": "/_unprotected"
+      "filePath": "_unprotected/terms-and-condition.tsx"
     },
     "/_unprotected/": {
-      "filePath": "_unprotected/index.tsx",
-      "parent": "/_unprotected"
+      "filePath": "_unprotected/index.tsx"
     },
     "/_protected/analytics/$slug": {
       "filePath": "_protected/analytics/$slug.tsx",
@@ -841,23 +782,21 @@ export const routeTree = rootRoute
       "filePath": "_protected/courses/add.tsx",
       "parent": "/_protected"
     },
-    "/_protected/settings": {
-      "filePath": "_protected/settings",
-      "parent": "/_protected",
-      "children": [
-        "/_protected/settings/_layout"
-      ]
+    "/_protected/settings/account": {
+      "filePath": "_protected/settings/account.tsx",
+      "parent": "/_protected/settings"
     },
-    "/_protected/settings/_layout": {
-      "filePath": "_protected/settings/_layout.tsx",
-      "parent": "/_protected/settings",
-      "children": [
-        "/_protected/settings/_layout/account",
-        "/_protected/settings/_layout/appearance",
-        "/_protected/settings/_layout/display",
-        "/_protected/settings/_layout/notifications",
-        "/_protected/settings/_layout/"
-      ]
+    "/_protected/settings/appearance": {
+      "filePath": "_protected/settings/appearance.tsx",
+      "parent": "/_protected/settings"
+    },
+    "/_protected/settings/display": {
+      "filePath": "_protected/settings/display.tsx",
+      "parent": "/_protected/settings"
+    },
+    "/_protected/settings/notifications": {
+      "filePath": "_protected/settings/notifications.tsx",
+      "parent": "/_protected/settings"
     },
     "/_protected/analytics/": {
       "filePath": "_protected/analytics/index.tsx",
@@ -867,33 +806,17 @@ export const routeTree = rootRoute
       "filePath": "_protected/courses/index.tsx",
       "parent": "/_protected"
     },
+    "/_protected/settings/": {
+      "filePath": "_protected/settings/index.tsx",
+      "parent": "/_protected/settings"
+    },
     "/_protected/courses/edit/$slug": {
       "filePath": "_protected/courses/edit/$slug.tsx",
       "parent": "/_protected"
     },
-    "/_protected/settings/_layout/account": {
-      "filePath": "_protected/settings/_layout/account.tsx",
-      "parent": "/_protected/settings/_layout"
-    },
-    "/_protected/settings/_layout/appearance": {
-      "filePath": "_protected/settings/_layout/appearance.tsx",
-      "parent": "/_protected/settings/_layout"
-    },
-    "/_protected/settings/_layout/display": {
-      "filePath": "_protected/settings/_layout/display.tsx",
-      "parent": "/_protected/settings/_layout"
-    },
-    "/_protected/settings/_layout/notifications": {
-      "filePath": "_protected/settings/_layout/notifications.tsx",
-      "parent": "/_protected/settings/_layout"
-    },
     "/_protected/courses/edit/": {
       "filePath": "_protected/courses/edit/index.tsx",
       "parent": "/_protected"
-    },
-    "/_protected/settings/_layout/": {
-      "filePath": "_protected/settings/_layout/index.tsx",
-      "parent": "/_protected/settings/_layout"
     }
   }
 }

@@ -8,7 +8,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useSeo } from "@/hooks/useSeo";
 import { useAuth } from "@/hooks/useAuth";
 import { Form } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -22,17 +21,25 @@ import { Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_auth/login")({
   component: RouteComponent,
+  head: () => {
+    return {
+      meta: [
+        {
+          title: "Login",
+        },
+        {
+          name: "description",
+          content: "Login to your account",
+        },
+      ],
+    };
+  },
 });
 
 function RouteComponent() {
   const navigate = useNavigate();
 
   const { setUser } = useAuth();
-
-  useSeo({
-    title: "Login",
-    description: "Login to your account",
-  });
 
   const form = useForm<LoginSchema>({
     resolver: zodResolver(loginSchema),

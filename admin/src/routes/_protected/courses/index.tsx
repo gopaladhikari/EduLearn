@@ -40,7 +40,6 @@ import {
 } from "lucide-react";
 import { TableSkeleton } from "@/components/skeletons/TableSkeleton";
 import { Button } from "@/components/ui/button";
-import { useSeo } from "@/hooks/useSeo";
 import { PaginationControls } from "@/components/courses/PaginationControls";
 import { useCoursesTable } from "@/hooks/useCoursesTable";
 import { SessionStorage } from "@/config/constants";
@@ -51,6 +50,19 @@ import type { Course } from "@/types";
 
 export const Route = createFileRoute("/_protected/courses/")({
   component: RouteComponent,
+  head: () => {
+    return {
+      meta: [
+        {
+          title: "Courses",
+        },
+        {
+          name: "description",
+          content: "Courses list of EduLearn platform",
+        },
+      ],
+    };
+  },
 });
 
 type CachedCourses = {
@@ -65,11 +77,6 @@ function RouteComponent() {
     10;
 
   const navigate = useNavigate();
-
-  useSeo({
-    title: "Courses",
-    description: "Courses",
-  });
 
   const { table, isPending } = useCoursesTable(itemsPerPage);
 

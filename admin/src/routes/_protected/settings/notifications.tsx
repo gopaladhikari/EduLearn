@@ -1,11 +1,24 @@
-import { DisplayForm } from "@/components/settings/display-form";
+import { NotificationsForm } from "@/components/settings/notification-form";
 import { Separator } from "@/components/ui/separator";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute(
-  "/_protected/settings/_layout/display",
+  "/_protected/settings/notifications",
 )({
   component: RouteComponent,
+  head: () => {
+    return {
+      meta: [
+        {
+          title: "Notifications",
+        },
+        {
+          name: "description",
+          content: "Notifications settings of EduLearn platform",
+        },
+      ],
+    };
+  },
 });
 
 function RouteComponent() {
@@ -13,12 +26,12 @@ function RouteComponent() {
     <div className="space-y-6">
       <div>
         <h3 className="text-lg font-medium">Notifications</h3>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-muted-foreground text-sm">
           Configure how you receive notifications.
         </p>
       </div>
       <Separator />
-      <DisplayForm />
+      <NotificationsForm />
     </div>
   );
 }

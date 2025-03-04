@@ -1,4 +1,3 @@
-import { useSeo } from "@/hooks/useSeo";
 import { createFileRoute } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import {
@@ -21,14 +20,22 @@ import { axiosInstance } from "@/config/axios";
 
 export const Route = createFileRoute("/_auth/forgot-password")({
   component: RouteComponent,
+  head: () => {
+    return {
+      meta: [
+        {
+          title: "Forgot Password",
+        },
+        {
+          name: "description",
+          content: "Recover your password",
+        },
+      ],
+    };
+  },
 });
 
 function RouteComponent() {
-  useSeo({
-    title: "Forgot Password",
-    description: "Forgot Password",
-  });
-
   const form = useForm<ForgotPasswordSchema>({
     resolver: zodResolver(forgotPasswordSchema),
   });

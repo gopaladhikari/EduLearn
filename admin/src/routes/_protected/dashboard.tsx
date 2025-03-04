@@ -14,6 +14,19 @@ import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_protected/dashboard")({
   component: RouteComponent,
+  head: () => {
+    return {
+      meta: [
+        {
+          title: "Dashboard",
+        },
+        {
+          name: "description",
+          content: "Admin side dashboard of EduLearn platform",
+        },
+      ],
+    };
+  },
 });
 
 function RouteComponent() {

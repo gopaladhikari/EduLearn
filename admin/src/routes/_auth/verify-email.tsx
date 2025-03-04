@@ -27,6 +27,19 @@ export const Route = createFileRoute("/_auth/verify-email")({
       token: String(token) || "",
     };
   },
+  head: () => {
+    return {
+      meta: [
+        {
+          title: "Verfiy Email",
+        },
+        {
+          name: "description",
+          content: "Verify your edulearn registered email",
+        },
+      ],
+    };
+  },
 });
 
 function RouteComponent() {

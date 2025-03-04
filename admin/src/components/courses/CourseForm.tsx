@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,6 +16,9 @@ import {
   courseSchema,
   type CourseSchema,
 } from "@/schemas/courses.schema";
+import { useState, useEffect } from "react";
+import { XIcon } from "lucide-react";
+import { MultiSelect } from "@/components/ui/multi-select";
 import {
   Select,
   SelectContent,
@@ -25,44 +28,61 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { TipTap } from "@/components/courses/TipTap";
-import { useMemo, useState } from "react";
-import { FileUploadField } from "../ui/FileUploadField";
-import { FormInputField } from "../ui/FormInputField";
-import { MultiSelect } from "../ui/multi-select";
-import { XIcon } from "lucide-react";
-import { useAllUsers } from "@/lib/queries/users.query";
+import { FileUploadField } from "@/components/ui/FileUploadField";
+import { FormInputField } from "@/components/ui/FormInputField";
+import type { Course, User } from "@/types";
 
-type Props = {
-  onSubmit: () => void;
-};
+interface CourseFormProps {
+  initialData?: Partial<Course>;
+  onSubmit: SubmitHandler<CourseSchema>;
+  isSubmitting: boolean;
+  instructors: User[];
+}
 
-export function CourseForm({ onSubmit }: Props) {
-  const [tags, setTags] = useState<string[]>([]);
-
+export function CourseForm({
+  initialData,
+  onSubmit,
+  isSubmitting,
+  instructors,
+}: CourseFormProps) {
+  const [tags, setTags] = useState<string[]>(initialData?.tags || []);
   const form = useForm<CourseSchema>({
     resolver: zodResolver(courseSchema),
+    defaultValues: {
+      category: initialData?.category as CourseCategory,
+      description: initialData?.description,
+      instructor: initialData?.instructor,
+      price: initialData?.price,
+      tags: initialData?.tags,
+      title: initialData?.title,
+    },
   });
 
-  const { data } = useAllUsers();
-
-  const selectables = useMemo(() => {
-    return data?.data || [];
-  }, [data?.data]);
+  useEffect(() => {
+    if (initialData) {
+      form.reset({
+        category: initialData?.category as CourseCategory,
+        description: initialData?.description,
+        instructor: initialData?.instructor,
+        price: initialData?.price,
+        tags: initialData?.tags,
+        title: initialData?.title,
+      });
+      setTags(initialData.tags || []);
+    }
+  }, [initialData, form]);
 
   const handleAddTag = (
     event: React.KeyboardEvent<HTMLInputElement>,
   ) => {
     if (event.key === "Enter" || event.key === ",") {
       event.preventDefault();
-
-      const value = event.currentTarget.value;
-
+      const value = event.currentTarget.value.trim();
       if (value && !tags.includes(value)) {
-        setTags((prevTags) => [...prevTags, value]);
-        form.clearErrors("tags");
-        form.setValue("tags", tags);
+        const newTags = [...tags, value];
+        setTags(newTags);
+        form.setValue("tags", newTags);
       }
-
       event.currentTarget.value = "";
     }
   };
@@ -70,7 +90,6 @@ export function CourseForm({ onSubmit }: Props) {
   const handleRemoveTag = (tagToRemove: string) => {
     const updatedTags = tags.filter((tag) => tag !== tagToRemove);
     setTags(updatedTags);
-
     form.setValue("tags", updatedTags);
   };
 
@@ -84,24 +103,22 @@ export function CourseForm({ onSubmit }: Props) {
           name="video"
           label="Course Video"
           description="Upload the course video (MP4, Max 10MB)"
-          accept={{
-            "video/*": [".mp4"],
-          }}
+          accept={{ "video/*": [".mp4"] }}
           maxSize={1024 * 1024 * 10}
           previewType="video"
           form={form}
+          existingFile={initialData?.video}
         />
 
         <FileUploadField
           name="thumbnail"
           label="Video Thumbnail"
           description="Upload a thumbnail image (JPEG, PNG, Max 5MB)"
-          accept={{
-            "image/*": [".jpg", ".jpeg", ".png"],
-          }}
-          maxSize={1024 * 1024 * 5} // 5MB
+          accept={{ "image/*": [".jpg", ".jpeg", ".png"] }}
+          maxSize={1024 * 1024 * 5}
           previewType="image"
           form={form}
+          existingFile={initialData?.thumbnail}
         />
 
         <FormInputField
@@ -131,14 +148,13 @@ export function CourseForm({ onSubmit }: Props) {
         <FormField
           control={form.control}
           name="category"
-          render={({ field: { onChange, value, ...rest } }) => (
+          render={({ field }) => (
             <FormItem>
               <FormLabel>Course Category</FormLabel>
               <FormControl>
                 <Select
-                  value={value}
-                  onValueChange={onChange}
-                  {...rest}
+                  value={field.value}
+                  onValueChange={field.onChange}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select category" />
@@ -156,10 +172,6 @@ export function CourseForm({ onSubmit }: Props) {
                   </SelectContent>
                 </Select>
               </FormControl>
-              <FormDescription>
-                A brief description of your course (max 500
-                characters)
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -173,18 +185,15 @@ export function CourseForm({ onSubmit }: Props) {
               <FormLabel>Course Instructor</FormLabel>
               <FormControl>
                 <MultiSelect
-                  options={selectables}
+                  options={instructors}
                   onValueChange={field.onChange}
                   defaultValue={field.value}
-                  placeholder="Select options"
+                  placeholder="Select instructors"
                   variant="inverted"
                   animation={2}
                   maxCount={5}
                 />
               </FormControl>
-              <FormDescription>
-                Select the instructor featured in this course.
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -194,7 +203,7 @@ export function CourseForm({ onSubmit }: Props) {
           control={form.control}
           label="Price"
           name="price"
-          description="This is your course price"
+          description="Course price in USD"
           inputProps={{
             type: "number",
             inputMode: "numeric",
@@ -228,6 +237,7 @@ export function CourseForm({ onSubmit }: Props) {
                           size="icon"
                           type="button"
                           onClick={() => handleRemoveTag(tag)}
+                          variant="ghost"
                         >
                           <XIcon className="h-4 w-4" />
                           <span className="sr-only">Remove tag</span>
@@ -239,17 +249,15 @@ export function CourseForm({ onSubmit }: Props) {
               </FormControl>
               <FormDescription>
                 Enter tags separated by commas or press "Enter" to add
-                them (e.g., "programming, web development, react").
+                them
               </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
 
-        <Button type="submit" disabled={form.formState.isSubmitting}>
-          {form.formState.isSubmitting
-            ? "Adding Course..."
-            : "Add Course"}
+        <Button type="submit" disabled={isSubmitting}>
+          {isSubmitting ? "Processing..." : "Save Course"}
         </Button>
       </form>
     </Form>

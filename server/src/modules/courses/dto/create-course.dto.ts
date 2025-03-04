@@ -6,8 +6,8 @@ import {
   IsEnum,
   IsNumberString,
 } from 'class-validator';
-import { CourseCategory } from 'src/config/constant';
 import { ApiProperty } from '@nestjs/swagger';
+import { CourseCategory } from '../entities/courses-categories';
 
 export class CreateCourseDto {
   @ApiProperty({

@@ -8,6 +8,12 @@ export enum Role {
   User = 'user',
 }
 
+export enum Status {
+  Active = 'active',
+  Restrcited = 'restrcited',
+  Inactive = 'inactive',
+}
+
 @Schema({
   timestamps: true,
 })
@@ -28,17 +34,17 @@ export class User {
   password: string;
 
   @Prop({ required: true, enum: Role })
-  role: 'admin' | 'user';
+  role: Role;
 
   @Prop({ required: true, default: false })
   verified: boolean;
 
   @Prop({
     required: true,
-    default: 'active',
-    enum: ['active', 'restrcited', 'inactive'],
+    default: Status.Active,
+    enum: Status,
   })
-  status: 'active' | 'restrcited' | 'inactive';
+  status: Status;
 
   @Prop({
     type: {

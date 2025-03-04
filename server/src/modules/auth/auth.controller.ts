@@ -21,7 +21,7 @@ import {
   ApiResponse,
   ApiSecurity,
 } from '@nestjs/swagger';
-import { LoginDto } from './dto/login.dto';
+import { AuthSwagger } from 'src/config/constants/auth.swagger';
 
 @ApiSecurity('x-api-key')
 @Controller('auth')
@@ -30,19 +30,9 @@ export class AuthController {
 
   @Post('login')
   @UseGuards(LocalGuard)
-  @ApiOperation({
-    summary: 'User login',
-    description:
-      'Authenticates a user and returns a JWT token in cookies.',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'User logged in successfully.',
-  })
-  @ApiBody({
-    description: 'User login credentials',
-    type: LoginDto,
-  })
+  @ApiOperation(AuthSwagger.login.operation)
+  @ApiResponse(AuthSwagger.login.okResponse)
+  @ApiBody(AuthSwagger.login.body)
   login(
     @CurrentUser() user: UserDocument,
     @Res({ passthrough: true }) response: Response,
@@ -52,52 +42,24 @@ export class AuthController {
 
   @Post('logout')
   @UseGuards(JwtGuard)
-  @ApiOperation({
-    summary: 'User logout',
-    description:
-      'Logs out a user by clearing the JWT token from cookies.',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'User logged out successfully.',
-  })
+  @ApiOperation(AuthSwagger.logout.operation)
+  @ApiResponse(AuthSwagger.logout.okResponse)
   logout(@Res({ passthrough: true }) response: Response) {
     return this.authService.logout(response);
   }
 
   @Post('forgot-password')
-  @ApiOperation({
-    summary: 'Request password reset',
-    description: "Sends a password reset link to the user's email.",
-  })
-  @ApiBody({
-    schema: {
-      properties: {
-        email: { type: 'string', example: 'user@example.com' },
-      },
-    },
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Password reset link sent successfully.',
-  })
+  @ApiOperation(AuthSwagger.forgotPassword.operation)
+  @ApiBody(AuthSwagger.forgotPassword.body)
+  @ApiResponse(AuthSwagger.forgotPassword.okResponse)
   requestForgotPassword(@Body('email') email: string) {
     return this.authService.requestForgotPassword(email);
   }
 
   @Patch('forgot-password/:token')
-  @ApiOperation({
-    summary: 'Confirm password reset',
-    description:
-      'Resets the password using a token received in email.',
-  })
-  @ApiBody({
-    type: ConfirmForgotPasswordDto,
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Password reset successfully.',
-  })
+  @ApiOperation(AuthSwagger.confirmForgotPassword.operation)
+  @ApiBody(AuthSwagger.confirmForgotPassword.body)
+  @ApiResponse(AuthSwagger.confirmForgotPassword.okResponse)
   confirmForgotPassword(
     @Param('token') token: string,
     @Body(ValidationPipe) body: ConfirmForgotPasswordDto,
@@ -111,21 +73,9 @@ export class AuthController {
   }
 
   @Patch('verify-email/:token')
-  @ApiOperation({
-    summary: 'Verify email',
-    description: 'Verifies user email using the token sent to email.',
-  })
-  @ApiBody({
-    schema: {
-      properties: {
-        email: { type: 'string', example: 'user@example.com' },
-      },
-    },
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Email verified successfully.',
-  })
+  @ApiOperation(AuthSwagger.verifyEmail.operation)
+  @ApiBody(AuthSwagger.verifyEmail.body)
+  @ApiResponse(AuthSwagger.verifyEmail.okResponse)
   verifyEmail(
     @Body('email') email: string,
     @Param('token') token: string,

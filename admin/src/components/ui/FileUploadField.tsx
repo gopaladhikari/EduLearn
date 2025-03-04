@@ -26,6 +26,7 @@ interface FileUploadFieldProps {
   maxSize: number;
   previewType: "video" | "image";
   form: UseFormReturn<CourseSchema>;
+  existingFile: string | undefined;
 }
 
 export function FileUploadField({
@@ -36,9 +37,10 @@ export function FileUploadField({
   maxSize,
   previewType,
   form,
+  existingFile = "",
 }: FileUploadFieldProps) {
   const [files, setFiles] = useState<File[]>([]);
-  const [previewUrl, setPreviewUrl] = useState<string>("");
+  const [previewUrl, setPreviewUrl] = useState<string>(existingFile);
 
   useEffect(() => {
     if (files?.length > 0) {

@@ -1,6 +1,9 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, PartialType } from '@nestjs/swagger';
 
-export class CourseDto {
+export class CourseResponseDto {
+  @ApiProperty({ example: '65f8d7e4c4b5d12a5c3e4f5a' })
+  _id: string;
+
   @ApiProperty({ example: 'introduction-to-nestjs' })
   slug: string;
 
@@ -20,11 +23,43 @@ export class CourseDto {
   isPublished: boolean;
 
   @ApiProperty({
-    example:
-      'https://res.cloudinary.com/demo/image/upload/v1234/webdev-thumb.jpg',
+    example: {
+      url: 'https://res.cloudinary.com/demo/image/upload/v1674081937/course-thumbnail.png',
+      publicId: 'course-thumbnail-1234',
+    },
   })
   thumbnail: {
     url: string;
     publicId: string;
   };
+
+  @ApiProperty({
+    example: {
+      url: 'https://res.cloudinary.com/demo/video/upload/v1234/course-video.mp4',
+      publicId: 'course-video-1234',
+    },
+  })
+  video: {
+    url: string;
+    publicId: string;
+  };
+
+  @ApiProperty({ example: ['javascript', 'web', 'es6'] })
+  tags: string[];
+
+  @ApiProperty({ example: ['65f8d7e4c4b5d12a5c3e4f5a'] })
+  instructor: string[];
+
+  @ApiProperty({ example: ['javascript', 'web', 'es6'] })
+  lessons: string[];
+
+  @ApiProperty({ example: true })
+  isPopular: boolean;
+
+  @ApiProperty({ example: false })
+  isBestSeller: boolean;
 }
+
+export class CourseQueryExampleDto extends PartialType(
+  CourseResponseDto,
+) {}

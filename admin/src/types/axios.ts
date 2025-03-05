@@ -1,4 +1,4 @@
-import type { AxiosRequestConfig, AxiosResponse } from "axios";
+import type { AxiosResponse } from "axios";
 
 type CustomResponse<T = unknown> = Promise<
   AxiosResponse<{

@@ -4,8 +4,8 @@ import { env } from "./env";
 const axiosInstance = axios.create({
   baseURL: env.backendApi,
   withCredentials: true,
-  // timeout: 20000, // 20 seconds
-  // timeoutErrorMessage: "Request timed out",
+  timeout: 4_000, // 4 seconds
+  timeoutErrorMessage: "Request timed out",
   headers: {
     "x-api-key": env.xApiKey,
   },

@@ -17,6 +17,7 @@ import {
   FileUploaderItem,
 } from "./file-upload";
 import { CloudUpload, Paperclip } from "lucide-react";
+import type { Asset } from "@/types";
 
 interface FileUploadFieldProps {
   name: "video" | "thumbnail";
@@ -26,7 +27,7 @@ interface FileUploadFieldProps {
   maxSize: number;
   previewType: "video" | "image";
   form: UseFormReturn<CourseSchema>;
-  existingFile: string | undefined;
+  existingFile?: Asset;
 }
 
 export function FileUploadField({
@@ -37,10 +38,12 @@ export function FileUploadField({
   maxSize,
   previewType,
   form,
-  existingFile = "",
+  existingFile,
 }: FileUploadFieldProps) {
   const [files, setFiles] = useState<File[]>([]);
-  const [previewUrl, setPreviewUrl] = useState<string>(existingFile);
+  const [previewUrl, setPreviewUrl] = useState<string>(
+    existingFile?.url || "",
+  );
 
   useEffect(() => {
     if (files?.length > 0) {

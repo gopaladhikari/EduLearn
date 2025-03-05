@@ -26,9 +26,12 @@ function AddCourse() {
     try {
       const { data } = await axiosInstance.post<Course>(
         "/api/courses",
+        formData,
         {
-          data: formData,
-          headers: { "Content-Type": "multipart/form-data" },
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          timeout: Infinity,
         },
       );
 

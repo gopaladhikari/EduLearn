@@ -6,7 +6,6 @@ export type User = {
   phoneNumber: string;
   password: string;
   role: "admin" | "user";
-  verified: boolean;
   bio: string;
   verified: boolean;
   status: "active" | "restrcited" | "inactive";
@@ -19,13 +18,18 @@ export type User = {
   __v: number;
 };
 
+export type Asset = {
+  url: string;
+  publicId: string;
+};
+
 export type Course = {
   _id: string;
   title: string;
   description: string;
   slug: string;
   instructor: string[];
-  thumbnail: string;
+  thumbnail: Asset;
   uploadedBy: {
     _id: string;
     fullName: string;
@@ -36,10 +40,7 @@ export type Course = {
   category: string;
   tags: string[];
   price: number;
-  video: {
-    url: string;
-    publicId: string;
-  };
+  video: Asset;
   isPopular: boolean;
   isBestSeller: boolean;
   createdAt: string;

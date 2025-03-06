@@ -5,7 +5,6 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-
 import { type AuthContextType } from "@/context/AuthContext";
 import { Footer } from "@/components/partials/Footer";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";

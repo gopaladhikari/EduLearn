@@ -14,6 +14,12 @@ export enum Status {
   Inactive = 'inactive',
 }
 
+export enum AuthProvider {
+  Local = 'local',
+  Google = 'google',
+  Facebook = 'facebook',
+}
+
 @Schema({
   timestamps: true,
 })
@@ -30,7 +36,7 @@ export class User {
   @Prop({ unique: true, index: true, sparse: true })
   phoneNumber: number;
 
-  @Prop({ required: true })
+  @Prop()
   password: string;
 
   @Prop({ required: true, enum: Role })
@@ -45,6 +51,15 @@ export class User {
     enum: Status,
   })
   status: Status;
+
+  @Prop({
+    enum: AuthProvider,
+    default: AuthProvider.Local,
+  })
+  provider: AuthProvider;
+
+  @Prop({ required: false })
+  providerId: string;
 
   @Prop({
     type: {

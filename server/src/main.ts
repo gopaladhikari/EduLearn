@@ -1,4 +1,4 @@
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { RequestMethod, ValidationPipe } from '@nestjs/common';
 import * as cookieParser from 'cookie-parser';
@@ -7,6 +7,7 @@ import { ResponseInterceptor } from './interceptors/response.interceptor';
 import { site } from './config/site';
 import { XApiKeyInterceptor } from './interceptors/x-api-key.interceptor';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app =
@@ -14,7 +15,13 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalInterceptors(new ResponseInterceptor());
-  app.useGlobalInterceptors(new XApiKeyInterceptor());
+
+  const reflector = app.get(Reflector);
+
+  app.useGlobalInterceptors(
+    new XApiKeyInterceptor(new ConfigService(), reflector),
+  );
+
   app.enableCors({
     origin: site.domain,
     credentials: true,

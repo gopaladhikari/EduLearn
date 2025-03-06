@@ -5,16 +5,22 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import type { Response } from 'express';
-import type { UserDocument } from 'src/modules/users/entities/user.entity';
+import {
+  AuthProvider,
+  type User,
+  type UserDocument,
+} from 'src/modules/users/entities/user.entity';
 import { UsersService } from 'src/modules/users/users.service';
 import { ConfigService } from '@nestjs/config';
 import { compare } from 'bcrypt';
 import { MailService } from '../mail/mail.service';
-import type { Types } from 'mongoose';
+import type { FilterQuery, Types } from 'mongoose';
 import type { ConfirmForgotPasswordDto } from './dto/confirm-forgot-password.dto';
 import type { JwtPayload } from 'jsonwebtoken';
 import type { ServiceReturnType } from 'src/interceptors/response.interceptor';
 import { AUTH_MESSAGES, USERS_MESSAGES } from 'src/config/messages';
+import type { CreateUserDto } from '../users/dto/create-user.dto';
+import { site } from 'src/config/site';
 
 export interface Payload extends JwtPayload {
   _id: Types.ObjectId;
@@ -201,5 +207,45 @@ export class AuthService {
     } catch (error) {
       throw error;
     }
+  }
+
+  async validateGoogleUser(
+    googleUser: Omit<CreateUserDto, 'password'> & FilterQuery<User>,
+  ) {
+    try {
+      const user = await this.users.getUser({
+        email: googleUser.email,
+      });
+
+      return user;
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        const createdUser = await this.users.createUser({
+          email: googleUser.email,
+          fullName: googleUser.fullName,
+          role: googleUser.role,
+          provider: AuthProvider.Google,
+          providerId: googleUser.providerId,
+        });
+
+        return createdUser;
+      }
+
+      throw new BadRequestException(error.message);
+    }
+  }
+
+  async googleCallback(user: UserDocument, response: Response) {
+    const accessToken = this.generateJwtToken(user);
+
+    response.cookie('access_token', accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite:
+        process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+    });
+
+    response.redirect(`${site.domain[0]}`);
   }
 }

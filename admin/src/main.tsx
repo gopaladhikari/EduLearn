@@ -5,7 +5,7 @@ import {
   QueryClientProvider,
 } from "@tanstack/react-query";
 import { TanstackRouterProvider } from "./components/partials/TanstackRouterProvider";
-import "./index.css";
+import "./styles/index.css";
 import { AuthProvider } from "./context/AuthContext";
 
 export const queryClient = new QueryClient({

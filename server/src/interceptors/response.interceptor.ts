@@ -25,8 +25,8 @@ export class ResponseInterceptor implements NestInterceptor {
       status: true,
       path: request.url,
       statusCode,
-      message: res.message,
-      data: res.data,
+      message: res?.message,
+      data: res?.data,
     };
   }
 

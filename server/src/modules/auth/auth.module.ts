@@ -7,10 +7,17 @@ import { LocalStrategy } from './strategies/local.strategy';
 import { JwtStrategy } from './strategies/jwt-strategy';
 import { UsersModule } from 'src/modules/users/users.module';
 import { MailService } from '../mail/mail.service';
+import { GoogleStrategy } from './strategies/google-strategy';
 
 @Module({
   imports: [UsersModule, JwtModule, PassportModule],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, JwtStrategy, MailService],
+  providers: [
+    AuthService,
+    LocalStrategy,
+    JwtStrategy,
+    MailService,
+    GoogleStrategy,
+  ],
 })
 export class AuthModule {}

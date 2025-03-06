@@ -18,6 +18,9 @@ import { axiosInstance } from "@/config/axios";
 import type { User } from "@/types";
 import { FormInputField } from "@/components/ui/FormInputField";
 import { Link } from "@tanstack/react-router";
+import { Icons } from "@/components/partials/icons";
+import "@/styles/login-with-goole.css";
+import { env } from "@/config/env";
 
 export const Route = createFileRoute("/_auth/login")({
   component: RouteComponent,
@@ -147,6 +150,23 @@ function RouteComponent() {
             </CardFooter>
           </form>
         </Form>
+        <div className="relative">
+          <div className="absolute inset-0 flex items-center">
+            <span className="w-full border-t" />
+          </div>
+          <div className="relative flex justify-center text-xs uppercase">
+            <span className="bg-background text-muted-foreground px-2">
+              Or continue with
+            </span>
+          </div>
+        </div>
+        <div className="mt-4 text-center">
+          <button className="gsi-material-button">
+            <a href={`${env.backendApi}/api/auth/google/login`}>
+              <Icons.google />
+            </a>
+          </button>
+        </div>
       </CardContent>
     </Card>
   );

@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { Link } from "@tanstack/react-router";
 import { MaxWithWrapper } from "./MaxWithWrapper";
 
@@ -14,13 +14,14 @@ export function NotFound() {
             <p className="mb-4 text-3xl font-bold tracking-tight md:text-4xl">
               Something&apos;s missing.
             </p>
-            <p className="mb-8 text-lg font-light text-secondary-foreground">
-              Sorry, we can&apos;t find that page. You&apos;ll find lots to
-              explore on the home page.{" "}
+            <p className="text-secondary-foreground mb-8 text-lg font-light">
+              Sorry, we can&apos;t find that page. You&apos;ll find
+              lots to explore on the home page.{" "}
             </p>
-            <Button size="lg">
-              <Link to="/">Back to Homepage</Link>
-            </Button>
+
+            <Link to="/" className={buttonVariants()}>
+              Back to Homepage
+            </Link>
           </div>
         </MaxWithWrapper>
       </main>

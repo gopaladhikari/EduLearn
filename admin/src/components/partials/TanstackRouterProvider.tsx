@@ -1,6 +1,7 @@
 import { useAuth } from "@/hooks/useAuth";
 import { routeTree } from "@/routeTree.gen";
 import { createRouter, RouterProvider } from "@tanstack/react-router";
+import { NotFound } from "./NotFound";
 
 const router = createRouter({
   routeTree,
@@ -10,6 +11,7 @@ const router = createRouter({
     setUser: undefined!,
   },
   scrollRestoration: true,
+  defaultNotFoundComponent: NotFound,
 });
 
 declare module "@tanstack/react-router" {

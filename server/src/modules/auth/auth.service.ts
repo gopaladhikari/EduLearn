@@ -3,7 +3,6 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 import type { Response } from 'express';
 import {
   AuthProvider,
@@ -11,7 +10,6 @@ import {
   type UserDocument,
 } from 'src/modules/users/entities/user.entity';
 import { UsersService } from 'src/modules/users/users.service';
-import { ConfigService } from '@nestjs/config';
 import { compare } from 'bcrypt';
 import { MailService } from '../mail/mail.service';
 import type { FilterQuery, Types } from 'mongoose';
@@ -20,7 +18,7 @@ import type { JwtPayload } from 'jsonwebtoken';
 import type { ServiceReturnType } from 'src/interceptors/response.interceptor';
 import { AUTH_MESSAGES, USERS_MESSAGES } from 'src/config/messages';
 import type { CreateUserDto } from '../users/dto/create-user.dto';
-import { site } from 'src/config/site';
+import { cookieConfig, site } from 'src/config/site';
 
 export interface Payload extends JwtPayload {
   _id: Types.ObjectId;
@@ -31,23 +29,8 @@ export interface Payload extends JwtPayload {
 export class AuthService {
   constructor(
     private readonly users: UsersService,
-    private readonly jwtService: JwtService,
-    private readonly configService: ConfigService,
     private readonly mail: MailService,
   ) {}
-
-  generateJwtToken(user: UserDocument) {
-    const payload: Payload = {
-      _id: user._id,
-      email: user.email,
-    };
-
-    const token = this.jwtService.sign(payload, {
-      secret: this.configService.getOrThrow('JWT_SECRET'),
-      expiresIn: '7d',
-    });
-    return token;
-  }
 
   async verifyUser(email: string, password: string) {
     const user = await this.users.getUser({
@@ -67,15 +50,9 @@ export class AuthService {
     const date = new Date();
     date.setMilliseconds(date.getTime() + 60 * 60 * 24 * 7 * 1000);
 
-    const accessToken = this.generateJwtToken(user);
+    const accessToken = this.users.generateJwtToken(user);
 
-    response.cookie('access_token', accessToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite:
-        process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-      expires: date,
-    });
+    response.cookie('access_token', accessToken, cookieConfig);
 
     return {
       data: {
@@ -87,12 +64,7 @@ export class AuthService {
   }
 
   logout(response: Response): ServiceReturnType {
-    response.clearCookie('access_token', {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite:
-        process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-    });
+    response.clearCookie('access_token', cookieConfig);
     return {
       message: AUTH_MESSAGES.LOGOUT_SUCCESS,
       data: null,
@@ -107,7 +79,7 @@ export class AuthService {
     if (!user)
       throw new NotFoundException(USERS_MESSAGES.INVALID_CREDENTIALS);
 
-    const accessToken = this.generateJwtToken(user);
+    const accessToken = this.users.generateJwtToken(user);
 
     const data = await this.mail.sendRequestForgotPasswordMail(
       user.fullName,
@@ -158,12 +130,7 @@ export class AuthService {
 
       await user.save();
 
-      response.clearCookie('access_token', {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite:
-          process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-      });
+      response.clearCookie('access_token', cookieConfig);
 
       return {
         message: 'Password reset successfully',
@@ -226,6 +193,7 @@ export class AuthService {
           role: googleUser.role,
           provider: AuthProvider.Google,
           providerId: googleUser.providerId,
+          verified: true,
         });
 
         return createdUser;
@@ -236,16 +204,10 @@ export class AuthService {
   }
 
   async googleCallback(user: UserDocument, response: Response) {
-    const accessToken = this.generateJwtToken(user);
+    const accessToken = this.users.generateJwtToken(user);
 
-    response.cookie('access_token', accessToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite:
-        process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-      expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-    });
+    response.cookie('access_token', accessToken, cookieConfig);
 
-    response.redirect(`${site.domain[0]}`);
+    response.redirect(`${site.domain[0]}/dashboard`);
   }
 }

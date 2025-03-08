@@ -47,9 +47,6 @@ export class AuthService {
   }
 
   login(user: UserDocument, response: Response): ServiceReturnType {
-    const date = new Date();
-    date.setMilliseconds(date.getTime() + 60 * 60 * 24 * 7 * 1000);
-
     const accessToken = this.users.generateJwtToken(user);
 
     response.cookie('access_token', accessToken, cookieConfig);

@@ -1,46 +1,22 @@
 import { ThemeProvider } from "@/context/ThemeContext";
-import {
-  createRootRouteWithContext,
-  Outlet,
-  HeadContent,
-  Scripts,
-} from "@tanstack/react-router";
-import { type AuthContextType } from "@/context/AuthContext";
+import { Outlet, HeadContent, Scripts } from "@tanstack/react-router";
 import { Footer } from "@/components/partials/Footer";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 import { Toaster } from "@/components/ui/toaster";
 import { Header } from "@/components/partials/Header";
-import { axiosInstance } from "@/config/axios";
-import type { User } from "@/types";
-import { setUserStore } from "@/store/user-store";
-import { useEffect } from "react";
+import { createRootRoute } from "@tanstack/react-router";
+import { CookiesProvider } from "react-cookie";
 
-export const Route = createRootRouteWithContext<AuthContextType>()({
+export const Route = createRootRoute({
   component: Root,
-  loader: async () => {
-    try {
-      const { data } = await axiosInstance.get<User>("/api/users/me");
-      console.log(data);
-      return data.data;
-    } catch (error) {
-      console.log(error);
-      return null;
-    }
-  },
 });
 
 function Root() {
-  const data = Route.useLoaderData();
-
-  useEffect(() => {
-    if (data) setUserStore(data);
-  }, [data]);
-
   return (
     <>
       <HeadContent />
       <ThemeProvider>
+        <CookiesProvider></CookiesProvider>
         <Header />
         <main>
           <Outlet />
@@ -53,7 +29,6 @@ function Root() {
       {import.meta.env.DEV && (
         <ReactQueryDevtools initialIsOpen={false} />
       )}
-      {import.meta.env.DEV && <TanStackRouterDevtools />}
     </>
   );
 }

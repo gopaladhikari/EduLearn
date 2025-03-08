@@ -8,12 +8,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useAuth } from "@/hooks/useAuth";
 import { Form } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, type LoginSchema } from "@/schemas/auth.schema";
 import { useForm, type SubmitHandler } from "react-hook-form";
-import { SessionStorage } from "@/config/constants";
 import { axiosInstance } from "@/config/axios";
 import type { User } from "@/types";
 import { FormInputField } from "@/components/ui/FormInputField";
@@ -21,6 +19,7 @@ import { Link } from "@tanstack/react-router";
 import { Icons } from "@/components/partials/icons";
 import "@/styles/login-with-goole.css";
 import { env } from "@/config/env";
+import { setUserStore } from "@/store/user-store";
 
 export const Route = createFileRoute("/_auth/login")({
   component: RouteComponent,
@@ -42,8 +41,6 @@ export const Route = createFileRoute("/_auth/login")({
 function RouteComponent() {
   const navigate = useNavigate();
 
-  const { setUser } = useAuth();
-
   const form = useForm<LoginSchema>({
     resolver: zodResolver(loginSchema),
   });
@@ -55,30 +52,20 @@ function RouteComponent() {
         accessToken: string;
       }>("/api/auth/login", values);
 
-      if (data?.status) {
-        sessionStorage.setItem(SessionStorage.IS_LOGGED_IN, "true");
-        setUser((prev) => {
-          return {
-            ...prev,
-            ...data.data.user,
-          };
-        });
-
+      if (data) {
+        setUserStore(data.data.user);
         navigate({ to: "/dashboard" });
-      } else {
+      } else
         form.setError("root", {
           type: "manual",
           message: "Something went wrong",
         });
-      }
     } catch (error) {
       const err = (error as Error).message;
       form.setError("root", {
         type: "manual",
         message: err,
       });
-      sessionStorage.removeItem(SessionStorage.IS_LOGGED_IN);
-      setUser(null);
     }
   };
 

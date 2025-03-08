@@ -6,7 +6,11 @@ import {
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { User, type UserDocument } from './entities/user.entity';
+import {
+  AuthProvider,
+  User,
+  type UserDocument,
+} from './entities/user.entity';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { type FilterQuery, type Model } from 'mongoose';
 import type { UpdatePasswordDto } from './dto/update-password.dto';
@@ -55,11 +59,20 @@ export class UsersService {
     return token;
   }
 
-  async createUser(createUserDto: CreateUserDto) {
+  async createUser(
+    createUserDto: Partial<CreateUserDto> & FilterQuery<User>,
+  ) {
     try {
       const user = await this.User.create(createUserDto);
 
       const accessToken = this.generateJwtToken(user);
+
+      if (createUserDto.provider === AuthProvider.Google) {
+        return {
+          message: 'User created successfully',
+          data: user,
+        };
+      }
 
       const data = await this.mail.sendVerifyEmail(
         user.fullName,

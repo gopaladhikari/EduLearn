@@ -4,25 +4,38 @@ import {
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
-import { TanstackRouterProvider } from "./components/partials/TanstackRouterProvider";
-import "./index.css";
-import { AuthProvider } from "./context/AuthContext";
+import { createRouter, RouterProvider } from "@tanstack/react-router";
+import { NotFound } from "./components/partials/NotFound";
+import { Spinner } from "./components/skeletons/Spinner";
+import { routeTree } from "./routeTree.gen";
+import "./styles/index.css";
 
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       refetchOnWindowFocus: false,
-      staleTime: 1000 * 60 * 15, // 15 minutes
+      staleTime: 15_000, // 15 seconds
     },
   },
 });
 
+const router = createRouter({
+  routeTree,
+  scrollRestoration: true,
+  defaultNotFoundComponent: NotFound,
+  defaultPendingComponent: Spinner,
+});
+
+declare module "@tanstack/react-router" {
+  interface Register {
+    router: typeof router;
+  }
+}
+
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <TanstackRouterProvider />
-      </AuthProvider>
+      <RouterProvider router={router} />
     </QueryClientProvider>
   );
 }

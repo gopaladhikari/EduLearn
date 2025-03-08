@@ -13,43 +13,33 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/components/ui/avatar";
-import { useAuth } from "@/hooks/useAuth";
-import { Link, useNavigate } from "@tanstack/react-router";
-import { useMutation } from "@tanstack/react-query";
-import { logoutMutation } from "@/lib/mutations/auth.mutation";
-import { SessionStorage } from "@/config/constants";
-import { toast } from "@/hooks/use-toast";
-import { queryClient } from "@/main";
+import { Link } from "@tanstack/react-router";
+
 import { User } from "lucide-react";
+import { clearUserStore, useMe } from "@/store/user-store";
+import { useTransition } from "react";
+import { axiosInstance } from "@/config/axios";
+import { toast } from "@/hooks/use-toast";
 
 export function UserNav() {
-  const { user, setUser } = useAuth();
-  const navigate = useNavigate();
+  const user = useMe();
+  const [isPending, startTransition] = useTransition();
 
-  const { mutate, isPending } = useMutation({
-    mutationFn: logoutMutation,
-    onSuccess: () => {
-      sessionStorage.removeItem(SessionStorage.IS_LOGGED_IN);
+  const handleLogout = () => {
+    startTransition(async () => {
+      try {
+        const { data } = await axiosInstance.post("/api/auth/logout");
+        if (data) clearUserStore();
+      } catch (error) {
+        toast({
+          title: "Something went wrong",
+          description: (error as Error).message,
 
-      setUser(null);
-
-      navigate({
-        to: "/",
-      });
-    },
-    onError: ({ message }) => {
-      toast({
-        title: message,
-        description: "Something went wrong",
-        variant: "destructive",
-      });
-    },
-    onSettled: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: ["me"],
-      });
-    },
-  });
+          variant: "destructive",
+        });
+      }
+    });
+  };
 
   return (
     <DropdownMenu>
@@ -106,7 +96,7 @@ export function UserNav() {
               className="w-full"
               variant="link"
               disabled={isPending}
-              onClick={() => mutate()}
+              onClick={handleLogout}
             >
               {isPending ? "Logging out..." : "Logout"}
             </Button>

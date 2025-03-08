@@ -3,9 +3,9 @@ import { MaxWithWrapper } from "./MaxWithWrapper";
 import { menu } from "@/config/site";
 import { ModeToggle } from "./mode-toggle";
 import { Logo } from "./Logo";
-import { useAuth } from "@/hooks/useAuth";
 import { cn } from "@/lib/utils";
 import { UserNav } from "../dashboard/user-nav";
+import { useMe } from "@/store/user-store";
 
 function AuthNav() {
   return (
@@ -54,12 +54,12 @@ function MainNav() {
 }
 
 export function Header() {
-  const { isLoggedIn } = useAuth();
+  const user = useMe();
 
   return (
     <header
       className={cn(
-        isLoggedIn && "bg-background sticky inset-0 z-10000",
+        user && "bg-background sticky inset-0 z-10000",
         "border-secondary shadow-lg dark:border-b dark:shadow-none",
       )}
     >
@@ -72,7 +72,7 @@ export function Header() {
             >
               <Logo />
             </li>
-            {isLoggedIn ? <AuthNav /> : <MainNav />}
+            {user ? <AuthNav /> : <MainNav />}
           </menu>
         </nav>
       </MaxWithWrapper>

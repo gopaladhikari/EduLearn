@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   Param,
   Patch,
   Post,
@@ -17,11 +18,14 @@ import type { Response } from 'express';
 import { ConfirmForgotPasswordDto } from './dto/confirm-forgot-password.dto';
 import {
   ApiBody,
+  ApiExcludeEndpoint,
   ApiOperation,
   ApiResponse,
   ApiSecurity,
 } from '@nestjs/swagger';
 import { AuthSwagger } from 'src/config/constants/auth.swagger';
+import { GoogleAuthGuard } from './guards/google-auth.guard';
+import { Public } from 'src/interceptors/x-api-key.interceptor';
 
 @ApiSecurity('x-api-key')
 @Controller('auth')
@@ -81,5 +85,22 @@ export class AuthController {
     @Param('token') token: string,
   ) {
     return this.authService.verifyEmail(email, token);
+  }
+
+  @Public()
+  @Get('/google/login')
+  @UseGuards(GoogleAuthGuard)
+  @ApiExcludeEndpoint()
+  googleLogin() {}
+
+  @Public()
+  @Get('/google/callback')
+  @ApiExcludeEndpoint()
+  @UseGuards(GoogleAuthGuard)
+  googleCallback(
+    @CurrentUser() user: UserDocument,
+    @Res() res: Response,
+  ) {
+    this.authService.googleCallback(user, res);
   }
 }

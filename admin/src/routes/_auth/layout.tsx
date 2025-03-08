@@ -1,24 +1,12 @@
 import { MaxWithWrapper } from "@/components/partials/MaxWithWrapper";
-import { NotFound } from "@/components/partials/NotFound";
 import {
   createFileRoute,
   Link,
   Outlet,
-  redirect,
 } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_auth")({
   component: RouteComponent,
-  notFoundComponent: NotFound,
-  beforeLoad({ context, location }) {
-    if (context.isLoggedIn)
-      throw redirect({
-        to: "/dashboard",
-        search: {
-          redirect: location.href,
-        },
-      });
-  },
 });
 
 function RouteComponent() {

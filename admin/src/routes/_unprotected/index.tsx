@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/hooks/useAuth";
+import { useMe } from "@/store/user-store";
 import {
   createFileRoute,
   Link,
@@ -14,19 +14,21 @@ import {
   SearchIcon,
   User2Icon,
 } from "lucide-react";
+import { useEffect } from "react";
 
 export const Route = createFileRoute("/_unprotected/")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  const { isLoggedIn } = useAuth();
   const navigate = useNavigate();
+  const user = useMe();
 
-  if (isLoggedIn)
-    navigate({
-      to: "/dashboard",
-    });
+  useEffect(() => {
+    if (user) {
+      navigate({ to: "/dashboard" });
+    }
+  }, [user, navigate]);
 
   return (
     <div className="space-y-5 pb-16">

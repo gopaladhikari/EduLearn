@@ -53,8 +53,10 @@ export const action = async ({ request }: Route.ActionArgs) => {
     const { data: result } = await axiosInstance.post<User>(
       "/api/users",
       {
-        ...data,
-        role: "user",
+        data: {
+          ...data,
+          role: "user",
+        },
       },
     );
 
@@ -98,7 +100,7 @@ export default function Register({
               htmlFor="fullName"
               className={cn(
                 "text-lg",
-                errors.fullName && "text-destructive",
+                errors?.fullName && "text-destructive",
               )}
             >
               Full Name

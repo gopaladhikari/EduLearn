@@ -1,4 +1,4 @@
-import { useAuth } from "@/hooks/useAuth";
+import { useMe } from "@/store/user-store";
 import {
   fullNameSchema,
   emailSchema,
@@ -8,16 +8,14 @@ import {
 import { FormCard } from "./FormCard";
 
 export default function ProfileForms() {
-  const { user } = useAuth();
-
-  if (!user) return null;
+  const user = useMe();
 
   return (
     <>
       <FormCard
         label="Full Name"
         description="Enter your full name."
-        placeholder={user.fullName || "Enter your full name"}
+        placeholder={user?.fullName || "Enter your full name"}
         schema={fullNameSchema}
         defaultValues={user}
         fieldName="fullName"
@@ -25,7 +23,7 @@ export default function ProfileForms() {
       <FormCard
         label="Email"
         description="Enter your email."
-        placeholder={user.email || "Enter your email"}
+        placeholder={user?.email || "Enter your email"}
         schema={emailSchema}
         defaultValues={user}
         fieldName="email"
@@ -33,7 +31,7 @@ export default function ProfileForms() {
       <FormCard
         label="Username"
         description="Enter your username."
-        placeholder={user.username || "Enter your username"}
+        placeholder={user?.username || "Enter your username"}
         schema={usernameSchema}
         defaultValues={user}
         fieldName="username"
@@ -42,7 +40,7 @@ export default function ProfileForms() {
       <FormCard
         label="Bio"
         description="Enter your bio."
-        placeholder={user.bio || "Enter your bio"}
+        placeholder={user?.bio || "Enter your bio"}
         schema={bioSchema}
         defaultValues={user}
         fieldName="bio"

@@ -66,10 +66,7 @@ export function Header() {
       <MaxWithWrapper as="section">
         <nav role="navigation">
           <menu className="flex items-center gap-6" role="menu">
-            <li
-              className={cn("text-primary text-2xl font-bold")}
-              role="menubar"
-            >
+            <li role="menubar">
               <Logo />
             </li>
             {user ? <AuthNav /> : <MainNav />}

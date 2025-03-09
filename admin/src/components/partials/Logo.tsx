@@ -1,30 +1,22 @@
-import { useAuth } from "@/hooks/useAuth";
 import { cn } from "@/lib/utils";
+import { useMe } from "@/store/user-store";
 import { Link } from "@tanstack/react-router";
 import { BookOpen } from "lucide-react";
-import { useState, type ComponentProps } from "react";
+import { type ComponentProps } from "react";
 
 type Props = ComponentProps<"a">;
 
 export function Logo({ className, ...props }: Props) {
-  const { isLoggedIn } = useAuth();
-  const [isRotated, setIsRotated] = useState(false);
-
-  const handleClick = () => {
-    setIsRotated(true);
-  };
+  const user = useMe();
 
   return (
     <Link
-      to={isLoggedIn ? "/dashboard" : "/"}
+      to={user ? "/dashboard" : "/"}
       {...props}
-      className={cn("flex items-center gap-2", className)}
+      className={cn("group flex w-fit items-center gap-2", className)}
     >
       <div className="flex items-center gap-2">
-        <BookOpen
-          onClick={handleClick}
-          className={cn("text-blue-400", isRotated && "spin-once")}
-        />
+        <BookOpen className="text-blue-600 group-hover:animate-spin" />
         <strong className="text-2xl font-bold">EduLearn</strong>
       </div>
     </Link>

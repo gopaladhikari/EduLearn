@@ -6,19 +6,20 @@ import {
 import type { Response } from 'express';
 import {
   AuthProvider,
-  type User,
+  Role,
   type UserDocument,
 } from 'src/modules/users/entities/user.entity';
 import { UsersService } from 'src/modules/users/users.service';
 import { compare } from 'bcrypt';
 import { MailService } from '../mail/mail.service';
-import type { FilterQuery, Types } from 'mongoose';
+import type { Types } from 'mongoose';
 import type { ConfirmForgotPasswordDto } from './dto/confirm-forgot-password.dto';
 import type { JwtPayload } from 'jsonwebtoken';
 import type { ServiceReturnType } from 'src/interceptors/response.interceptor';
 import { AUTH_MESSAGES, USERS_MESSAGES } from 'src/config/messages';
-import type { CreateUserDto } from '../users/dto/create-user.dto';
+
 import { cookieConfig, site } from 'src/config/site';
+import type { Profile } from 'passport-google-oauth20';
 
 export interface Payload extends JwtPayload {
   _id: Types.ObjectId;
@@ -173,27 +174,28 @@ export class AuthService {
     }
   }
 
-  async validateGoogleUser(
-    googleUser: Omit<CreateUserDto, 'password'> & FilterQuery<User>,
-  ) {
+  async validateGoogleUser(profile: Profile) {
     try {
       const user = await this.users.getUser({
-        email: googleUser.email,
+        email: profile.emails[0].value,
       });
 
       return user;
     } catch (error) {
       if (error instanceof NotFoundException) {
         const createdUser = await this.users.createUser({
-          email: googleUser.email,
-          fullName: googleUser.fullName,
-          role: googleUser.role,
+          email: profile.emails[0].value,
+          fullName: `${profile.name.givenName} ${profile.name.familyName}`,
+          role: Role.Admin,
           provider: AuthProvider.Google,
-          providerId: googleUser.providerId,
-          verified: true,
+          providerId: profile.id,
+          verified: profile.emails[0].verified,
+          avatar: {
+            url: profile.photos[0].value,
+          },
         });
 
-        return createdUser;
+        return createdUser.data;
       }
 
       throw new BadRequestException(error.message);

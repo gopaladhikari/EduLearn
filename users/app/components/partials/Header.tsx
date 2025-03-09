@@ -50,7 +50,7 @@ function UserMenu({ user }: { user: User }) {
             </AvatarFallback>
           </Avatar>
           <div>
-            <strong>{user.fullName}</strong>
+            <strong>{user?.fullName}</strong>
             <p className="text-muted-foreground text-sm">
               test@edulearn.com
             </p>

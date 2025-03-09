@@ -22,8 +22,8 @@ import {
 import { useState } from "react";
 import { CloudUpload, Paperclip, User } from "lucide-react";
 import type { DropzoneOptions } from "react-dropzone";
-import { useAuth } from "@/hooks/useAuth";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { useMe } from "@/store/user-store";
 
 export function AvatarForm() {
   const form = useForm<z.infer<typeof avatarSchema>>({
@@ -31,7 +31,7 @@ export function AvatarForm() {
   });
   const [files, setFiles] = useState<File[] | null>(null);
   const [imageUrl, setImageUrl] = useState<string>("");
-  const { user, setUser } = useAuth();
+  const user = useMe();
 
   const dropZoneConfig: DropzoneOptions = {
     maxSize: 1024 * 1024 * 4,
@@ -41,7 +41,6 @@ export function AvatarForm() {
   const onSubmit: SubmitHandler<
     z.infer<typeof avatarSchema>
   > = async (formData) => {
-    console.log(setUser);
     console.log(formData);
   };
 

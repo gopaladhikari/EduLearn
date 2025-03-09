@@ -30,12 +30,12 @@ export const USERS_MESSAGES = {
   CREATE_SUCCESS: 'User created successfully',
   DUPLICATE_FIELD: 'A user with this {duplicateField} already exists',
   INVALID_CREDENTIALS: 'Invalid email or password',
-  NO_USER_FOUND: 'No user found',
   UPDATE_SUCCESS: 'User updated successfully',
   NOT_FOUND: 'User not found',
   AVATAR_UPDATE_SUCCESS: 'Avatar updated successfully',
   AVATAR_NOT_FOUND: 'Avatar not found',
   FORBIDDEN: 'You are not authorized to access this resource',
+  FETCH_SUCCESS: 'Users fetched successfully',
 };
 
 export const COURSES_MESSAGES = {

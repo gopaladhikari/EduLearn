@@ -24,6 +24,7 @@ import type { Payload } from '../auth/auth.service';
 import * as path from 'path';
 import * as fs from 'fs';
 import { v2 as cloudinary } from 'cloudinary';
+import { USERS_MESSAGES } from 'src/config/messages';
 
 @Injectable()
 export class UsersService {
@@ -61,6 +62,7 @@ export class UsersService {
 
   async createUser(
     createUserDto: Partial<CreateUserDto> & FilterQuery<User>,
+    sendEmail = true,
   ) {
     try {
       const user = await this.User.create(createUserDto);
@@ -69,10 +71,19 @@ export class UsersService {
 
       if (createUserDto.provider === AuthProvider.Google) {
         return {
-          message: 'User created successfully',
+          message: USERS_MESSAGES.CREATE_SUCCESS,
           data: user,
         };
       }
+
+      if (!sendEmail)
+        return {
+          message: USERS_MESSAGES.CREATE_SUCCESS,
+          data: {
+            user,
+            message: USERS_MESSAGES.CREATE_SUCCESS,
+          },
+        };
 
       const data = await this.mail.sendVerifyEmail(
         user.fullName,
@@ -86,7 +97,7 @@ export class UsersService {
 
       await this.cache.clear();
       return {
-        message: 'User created successfully',
+        message: USERS_MESSAGES.CREATE_SUCCESS,
         data,
       };
     } catch (error) {
@@ -105,7 +116,9 @@ export class UsersService {
       const user = await this.User.findOne(query);
 
       if (!user)
-        throw new NotFoundException('Invalid email or password');
+        throw new NotFoundException(
+          USERS_MESSAGES.INVALID_CREDENTIALS,
+        );
 
       return user;
     } catch (error) {
@@ -122,18 +135,19 @@ export class UsersService {
 
       if (cachedUsers)
         return {
-          message: 'Users fetched successfully',
+          message: USERS_MESSAGES.FETCH_SUCCESS,
           data: cachedUsers,
         };
 
       const users = await this.User.find(query);
 
-      if (!users.length) throw new NotFoundException('No user found');
+      if (!users.length)
+        throw new NotFoundException(USERS_MESSAGES.NOT_FOUND);
 
       await this.cache.set(cacheKey, users);
 
       return {
-        message: 'Users fetched successfully',
+        message: USERS_MESSAGES.FETCH_SUCCESS,
         data: users,
       };
     } catch (error) {
@@ -188,10 +202,13 @@ export class UsersService {
           }
 
           return {
-            message: 'Avatar updated successfully',
+            message: USERS_MESSAGES.AVATAR_UPDATE_SUCCESS,
             data: updatedUser,
           };
-        } else throw new BadRequestException('Avatar not found');
+        } else
+          throw new BadRequestException(
+            USERS_MESSAGES.AVATAR_NOT_FOUND,
+          );
       } catch (error) {
         throw new BadRequestException(error.message);
       } finally {
@@ -207,12 +224,13 @@ export class UsersService {
         { new: true },
       ).select('-password');
 
-      if (!updatedUser) throw new NotFoundException('User not found');
+      if (!updatedUser)
+        throw new NotFoundException(USERS_MESSAGES.NOT_FOUND);
 
       await this.cache.clear();
 
       return {
-        message: 'User updated successfully',
+        message: USERS_MESSAGES.UPDATE_SUCCESS,
         data: updatedUser,
       };
     } catch (error) {
@@ -245,7 +263,7 @@ export class UsersService {
       await user.save();
       await this.cache.clear();
       return {
-        message: 'Password updated successfully',
+        message: USERS_MESSAGES.UPDATE_SUCCESS,
         data: user,
       };
     } catch (error) {

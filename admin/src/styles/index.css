@@ -126,10 +126,6 @@
     margin: 0;
   }
 
-  .spin-once {
-    animation: spin-once 500ms linear 1;
-  }
-
   input[type="number"] {
     appearance: none;
     -moz-appearance: textfield;

@@ -88,16 +88,33 @@ export class AuthController {
   }
 
   @Public()
-  @Get('/google/login')
+  @Get('/google/login/admin')
   @UseGuards(GoogleAuthGuard)
   @ApiExcludeEndpoint()
-  googleLogin() {}
+  googleLoginAdmin() {}
 
   @Public()
-  @Get('/google/callback')
+  @Get('/google/callback/admin')
   @ApiExcludeEndpoint()
   @UseGuards(GoogleAuthGuard)
-  googleCallback(
+  googleCallbackAdmin(
+    @CurrentUser() user: UserDocument,
+    @Res() res: Response,
+  ) {
+    this.authService.googleCallback(user, res);
+  }
+
+  @Public()
+  @Get('/google/login/user')
+  @UseGuards(GoogleAuthGuard)
+  @ApiExcludeEndpoint()
+  googleLoginUser() {}
+
+  @Public()
+  @Get('/google/callback/users')
+  @ApiExcludeEndpoint()
+  @UseGuards(GoogleAuthGuard)
+  googleCallbackUser(
     @CurrentUser() user: UserDocument,
     @Res() res: Response,
   ) {

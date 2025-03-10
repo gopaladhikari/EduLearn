@@ -17,7 +17,6 @@ export enum Status {
 export enum AuthProvider {
   Local = 'local',
   Google = 'google',
-  Facebook = 'facebook',
 }
 
 @Schema({
@@ -57,9 +56,6 @@ export class User {
     default: AuthProvider.Local,
   })
   provider: AuthProvider;
-
-  @Prop({ required: false })
-  providerId: string;
 
   @Prop({
     type: {

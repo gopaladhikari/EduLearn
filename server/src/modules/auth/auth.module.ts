@@ -7,7 +7,8 @@ import { LocalStrategy } from './strategies/local.strategy';
 import { JwtStrategy } from './strategies/jwt-strategy';
 import { UsersModule } from 'src/modules/users/users.module';
 import { MailService } from '../mail/mail.service';
-import { GoogleStrategy } from './strategies/google-strategy';
+import { GoogleStrategyAdmin } from './strategies/google-strategy';
+import { GoogleStrategyUser } from './strategies/google-strategy';
 
 @Module({
   imports: [UsersModule, JwtModule, PassportModule],
@@ -17,7 +18,8 @@ import { GoogleStrategy } from './strategies/google-strategy';
     LocalStrategy,
     JwtStrategy,
     MailService,
-    GoogleStrategy,
+    GoogleStrategyAdmin,
+    GoogleStrategyUser,
   ],
 })
 export class AuthModule {}

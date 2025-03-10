@@ -62,12 +62,9 @@ export class UsersService {
 
   async createUser(
     createUserDto: Partial<CreateUserDto> & FilterQuery<User>,
-    sendEmail = true,
   ) {
     try {
       const user = await this.User.create(createUserDto);
-
-      const accessToken = this.generateJwtToken(user);
 
       if (createUserDto.provider === AuthProvider.Google) {
         return {
@@ -76,20 +73,13 @@ export class UsersService {
         };
       }
 
-      if (!sendEmail)
-        return {
-          message: USERS_MESSAGES.CREATE_SUCCESS,
-          data: {
-            user,
-            message: USERS_MESSAGES.CREATE_SUCCESS,
-          },
-        };
+      const accessToken = this.generateJwtToken(user);
 
       const data = await this.mail.sendVerifyEmail(
         user.fullName,
         user.email,
         accessToken,
-        // user.role,
+        user.role,
       );
 
       user.jwtToken = accessToken;

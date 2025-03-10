@@ -174,7 +174,7 @@ export class AuthService {
     }
   }
 
-  async validateGoogleUser(profile: Profile) {
+  async validateGoogleUser(profile: Profile, role: Role) {
     try {
       const user = await this.users.getUser({
         email: profile.emails[0].value,
@@ -186,13 +186,12 @@ export class AuthService {
         const createdUser = await this.users.createUser({
           email: profile.emails[0].value,
           fullName: `${profile.name.givenName} ${profile.name.familyName}`,
-          role: Role.Admin,
           provider: AuthProvider.Google,
-          providerId: profile.id,
           verified: profile.emails[0].verified,
           avatar: {
             url: profile.photos[0].value,
           },
+          role,
         });
 
         return createdUser.data;
@@ -207,6 +206,9 @@ export class AuthService {
 
     response.cookie('access_token', accessToken, cookieConfig);
 
-    response.redirect(`${site.domain[0]}/dashboard`);
+    const url =
+      user.role === Role.Admin ? site.domain.admin : site.domain.user;
+
+    response.redirect(`${url}/dashboard`);
   }
 }

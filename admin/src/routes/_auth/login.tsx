@@ -19,7 +19,6 @@ import { Link } from "@tanstack/react-router";
 import { Icons } from "@/components/partials/icons";
 import "@/styles/login-with-goole.css";
 import { env } from "@/config/env";
-import { setUserStore } from "@/store/user-store";
 
 export const Route = createFileRoute("/_auth/login")({
   component: RouteComponent,
@@ -52,10 +51,8 @@ function RouteComponent() {
         accessToken: string;
       }>("/api/auth/login", values);
 
-      if (data) {
-        setUserStore(data.data.user);
-        navigate({ to: "/dashboard" });
-      } else
+      if (data) navigate({ to: "/dashboard" });
+      else
         form.setError("root", {
           type: "manual",
           message: "Something went wrong",
@@ -149,7 +146,7 @@ function RouteComponent() {
         </div>
         <div className="mt-4 text-center">
           <button className="gsi-material-button">
-            <a href={`${env.backendApi}/api/auth/google/login`}>
+            <a href={`${env.backendApi}/api/auth/google/login/admin`}>
               <Icons.google />
             </a>
           </button>

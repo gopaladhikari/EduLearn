@@ -74,9 +74,9 @@ function RouteComponent() {
               control={form.control}
               name="fullName"
               label="Your full name"
-              placeholder="Gopal Adhikari"
+              placeholder="Test Admin"
               inputProps={{
-                type: "email",
+                type: "text",
               }}
             />
 
@@ -84,7 +84,7 @@ function RouteComponent() {
               control={form.control}
               name="email"
               label="Email"
-              placeholder="gopal@gmail.com"
+              placeholder="admin@edulearn.com"
               inputProps={{
                 type: "email",
               }}
@@ -136,7 +136,7 @@ function RouteComponent() {
         </div>
         <div className="mt-4 text-center">
           <button className="gsi-material-button">
-            <a href={`${env.backendApi}/api/auth/google/login`}>
+            <a href={`${env.backendApi}/api/auth/google/login/admin`}>
               <Icons.google />
             </a>
           </button>

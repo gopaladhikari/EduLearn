@@ -4,7 +4,6 @@ import { Resend } from 'resend';
 import * as path from 'path';
 import * as fs from 'fs';
 import { site } from 'src/config/site';
-
 type Templates = 'forgotPassword.html' | 'verifyEmail.html';
 type Placeholders = { [key: string]: string };
 
@@ -75,17 +74,17 @@ export class MailService {
     fullName: string,
     email: string,
     token: string,
-    // role: 'user' | 'admin',
+    role: 'user' | 'admin',
   ) {
     try {
       const html = await this.loadTemplate('verifyEmail.html', {
-        CONFIRMATION_LINK: `${site.domain[2]}/verify-email?token=${token}`,
+        CONFIRMATION_LINK: `${site.domain[role]}/verify-email?token=${token}`,
         Name: fullName ?? 'User',
       });
       const { data, error } = await this.resend.emails.send({
         from: 'EduLearn <edulearn@gopal-adhikari.com.np>',
         to: [email],
-        subject: 'Verify email',
+        subject: 'Verify email for Edulearn',
         html: html,
       });
 

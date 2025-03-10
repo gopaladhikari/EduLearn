@@ -16,6 +16,8 @@ export const Route = createFileRoute("/_protected")({
     try {
       const { data } = await axiosInstance.get<User>("/api/users/me");
       if (data) setUserStore(data.data);
+
+      return data;
     } catch (error) {
       console.log(error);
       return null;

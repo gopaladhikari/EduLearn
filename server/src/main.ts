@@ -23,7 +23,7 @@ async function bootstrap() {
   );
 
   app.enableCors({
-    origin: site.domain,
+    origin: [site.domain.admin, site.domain.user],
     credentials: true,
     optionsSuccessStatus: 204,
   });

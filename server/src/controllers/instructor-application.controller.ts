@@ -11,8 +11,6 @@ import type { Request, Response } from "express";
 import type { Content } from "mailgen";
 import { isValidObjectId } from "mongoose";
 
-const CACHE_TTL = 60 * 60; // 1 hour
-
 function getKey(key: string): string {
   return `instructor-application:${key}`;
 }

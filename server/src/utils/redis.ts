@@ -67,14 +67,13 @@ class CacheService {
     }
   }
 
-  async set(key: string, value: unknown, ttl?: number): Promise<void> {
+  async set(key: string, value: unknown, ttl = 3600): Promise<void> {
     if (!this.isReady) return;
 
     try {
       const payload = JSON.stringify(value);
 
-      if (ttl) await this.redis.set(key, payload, "EX", ttl);
-      else await this.redis.set(key, payload);
+      await this.redis.set(key, payload, "EX", ttl);
     } catch (error) {
       console.error("Redis SET failed:", error);
     }

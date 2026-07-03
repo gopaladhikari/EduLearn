@@ -2,7 +2,7 @@ import { ApiResponse } from "@/utils/api-responses.js";
 import type { Response, Request } from "express";
 import { dbConnection } from "@/utils/connect-to-db.js";
 import os from "os";
-import { redis } from "@/utils/redis.js";
+import { cache } from "@/utils/redis.js";
 
 const getReadyStatus = (number: number) => {
   switch (number) {
@@ -30,32 +30,26 @@ export const healthCheck = async (_req: Request, res: Response) => {
     version: null as string | null,
   };
 
-  try {
-    const start = Date.now();
-    const pong = await redis.ping();
-    const latency = Date.now() - start;
+  const start = Date.now();
+  const pong = await cache.client.ping();
+  const latency = Date.now() - start;
 
-    if (pong === "PONG") {
-      // Fetch vital stats from Redis INFO command
-      const infoRaw = await redis.info("memory", "clients", "server");
+  if (pong === "PONG") {
+    const infoRaw = await cache.client.info("memory", "clients", "server");
 
-      // specific parsing logic to extract values
-      const usedMemory = infoRaw.match(/used_memory_human:(.*)/)?.[1]?.trim();
-      const connectedClients = infoRaw
-        .match(/connected_clients:(.*)/)?.[1]
-        ?.trim();
-      const redisVersion = infoRaw.match(/redis_version:(.*)/)?.[1]?.trim();
+    const usedMemory = infoRaw.match(/used_memory_human:(.*)/)?.[1]?.trim();
+    const connectedClients = infoRaw
+      .match(/connected_clients:(.*)/)?.[1]
+      ?.trim();
+    const redisVersion = infoRaw.match(/redis_version:(.*)/)?.[1]?.trim();
 
-      redisHealth = {
-        status: "Connected",
-        latency_ms: latency,
-        memory_usage: usedMemory || "Unknown",
-        connected_clients: Number(connectedClients) || 0,
-        version: redisVersion || "Unknown",
-      };
-    }
-  } catch (error) {
-    console.error("Health Check Redis Error:", error);
+    redisHealth = {
+      status: "Connected",
+      latency_ms: latency,
+      memory_usage: usedMemory || "Unknown",
+      connected_clients: Number(connectedClients) || 0,
+      version: redisVersion || "Unknown",
+    };
   }
 
   const healthStatus = {

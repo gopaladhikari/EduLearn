@@ -14,8 +14,6 @@ import { clientUrl } from "./utils/constants.js";
 
 const app = express();
 
-// Redis
-
 // Proxy
 
 app.set("trust proxy", true);

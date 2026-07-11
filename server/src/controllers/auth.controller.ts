@@ -8,6 +8,11 @@ import { sendEmail } from "@/utils/send-email.js";
 import { emailVerificationTemplate } from "@/emails/email-verification.email.js";
 import { forgotPasswordTemplate } from "@/emails/forgot-password.email.js";
 import { welcomeEmailTemplate } from "@/emails/welcome-after-verification.email.js";
+import { cache } from "@/utils/redis.js";
+
+function cacheKey(key: string) {
+  return `auth:${key}`;
+}
 
 // Generate access and refresh tokens
 const generateAccessAndRefreshTokens = async (user: Express.User) => {
@@ -42,17 +47,9 @@ export const registerUser = async (req: Request, res: Response) => {
 
   if (!user) throw new ApiError(400, "Something went wrong");
 
-  const { hashToken, tokenExpiry, unhashedToken } = user.generateToken();
+  const { hashToken, unhashedToken } = user.generateToken();
 
-  user.emailVerificationToken = hashToken;
-  user.emailVerificationExpires = new Date(tokenExpiry);
-
-  await user.save();
-
-  const content = emailVerificationTemplate(
-    user.username,
-    `${clientUrl}/verify-email/${unhashedToken}`
-  );
+  await cache.set(cacheKey(hashToken), user._id.toString(), 20 * 60);
 
   res.status(201).json(
     new ApiResponse(201, "Registration successful! 🎉", {
@@ -61,6 +58,11 @@ export const registerUser = async (req: Request, res: Response) => {
       email: user.email,
       expiresIn: "20 minutes",
     })
+  );
+
+  const content = emailVerificationTemplate(
+    user.username,
+    `${clientUrl}/verify-email/${unhashedToken}`
   );
 
   void sendEmail(user.email, "Verify your email", content);
@@ -120,19 +122,19 @@ export const verifyEmail = async (req: Request, res: Response) => {
     .update(verificationToken as string)
     .digest("hex");
 
-  const user = await User.findOne({
-    emailVerificationToken: hashedVerificationToken,
-    emailVerificationExpires: { $gt: Date.now() },
-  });
+  const userId = await cache.get<string>(cacheKey(hashedVerificationToken));
 
-  if (!user) throw new ApiError(400, "Token is invalid or expired.");
+  if (!userId) throw new ApiError(400, "Token is invalid or expired.");
+
+  const user = await User.findById(userId);
+
+  if (!user) throw new ApiError(400, "User not found.");
 
   user.isEmailVerified = true;
 
-  user.emailVerificationToken = undefined;
-  user.emailVerificationExpires = undefined;
-
   await user.save();
+
+  void cache.del(cacheKey(hashedVerificationToken));
 
   res.status(200).json(new ApiResponse(200, "Email verified", {}));
 
@@ -150,12 +152,9 @@ export const resendEmailVerification = async (req: Request, res: Response) => {
 
   if (user.isEmailVerified) throw new ApiError(409, "Email already verified");
 
-  const { hashToken, tokenExpiry, unhashedToken } = user.generateToken();
+  const { hashToken, unhashedToken } = user.generateToken();
 
-  user.emailVerificationToken = hashToken;
-  user.emailVerificationExpires = new Date(tokenExpiry);
-
-  await user.save();
+  await cache.set(cacheKey(hashToken), user._id.toString(), 20 * 60);
 
   res.status(200).json(new ApiResponse(200, "Email verification resent", {}));
 
@@ -204,12 +203,9 @@ export const forgotPassword = async (req: Request, res: Response) => {
 
   if (!user) throw new ApiError(400, "User not found");
 
-  const { hashToken, tokenExpiry, unhashedToken } = user.generateToken();
+  const { hashToken, unhashedToken } = user.generateToken();
 
-  user.forgotPasswordToken = hashToken;
-  user.forgotPasswordExpires = new Date(tokenExpiry);
-
-  await user.save();
+  await cache.set(cacheKey(hashToken), user._id.toString(), 20 * 60);
 
   res.status(200).json(new ApiResponse(200, "Password reset email sent", {}));
 
@@ -230,18 +226,18 @@ export const resetPassword = async (req: Request, res: Response) => {
     .update(resetToken as string)
     .digest("hex");
 
-  const user = await User.findOne({
-    forgotPasswordToken: hashedResetToken,
-    forgotPasswordExpires: { $gt: Date.now() },
-  });
+  const userId = await cache.get<string>(cacheKey(hashedResetToken));
 
-  if (!user) throw new ApiError(400, "Token is invalid or expired.");
+  if (!userId) throw new ApiError(400, "Token is invalid or expired.");
+
+  const user = await User.findById(userId);
+
+  if (!user) throw new ApiError(400, "User not found.");
 
   user.password = newPassword;
-  user.forgotPasswordToken = undefined;
-  user.forgotPasswordExpires = undefined;
 
   await user.save();
+  void cache.del(cacheKey(hashedResetToken));
 
   return res
     .status(200)

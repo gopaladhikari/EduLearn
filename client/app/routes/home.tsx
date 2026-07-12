@@ -2,6 +2,7 @@ import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
 import { Link } from "react-router";
 import { BookOpen, Clock, Award, Users, Target, Zap } from "lucide-react";
+import { Header } from "~/components/header";
 
 export function meta() {
   return [
@@ -17,7 +18,7 @@ export function meta() {
 export default function Home() {
   return (
     <>
-      {" "}
+      <Header />
       <section className="relative bg-linear-to-br from-primary/5 to-accent/5 px-4 py-20 sm:px-6 md:py-32 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="grid grid-cols-1 items-center gap-12 md:grid-cols-2">

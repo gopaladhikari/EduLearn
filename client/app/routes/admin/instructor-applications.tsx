@@ -52,7 +52,7 @@ export default function InstructorApplications() {
   const applications = response.data.instructorApplications;
 
   return (
-    <section className="mx-auto max-w-7xl space-y-8 py-10">
+    <section className="mx-auto max-w-7xl space-y-8">
       <div>
         <h1 className="text-3xl font-bold">Instructor Applications</h1>
 

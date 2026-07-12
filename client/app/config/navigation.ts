@@ -4,6 +4,9 @@ import {
   ShoppingCart,
   GraduationCap,
   LayoutDashboard,
+  FileText,
+  BookOpen,
+  Users,
 } from "lucide-react";
 import type { NavigationConfig } from "../../types/navs.t";
 
@@ -104,7 +107,7 @@ export const adminNav: NavigationConfig = {
     },
     {
       title: "Notifications",
-      to: "/notifications",
+      to: "/admin/notifications",
       icon: Bell,
     },
   ],
@@ -113,18 +116,22 @@ export const adminNav: NavigationConfig = {
     {
       title: "Dashboard",
       to: "/admin",
+      icon: LayoutDashboard,
     },
     {
       title: "Courses",
       to: "/admin/courses",
+      icon: BookOpen,
     },
     {
       title: "Users",
       to: "/admin/users",
+      icon: Users,
     },
     {
       title: "Instructor Applications",
       to: "/admin/instructor-applications",
+      icon: FileText,
     },
   ],
 };

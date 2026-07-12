@@ -6,7 +6,6 @@ import {
   ScrollRestoration,
   useNavigation,
 } from "react-router";
-import { Header } from "./components/header";
 import { Footer } from "./components/footer";
 import "./app.css";
 import { GlobalError } from "./routes/error-boundary";
@@ -32,7 +31,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body suppressHydrationWarning>
-        <Header />
         <main>{isLoading ? <Loading /> : children}</main>
         <Footer />
         <ScrollRestoration />

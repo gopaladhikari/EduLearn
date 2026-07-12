@@ -22,6 +22,10 @@ const generateAccessAndRefreshTokens = async (user: Express.User) => {
 
     user.refreshToken = refreshToken;
 
+    await user.save({
+      validateBeforeSave: false,
+    });
+
     return { accessToken, refreshToken };
   } catch (error) {
     const err = error as Error;
@@ -93,10 +97,7 @@ export const logoutUser = async (req: Request, res: Response) => {
   const user = req.user!;
 
   await User.findByIdAndUpdate(user._id, {
-    $unset: {
-      accessToken: 1,
-      refreshToken: 1,
-    },
+    $unset: { refreshToken: 1 },
   });
 
   return res

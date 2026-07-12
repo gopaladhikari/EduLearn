@@ -35,7 +35,7 @@ export const getAllInstructorApplication = async (
   if (instructorApplications && instructorApplications.length === 0)
     throw new ApiError(404, "No instructor applications found");
 
-  void cache.set(getKey("all"), JSON.stringify(instructorApplications));
+  void cache.set(getKey("all"), instructorApplications);
 
   return res.status(200).json(
     new ApiResponse(200, "Instructor applications fetched successfully", {
@@ -88,6 +88,7 @@ export const getInstructorApplicationById = async (
   if (!isValidObjectId(applicationId))
     throw new ApiError(400, "Invalid application id");
 
+  await cache.del(getKey(applicationId));
   const cachedApplication = await cache.get(getKey(applicationId));
 
   if (cachedApplication) {
@@ -99,12 +100,12 @@ export const getInstructorApplicationById = async (
   }
 
   const instructorApplication =
-    await InstructorApplication.findById(applicationId);
+    await InstructorApplication.findById(applicationId).populate("user");
 
   if (!instructorApplication)
     throw new ApiError(404, "Instructor application not found");
 
-  void cache.set(getKey(applicationId), JSON.stringify(instructorApplication));
+  void cache.set(getKey(applicationId), instructorApplication);
 
   return res.status(200).json(
     new ApiResponse(200, "Instructor application fetched successfully", {

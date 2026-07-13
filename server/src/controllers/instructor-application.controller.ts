@@ -183,9 +183,8 @@ export const updateInstructorApplication = async (
   if (status === instructorApplicationStatus.REJECTED)
     instructorApplication.rejectionReason = rejectionReason;
 
-  await instructorApplication.save();
-
   void Promise.all([
+    instructorApplication.save(),
     cache.del(getKey(applicationId)),
     cache.del(getKey("all")),
     cache.del(instructorApplication.user._id.toString()),

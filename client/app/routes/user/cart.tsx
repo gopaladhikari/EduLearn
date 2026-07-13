@@ -81,7 +81,7 @@ export default function CartPage() {
 
   return (
     <>
-      <section className="bg-linear-to-br from-primary/5 to-accent/5 px-4 py-12 sm:px-6 lg:px-8">
+      <section className="bg-linear-to-br from-primary/5 to-accent/5">
         <div className="mx-auto max-w-7xl">
           <div className="mb-4 flex items-center gap-3">
             <ShoppingCart className="h-8 w-8 text-primary" />

@@ -3,7 +3,7 @@ import { useFetcher } from "react-router";
 
 import { LogOut } from "lucide-react";
 
-import { useNavigation } from "~/hooks/use-navigation";
+import { useNavs } from "~/hooks/use-navigation";
 import { useUserStore } from "~/store/userStore";
 
 import {
@@ -20,7 +20,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import type { ApiError, ApiSuccess } from "../../../types/axios.t";
 
 export function UserNav() {
-  const navigation = useNavigation();
+  const navigation = useNavs();
 
   const user = useUserStore((state) => state.user);
 

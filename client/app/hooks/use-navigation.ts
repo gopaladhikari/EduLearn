@@ -8,7 +8,7 @@ import {
 
 import { useUserStore } from "~/store/userStore";
 
-export function useNavigation() {
+export function useNavs() {
   const user = useUserStore((s) => s.user);
 
   if (!user) return publicNav;

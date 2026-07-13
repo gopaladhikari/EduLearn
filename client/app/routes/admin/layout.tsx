@@ -1,10 +1,17 @@
 import { LogOut } from "lucide-react";
 import { Link, Outlet } from "react-router";
 import { Button } from "~/components/ui/button";
-import { useNavigation } from "~/hooks/use-navigation";
+import { useNavs } from "~/hooks/use-navigation";
+import { useNavigation } from "react-router";
+import { AdminLoading } from "./loading";
+import { Form } from "react-router";
 
 export default function AdminLayout() {
-  const navs = useNavigation();
+  const navs = useNavs();
+
+  const navigation = useNavigation();
+
+  const isLoading = navigation.state === "loading";
 
   return (
     <div className="flex h-screen bg-background">
@@ -56,19 +63,25 @@ export default function AdminLayout() {
         </nav>
 
         {/* Logout */}
-        <div className="absolute bottom-0 w-64 border-t border-border p-4">
-          <Button variant="outline" className="w-full justify-start gap-3">
+        <Form
+          className="absolute bottom-0 w-64 border-t border-border p-4"
+          method="post"
+          action="/logout"
+        >
+          <Button
+            variant="outline"
+            className="w-full justify-start gap-3"
+            type="submit"
+          >
             <LogOut className="h-5 w-5" />
             Logout
           </Button>
-        </div>
+        </Form>
       </div>
 
       {/* Main Content */}
       <div className="flex-1 overflow-auto">
-        <div className="p-8">
-          <Outlet />
-        </div>
+        <div className="p-4">{isLoading ? <AdminLoading /> : <Outlet />}</div>
       </div>
     </div>
   );

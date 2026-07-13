@@ -19,7 +19,7 @@ export default function Home() {
   return (
     <>
       <Header />
-      <section className="relative bg-linear-to-br from-primary/5 to-accent/5 px-4 py-20 sm:px-6 md:py-32 lg:px-8">
+      <section className="relative bg-linear-to-br from-primary/5 to-accent/5">
         <div className="mx-auto max-w-7xl">
           <div className="grid grid-cols-1 items-center gap-12 md:grid-cols-2">
             {/* Left Content */}
@@ -79,7 +79,7 @@ export default function Home() {
         </div>
       </section>
       {/* Features Section */}
-      <section className="px-4 py-20 sm:px-6 lg:px-8">
+      <section>
         <div className="mx-auto max-w-7xl">
           <div className="mb-16 text-center">
             <h2 className="mb-4 text-4xl font-bold text-foreground md:text-5xl">
@@ -178,7 +178,7 @@ export default function Home() {
         </div>
       </section>
       {/* CTA Section */}
-      <section className="bg-linear-to-r from-primary to-accent px-4 py-20 sm:px-6 lg:px-8">
+      <section className="bg-linear-to-r from-primary to-accent">
         <div className="mx-auto max-w-4xl text-center text-white">
           <h2 className="mb-6 text-4xl font-bold md:text-5xl">
             Ready to Start Learning?

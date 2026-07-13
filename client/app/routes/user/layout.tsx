@@ -1,4 +1,5 @@
 import { Navigate, Outlet } from "react-router";
+import { Header } from "~/components/header";
 import { Loading } from "~/components/loading";
 import { useUserStore } from "~/store/userStore";
 
@@ -11,5 +12,10 @@ export default function Layout() {
 
   if (!isAuthenticated) return <Navigate to="/?redirect=logout" />;
 
-  return <Outlet />;
+  return (
+    <>
+      <Header />
+      <Outlet />
+    </>
+  );
 }

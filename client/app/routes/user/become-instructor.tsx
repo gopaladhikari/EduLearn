@@ -94,7 +94,7 @@ export default function BecomeInstructorPage() {
   if (actionData?.success === true) {
     return (
       <>
-        <section className="bg-linear-to-br from-primary/5 to-accent/5 px-4 py-12 sm:px-6 lg:px-8">
+        <section className="bg-linear-to-br from-primary/5 to-accent/5">
           <div className="mx-auto max-w-4xl">
             <h1 className="mb-4 text-4xl font-bold text-foreground md:text-5xl">
               Apply to Teach

@@ -52,8 +52,8 @@ export default function InstructorApplications() {
   const applications = response.data.instructorApplications;
 
   return (
-    <section className="mx-auto max-w-7xl space-y-8">
-      <div>
+    <section className="space-y-3 p-0">
+      <div className="space-y-3">
         <h1 className="text-3xl font-bold">Instructor Applications</h1>
 
         <p className="text-muted-foreground">

@@ -1,11 +1,4 @@
-import {
-  Links,
-  Meta,
-  Outlet,
-  Scripts,
-  ScrollRestoration,
-  useNavigation,
-} from "react-router";
+import { Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router";
 import { Footer } from "./components/footer";
 import "./app.css";
 import { GlobalError } from "./routes/error-boundary";
@@ -18,10 +11,6 @@ export function HydrateFallback() {
 }
 
 export function Layout({ children }: { children: React.ReactNode }) {
-  const navigation = useNavigation();
-
-  const isLoading = navigation.state === "loading";
-
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -31,7 +20,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body suppressHydrationWarning>
-        <main>{isLoading ? <Loading /> : children}</main>
+        <main>{children}</main>
         <Footer />
         <ScrollRestoration />
         <Scripts />

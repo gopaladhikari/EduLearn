@@ -235,6 +235,7 @@ export default function Register() {
             {actionData?.success ? (
               <div className="rounded-xl bg-green-500/10 p-4 text-green-900">
                 <p className="font-bold">{actionData.message}</p>
+                {/* @ts-expect-error - actionData.data exists */}
                 <p className="text-sm">{actionData.data?.message}</p>
               </div>
             ) : (

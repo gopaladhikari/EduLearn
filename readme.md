@@ -1,42 +1,329 @@
-# Edulearn
+# 🎓 Edulearn
 
-[![Node.js](https://img.shields.io/badge/Node.js-24.x-339933?logo=node.js&logoColor=white)](https://nodejs.org)
-[![Express.js](https://img.shields.io/badge/Express.js-5.x-000000?logo=express&logoColor=white)](https://expressjs.com)
-[![MongoDB](https://img.shields.io/badge/MongoDB-4.x-47A248?logo=mongodb&logoColor=white)](https://www.mongodb.com)
-[![React](https://img.shields.io/badge/React-18.x-61DAFB?logo=react)](https://react.dev)
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+A modern full-stack Learning Management System (LMS) built with React Router 7, Express 5, TypeScript, MongoDB, Redis, and Stripe.
 
-**Edulearn** is a full-stack LMS (Learning Management System) built using the MERN stack. It allows instructors to create and manage courses, and students to enroll in both free and paid courses.
+Edulearn enables instructors to create and publish courses while allowing students to enroll, learn, and track their progress through a clean and scalable platform.
 
-## ✨ Features
+---
 
-- Authentication (register, login, password reset)
-- Role-based access (student, instructor, admin)
-- Course creation and management
-- Lecture uploads (video + resources)
-- Free and paid course enrollment
-- Progress tracking
-- Payment integration
+# ✨ Features
 
-## 🛠 Tech Stack
+## Authentication
 
-- Frontend: React Router 7
-- Backend: Node.js, Express
-- Database: MongoDB
-- Authentication: JWT
-- File Uploads: Multer
-- Payments: Stripe, Razorpay
+- Register & Login
+- JWT Authentication
+- Refresh Token Authentication
+- Email Verification
+- Forgot Password
+- Change Password
+- Secure HttpOnly Cookies
 
-## 📋 Prerequisites
+---
 
-- Node.js ≥ 24
-- MongoDB (local or MongoDB Atlas)
-- Git
+## Authorization
 
-## 🚀 Getting Started
+- Student
+- Instructor
+- Admin
+
+Role-based access control (RBAC) throughout the application.
+
+---
+
+## Instructor Application
+
+Students can apply to become instructors.
+
+Features include:
+
+- Submit instructor application
+- Admin review dashboard
+- Approve / Reject applications
+- Email notifications
+- Automatic instructor role upgrade
+
+---
+
+## Course Management
+
+- Create Course
+- Edit Course
+- Delete Course
+- Publish Course
+- Draft Course
+- Course Thumbnail Upload
+- Categories
+- Difficulty Level
+- Language
+- Pricing
+
+---
+
+## Lecture Management
+
+- Create Lectures
+- Upload Videos
+- Preview Lectures
+- Lecture Ordering
+- Resources
+
+---
+
+## Enrollment
+
+- Free Courses
+- Paid Courses
+- Stripe Payments
+- Prevent Duplicate Enrollments
+
+---
+
+## Learning
+
+- Course Player
+- Lecture Progress
+- Resume Learning
+- Course Completion
+- Progress Tracking
+
+---
+
+## Admin Dashboard
+
+- Manage Users
+- Manage Courses
+- Review Instructor Applications
+- Platform Analytics
+
+---
+
+# 🚀 Tech Stack
+
+## Frontend
+
+- React 19
+- React Router 7
+- TypeScript
+- Tailwind CSS
+- shadcn/ui
+- Axios
+
+---
+
+## Backend
+
+- Node.js 24
+- Express 5
+- TypeScript
+- MongoDB Atlas
+- Mongoose
+- Passport.js
+- JWT
+- Redis
+- Zod
+- Multer
+- Cloudinary
+- Resend
+- Arcjet
+
+---
+
+## Security
+
+- JWT Authentication
+- Refresh Tokens
+- Passport.js
+- Role-Based Access Control
+- Helmet
+- HPP
+- Zod Validation
+- Arcjet Bot Protection
+- Rate Limiting
+- HttpOnly Cookies
+
+---
+
+## Infrastructure
+
+- MongoDB Atlas
+- Redis
+- Docker
+- Netlify (Frontend)
+- Render (Backend)
+
+---
+
+# 📂 Project Structure
+
+```
+edulearn
+│
+├── client
+│   ├── app
+│   ├── routes
+│   ├── components
+│   ├── hooks
+│   └── lib
+│
+├── server
+│   ├── controllers
+│   ├── models
+│   ├── middlewares
+│   ├── routes
+│   ├── schemas
+│   ├── utils
+│   ├── emails
+│   └── services
+│
+└── docker-compose.yml
+```
+
+---
+
+# ⚡ Architecture
+
+```
+React Router 7
+
+        │
+
+Axios
+
+        │
+
+Express API
+
+        │
+
+Controllers
+
+        │
+
+MongoDB Atlas
+        │
+Redis Cache
+
+        │
+
+Cloudinary
+Resend
+Stripe
+```
+
+---
+
+# ⚙️ Environment Variables
+
+## Backend
+
+```
+PORT=
+
+MONGODB_URI=
+
+ACCESS_TOKEN_SECRET=
+ACCESS_TOKEN_EXPIRY=
+
+REFRESH_TOKEN_SECRET=
+REFRESH_TOKEN_EXPIRY=
+
+REDIS_URL=
+
+ARCJET_KEY=
+
+CLOUDINARY_CLOUD_NAME=
+CLOUDINARY_API_KEY=
+CLOUDINARY_API_SECRET=
+
+RESEND_API_KEY=
+
+STRIPE_SECRET_KEY=
+
+CLIENT_URL=
+```
+
+---
+
+# 🚀 Getting Started
+
+Clone the repository
 
 ```bash
-### Clone the repository
-git clone https://github.com/gopaladhikari/edulearn
-cd edulearn
+git clone https://github.com/gopaladhikari/edulearn.git
 ```
+
+Install dependencies
+
+```bash
+cd client
+npm install
+
+cd ../server
+npm install
+```
+
+Start Redis
+
+```bash
+docker compose up -d
+```
+
+Run backend
+
+```bash
+npm run dev
+```
+
+Run frontend
+
+```bash
+npm run dev
+```
+
+---
+
+# 📋 Roadmap
+
+## ✅ Completed
+
+- Authentication
+- RBAC
+- Email Verification
+- Forgot Password
+- Redis Integration
+- Instructor Applications
+- Admin Dashboard
+- API Validation
+- Docker Development
+- Global Error Handling
+- Redis Caching
+
+---
+
+## 🚧 In Progress
+
+- Course CRUD
+- Lecture CRUD
+- Cloudinary Uploads
+
+---
+
+## 📅 Planned
+
+- Stripe Payments
+- Student Dashboard
+- Instructor Dashboard
+- Course Player
+- Reviews
+- Ratings
+- Certificates
+- Wishlist
+- Analytics
+- Notifications
+- Testing
+
+---
+
+# 📄 License
+
+MIT License

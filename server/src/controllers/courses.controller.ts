@@ -9,7 +9,18 @@ function courseKey(id: string) {
 }
 
 export const getCourses = async (_req: Request, res: Response) => {
-  const courses = await Course.aggregate([]);
+  const courses = await Course.aggregate([
+    {
+      $lookup: {
+        from: "users",
+        localField: "instructor",
+        foreignField: "_id",
+        as: "instructor",
+      },
+    },
+  ]);
+
+  if (courses.length === 0) throw new ApiError(404, "No courses found");
 
   res.json(courses);
 };
@@ -40,3 +51,13 @@ export const getCourseById = async (req: Request, res: Response) => {
     })
   );
 };
+
+export const createCourse = async (req: Request, res: Response) => {};
+
+export const updateCourseById = async (req: Request, res: Response) => {};
+
+export const deleteCourseById = async (req: Request, res: Response) => {};
+
+export const publishCourseById = async (req: Request, res: Response) => {};
+
+export const draftCourseById = async (req: Request, res: Response) => {};

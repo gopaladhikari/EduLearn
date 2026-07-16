@@ -1,267 +1,425 @@
 # 📘 Product Requirements Document (PRD)
 
-## 🧾 Product Overview
+# Product
 
-**Edulearn – Learning Management System (LMS)**
+**Project:** Edulearn
 
-**Product Name:** Edulearn
-**Version:** 1.0.0  
-**Product Type:** MERN stack LMS system.
+**Version:** 1.0
 
----
-
-## 🎯 1. Problem Statement
-
-Many learners struggle to find structured, affordable, and trackable online courses, while instructors lack a simple platform to create and monetize content.
-
-Edulearn provides:
-
-- A platform for instructors to create and manage courses
-- A system for students to enroll in free and paid courses
-- Progress tracking for effective learning
+**Type:** Full Stack Learning Management System (LMS)
 
 ---
 
-## 🎯 2. Goals & Objectives
+# Vision
 
-### Primary Goals
-
-- Enable course creation and publishing
-- Allow enrollment in free and paid courses
-- Track user learning progress
-- Provide secure authentication and role-based access
-
-### Secondary Goals
-
-- Integrate payment systems (Stripe/Razorpay)
-- Ensure scalable content delivery
-- Deliver a clean and responsive user experience
+Build a modern LMS where instructors can easily create and monetize courses while students can learn through an engaging, secure, and scalable platform.
 
 ---
 
-## 👥 3. Target Users
+# Problem Statement
 
-### Students
+Many online learning platforms are expensive, difficult to manage, or lack proper learning analytics.
 
-- Browse and enroll in courses
-- Watch lectures
-- Track progress
+Edulearn aims to provide:
 
-### Instructors
-
-- Create and manage courses
-- Upload lectures
-- Publish content
-
-### Admin
-
-- Manage users and platform operations
+- Easy course creation
+- Secure authentication
+- Affordable learning
+- Progress tracking
+- Instructor management
+- Scalable architecture
 
 ---
 
-## 🔑 4. Core Features (MVP Scope)
+# Goals
 
-### Authentication
+## Students
 
-- Register / Login
-- Email verification
-- Password reset
-- JWT-based authentication
-
-### Role-Based Access
-
-- Student
-- Instructor
-- Admin
-
-### Course Management
-
-- Create, edit, delete courses
-- Add metadata (title, description, category, level, language)
-- Publish/unpublish courses
-
-### Lecture Management
-
-- Upload video lectures
-- Add lecture metadata (title, description, duration, order)
-- Mark preview lectures
-
-### Enrollment System
-
-- Free enrollment (instant access)
-- Paid enrollment (payment required)
-- Prevent duplicate enrollments
-
-### Progress Tracking
-
-- Track lecture completion
-- Track watch time
-- Calculate completion percentage
-- Resume last watched lecture
+- Register/Login
+- Browse Courses
+- Purchase Courses
+- Learn
+- Track Progress
 
 ---
 
-## 🔄 5. User Flows
+## Instructors
 
-### 🟢 Free Course Enrollment
-
-User → selects course → clicks enroll → enrollment created → access granted
-
----
-
-### 💳 Paid Course Enrollment
-
-User → clicks buy → payment initiated → payment verified → enrollment created → access granted
+- Apply to become instructor
+- Create Courses
+- Upload Lectures
+- Publish Courses
+- Manage Students
 
 ---
 
-### 📚 Learning Flow
+## Admin
 
-User → opens course → watches lecture → progress updated → completion tracked
-
----
-
-### 🔁 Refund Flow
-
-User requests refund → validation → refund processed → enrollment status updated
+- Manage Users
+- Approve Instructor Applications
+- Manage Courses
+- Platform Monitoring
 
 ---
 
-## 📦 6. Core Data Entities
+# User Roles
 
-- **User**
-  - Authentication & identity
-  - Role-based access
+## Student
 
-- **Course**
-  - Metadata (title, description, level, price, etc.)
-  - Multiple instructors
-
-- **Lecture**
-  - Linked to course
-  - Ordered content with video
-
-- **CourseEnrollment**
-  - Links user and course
-  - Handles payment and access
-
-- **CourseProgress**
-  - Linked to enrollment
-  - Tracks lecture-level progress
+- Register
+- Login
+- Purchase Courses
+- Watch Lectures
+- Track Progress
 
 ---
 
-## ⚠️ 7. Business Rules & Constraints
+## Instructor
 
-- One user cannot enroll in the same course twice
-- Progress is tied to enrollment, not directly to user
-- Only enrolled users can access course content
-- Only instructors can create courses
-- Course must have at least one instructor
-- Lecture order must be unique within a course
-- Payment required before access for paid courses
-- Refund only allowed for completed payments
+- Course CRUD
+- Lecture CRUD
+- Publish Courses
+- Draft Courses
+- View Enrollments
 
 ---
 
-## 🏗 8. System Architecture Overview
+## Admin
 
-Frontend: React (`/client`)  
-Backend: Node.js + Express (`/server`)  
-Database: MongoDB (Mongoose)
-
-### Communication Flow
-
-Client → REST API → Server → Database
+- User Management
+- Course Management
+- Instructor Review
+- Platform Administration
 
 ---
 
-## 🔐 9. Authentication & Security
+# Core Modules
 
-- JWT-based authentication (access + refresh tokens)
-- Password hashing using bcrypt
-- Role-based protected routes
-- Input sanitization (mongo-sanitize, hpp)
-- Rate limiting
-- Secure headers via Helmet
+## Authentication
+
+- Register
+- Login
+- Refresh Tokens
+- Logout
+- Forgot Password
+- Reset Password
+- Email Verification
 
 ---
 
-## 💳 10. Payment System
+## Instructor Applications
 
-### Supported Methods
+Student
+
+↓
+
+Submit Application
+
+↓
+
+Admin Review
+
+↓
+
+Approve / Reject
+
+↓
+
+Email Notification
+
+↓
+
+Instructor Role Assigned
+
+---
+
+## Course Management
+
+- Create
+- Update
+- Delete
+- Publish
+- Draft
+- Categories
+- Levels
+- Language
+- Pricing
+
+---
+
+## Lecture Management
+
+- Create Lecture
+- Upload Video
+- Upload Resources
+- Preview Lecture
+- Lecture Ordering
+
+---
+
+## Enrollment
+
+### Free
+
+Student
+
+↓
+
+Enroll
+
+↓
+
+Access Granted
+
+---
+
+### Paid
+
+Student
+
+↓
+
+Stripe Checkout
+
+↓
+
+Payment Verification
+
+↓
+
+Enrollment Created
+
+↓
+
+Access Granted
+
+---
+
+## Learning
+
+Student
+
+↓
+
+Open Course
+
+↓
+
+Watch Lecture
+
+↓
+
+Progress Saved
+
+↓
+
+Completion Updated
+
+↓
+
+Resume Learning
+
+---
+
+# Progress Tracking
+
+Track
+
+- Completed Lectures
+- Watch Time
+- Completion Percentage
+- Last Watched Lecture
+
+---
+
+# Business Rules
+
+- Email must be verified
+- JWT required for protected routes
+- Refresh Tokens required
+- One enrollment per course
+- Only instructors create courses
+- Only owners/admin edit courses
+- Published courses visible publicly
+- Draft courses visible only to instructors/admin
+
+---
+
+# Security
+
+- JWT Authentication
+- Passport.js
+- Refresh Tokens
+- RBAC
+- Helmet
+- HPP
+- Arcjet Protection
+- Zod Validation
+- HttpOnly Cookies
+
+---
+
+# Storage
+
+## MongoDB Atlas
+
+Stores
+
+- Users
+- Courses
+- Lectures
+- Instructor Applications
+- Enrollments
+- Progress
+
+---
+
+## Redis
+
+Stores
+
+- Email Verification Tokens
+- Password Reset Tokens
+- Cached Courses
+- Cached Instructor Applications
+
+---
+
+## Cloudinary
+
+Stores
+
+- Course Thumbnails
+- Lecture Videos
+- Course Assets
+
+---
+
+# External Services
 
 - Stripe
-- Razorpay
-- Free (for free courses)
-
-### Flow
-
-User initiates payment → Payment provider processes → Backend verifies → Enrollment created/updated
-
-### Rules
-
-- `paymentId` must be unique (when present)
-- Free courses use `paymentMethod = "free"`
-- Paid courses require verified payment before enrollment
+- Resend
+- Cloudinary
+- Arcjet
 
 ---
 
-## 📊 11. Progress Tracking Logic
+# High-Level Architecture
 
-Completion Percentage:
-(completed lectures / total lectures in course) × 100
+```
+React Router
 
-Rules:
+        │
 
-- One progress document per enrollment
-- Each lecture tracked individually
-- No duplicate lecture progress entries
-- `isCompleted = true` only when 100%
+Axios
 
----
+        │
 
-## ⚠️ 12. Edge Cases
+Express
 
-- Payment succeeds but enrollment fails
-- Payment fails after initiation
-- Duplicate enrollment attempts
-- Lecture deleted after progress started
-- Unauthorized access to course
-- Refund requested multiple times
+        │
 
----
+Controllers
 
-## 📈 13. Success Metrics
+        │
 
-- Number of enrollments
-- Course completion rate
-- Active users
-- Revenue from paid courses
+MongoDB
+        │
+Redis
+
+        │
+
+Cloudinary
+Stripe
+Resend
+```
 
 ---
 
-## 🚀 14. Future Improvements
+# Non-Functional Requirements
 
-- Course reviews and ratings
-- Wishlist system
-- Certificates on completion
-- Instructor analytics dashboard
-- Notifications (email/in-app)
-- Video streaming optimization
-
----
-
-## 📱 15. Non-Functional Requirements
-
-- API response time < 300ms
-- Scalable database design
-- Secure payment handling
-- Mobile responsive UI
+- Mobile Responsive
+- Fast API Response (<300ms target)
+- Scalable Architecture
+- Secure Authentication
+- Cache Frequently Accessed Data
+- Strong Input Validation
+- Clean API Design
 
 ---
 
-## 🧠 Notes
+# Success Metrics
 
-This PRD defines the MVP scope and core architecture for Edulearn.  
-Future iterations will expand features based on user feedback and platform growth.
+- Registered Users
+- Active Students
+- Active Instructors
+- Course Completion Rate
+- Paid Enrollments
+- Revenue
+- Average Course Rating
+
+---
+
+# Future Roadmap
+
+## Phase 1
+
+- Authentication
+- Instructor Applications
+- Course CRUD
+- Lecture CRUD
+
+---
+
+## Phase 2
+
+- Payments
+- Learning Dashboard
+- Course Player
+- Reviews
+
+---
+
+## Phase 3
+
+- Certificates
+- Instructor Analytics
+- Student Analytics
+- Notifications
+- Wishlist
+- Search
+- AI Course Recommendations
+
+---
+
+# Current Development Status
+
+## ✅ Completed
+
+- Authentication
+- Authorization
+- Redis Integration
+- Email System
+- Instructor Applications
+- Admin Dashboard
+- Validation Layer
+- Docker Development Setup
+- Caching Layer
+
+---
+
+## 🚧 In Progress
+
+- Course Module
+- Lecture Module
+
+---
+
+## 📅 Planned
+
+- Enrollment
+- Payments
+- Learning Progress
+- Reviews
+- Certificates
+- Analytics

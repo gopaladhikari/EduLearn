@@ -66,12 +66,15 @@ import { authRouter } from "./routes/auth.route.js";
 import { healthCheckRouter } from "./routes/healthcheck.route.js";
 import { userProfileRouter } from "./routes/user-profile.route.js";
 import { instructorApplicationRouter } from "./routes/instructor-application.route.js";
+import { courseRouter } from "./routes/course.routes.js";
 
 app.use("/health", healthCheckRouter);
 
 app.use("/api/v1/user", authRouter, userProfileRouter);
 
 app.use("/api/v1/instructor-application", instructorApplicationRouter);
+
+app.use("/api/v1/courses", courseRouter);
 
 // 404
 app.use((req, _res, next) => {

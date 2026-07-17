@@ -26,8 +26,6 @@ const courseBaseSchema = {
   level: z.enum(Courselevels).default(Courselevels.BEGINNER),
   price: z.number().min(0, "Course price cannot be negative"),
   language: z.string().min(1, "Course language is required"),
-  thumbnail: z.file(),
-  instructor: z.string().min(1, "Instructor is required"),
   coInstructors: z.array(z.string()).optional(),
   isPublished: z.boolean().default(false).optional(),
 };
@@ -39,8 +37,6 @@ export const createCourseSchema = z.object({
   category: courseBaseSchema.category,
   price: courseBaseSchema.price,
   language: courseBaseSchema.language,
-  thumbnail: courseBaseSchema.thumbnail,
-  instructor: courseBaseSchema.instructor,
 });
 
 export const updateCourseSchema = z.object({
@@ -52,8 +48,6 @@ export const updateCourseSchema = z.object({
   level: courseBaseSchema.level.optional(),
   price: courseBaseSchema.price.optional(),
   language: courseBaseSchema.language.optional(),
-  thumbnail: courseBaseSchema.thumbnail.optional(),
-  instructor: courseBaseSchema.instructor.optional(),
   coInstructors: courseBaseSchema.coInstructors,
   isPublished: courseBaseSchema.isPublished,
 });

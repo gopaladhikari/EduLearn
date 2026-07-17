@@ -25,6 +25,12 @@ const courseSchema = new mongoose.Schema<ICourses>(
       index: true,
     },
 
+    instructor: {
+      type: mongoose.Types.ObjectId,
+      ref: "User",
+      required: [true, "Instructor is required."],
+    },
+
     subtitle: {
       type: String,
       trim: true,
@@ -71,14 +77,12 @@ const courseSchema = new mongoose.Schema<ICourses>(
     },
 
     thumbnail: {
-      type: String,
-      required: [true, "Course thumbnail is required."],
-    },
-
-    instructor: {
-      type: mongoose.Types.ObjectId,
-      ref: "User",
-      required: [true, "Instructor is required."],
+      publicId: {
+        type: String,
+      },
+      url: {
+        type: String,
+      },
     },
 
     coInstructors: {

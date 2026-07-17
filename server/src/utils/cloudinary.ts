@@ -1,45 +1,42 @@
-import { v2 as cloudinary } from "cloudinary";
+import { v2 } from "cloudinary";
 
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME!,
-  api_key: process.env.CLOUDINARY_API_KEY!,
-  api_secret: process.env.CLOUDINARY_API_SECRET!,
-  secure: true,
-});
-
-export const uploadMedia = async (mediaPath: string) => {
-  try {
-    const result = await cloudinary.uploader.upload(mediaPath, {
-      resource_type: "auto",
+class CloudinaryService {
+  constructor() {
+    v2.config({
+      cloud_name: process.env.CLOUDINARY_CLOUD_NAME!,
+      api_key: process.env.CLOUDINARY_API_KEY!,
+      api_secret: process.env.CLOUDINARY_API_SECRET!,
+      secure: true,
     });
-    console.log(result);
-    return result;
-  } catch (error) {
-    console.error(error);
-    return null;
   }
-};
 
-export const deleteMedia = async (mediaId: string) => {
-  try {
-    const result = await cloudinary.uploader.destroy(mediaId, {
-      resource_type: "auto",
-    });
-    return result;
-  } catch (error) {
-    console.error(error);
-    return null;
+  async upload(mediaPath: string, folder: string = "edulearn") {
+    try {
+      const result = await v2.uploader.upload(mediaPath, {
+        resource_type: "auto",
+        folder,
+      });
+      return result;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
   }
-};
 
-export const deleteVideo = async (mediaId: string) => {
-  try {
-    const result = await cloudinary.uploader.destroy(mediaId, {
-      resource_type: "video",
-    });
-    return result;
-  } catch (error) {
-    console.error(error);
-    return null;
+  async delete(
+    mediaId: string,
+    resourceType: "auto" | "image" | "video" | "raw" = "auto"
+  ) {
+    try {
+      const result = await v2.uploader.destroy(mediaId, {
+        resource_type: resourceType,
+      });
+      return result;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
   }
-};
+}
+
+export const cloudinary = new CloudinaryService();

@@ -4,9 +4,9 @@ import {
   getCourseById,
   createCourse,
   deleteCourseById,
-  draftCourseById,
   publishCourseById,
   updateCourseById,
+  draftCourseById,
 } from "../controllers/courses.controller.js";
 import passport from "passport";
 import { UserRoles } from "@/utils/constants.js";
@@ -16,7 +16,8 @@ import {
   createCourseSchema,
   updateCourseSchema,
 } from "@/schemas/course.schema.js";
-import { validMongoIdSchema } from "@/schemas/valid-mongo-id.schema.js";
+import { validateMongoId } from "@/schemas/validate-mongo-id.js";
+import { upload } from "@/middlewares/multer.middleware.js";
 
 const verifyJwt = passport.authenticate("jwt", { session: false });
 
@@ -29,26 +30,24 @@ courseRouter
     verifyJwt,
     rbac([UserRoles.INSTRUCTOR]),
     validateRequest({ body: createCourseSchema }),
+    upload.single("thumbnail"),
     createCourse
   );
 
 courseRouter
   .route("/:courseId")
-  .get(
-    validateRequest({ params: validMongoIdSchema("courseId") }),
-    getCourseById
-  )
+  .get(validateRequest({ params: validateMongoId("courseId") }), getCourseById)
   .delete(
     verifyJwt,
     rbac([UserRoles.INSTRUCTOR, UserRoles.ADMIN]),
-    validateRequest({ params: validMongoIdSchema("courseId") }),
+    validateRequest({ params: validateMongoId("courseId") }),
     deleteCourseById
   )
   .patch(
     verifyJwt,
     rbac([UserRoles.INSTRUCTOR, UserRoles.ADMIN]),
     validateRequest({
-      params: validMongoIdSchema("courseId"),
+      params: validateMongoId("courseId"),
       body: updateCourseSchema,
     }),
     updateCourseById
@@ -59,7 +58,7 @@ courseRouter
   .patch(
     verifyJwt,
     rbac([UserRoles.INSTRUCTOR, UserRoles.ADMIN]),
-    validateRequest({ params: validMongoIdSchema("courseId") }),
+    validateRequest({ params: validateMongoId("courseId") }),
     publishCourseById
   );
 
@@ -68,7 +67,7 @@ courseRouter
   .patch(
     verifyJwt,
     rbac([UserRoles.INSTRUCTOR, UserRoles.ADMIN]),
-    validateRequest({ params: validMongoIdSchema("courseId") }),
+    validateRequest({ params: validateMongoId("courseId") }),
     draftCourseById
   );
 

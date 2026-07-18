@@ -39,6 +39,7 @@
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
     "resend": "^6.12.2",
+    "slugify": "^1.6.9",
     "stripe": "^22.1.1",
     "zod": "^4.4.1"
   },

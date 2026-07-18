@@ -1,11 +1,7 @@
 import type { ICourses } from "@/types/courses.t.js";
 import { Courselevels } from "@/utils/constants.js";
 import mongoose from "mongoose";
-
-// @ts-ignore
-import sluggerPlugin from "mongoose-slug-update";
-
-mongoose.plugin(sluggerPlugin);
+import slugify from "slugify";
 
 const courseSchema = new mongoose.Schema<ICourses>(
   {
@@ -18,15 +14,12 @@ const courseSchema = new mongoose.Schema<ICourses>(
 
     slug: {
       type: String,
-      required: [true, "Course Slug is required."],
       unique: true,
-      slug: "title",
-      slugPaddingSize: 4,
       index: true,
     },
 
     instructor: {
-      type: mongoose.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: [true, "Instructor is required."],
     },
@@ -88,7 +81,7 @@ const courseSchema = new mongoose.Schema<ICourses>(
     coInstructors: {
       type: [
         {
-          type: mongoose.Types.ObjectId,
+          type: mongoose.Schema.Types.ObjectId,
           ref: "User",
         },
       ],
@@ -104,6 +97,27 @@ const courseSchema = new mongoose.Schema<ICourses>(
   }
 );
 
-export const Course = mongoose.model("Course", courseSchema);
+courseSchema.pre("save", async function () {
+  if (!this.isModified("title")) return;
 
-// TODO: Add averageRating, totalReviews,totalEnrollments
+  let baseSlug = slugify(this.title, { lower: true, strict: true });
+
+  const CourseModel = this.constructor as mongoose.Model<ICourses>;
+
+  let slugExists = await CourseModel.findOne({ slug: baseSlug });
+  let count = 1;
+
+  while (slugExists) {
+    const newSlug = `${baseSlug}-${count}`;
+    slugExists = await CourseModel.findOne({ slug: newSlug });
+    if (!slugExists) {
+      baseSlug = newSlug;
+      break;
+    }
+    count++;
+  }
+
+  this.slug = baseSlug;
+});
+
+export const Course = mongoose.model("Course", courseSchema);

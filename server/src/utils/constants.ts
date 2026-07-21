@@ -4,8 +4,6 @@ export const appName = "edulearn";
 
 export const clientUrl = "https://edulearn.gopuadks.dev";
 
-export const defaultAvatar = "./public/default-avatar.svg";
-
 export const cookiesOptions: CookieOptions = {
   httpOnly: true,
   secure: true,

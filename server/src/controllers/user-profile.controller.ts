@@ -1,7 +1,6 @@
 import { UserProfile } from "@/models/user-profile.model.js";
 import { ApiError, ApiResponse } from "@/utils/api-responses.js";
-import { deleteMedia, uploadMedia } from "@/utils/cloudinary.js";
-import { defaultAvatar } from "@/utils/constants.js";
+import { cloudinary } from "@/utils/cloudinary.js";
 import type { Request, Response } from "express";
 
 export const updateProfile = async (req: Request, res: Response) => {
@@ -37,17 +36,16 @@ export const updateProfile = async (req: Request, res: Response) => {
 };
 
 export const updateAvatar = async (req: Request, res: Response) => {
-  const avatar = req.file;
+  const avatarFilePath = req.file?.path;
 
   const user = req.user!;
 
-  if (!avatar) throw new ApiError(400, "Avatar not found. Try again.");
+  if (!avatarFilePath) throw new ApiError(400, "Avatar not found. Try again.");
 
-  const result = await uploadMedia(avatar.path);
+  const result = await cloudinary.upload(avatarFilePath);
 
   if (!result) throw new ApiError(400, "Avatar upload failed.");
 
-  const previousAvatar = user.profile.avatar.secure_url;
   const previoudAvatarId = user.profile.avatar.public_id;
 
   const updatedUser = await UserProfile.findOneAndUpdate(
@@ -70,5 +68,5 @@ export const updateAvatar = async (req: Request, res: Response) => {
     })
   );
 
-  if (previousAvatar !== defaultAvatar) deleteMedia(previoudAvatarId);
+  void cloudinary.delete(previoudAvatarId);
 };

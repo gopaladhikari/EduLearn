@@ -88,7 +88,6 @@ export default function InstructorApplication() {
 
   return (
     <div>
-      {/* Header */}
       <Link to="/admin/instructor-applications">
         <Button variant="outline" className="mb-6">
           <ArrowLeft className="mr-2 h-4 w-4" />

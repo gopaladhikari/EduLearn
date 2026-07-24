@@ -1,48 +1,21 @@
 {
-  "compilerOptions": {
-    "module": "nodenext",
-    "target": "es2022",
-    // For nodejs:
-    "lib": ["esnext"],
-    "types": ["node"],
-    "moduleResolution": "nodenext",
+  "extends": "@tsconfig/node24/tsconfig.json",
 
+  "compilerOptions": {
     "rootDir": "./src",
     "outDir": "./dist",
 
-    // Other Outputs
-    "sourceMap": false,
-    "declaration": false,
-    "declarationMap": false,
+    "baseUrl": ".",
 
-    // Stricter Typechecking Options
+    "paths": {
+      "@/*": ["src/*"]
+    },
+
     "noUncheckedIndexedAccess": true,
     "exactOptionalPropertyTypes": true,
 
-    // path
-
-    "paths": {
-      "@/*": ["./src/*"]
-    },
-
-    // Style Options
-    "noImplicitReturns": true,
-    "noImplicitOverride": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
-    // "noPropertyAccessFromIndexSignature": true,
-
-    // Recommended Options
-    "strict": true,
-    "jsx": "react-jsx",
-    "verbatimModuleSyntax": true,
-    "isolatedModules": true,
-    "noUncheckedSideEffectImports": true,
-    "moduleDetection": "force",
-    "skipLibCheck": true,
     "removeComments": true
   },
-  "include": ["./src/**/*"],
-  "exclude": ["./node_modules"]
+
+  "include": ["src"]
 }

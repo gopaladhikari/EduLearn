@@ -42,10 +42,7 @@ const instructorApplicationSchema = new Schema<InstructorDetails>(
 
     status: {
       type: String,
-      enum: {
-        values: Object.values(instructorApplicationStatus),
-        message: "Invalid instructor application status",
-      },
+      enum: instructorApplicationStatus,
       default: instructorApplicationStatus.PENDING,
     },
 

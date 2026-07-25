@@ -8,6 +8,7 @@ export interface InstructorApplication {
   expertise: string[];
   qualification: string;
   status: string;
+  rejectionReason?: string;
   socialLinks: {
     youtube: string;
     linkedin: string;

@@ -11,22 +11,18 @@ export const instructorApplicationSchema = z.object({
   website: z.url().optional().or(z.literal("")),
 });
 
-export const updateInstructorApplicationSchema = z
-  .object({
-    status: z.enum([
-      instructorApplicationStatus.REJECTED,
-      instructorApplicationStatus.ACCEPTED,
-    ]),
-    rejectionReason: z.string().min(1).max(500).optional(),
-  })
-  .refine(
-    (data) => {
-      if (data.status === instructorApplicationStatus.REJECTED)
-        return !!data.rejectionReason;
-      return true;
-    },
-    {
-      message: "Rejection reason is required.",
-      path: ["rejectionReason"],
-    }
-  );
+export const updateInstructorApplicationSchema = z.discriminatedUnion(
+  "status",
+  [
+    z.object({
+      status: z.literal(instructorApplicationStatus.ACCEPTED),
+      rejectionReason: z.string().optional().or(z.literal("")),
+    }),
+    z.object({
+      status: z.literal(instructorApplicationStatus.REJECTED),
+      rejectionReason: z
+        .string()
+        .min(10, "Rejection reason must be at least 10 characters"),
+    }),
+  ]
+);

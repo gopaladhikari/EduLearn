@@ -212,20 +212,22 @@ export default function Register() {
               />
 
               <FieldLabel htmlFor="terms" className="font-normal">
-                I agree to the{" "}
-                <Link
-                  to="/terms-and-conditions"
-                  className="text-primary hover:underline"
-                >
-                  Terms of Service
-                </Link>{" "}
-                and{" "}
-                <Link
-                  to="/privacy-policy"
-                  className="text-primary hover:underline"
-                >
-                  Privacy Policy
-                </Link>
+                <p>
+                  I agree to the{" "}
+                  <Link
+                    to="/terms-and-conditions"
+                    className="text-inline text-primary hover:underline"
+                  >
+                    Terms of Service
+                  </Link>{" "}
+                  and{" "}
+                  <Link
+                    to="/privacy-policy"
+                    className="text-primary hover:underline"
+                  >
+                    Privacy Policy
+                  </Link>
+                </p>
               </FieldLabel>
             </Field>
             {errors.terms && (

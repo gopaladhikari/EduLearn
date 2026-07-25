@@ -12,6 +12,7 @@ import {
   instructorApplicationSchema,
   updateInstructorApplicationSchema,
 } from "@/schemas/instructor-application.schema.js";
+import { validateMongoId } from "@/schemas/validate-mongo-id.js";
 import { UserRoles } from "@/utils/constants.js";
 import { Router } from "express";
 import passport from "passport";
@@ -31,18 +32,37 @@ instructorApplicationRouter
     createInstructorApplication
   );
 
-instructorApplicationRouter
-  .route("/student/:studentId")
-  .get(rbac([UserRoles.ADMIN]), getInstructorApplicationsbByStudentId);
+instructorApplicationRouter.route("/student/:studentId").get(
+  rbac([UserRoles.ADMIN]),
+  validateRequest({
+    params: validateMongoId("studentId"),
+  }),
+  getInstructorApplicationsbByStudentId
+);
 
 instructorApplicationRouter
   .route("/:applicationId")
-  .get(rbac([UserRoles.ADMIN]), getInstructorApplicationById)
+  .get(
+    rbac([UserRoles.ADMIN]),
+    validateRequest({
+      params: validateMongoId("applicationId"),
+    }),
+    getInstructorApplicationById
+  )
   .patch(
     rbac([UserRoles.ADMIN]),
-    validateRequest({ body: updateInstructorApplicationSchema }),
+    validateRequest({
+      params: validateMongoId("applicationId"),
+      body: updateInstructorApplicationSchema,
+    }),
     updateInstructorApplication
   )
-  .delete(rbac([UserRoles.ADMIN]), deleteInstructorApplication);
+  .delete(
+    rbac([UserRoles.ADMIN]),
+    validateRequest({
+      params: validateMongoId("applicationId"),
+    }),
+    deleteInstructorApplication
+  );
 
 export { instructorApplicationRouter };

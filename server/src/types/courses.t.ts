@@ -5,7 +5,10 @@ import type { ILectures } from "./lectures.t.js";
 export interface ICourses {
   title: string;
   description: string;
-  thumbnail: string;
+  thumbnail: {
+    publicId: string;
+    url: string;
+  };
   price: number;
   instructor: Types.ObjectId;
   coInstructors: Types.ObjectId[];

@@ -1,4 +1,4 @@
-# 🎓 Edulearn
+# 🗺️ Edulearn
 
 A modern full-stack Learning Management System (LMS) built with React Router 7, Express 5, TypeScript, MongoDB, Redis, and Stripe.
 

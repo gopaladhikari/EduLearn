@@ -1,84 +1,75 @@
 # 🗺️ Edulearn Master Roadmap
 
-This roadmap follows a **vertical slice architecture**, meaning we build one complete feature end-to-end (from the database to the React Router 7 UI) before moving to the next.
-
-## 📦 Phase 1: The Content Pipeline (Course & Lecture Builder)
-
-_Goal: Enable instructors to successfully upload and sequence their teaching materials[cite: 6]._
-
-### Backend (Express)
-
-- [ ] **Lecture Model & Controller:** Build the controller to accept video files via Multer, upload them to Cloudinary, and extract the video duration.
-- [ ] **Lecture CRUD Endpoints:** Implement `POST`, `PATCH`, `DELETE`, and `GET` for lectures tied to a specific `courseId`[cite: 6].
-- [ ] **Ordering Endpoint:** Build a `PATCH /reorder` endpoint that accepts an array of lecture IDs and updates their sequence in bulk.
-
-### Frontend (React Router 7)
-
-- [ ] **Multipart Form Upgrade:** Refactor `CreateCoursePage` to use `FormData` and `encType="multipart/form-data"` so the thumbnail file transmits to the backend correctly.
-- [ ] **Curriculum Manager UI:** Build the instructor dashboard view to drag-and-drop lectures, upload videos, and trigger the publish/draft course states.
+This roadmap follows a **vertical slice architecture**, completing each feature end-to-end across the **Express Backend**, **FastAPI AI Service**, and **React Router 7 Frontend**.
 
 ---
 
-## 💳 Phase 2: Discovery & Monetization (Catalog & Checkout)
+## 📦 Phase 1: The Content Pipeline & AI Generation
 
-_Goal: Allow students to find courses and successfully pay for them via Stripe[cite: 6]._
+_Goal: Enable instructors to build courses manually or generate structured curriculum and assets using AI._
 
-### Backend (Express)
+### Backend (Express & FastAPI)
 
-- [ ] **Search & Filter API:** Enhance the `getCourses` endpoint to accept query parameters for text search, categories, difficulty levels, and price filtering.
-- [ ] **Stripe Webhook:** Implement the `/api/v1/payments/webhook` route using `express.raw()` to securely listen for `checkout.session.completed` events.
-- [ ] **Payment Fulfillment:** Write the webhook logic to update the `CourseEnrollment` status to `COMPLETED` and trigger the Resend success email.
+- [ ] **Lecture CRUD & Video Uploads:** Implement Express endpoints to upload lecture videos to Cloudinary, track duration, and manage ordering.
+- [ ] **AI Course Outline Generator (FastAPI):** Create a `/generate-course` endpoint utilizing the Google GenAI SDK and Pydantic schema validation to produce structured JSON course outlines (title, description, modules, lectures).
+- [ ] **AI Thumbnail Generator (FastAPI & Cloudinary):** Build an endpoint to generate promotional course imagery via an image generation model and stream directly to Cloudinary.
 
 ### Frontend (React Router 7)
 
-- [ ] **Course Catalog UI:** Build the public `/courses` page with a search bar and sidebar filters that instantly update the URL search parameters.
-- [ ] **Checkout Integration:** Connect the `CartPage` checkout button to the `/api/v1/enrollments/:courseId` endpoint to redirect the user to the Stripe hosted checkout.
+- [ ] **Multipart Form Integration:** Refactor `CreateCoursePage` with `FormData` to transmit files to the Express server.
+- [ ] **"Draft with AI" Modal:** Add a UI trigger allowing instructors to generate entire course structures and auto-populate form fields.
+- [ ] **Curriculum Manager:** Build drag-and-drop lecture ordering, video upload progress bars, and publish/draft toggles.
 
 ---
 
-## 🎓 Phase 3: The Classroom (Player & Progress)
+## 💳 Phase 2: Discovery, Monetization & 24/7 AI Support
 
-_Goal: Deliver the core learning experience and track student progression[cite: 6]._
+_Goal: Provide semantic course search, seamless checkout, and an autonomous platform chatbot._
 
-### Backend (Express)
+### Backend (Express & FastAPI)
 
-- [ ] **Progress API:** Build the controllers for the `CourseProgress` model to record watch time and toggle a lecture's `isCompleted` status[cite: 6].
-- [ ] **Completion Math:** Implement backend logic to calculate the `completionPercentage` and mark the course as fully completed when it hits 100%[cite: 6].
+- [ ] **Edulearn-Aware RAG Chatbot (FastAPI):** Build a vector-search Q&A engine loaded with platform policies, FAQs, and course catalog metadata.
+- [ ] **Semantic & Keyword Search API (Express):** Implement course catalog filtering by category, level, price, and semantic similarity.
+- [ ] **Stripe Webhook & Fulfillment:** Create `/api/v1/payments/webhook` with `express.raw()` to handle `checkout.session.completed` and trigger confirmation emails.
 
 ### Frontend (React Router 7)
 
-- [ ] **Course Player Layout:** Design the learning dashboard featuring the main video player and a collapsible sidebar containing the lecture playlist.
-- [ ] **State Syncing (Heartbeat):** Implement a background `useFetcher` that pings the backend every 15 seconds to save the student's video timestamp so they can resume exactly where they left off[cite: 6].
+- [ ] **Homepage Chatbot Widget:** Build a floating chat component backed by a Zustand message store for instant customer support.
+- [ ] **Course Catalog & Filtering:** Implement the `/courses` page with URL-driven search and category filters.
+- [ ] **Cart & Checkout Integration:** Connect the shopping cart to Stripe Checkout sessions.
 
 ---
 
-## ⭐ Phase 4: Social Proof & Moderation (Reviews & Trust)
+## 🎓 Phase 3: The Classroom & Contextual AI Tutor
 
-_Goal: Drive course sales through student feedback and maintain platform quality[cite: 6]._
+_Goal: Deliver video playback, progress tracking, and an in-player AI learning assistant._
 
-### Backend (Express)
+### Backend (Express & FastAPI)
 
-- [ ] **Review Engine:** Create a `Review` Mongoose model and endpoints for enrolled students to leave a 1-5 star rating and text review[cite: 6].
-- [ ] **Rating Aggregation:** Write a Mongoose aggregation pipeline that automatically recalculates a course's overall average rating on new review submissions.
-- [ ] **User Moderation API:** Finalize the admin endpoints to mute, temporarily ban, or permanently ban malicious users.
+- [ ] **Learning Progress API (Express):** Track watch time, lecture completion status, and dynamic completion percentage calculation.
+- [ ] **In-Video AI Tutor (FastAPI):** Build a RAG assistant that answers student questions specifically using the active lecture transcript.
+- [ ] **Auto-Quiz Generator (FastAPI):** Create an endpoint to generate multiple-choice quizzes and summaries from lecture transcripts.
 
 ### Frontend (React Router 7)
 
-- [ ] **Course Details Page:** Design the public-facing landing page for individual courses, displaying the curriculum, instructor bio, and aggregated student reviews.
-- [ ] **Review Form:** Add a modal for students who have completed a course to submit their rating.
+- [ ] **Course Player Layout:** Build a full-screen player with a collapsible playlist sidebar and progress checkboxes.
+- [ ] **Progress Sync (Heartbeat):** Implement a background fetcher syncing video watch time every 15 seconds.
+- [ ] **Player AI Assistant Tab:** Add an embedded chat panel inside the player for real-time lecture Q&A.
 
 ---
 
-## 📈 Phase 5: Insights & Dashboards
+## ⭐ Phase 4: Social Proof, Moderation & Insights
 
-_Goal: Provide users with the data they need to track their success and platform metrics[cite: 6]._
+_Goal: Maintain platform quality with AI content moderation, student reviews, and analytics._
 
-### Backend (Express)
+### Backend (Express & FastAPI)
 
-- [ ] **Admin Analytics API:** Create endpoints aggregating total platform revenue, active users, and pending instructor applications[cite: 6].
-- [ ] **Instructor Analytics API:** Create endpoints aggregating individual course sales, total enrollments, and revenue splits.
+- [ ] **Automated Review Moderation (FastAPI):** Classify incoming course reviews and contact inquiries for toxicity and spam before persistence.
+- [ ] **Reviews & Ratings Engine (Express):** Implement review submission and a Mongoose aggregation pipeline for average rating calculations.
+- [ ] **Platform Analytics API (Express):** Provide aggregated metrics for revenue, active enrollments, and user growth.
 
 ### Frontend (React Router 7)
 
-- [ ] **Admin Dashboard UI:** Populate the placeholder `/admin` routes with data tables and charts showing platform growth.
-- [ ] **Instructor Dashboard UI:** Build the UI showing instructors their revenue metrics and top-performing courses.
+- [ ] **Course Details Page:** Display instructor credentials, course curriculum, and verified student reviews.
+- [ ] **Admin Dashboard UI:** Implement data tables and charts for revenue tracking, application reviews, and user moderation.
+- [ ] **Instructor Analytics UI:** Build a dashboard tracking course performance, student engagement, and payout balances.

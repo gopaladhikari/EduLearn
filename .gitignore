@@ -159,3 +159,8 @@ sketch
 build
 .netlify
 client/public/_redirects
+
+# Python
+
+.venv/
+__pycache__/

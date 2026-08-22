@@ -3,13 +3,9 @@ name = "ai"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-authors = [
-    { name = "gopaladhikari", email = "gopuadks@gmail.com" }
-]
+authors = [{ name = "gopaladhikari", email = "gopuadks@gmail.com" }]
 requires-python = ">=3.14"
-dependencies = [
-    "fastapi[standard]>=0.141.1",
-]
+dependencies = ["fastapi[standard]>=0.141.1"]
 
 [project.scripts]
 ai = "ai:main"
@@ -17,3 +13,7 @@ ai = "ai:main"
 [build-system]
 requires = ["uv_build>=0.12.3,<0.13.0"]
 build-backend = "uv_build"
+
+
+[tool.fastapi]
+entrypoint = "ai.main:app"
